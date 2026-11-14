@@ -21,7 +21,7 @@ export async function loadTerrainPack(baseUrl = DEFAULT_TERRAIN_URL, signal?: Ab
   const base = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
   // Only the Kilbourne pack ships a loader module, and its loader reads any pack's manifest and
   // grid, so it is used for every pack (asking each pack for its own would log a 404).
-  const mod = await import(/* @vite-ignore */ /* webpackIgnore: true */ `${DEFAULT_TERRAIN_URL}load-terrain.mjs`);
+  const mod = await import(/* @vite-ignore */ /* webpackIgnore: true */ `${DEFAULT_TERRAIN_URL}load-terrain.mjs?v=2`);   // ?v=2: browsers that cached the module from a server sending the wrong type must refetch it
   return mod.loadTerrain(base, { signal }) as Promise<TerrainPack>;
 }
 
