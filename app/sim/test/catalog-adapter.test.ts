@@ -17,12 +17,20 @@ describe('site catalog adapter', () => {
     const k = loadCatalogSite(catalog, 'kilbourne-hole-v1');
     const entry = catalog.sites.find((s) => s.id === 'kilbourne-hole-v1')!;
     expect(k.albedo).toBe(entry.conditions.albedo.value);
-    expect(Math.hypot(k.wind!.x, k.wind!.y)).toBeCloseTo(entry.conditions.wind_speed_10m.value!, 6);
     expect(k.soilType).toBe('basalt');
-    expect(k.sources!.wind_speed_10m).toMatch(/direction assumed/);
-    // best pairing for Kilbourne is arsia-flank (Mars)
+    expect(k.sources!.albedo).toBeTruthy();
     expect(pairingsFor(catalog, k.id)[0].planetary_id).toBe('arsia-flank');
-    expect(k.analogOf).toBe('mars');
+  });
+
+  it('infers nothing: no analog body and no wind vector unless the caller chooses them', () => {
+    const k = loadCatalogSite(catalog, 'kilbourne-hole-v1');
+    expect(k.analogOf).toBeUndefined();
+    expect(k.wind).toBeUndefined();
+    const chosen = loadCatalogSite(catalog, 'kilbourne-hole-v1', { analogOf: 'mars', windTowardDeg: 90 });
+    const speed = catalog.sites.find((s) => s.id === 'kilbourne-hole-v1')!.conditions.wind_speed_10m.value!;
+    expect(chosen.analogOf).toBe('mars');
+    expect(chosen.wind!.x).toBeCloseTo(speed, 6);
+    expect(chosen.sources!.wind_speed_10m).toMatch(/scenario assumption/);
   });
 
   it('derives harsher camera conditions at the lunar pole than at mid-latitude Earth', () => {

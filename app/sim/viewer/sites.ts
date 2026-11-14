@@ -1,11 +1,10 @@
-import { catalogSiteToSite, syntheticTerrain } from '../src/index.ts';
-import type { SiteCatalog } from '../src/index.ts';
-import catalogUrl from '../../../web/public/sites.json?url';
+import { syntheticTerrain } from '../src/index.ts';
+export { loadTerrainPacks } from './catalog.ts';
 import type { SiteTerrain } from '../src/index.ts';
 
 const boulders = [{ center: { x: 0, y: 0 }, radiusM: 25, count: 60 }];
 
-/** Synthetic test sites until the real sites.json lands. */
+/** Synthetic test scenarios alongside the real catalog sites. */
 export const PRESETS: Record<string, { label: string; make: () => SiteTerrain }> = {
   moon: { label: 'Moon — highlands (synthetic)', make: () => ({ ...syntheticTerrain({ id: 'moon', body: 'moon', craters: 6 }), soilType: 'regolith', rockAbundance: 0.02 }) },
   moonRocks: {
@@ -38,37 +37,4 @@ export function resolveSite(key: string, fileSites: Map<string, SiteTerrain>): S
   }
   if (!cache.has(key)) cache.set(key, PRESETS[key.slice(7)].make());
   return cache.get(key)!;
-}
-
-// Vite resolves every terrain pack under web/public/terrain at build time.
-const manifests = import.meta.glob('../../../web/public/terrain/*/manifest.json', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
-const grids = import.meta.glob('../../../web/public/terrain/*/elevation.f32', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
-const packUrl = (table: Record<string, string>, id: string, file: string) =>
-  table[`../../../web/public/terrain/${id}/${file}`];
-
-export interface LoadedCatalog {
-  catalog: SiteCatalog;
-  sites: SiteTerrain[];
-}
-
-/**
- * Every site in the data team's catalog (web/public/sites.json) that has a terrain pack, with
- * its conditions applied. Earth analogs fly as the body of their best-scoring pairing.
- */
-export async function loadCatalogSites(): Promise<LoadedCatalog> {
-  const catalog: SiteCatalog = await fetch(catalogUrl).then((r) => r.json());
-  const sites = await Promise.all(
-    catalog.sites
-      .filter((entry) => entry.terrain && packUrl(manifests, entry.id, 'manifest.json') && packUrl(grids, entry.id, 'elevation.f32'))
-      .map(async (entry) => {
-        const [manifest, buffer] = await Promise.all([
-          fetch(packUrl(manifests, entry.id, 'manifest.json')).then((r) => r.json()),
-          fetch(packUrl(grids, entry.id, 'elevation.f32')).then((r) => r.arrayBuffer()),
-        ]);
-        const site = catalogSiteToSite(entry, manifest, buffer, catalog);
-        const tag = site.body === 'earth' ? `Earth analog${site.analogOf ? ` for ${site.analogOf}` : ''}` : site.body;
-        return { ...site, name: `${entry.name} (${tag})` };
-      }),
-  );
-  return { catalog, sites };
 }

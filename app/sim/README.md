@@ -17,7 +17,7 @@ npx tsx scripts/run.ts --site profile:../../data/processed/earth_analogs/<id>.js
 - **Boulders below the DEM's resolution:** each site's *rock abundance* (Diviner on the Moon, TES/THEMIS on Mars) becomes a seeded boulder field using the Golombek & Rapp (1997) size–frequency model (`src/surface.ts`). If the site has a `roughness_rms_m` grid, rough patches get more rocks. Lidar and camera hazard scans see the rocks, and touchdown checks for a rock under the footprint.
 - **Dust and glare from data** (`src/environment.ts`): dust comes from the soil type, and glare from albedo, snow cover, sun elevation and shadow. The configurator can still override both.
 - **Wind and gusts:** a mean wind vector plus gusts.
-- **Site catalog:** `catalogSiteToSite()` (`src/catalog.ts`) turns an entry of the data team's `web/public/sites.json` plus its terrain pack into a site, copying substrate, albedo, wind speed and latitude with their sources. The catalog has no wind direction, so that is a scenario option (`windTowardDeg`). For real hourly wind vectors on the six US sites, use Yousef's `app/lib/environment-site.ts`.
+- **Site catalog:** `catalogSiteToSite()` (`src/catalog.ts`) turns an entry of the data team's `web/public/sites.json` plus its terrain pack into a site, copying substrate, albedo, wind speed and latitude with their sources. Nothing is inferred: a site flies as itself unless the caller sets `analogOf`, and the catalog's scalar wind speed is applied only when the caller chooses a direction (`windTowardDeg`). The viewer's catalog loader (`viewer/catalog.ts`, Antonio) lists each site natively plus one entry per proposed pairing. For real hourly wind vectors on the six US sites, use Yousef's `app/lib/environment-site.ts`.
 
 ## Analog Fidelity Score
 
