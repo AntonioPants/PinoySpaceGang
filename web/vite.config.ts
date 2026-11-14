@@ -8,6 +8,10 @@ export default defineConfig({
   server: { fs: { allow: ['..'] } },
   build: { rollupOptions: { output: { manualChunks(id) {
     if (id.includes('/node_modules/three/') && !id.includes('/examples/')) return 'globe';
+    // The site catalog is 2.6 MB of data; keep it out of the app code so a code change does not
+    // make every player download it again.
+    if (id.endsWith('/public/sites.json')) return 'catalog';
+    if (id.includes('/node_modules/cesium/') || id.includes('/node_modules/@cesium/')) return 'cesium';
     // The latest physics catalog retains full seasonal provenance. Keep those
     // records cached separately and load them with descent, not the first globe.
     if (id.includes('/data/environment/') && id.endsWith('.json')) return `environment-${id.split('/').pop()!.replace('.json', '')}`;

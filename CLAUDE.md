@@ -16,9 +16,17 @@ Select a Moon/Mars region, match an Earth testbed, choose equipment, enter the
 planetary ship environment, configure conditions on interactive ship screens,
 launch, transition to Earth descent, and debrief the actual physics outcome.
 
-The 2D planner/console is the current playable fallback. Tim's 3D interior and
-Furgan's scenes are pending. Register scenes with web/src/game/integrations.ts;
-see contracts.ts in that directory. Do not duplicate the simulation or mission state.
+The game opens on a title screen and runs full-screen: worlds, region, Earth test site,
+equipment bay, Tim's third-person ship bridge (`web/src/game/interior/`), Furgan's liftoff,
+Furgan's Earth-approach cutscene, the live 3D descent and the debrief. The old planner is at
+`?planner`; the flat console is the bridge's fallback. Register scenes with
+web/src/game/integrations.ts; see contracts.ts in that directory. Do not duplicate the
+simulation or mission state.
+
+Local testing and CI: `npm run setup`, `npm run dev`, `npm run check` from the repo root
+(see [docs/LOCAL_TESTING.md](docs/LOCAL_TESTING.md)); `.github/workflows/ci.yml` runs the same
+checks on every push. The live site is https://analog.timhufnagel.org (see
+[deploy/README.md](deploy/README.md)).
 
 ## Repo layout — read this first
 
@@ -46,11 +54,13 @@ consume actual telemetry. Run `cd web && pnpm install && pnpm dev`; `pnpm build`
 typechecks/builds and `pnpm test` includes frontend and physics tests. See
 `web/INTEGRATION.md` for coordinate conventions and cutscene interfaces.
 Furgan's cutscenes (Three.js, generated in code) are in `web/src/components/cutscene/`; test bench:
-open the web app with `?cutscene-demo`. They are not yet wired into the descent screen. His Flight
+open the web app with `?cutscene-demo`. His opening cutscene plays as `earthApproach` and his live 3D
+view flies the descent and its ending (`web/src/components/Descent3D.tsx`). His Flight
 Lab (live 3D descent with sliders) is in `app/flightlab/`: `npm install && npm run build` writes
 `dist/flight-lab.html`. Prebuilt previews are in `docs/previews/`.
-The game registry reserves arrival, liftoff, Earth approach and outcome slots;
-the existing cutscene modules have not yet been registered in that journey.
+The game registry has arrival, liftoff, Earth approach and outcome slots: liftoff is Furgan's
+blast-off cutscene (`web/src/game/scenes/LiftoffScene.tsx`), Earth approach is Furgan's cutscene,
+arrival is still empty, and outcome is null because the 3D descent plays the ending.
 
 ## Team roles and ownership
 

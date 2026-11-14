@@ -6,6 +6,7 @@ import type { SimInput, SiteTerrain } from '../../../app/sim/src/types';
 import type { EnvironmentProfile } from '../../../app/lib/environment.mjs';
 import { withRealWeather } from './weather';
 import type { MissionConfig, TerrainProfile } from './types';
+import { gearFootprintM } from './gear';
 
 /** The Earth analog as the physics flies it: terrain plus, when a catalog entry is given, its surface data. */
 export function analogSite(mission: MissionConfig, profile: TerrainProfile, entry?: CatalogSite): SiteTerrain {
@@ -22,10 +23,12 @@ export function analogSite(mission: MissionConfig, profile: TerrainProfile, entr
 
 /** Lander, sensors and interference shared by the flown descent and the fidelity comparison. */
 export function flightSetup(mission: MissionConfig): Pick<SimInput, 'strategy' | 'lander' | 'sensors' | 'interference' | 'start' | 'target' | 'maxTimeS'> {
+  const legRadiusM = gearFootprintM(mission);
   return {
     strategy: mission.strategy.mode === 'MANUAL_CONTROL' ? 'manual' : 'autonomous',
     lander: { name:'Configured experimental lander', dryMassKg:mission.strategy.dryMassKg, fuelKg:mission.strategy.fuelMassKg,
-      maxThrustN:mission.strategy.thrusterForceN, limits:{maxSlopeDeg:mission.strategy.maxSlopeToleranceDeg} },
+      maxThrustN:mission.strategy.thrusterForceN, limits:{maxSlopeDeg:mission.strategy.maxSlopeToleranceDeg},
+      ...(legRadiusM ? { legRadiusM } : {}) },
     sensors:{hazard:mission.strategy.hazardSensor,velocimeter:true},
     // 'site': leave unset so the engine derives dust and glare from the site's surface data.
     interference: mission.environment.interferenceSource === 'site' ? undefined : {dust:mission.environment.dust,glare:mission.environment.glare},

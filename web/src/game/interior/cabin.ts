@@ -111,17 +111,30 @@ function switchRow(kit: Kit, p: Palette, count: number, x: number, y: number, z:
   return g;
 }
 
-/** A crew seat facing the window (negative z): grey frame, dark fabric cushions and a harness. */
+/** A crew seat facing the window (negative z): shaped cushions with side bolsters, a rounded headrest and a harness. */
 function chair(kit: Kit, p: Palette): THREE.Group {
   const g = new THREE.Group();
-  g.add(kit.cyl(0.34, 0.4, 0.05, p.structure, 0, 0.025, 0, 16), kit.cyl(0.07, 0.09, 0.38, p.structure, 0, 0.24, 0, 10));
-  g.add(kit.box(0.64, 0.1, 0.62, p.structure, 0, 0.45, 0), kit.box(0.56, 0.09, 0.54, p.fabric, 0, 0.525, -0.01));
-  const back = new THREE.Group(); back.position.set(0, 0.5, 0.3); back.rotation.x = 0.16; g.add(back);
-  back.add(kit.box(0.62, 0.92, 0.1, p.structure, 0, 0.46, 0), kit.box(0.52, 0.76, 0.08, p.fabric, 0, 0.45, -0.07));
-  back.add(kit.box(0.34, 0.22, 0.12, p.structure, 0, 1.02, 0), kit.box(0.28, 0.16, 0.07, p.fabric, 0, 1.02, -0.075));
+  const roll = (radius: number, length: number, mat: THREE.Material, x: number, y: number, z: number) => { const c = kit.cyl(radius, radius, length, mat, x, y, z, 12); c.rotation.z = Math.PI / 2; return c; };
+  const soft = kit.mat(0x2a2d33, { rough: 1, smooth: true });
+  // pedestal: floor ring, column, and a rail to rest the feet on
+  g.add(kit.cyl(0.36, 0.42, 0.04, p.structure, 0, 0.02, 0, 20), kit.cyl(0.06, 0.1, 0.4, p.metal, 0, 0.24, 0, 12), kit.cyl(0.16, 0.12, 0.06, p.structure, 0, 0.42, 0, 12));
+  const rail = kit.mesh(new THREE.TorusGeometry(0.3, 0.018, 6, 24), p.metal, 0, 0.2, 0); rail.rotation.x = Math.PI / 2; g.add(rail);
+  // seat pan, cushion with a rolled front edge and raised sides
+  g.add(kit.box(0.6, 0.07, 0.58, p.structure, 0, 0.47, 0), kit.box(0.5, 0.09, 0.46, p.fabric, 0, 0.535, 0.02), roll(0.05, 0.5, soft, 0, 0.53, -0.22));
+  for (const sx of [-1, 1]) { const side = kit.box(0.07, 0.11, 0.5, p.fabric, sx * 0.28, 0.555, 0); side.rotation.z = -sx * 0.25; g.add(side); }
+  // back: a shell that narrows toward the shoulders, lumbar and shoulder cushions, side wings
+  const back = new THREE.Group(); back.position.set(0, 0.5, 0.29); back.rotation.x = 0.16; g.add(back);
+  back.add(kit.box(0.6, 0.5, 0.08, p.structure, 0, 0.27, 0), kit.box(0.52, 0.42, 0.08, p.structure, 0, 0.71, 0));
+  back.add(kit.box(0.44, 0.34, 0.07, p.fabric, 0, 0.26, -0.06), kit.box(0.4, 0.36, 0.06, p.fabric, 0, 0.68, -0.055), roll(0.045, 0.42, soft, 0, 0.46, -0.07));
   for (const sx of [-1, 1]) {
-    back.add(kit.box(0.05, 0.7, 0.012, p.strap, sx * 0.13, 0.5, -0.115), kit.box(0.07, 0.05, 0.02, p.metal, sx * 0.13, 0.2, -0.12));     // harness
-    g.add(kit.box(0.07, 0.2, 0.07, p.structure, sx * 0.36, 0.58, 0.1), kit.box(0.09, 0.045, 0.48, p.fabric, sx * 0.36, 0.7, -0.05));
+    const wing = kit.box(0.07, 0.72, 0.13, p.fabric, sx * 0.27, 0.46, -0.07); wing.rotation.y = sx * 0.35; back.add(wing);
+    back.add(kit.box(0.045, 0.66, 0.012, p.strap, sx * 0.11, 0.5, -0.1), kit.box(0.065, 0.045, 0.02, p.metal, sx * 0.11, 0.22, -0.105));     // harness
+  }
+  back.add(kit.box(0.14, 0.12, 0.05, p.structure, 0, 0.96, 0), roll(0.085, 0.3, soft, 0, 1.06, -0.03), kit.box(0.3, 0.13, 0.05, p.structure, 0, 1.06, 0.03));    // headrest
+  // armrests: a post, a beam and a rounded pad
+  for (const sx of [-1, 1]) {
+    g.add(kit.box(0.05, 0.2, 0.06, p.structure, sx * 0.35, 0.6, 0.12), kit.box(0.06, 0.03, 0.42, p.structure, sx * 0.35, 0.7, -0.04));
+    const pad = kit.cyl(0.04, 0.04, 0.36, soft, sx * 0.35, 0.735, -0.06, 10); pad.rotation.x = Math.PI / 2; g.add(pad);
   }
   return g;
 }
@@ -215,6 +228,17 @@ export function buildCabin(): { group: THREE.Group; mounts: Record<StationId, Sc
   const right = wall(kit, p, D, -0.4, 8); right.position.set(W, 0, 0); right.rotation.y = -Math.PI / 2;
   const hx = 3.0, back = wall(kit, p, W, 0, 21, hx); back.position.set(0, 0, D); back.rotation.y = Math.PI;
   group.add(left, right, back);
+  // a few one-off fittings so the walls are not the same three modules repeated
+  const extinguisher = (w: THREE.Group, x: number) => {
+    w.add(kit.box(0.22, 0.5, 0.03, p.structure, x, 1.05, 0.065), kit.cyl(0.075, 0.075, 0.38, kit.mat(0xa5382e, { rough: 0.5, smooth: true }), x, 1.02, 0.15, 12),
+      kit.cyl(0.03, 0.045, 0.07, p.black, x, 1.245, 0.15, 8), kit.box(0.2, 0.03, 0.02, p.metal, x, 1.08, 0.23), placard(kit, p, 7, 0.22, x, 1.36, 0.052));
+  };
+  const drawers = (w: THREE.Group, x: number) => {
+    w.add(kit.box(0.74, 0.92, 0.12, p.housing, x, 1.72, 0.11));
+    for (let i = 0; i < 4; i++) w.add(kit.box(0.68, 0.19, 0.02, p.panelA, x, 1.39 + i * 0.22, 0.18), kit.box(0.2, 0.025, 0.03, p.metal, x, 1.39 + i * 0.22, 0.2));
+    w.add(placard(kit, p, 5, 0.3, x, 2.24, 0.052));
+  };
+  extinguisher(right, 3.6); extinguisher(back, -4.2); drawers(left, 3.1); drawers(back, -2.75);
   // hatch in the back wall, with the one caution stripe on the bridge at its sill
   back.add(kit.box(1.2, 2.1, 0.09, p.structure, hx, 1.12, 0.045), kit.box(1.0, 1.9, 0.05, p.panelA, hx, 1.12, 0.1));
   const port = kit.cyl(0.17, 0.17, 0.03, p.black, hx, 1.7, 0.13, 20); port.rotation.x = Math.PI / 2;

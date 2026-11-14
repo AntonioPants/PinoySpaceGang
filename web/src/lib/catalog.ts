@@ -85,9 +85,11 @@ export function parseCatalog(raw: unknown): Catalog {
 }
 
 export async function loadCatalog(signal?: AbortSignal): Promise<Catalog> {
-  const response = await fetch('/sites.json', { signal });
-  if (!response.ok) throw new Error(`Site catalog unavailable (${response.status}).`);
-  return parseCatalog(await response.json());
+  // The catalog is already part of the app (data/sites.ts imports it for the physics), so reuse
+  // that copy instead of downloading /sites.json a second time.
+  const raw = (await import('../../public/sites.json')).default;
+  if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
+  return parseCatalog(raw);
 }
 
 export const pairingOf = (catalog: Catalog, targetId: string, analogId: string) =>

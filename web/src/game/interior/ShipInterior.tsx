@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import * as THREE from 'three';
 import { CSS3DObject, CSS3DRenderer } from 'three/addons/renderers/CSS3DRenderer.js';
@@ -27,18 +27,21 @@ const PAGE = { width: 840, height: Math.round(840 * SCREEN.heightM / SCREEN.widt
  * used automatically when 3D cannot start or the window is phone-sized.
  */
 export default function ShipInterior(props: ControlCenterProps) {
-  const [flat, setFlat] = useState(() => window.innerWidth < 760);
+  const [flat, setFlat] = useState(false);
+  // Phones get the same bridge with one change: a monitor's page opens as a sheet over the view
+  // instead of being read on the 3D screen, where it would be far too small to use.
+  const [compact] = useState(() => window.innerWidth < 760);
   const [failure, setFailure] = useState('');
   if (flat || failure) return <div className="ship-interior-flat">
     <p className="field-help" role="status">{failure ? `The 3D bridge could not start (${failure}). Showing the flat console.` : 'Flat console view.'}{' '}
       {!failure && <button className="text-button" onClick={() => setFlat(false)}>Enter the bridge</button>}</p>
     <SystemsConsole {...props} />
   </div>;
-  return <Bridge {...props} onFlat={() => setFlat(true)} onFailure={setFailure} />;
+  return <Bridge {...props} compact={compact} onFlat={() => setFlat(true)} onFailure={setFailure} />;
 }
 
-function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, weatherAvailable, weather, reducedMotion, onFlat, onFailure }:
-  ControlCenterProps & { onFlat: () => void; onFailure: (reason: string) => void }) {
+function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, weatherAvailable, weather, reducedMotion, compact, onFlat, onFailure }:
+  ControlCenterProps & { compact: boolean; onFlat: () => void; onFailure: (reason: string) => void }) {
   const mount = useRef<HTMLDivElement>(null);
   const player = useRef<ThirdPerson | null>(null);
   const [mode, setMode] = useState<Mode>({ kind: 'walk' });
@@ -82,7 +85,7 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x02040b);
-    const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 4000);
+    const camera = new THREE.PerspectiveCamera(compact ? 78 : 58, 1, 0.1, 4000);   // portrait screens need a wider view
     const cabin = buildCabin(), space = buildSpace(body), astronaut = buildAstronaut();
     scene.add(cabin.group, space.group, astronaut.group);
     // Light: the Sun through the window (the only strong, warm light), the ceiling panels as a
@@ -103,13 +106,17 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
     const holeGeo = new THREE.PlaneGeometry(SCREEN.widthM, SCREEN.heightM);
     // writes "fully transparent" into the picture wherever a screen is the nearest thing
     const holeMat = new THREE.MeshBasicMaterial({ color: 0x000000, opacity: 0, transparent: true, blending: THREE.NoBlending });
+    // compact: the page is shown as a sheet, so the 3D monitor is just dark glass
+    const glassMat = new THREE.MeshStandardMaterial({ color: 0x0a0c0f, emissive: 0x1b2734, emissiveIntensity: 0.6, roughness: 0.25 });
     const mounted: THREE.Object3D[] = [];
     for (const station of STATIONS) {
       const { position, rotationY } = cabin.mounts[station.id];
+      const hole = new THREE.Mesh(holeGeo, compact ? glassMat : holeMat); hole.position.copy(position); hole.rotation.y = rotationY;
+      scene.add(hole); mounted.push(hole);
+      if (compact) continue;
       const page = new CSS3DObject(pages[station.id]);
       page.position.copy(position); page.rotation.y = rotationY; page.scale.setScalar(SCREEN.widthM / PAGE.width);
-      const hole = new THREE.Mesh(holeGeo, holeMat); hole.position.copy(position); hole.rotation.y = rotationY;
-      scene.add(page, hole); mounted.push(page, hole);
+      scene.add(page); mounted.push(page);
     }
 
     const tp = new ThirdPerson(host, {
@@ -140,7 +147,8 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
       tp.setReducedMotion(motion.current);
       tp.update(dt);
       const seated = tp.mode.kind === 'seated';
-      astronaut.group.position.set(tp.pos.x, seated ? SEAT.seatHeightM - 0.2 : 0, tp.pos.z + (seated ? 0.02 : 0));
+      // seated: hips on the cushion and far enough forward that the backpack clears the seat back
+      astronaut.group.position.set(tp.pos.x, seated ? SEAT.seatHeightM - 0.34 : 0, tp.pos.z - (seated ? 0.17 : 0));
       astronaut.group.rotation.y = -tp.heading;
       astronaut.animate(dt, tp.speed, seated);
       if (!motion.current) space.drift(dt);
@@ -161,15 +169,20 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
       cancelAnimationFrame(raf); ro.disconnect(); host.removeEventListener('scroll', unscroll); tp.dispose(); player.current = null;
       for (const s of STATIONS) pages[s.id].removeEventListener('focusin', focusIn);
       for (const o of mounted) scene.remove(o);
-      holeGeo.dispose(); holeMat.dispose(); cabin.dispose(); space.dispose(); astronaut.dispose();
+      holeGeo.dispose(); holeMat.dispose(); glassMat.dispose(); cabin.dispose(); space.dispose(); astronaut.dispose();
       webgl.dispose(); webgl.forceContextLoss();
       webgl.domElement.remove(); css.domElement.remove();
     };
-  }, [body, pages]);
+  }, [body, pages, compact]);
 
   const checks = buildChecklist({ mission, settings, weatherAvailable, weatherLoaded: !!weather, error });
   const using = mode.kind === 'station' ? STATIONS.find(s => s.id === mode.id)! : null;
-  return <section className="ship-interior" aria-label="Ship's bridge">
+  const screens: Record<StationId, ReactNode> = {
+    mission: <MissionControlScreen mission={mission} settings={settings} checks={checks} />,
+    equipment: <EquipmentScreen mission={mission} settings={settings} onSettingsChange={onSettingsChange} />,
+    config: <FlightConfigScreen mission={mission} settings={settings} onSettingsChange={onSettingsChange} weatherAvailable={weatherAvailable} weather={weather} />,
+  };
+  return <section className={`ship-interior${compact ? ' compact' : ''}`} aria-label="Ship's bridge">
     <div className="cabin-toolbar">
       <div><strong>Bridge</strong><small>Outbound from {body === 'Moon' ? 'the Moon' : 'Mars'} · {mission.planetaryTarget.name} → {mission.earthAnalog.name}</small></div>
       <div role="group" aria-label="Go to">
@@ -180,13 +193,15 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
       </div>
     </div>
     <div ref={mount} className="cabin-view">
-      {mode.kind === 'walk' && target && <div className="cabin-overlay cabin-prompt" role="status"><kbd>E</kbd> {target.kind === 'seat' ? 'Sit in the pilot seat' : `Use ${target.title}`}</div>}
-      {using && <div className="cabin-overlay cabin-prompt" role="status"><kbd>Esc</kbd> Step back from {using.title}</div>}
+      {mode.kind === 'walk' && target && <button type="button" className="cabin-overlay cabin-prompt" onClick={() => player.current?.interact()}><kbd>E</kbd> {target.kind === 'seat' ? 'Sit in the pilot seat' : `Use ${target.title}`}</button>}
+      {using && !compact && <button type="button" className="cabin-overlay cabin-prompt" onClick={() => player.current?.walk()}><kbd>Esc</kbd> Step back from {using.title}</button>}
+      {using && compact && <div className="cabin-overlay cabin-sheet monitor-screen" data-station={using.id} role="group" aria-label={`${using.title} monitor`}>
+        {screens[using.id]}
+        <button type="button" className="launch-stand" onClick={() => player.current?.walk()}>Done</button>
+      </div>}
       {mode.kind === 'seated' && <LaunchMenu checks={checks} reducedMotion={reducedMotion} onLaunch={onLaunch} onStand={() => player.current?.walk()} />}
     </div>
-    <p className="cabin-hint">Walk with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>, turn the camera with <kbd>←</kbd> <kbd>→</kbd> or by dragging, use what is in front of you with <kbd>E</kbd>. Sit in the pilot seat to start the mission. The ship is illustrative, and the view outside does not show your landing site. Moon, Mars and Earth imagery: NASA.</p>
-    {createPortal(<MissionControlScreen mission={mission} settings={settings} checks={checks} />, pages.mission)}
-    {createPortal(<EquipmentScreen mission={mission} settings={settings} onSettingsChange={onSettingsChange} />, pages.equipment)}
-    {createPortal(<FlightConfigScreen mission={mission} settings={settings} onSettingsChange={onSettingsChange} weatherAvailable={weatherAvailable} weather={weather} />, pages.config)}
+    {compact ? mode.kind === 'walk' && <p className="cabin-hint">Tap a station above, drag to look around, and sit in the pilot seat to start. The ship is illustrative; the view outside does not show your landing site. Imagery: NASA.</p> : <p className="cabin-hint">Walk with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>, turn the camera with <kbd>←</kbd> <kbd>→</kbd> or by dragging, use what is in front of you with <kbd>E</kbd>. Sit in the pilot seat to start the mission. The ship is illustrative, and the view outside does not show your landing site. Moon, Mars and Earth imagery: NASA.</p>}
+    {!compact && STATIONS.map(s => createPortal(screens[s.id], pages[s.id], s.id))}
   </section>;
 }
