@@ -75,6 +75,22 @@ def test_build_failure_does_not_replace_catalog(tmp_path, monkeypatch):
     assert target.read_bytes() == original
 
 
+def _same(a, b, path='catalog'):
+    """Deep equality with a tight tolerance on floats; names the first place that differs."""
+    if isinstance(a, float) or isinstance(b, float):
+        if isinstance(a, (int, float)) and isinstance(b, (int, float)) and not isinstance(a, bool) and not isinstance(b, bool):
+            assert a == pytest.approx(b, rel=1e-9, abs=1e-12), f'{path}: {a!r} != {b!r}'
+            return True
+    if isinstance(a, dict) and isinstance(b, dict):
+        assert a.keys() == b.keys(), f'{path}: keys differ: {sorted(a.keys() ^ b.keys())}'
+        return all(_same(a[k], b[k], f'{path}.{k}') for k in a)
+    if isinstance(a, list) and isinstance(b, list):
+        assert len(a) == len(b), f'{path}: {len(a)} items != {len(b)}'
+        return all(_same(x, y, f'{path}[{i}]') for i, (x, y) in enumerate(zip(a, b)))
+    assert a == b, f'{path}: {a!r} != {b!r}'
+    return True
+
+
 def test_build_and_registration_share_curated_metadata():
     from scripts.catalog.build import ROOT
     from scripts.catalog.metadata import make_catalog
@@ -82,7 +98,9 @@ def test_build_and_registration_share_curated_metadata():
     catalog = json.loads((ROOT/'web/public/sites.json').read_text())
     for site in catalog['sites']:
         preserve_handoff(site)
-    assert make_catalog(catalog['sites']) == catalog
+    # Derived scores differ in the last floating-point digit between platforms (the committed
+    # catalog was built on another OS), so compare numbers to 1e-9 and everything else exactly.
+    assert _same(make_catalog(catalog['sites']), catalog)
     assert literature_measurements('amboy')['cone_height']['value'] == 76.2
     assert literature_measurements('kilbourne-hole-v1')['crater_long_dimension']['value'] > 3200
 
