@@ -1,0 +1,104 @@
+{
+  "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S31_00_W069_00_DEM/Copernicus_DSM_COG_10_S31_00_W069_00_DEM.tif",
+  "sha256": "033b12850444d40adfa9b504ebbafa8ba6330b0e7e61fa322386037a89991af4",
+  "source_tiles": [
+    {
+      "tile_id": "Copernicus_DSM_COG_10_S31_00_W069_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S31_00_W069_00_DEM/Copernicus_DSM_COG_10_S31_00_W069_00_DEM.tif",
+      "sha256": "dcaf7936bced65f03777dcd7791796f85dd4b58c7b30a1dd8f16a50876b53b50"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_S31_00_W068_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S31_00_W068_00_DEM/Copernicus_DSM_COG_10_S31_00_W068_00_DEM.tif",
+      "sha256": "a223a89674c2667245834f10bdf735d0f660f432c1f6dd52f8512ad2425c3026"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_S30_00_W069_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S30_00_W069_00_DEM/Copernicus_DSM_COG_10_S30_00_W069_00_DEM.tif",
+      "sha256": "0f86f9fcc628540ad033759dd57a5deafbaaa93a5d2dd45fdc1b2a28cfdf9c87"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_S30_00_W068_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S30_00_W068_00_DEM/Copernicus_DSM_COG_10_S30_00_W068_00_DEM.tif",
+      "sha256": "fe40309350699f31e700bd0f379927a6d8f271149740a42862a75915cd14d332"
+    }
+  ],
+  "regional_dem_sha256": "b82704d95fd3b6c1ae1602328eaa6aa2c19a725d37ef9bdbd895c55cf9024d09",
+  "region_id": "ischigualasto-region",
+  "window": {
+    "region_dem": "data/raw/location-scan/regions/ischigualasto-region/dem.tif",
+    "row": 1440,
+    "column": 720,
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "row_order": "north_to_south",
+    "column_order": "west_to_east",
+    "crs": "EPSG:32719",
+    "affine": [
+      30.0,
+      0.0,
+      602640.0,
+      0.0,
+      -30.0,
+      6681000.0
+    ],
+    "elevation_sha256": "a69708f8e27c897727afc2bbf3f3ed1205a5a672a7b434cbcd8327b7a6076deb"
+  },
+  "land_cover": {
+    "fractions": {
+      "20": 0.1470236487789823,
+      "30": 0.048472066835555896,
+      "40": 5.14383447140671e-05,
+      "60": 0.8044528460407477
+    },
+    "allowed_fraction": 0.8044528460407477,
+    "excluded_fraction": 5.14383447140671e-05,
+    "nodata_fraction": 0,
+    "accepted": true
+  },
+  "worldcover_sources": {
+    "tiles": [
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_S33W069_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S33W069_Map.tif",
+        "sha256": "59bf08e76f0f2253430e29019f91bd4206ffb33574dfad38b210bd03eaddf76b"
+      },
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_S30W069_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S30W069_Map.tif",
+        "sha256": "102d5b62fbec794b88b7bc16777a92db53c49130a10434a86d48adb08997d433"
+      }
+    ],
+    "sha256": "4ba1b51abe71564eefacaffc14fc7247fa75db81ac5a6d1cad3595fb3539fb29",
+    "spacing_m": 10,
+    "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+    "product_id": "ESA WorldCover 10m 2021 v200",
+    "native_resolution_m_approx": 10,
+    "time_coverage": "2021",
+    "units": "WorldCover class codes (dimensionless)",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "method": "Bilinear Copernicus tile mosaic to local UTM at 30m; integer crop, no nodata filling.",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "land_cover_license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "registration_provenance": {
+    "method_version": "1.0.0",
+    "window_id": "scan-ischigualasto-region-r1440-c720",
+    "region_id": "ischigualasto-region",
+    "seed_site_ids": [
+      "ischigualasto",
+      "talampaya-canyon"
+    ],
+    "source_urls": [
+      "https://whc.unesco.org/en/list/966"
+    ],
+    "index_sha256": "6532fa26fa8640dbeb7513fdf29759bc2d36600909bc1d7cc8f62393ae378fed",
+    "shortlist_sha256": "51199fa35e0aca34c3194e579d04f6ccc861ed9c9370b51a7c55072b62333007",
+    "evidence_status": "exploratory_terrain_only",
+    "inference_method": "Region seed labels supplied by scan_matches; unreviewed at this window. The live scorer discounts inferred labels and excludes crater inference.",
+    "shortlisted_for": [
+      "jezero"
+    ]
+  }
+}

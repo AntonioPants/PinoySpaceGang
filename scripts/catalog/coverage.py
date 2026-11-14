@@ -43,14 +43,14 @@ def main():
         season = f"{seasonal['baseline']['start_year']}-{seasonal['baseline']['end_year']} regional" if seasonal else 'not ingested'
         lines.append(f"| {site['id']} | {len(known)} | {len(unknown)} unknown; {len(inapplicable)} N/A | {season} | {', '.join(features) or 'No dedicated fields defined'} |")
     lines += ['', '## Interpretation and remaining work', '',
-        '- All eleven Earth records contain 2024 POWER regional context. Only six have the separate 2015-2024 seasonal weather profiles; annual means do not provide seasonal wind vectors.',
-        '- Marius Hills and Shackleton have Diviner cumulative bolometric-temperature bins (2009-2015). These are not instantaneous ground temperatures or footprint extrema. Lunar atmospheric wind and air temperature are physically inapplicable.',
+        f"- {sum(s['body']=='earth' and s['conditions'].get('air_temperature_2m',{}).get('value') is not None for s in catalog['sites'])} Earth records contain air-temperature context. Registered scan windows without weather ingestion retain explicit unknowns. Only six have separate 2015-2024 seasonal weather profiles; annual means do not provide seasonal wind vectors.",
+        '- All four lunar areas have Diviner cumulative bolometric-temperature bins (2009-2015). These are not instantaneous ground temperatures or footprint extrema. Lunar atmospheric wind and air temperature are physically inapplicable and hidden in the Moon comparison display.',
         '- Mars weather/albedo remain unknown in this catalog. Earth weather must not be silently applied to Mars.',
         '- Friction, cohesion and bulk density remain unknown for every site. Soil-survey context, basalt labels and DEM roughness do not establish contact mechanics. Vehicle/contact defaults belong in explicit simulation settings.',
         '- Unknown does not necessarily mean access blocked: landform boundaries, dune migration, active-layer depth and strength require a suitable scientific method and spatially matched measurements. Obtain those before replacing nulls.',
         '- Earthdata authenticated products and RCM access remain separate acquisition work; see DATA_SOURCES_AND_GAPS.md for provider-specific steps. No new radar or MODIS ingestion is claimed.',
         '- Amboy cone dimensions and Kilbourne short/long dimensions are approximate literature values. They are separate from crop statistics and are not included in similarity scoring.',
-        '- Haughton, Qaidam, Craters of the Moon, Lava Beds and Capitol Reef still need seasonal profiles if seasonal scenarios are required. Do not replace the existing ten-year baseline with a short demonstration fetch.',
+        '- Earth sites without a seasonal profile in the table still need one if seasonal scenarios are required. The four new US sites have 2024 annual context, not ten-year seasonal baselines. Do not replace an existing ten-year baseline with a short demonstration fetch.',
         '- Empty feature lists mean no feature-specific extraction is defined, not that the site is scientifically complete. Pairings and engineering scores remain unvalidated.', '']
     dump(ROOT/'data/catalog-coverage.json', {'schema_version': '1.0.0', 'sites': rows})
     (ROOT/'docs/DATA_COVERAGE.md').write_text('\n'.join(lines), encoding='utf-8', newline='\n')

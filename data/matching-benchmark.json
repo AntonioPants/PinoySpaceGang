@@ -1,0 +1,282 @@
+{
+  "reference": "literature_informed_proposal pairings; process-based hypotheses, not validated terrain matches",
+  "ranking": "pure score order, no evidence-tier boost",
+  "methods": {
+    "v1_fixed_scale_1km": {
+      "summary_weighted_by_known_pairs": {
+        "auc": 0.41626101694915263,
+        "recall_at_10": 0.15254237288135594,
+        "mean_rank": 28.440677966101696,
+        "score_gap_pp": -20.485710169491526,
+        "macro_recall_at_10": 0.1554421768707483
+      },
+      "targets": {
+        "arsia-flank": {
+          "auc": 0.2401,
+          "recall_at_10": 0.07142857142857142,
+          "mean_rank": 34.857142857142854,
+          "score_gap_pp": -28.98979285714286,
+          "known_unscorable": [],
+          "known": 14,
+          "candidates": 50
+        },
+        "bagnold": {
+          "auc": 0.5506,
+          "recall_at_10": 0.25,
+          "mean_rank": 23.375,
+          "score_gap_pp": -13.256625,
+          "known_unscorable": [],
+          "known": 8,
+          "candidates": 50
+        },
+        "jezero": {
+          "auc": 0.5314,
+          "recall_at_10": 0.26666666666666666,
+          "mean_rank": 24.4,
+          "score_gap_pp": -8.578186666666653,
+          "known_unscorable": [],
+          "known": 15,
+          "candidates": 50
+        },
+        "lucus-planum": {
+          "auc": 0.8152,
+          "recall_at_10": 0.5,
+          "mean_rank": 11.0,
+          "score_gap_pp": -2.0065500000000043,
+          "known_unscorable": [],
+          "known": 4,
+          "candidates": 50
+        },
+        "malapert-massif": {
+          "auc": null,
+          "recall_at_10": null,
+          "mean_rank": null,
+          "score_gap_pp": null,
+          "known_unscorable": [],
+          "known": 0,
+          "candidates": 50
+        },
+        "marius-hills": {
+          "auc": 0.1958,
+          "recall_at_10": 0.0,
+          "mean_rank": 37.36363636363637,
+          "score_gap_pp": -31.97053636363637,
+          "known_unscorable": [],
+          "known": 11,
+          "candidates": 50
+        },
+        "mons-mouton": {
+          "auc": null,
+          "recall_at_10": null,
+          "mean_rank": null,
+          "score_gap_pp": null,
+          "known_unscorable": [],
+          "known": 0,
+          "candidates": 50
+        },
+        "phoenix": {
+          "auc": 0.6122,
+          "recall_at_10": 0.0,
+          "mean_rank": 20.0,
+          "score_gap_pp": -5.600700000000003,
+          "known_unscorable": [],
+          "known": 1,
+          "candidates": 50
+        },
+        "shackleton-rim": {
+          "auc": 0.4659,
+          "recall_at_10": 0.0,
+          "mean_rank": 27.0,
+          "score_gap_pp": -33.7952,
+          "known_unscorable": [],
+          "known": 6,
+          "candidates": 50
+        }
+      }
+    },
+    "analog_score_landform_plus_terrain": {
+      "summary_weighted_by_known_pairs": {
+        "auc": 0.9173305084745762,
+        "recall_at_10": 0.7796610169491526,
+        "mean_rank": 9.11864406779661,
+        "score_gap_pp": 3.1298870817204376,
+        "macro_recall_at_10": 0.8623995052566481
+      },
+      "targets": {
+        "arsia-flank": {
+          "auc": 0.8115,
+          "recall_at_10": 0.6428571428571429,
+          "mean_rank": 14.285714285714286,
+          "score_gap_pp": -16.056412152841304,
+          "known_unscorable": [],
+          "known": 14,
+          "candidates": 50
+        },
+        "bagnold": {
+          "auc": 1.0,
+          "recall_at_10": 1.0,
+          "mean_rank": 4.5,
+          "score_gap_pp": 35.62196007934657,
+          "known_unscorable": [],
+          "known": 8,
+          "candidates": 50
+        },
+        "jezero": {
+          "auc": 0.941,
+          "recall_at_10": 0.6666666666666666,
+          "mean_rank": 10.066666666666666,
+          "score_gap_pp": 10.543943846446908,
+          "known_unscorable": [],
+          "known": 15,
+          "candidates": 50
+        },
+        "lucus-planum": {
+          "auc": 1.0,
+          "recall_at_10": 1.0,
+          "mean_rank": 2.5,
+          "score_gap_pp": 8.821367897762727,
+          "known_unscorable": [],
+          "known": 4,
+          "candidates": 50
+        },
+        "malapert-massif": {
+          "auc": null,
+          "recall_at_10": null,
+          "mean_rank": null,
+          "score_gap_pp": null,
+          "known_unscorable": [],
+          "known": 0,
+          "candidates": 50
+        },
+        "marius-hills": {
+          "auc": 0.8811,
+          "recall_at_10": 0.7272727272727273,
+          "mean_rank": 10.636363636363637,
+          "score_gap_pp": -10.800497985129098,
+          "known_unscorable": [],
+          "known": 11,
+          "candidates": 50
+        },
+        "mons-mouton": {
+          "auc": null,
+          "recall_at_10": null,
+          "mean_rank": null,
+          "score_gap_pp": null,
+          "known_unscorable": [],
+          "known": 0,
+          "candidates": 50
+        },
+        "phoenix": {
+          "auc": 1.0,
+          "recall_at_10": 1.0,
+          "mean_rank": 1.0,
+          "score_gap_pp": 45.24391757411636,
+          "known_unscorable": [],
+          "known": 1,
+          "candidates": 50
+        },
+        "shackleton-rim": {
+          "auc": 0.9924,
+          "recall_at_10": 1.0,
+          "mean_rank": 3.8333333333333335,
+          "score_gap_pp": 0.7657263835101134,
+          "known_unscorable": [],
+          "known": 6,
+          "candidates": 50
+        }
+      }
+    },
+    "v2_multifeature_common_resolution": {
+      "summary_weighted_by_known_pairs": {
+        "auc": 0.5004406779661017,
+        "recall_at_10": 0.1864406779661017,
+        "mean_rank": 25.220338983050848,
+        "score_gap_pp": -41.45184301456671,
+        "macro_recall_at_10": 0.28923933209647495
+      },
+      "targets": {
+        "arsia-flank": {
+          "auc": 0.3671,
+          "recall_at_10": 0.14285714285714285,
+          "mean_rank": 30.285714285714285,
+          "score_gap_pp": -51.94052478937162,
+          "known_unscorable": [],
+          "known": 14,
+          "candidates": 50
+        },
+        "bagnold": {
+          "auc": 0.5357,
+          "recall_at_10": 0.25,
+          "mean_rank": 24.0,
+          "score_gap_pp": -44.48921483150171,
+          "known_unscorable": [],
+          "known": 8,
+          "candidates": 50
+        },
+        "jezero": {
+          "auc": 0.5771,
+          "recall_at_10": 0.2,
+          "mean_rank": 22.8,
+          "score_gap_pp": -41.478517526951364,
+          "known_unscorable": [],
+          "known": 15,
+          "candidates": 50
+        },
+        "lucus-planum": {
+          "auc": 0.788,
+          "recall_at_10": 0.25,
+          "mean_rank": 12.25,
+          "score_gap_pp": -22.08684798016219,
+          "known_unscorable": [],
+          "known": 4,
+          "candidates": 50
+        },
+        "malapert-massif": {
+          "auc": null,
+          "recall_at_10": null,
+          "mean_rank": null,
+          "score_gap_pp": null,
+          "known_unscorable": [],
+          "known": 0,
+          "candidates": 50
+        },
+        "marius-hills": {
+          "auc": 0.3683,
+          "recall_at_10": 0.18181818181818182,
+          "mean_rank": 30.636363636363637,
+          "score_gap_pp": -44.27155121502048,
+          "known_unscorable": [],
+          "known": 11,
+          "candidates": 50
+        },
+        "mons-mouton": {
+          "auc": null,
+          "recall_at_10": null,
+          "mean_rank": null,
+          "score_gap_pp": null,
+          "known_unscorable": [],
+          "known": 0,
+          "candidates": 50
+        },
+        "phoenix": {
+          "auc": 0.8776,
+          "recall_at_10": 1.0,
+          "mean_rank": 7.0,
+          "score_gap_pp": -16.873057065961348,
+          "known_unscorable": [],
+          "known": 1,
+          "candidates": 50
+        },
+        "shackleton-rim": {
+          "auc": 0.5606,
+          "recall_at_10": 0.0,
+          "mean_rank": 22.833333333333332,
+          "score_gap_pp": -24.698732816685627,
+          "known_unscorable": [],
+          "known": 6,
+          "candidates": 50
+        }
+      }
+    }
+  }
+}

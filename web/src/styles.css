@@ -395,6 +395,24 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
 .pairing-explanation h4 { margin: 12px 0 6px; }
 .pairing-explanation ul { padding-left: 20px; color: var(--muted); }
 .pairing-explanation a { color: var(--accent); }
+.analog-comparison { margin: 24px 0; font-size: 12px; line-height: 1.6; }
+.analog-comparison h3 { font-size: 16px; }
+.comparison-metrics { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin: 16px 0; }
+.comparison-metrics > div { border: 1px solid var(--line); padding: 12px; }
+.comparison-metrics strong, .comparison-metrics span, .comparison-period { display: block; }
+.comparison-metrics strong { font-size: 18px; }
+.comparison-metrics span, .comparison-period { color: var(--muted); }
+.comparison-table-wrap { overflow-x: auto; }
+.analog-comparison table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.analog-comparison th, .analog-comparison td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+.analog-comparison th { font-weight: 500; }
+.analog-comparison summary { cursor: pointer; }
+.analog-comparison a { color: var(--accent); }
+.location-details-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.location-detail { border-top: 1px solid var(--line); padding-top: 12px; overflow-wrap: anywhere; }
+.location-detail dt { color: var(--muted); margin-top: 10px; }
+.location-detail dd { margin: 0; }
+@media (max-width: 640px) { .location-details-pair { grid-template-columns: 1fr; } }
 .weather-pickers label { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
 .report-panel > ul { font-size: 12px; color: var(--muted); line-height: 1.7; }
 .report-panel p + h3, .report-panel ul + h3, .report-panel .note + h3 { margin-top: 30px; }

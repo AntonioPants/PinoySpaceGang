@@ -1,15 +1,15 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight, Check, ChevronRight, CircleHelp, Download, ExternalLink, Globe2, Layers3, MapPin, Orbit, Radio, Rocket, Settings2, ShieldCheck, SlidersHorizontal } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, ChevronRight, CircleHelp, Download, ExternalLink, Globe2, Layers3, MapPin, Orbit, Radio, Rocket, Settings2, SlidersHorizontal } from 'lucide-react';
 import Globe from './components/Globe';
 import TerrainChart from './components/TerrainChart';
 import Dialog from './components/Dialog';
 import TerrainExplorer from './components/TerrainExplorer';
 import ConditionsImport from './components/ConditionsImport';
 import EquipmentPicker from './game/EquipmentPicker';
-import { CatalogDetails } from '../../app/sim/viewer/components/CatalogDetails';
-import { catalogSiteToSite } from '../../app/sim/src/catalog';
+import AnalogComparison from './components/AnalogComparison';
 import type { FlightTelemetry } from '../../app/sim/src/types';
-import { analogsFor, loadCatalog, pairingOf, type Catalog } from './lib/catalog';
+import { recommendedAnalogs, loadCatalog, pairingOf, type Catalog } from './lib/catalog';
+import { hiddenBelowCutoff, percent } from './lib/matching';
 import { normalizeTargetId } from './data/sites';
 import { hasWeatherProfile, loadWeatherProfile } from './lib/weather';
 import type { EnvironmentProfile } from '../../app/lib/environment.mjs';
@@ -23,15 +23,16 @@ const FlightReport = lazy(() => import('./components/FlightReport'));
 const FlightReportNHB = lazy(() => import('./components/FlightReportNHB'));
 const MoonGlobe = lazy(() => import('./components/MoonGlobe'));
 function restoreDraft(catalog: Catalog) {
-  const { targets, analogs } = catalog;
+  const { targets } = catalog;
   try {
     const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null');
     if (typeof raw?.targetId === 'string') raw.targetId = normalizeTargetId(raw.targetId);
     if (raw && targets.some(t => t.id === raw.targetId) && raw.settings && validateSettings({ ...defaultSettings, ...raw.settings }).length === 0) {
-      return { targetId: raw.targetId as string, analogId: analogs.find(a => a.id === raw.analogId)?.id ?? analogs[0].id, settings: { ...defaultSettings, ...raw.settings } as MissionSettings };
+      const analogId = recommendedAnalogs(catalog,raw.targetId).find(s => s.id === raw.analogId)?.id;
+      return { targetId: raw.targetId as string, analogId, settings: { ...defaultSettings, ...raw.settings } as MissionSettings };
     }
   } catch { /* Browser storage can be disabled; the mission remains usable in memory. */ }
-  return { targetId: targets[0].id, analogId: analogs[0].id, settings: defaultSettings };
+  return { targetId: targets[0].id, analogId: undefined, settings: defaultSettings };
 }
 const coord = (value: number, lat = false) => `${Math.abs(value).toFixed(2)}° ${lat ? value < 0 ? 'S' : 'N' : value < 0 ? 'W' : 'E'}`;
 
@@ -62,11 +63,13 @@ function Mission({ catalog }: { catalog: Catalog }) {
   const [targetId, setTargetId] = useState(draft.targetId);
   const [settings, setSettings] = useState<MissionSettings>(draft.settings);
   const target = targets.find(t => t.id === targetId)!;
-  const analogs = useMemo(() => analogsFor(catalog, targetId), [catalog, targetId]);
-  const [step, setStep] = useState(0), [analogId, setAnalogId] = useState(draft.analogId);
-  const analog = analogs.find(a => a.id === analogId) ?? analogs[0];
+  const choices = useMemo(() => recommendedAnalogs(catalog, targetId), [catalog, targetId]);
+  const [selection, setSelection] = useState({ targetId: draft.targetId, analogId: draft.analogId });
+  const analog = choices.find(s => selection.targetId === targetId && s.id === selection.analogId)
+    ?? choices[0] ?? catalog.analogs[0];
+  const analogId = analog.id;
+  const [step, setStep] = useState(0);
   const pairing = pairingOf(catalog, targetId, analog.id);
-  const available = analogs.filter(a => a.available);
   const weatherAvailable = hasWeatherProfile(analog.id);
   const [loadedWeather, setWeather] = useState<{ siteId: string; data: EnvironmentProfile } | null>(null), [weatherError, setWeatherError] = useState('');
   const weather = loadedWeather?.siteId === analog.id ? loadedWeather.data : null;
@@ -80,16 +83,16 @@ function Mission({ catalog }: { catalog: Catalog }) {
   const weatherHour = realWeather && weather ? weather.months[String(settings.realWeatherMonth)]?.scenarios[settings.weatherScenario] : null;
   const [loadedProfile, setProfile] = useState<TerrainProfile | null>(null);
   const profile = loadedProfile?.manifest.id === analog.id ? loadedProfile : null;
-  const selectedSite = useMemo(() => {
-    const entry = catalog.entries.get(analog.id);
-    return profile && entry ? catalogSiteToSite(entry, profile.manifest, profile.buffer, {}, catalog.source) : undefined;
-  }, [profile, analog.id, catalog]);
   const [loadError, setLoadError] = useState(''), [retry, setRetry] = useState(0);
   const [dialog, setDialog] = useState<'sources' | 'mission' | null>(null);
   const [mission, setMission] = useState<MissionConfig | null>(null);
   const [saved, setSaved] = useState(false), [storageAvailable, setStorageAvailable] = useState(true);
   const [downloadError, setDownloadError] = useState('');
   const [terrainView, setTerrainView] = useState(false);
+  const selectAnalog = (id: string) => {
+    if (!choices.some(s => s.id === id)) return;
+    setSelection({targetId, analogId: id}); setTerrainView(false);
+  };
   const [flight, setFlight] = useState<FlightTelemetry | null>(null);
   const [flightSettings, setFlightSettings] = useState<MissionSettings>(draft.settings);
   // Design trial: ?style=nhb opens the report in the 1976 manual style (docs/DESIGN_FRAMEWORK.md).
@@ -114,10 +117,6 @@ function Mission({ catalog }: { catalog: Catalog }) {
     setSaved(false); setFlight(null); setMission(null);
   }, [targetId, settings, analogId]);
   const changeBody = (body: Body) => setTargetId(targets.find(t => t.body === body)!.id);
-  const selectAnalog = (id: string) => {
-    setAnalogId(id);
-    setTerrainView(analogs.some(site => site.id === id && site.available));
-  };
   const update = <K extends keyof MissionSettings>(key: K, value: MissionSettings[K]) => setSettings(s => ({ ...s, [key]: value }));
   function reviewMission() {
     if (!profile || !analog.available) return;
@@ -134,7 +133,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
   const terrainStatus = <div className={`data-notice ${loadError ? 'warning' : ''}`} role="status">
     {loadError ? <><span>{loadError}</span><button className="text-button" onClick={() => setRetry(v => v + 1)}>Retry download</button></> : <><span className={`status-dot ${profile ? '' : 'pending'}`} />{profile ? `${analog.name} terrain loaded` : 'Loading terrain pack…'}</>}
   </div>;
-  if (step === 4 && flight && mission && profile && reportStyle === 'nhb') return <Suspense fallback={<p role="status">Preparing alternate report...</p>}><FlightReportNHB flight={flight} mission={mission} profile={profile} analogEntry={catalog.entries.get(analog.id)} planetaryEntry={catalog.entries.get(target.id)} onRetry={() => {setSettings(flightSettings);setReportStyle('standard');setStep(2);}} onStandardView={() => setReportStyle('standard')} /></Suspense>;
+  if (step === 4 && flight && mission && profile && reportStyle === 'nhb') return <Suspense fallback={<p role="status">Preparing alternate report...</p>}><FlightReportNHB match={catalog.matching?.comparisons.find(p => p.planetary_id === target.id && p.earth_id === analog.id)} flight={flight} mission={mission} profile={profile} analogEntry={catalog.entries.get(analog.id)} planetaryEntry={catalog.entries.get(target.id)} onRetry={() => {setSettings(flightSettings);setReportStyle('standard');setStep(2);}} onStandardView={() => setReportStyle('standard')} /></Suspense>;
   return <>
     <a className="skip-link" href="#mission-main">Skip to mission workspace</a>
     <header className="app-header">
@@ -150,8 +149,8 @@ function Mission({ catalog }: { catalog: Catalog }) {
     <main id="mission-main">
       <section className="workspace-heading">
         <div><div className="breadcrumb">Mission workspace <span>/</span> {['Select a destination', 'Explore a testbed', 'Prepare your experiment', 'Fly the descent', 'Review the outcome'][step]}</div>
-          <h1 id="mission-title" tabIndex={-1}>{['Select a destination.', 'Find your Earth testbed.', 'Prepare your equipment.', 'Mission control.', 'Flight debrief.'][step]}</h1>
-          <p>{['Explore the Moon and Mars. Choose a region to test your landing strategy on Earth.', 'Inspect a measured landscape and the evidence behind its proposed pairing.', 'Choose a loadout and initial conditions. Fine-tune the experiment from the ship systems console.', 'Prepare aboard your ship, launch the mission and follow the Earth descent.', 'Review the touchdown, inspect telemetry and prepare the next run.'][step]}</p></div>
+          <h1 id="mission-title" tabIndex={-1}>{['Select a destination.', 'Choose your Earth testbed.', 'Prepare your equipment.', 'Mission control.', 'Flight debrief.'][step]}</h1>
+          <p>{['Explore the Moon and Mars. Choose a region to test your landing strategy on Earth.', 'Compare up to ten Earth locations and choose one for your mission.', 'Choose a loadout and initial conditions. Fine-tune the experiment from the ship systems console.', 'Prepare aboard your ship, launch the mission and follow the Earth descent.', 'Review the touchdown, inspect telemetry and prepare the next run.'][step]}</p></div>
         <div className="prototype-label"><Radio size={14} /><span>Mission workspace<small>{step === 0 ? 'Moon / Mars / Earth' : `${target.body} → Earth`}</small></span></div>
       </section>
       {step === 0 && <section className="workspace destination-workspace" aria-label="Planetary destination">
@@ -168,40 +167,37 @@ function Mission({ catalog }: { catalog: Catalog }) {
           </button>)}</div>
           <div className="site-details"><span className="small-label">Selected target</span><h3>{target.name}</h3><div className="coordinates"><MapPin size={13} />{coord(target.lat, true)} <span>/</span> {coord(target.lon)}</div><p>{target.description}</p><div className="tags">{target.interests.map(tag => <span key={tag}>{tag}</span>)}</div></div>
           <div className="note"><CircleHelp size={17} /><p>Targets are study areas from the team’s site catalog, not approved landing sites. Planetary terrain is coarse (150–500 m per sample).</p></div>
-          <button className="primary-button wide" onClick={() => setStep(1)}>Explore Earth analogs <ArrowRight size={18} /></button>
+          <button className="primary-button wide" disabled={!choices.length} onClick={() => setStep(1)}>Compare Earth locations <ArrowRight size={18} /></button>
+          {!choices.length && <p role="status">No Earth candidates with verified terrain inputs are available for this target.</p>}
         </aside>
       </section>}
       {step === 1 && <section className="workspace analog-workspace" aria-label="Earth analog comparison">
         <div className="analog-map-panel">
-          <div className="panel-topline"><span><Globe2 size={17} /> Earth testbeds</span><span className="small-label">{analogs.length} candidate locations</span></div>
+          <div className="panel-topline"><span><Globe2 size={17} /> Earth testbeds</span><span className="small-label">{choices.length} candidates</span></div>
           <div className="terrain-mode-switch segmented"><button aria-pressed={!terrainView} onClick={()=>setTerrainView(false)}>Earth globe</button><button aria-pressed={terrainView} disabled={!analog.available || !profile} onClick={()=>setTerrainView(true)}>Explore 3D terrain</button></div>
-          {terrainView && analog.available && profile ? <TerrainExplorer profile={profile} /> : <Globe body="Earth" points={analogs} selected={analogId} onSelect={selectAnalog} />}
+          {terrainView && analog.available && profile ? <TerrainExplorer profile={profile} /> : <Globe body="Earth" points={choices} selected={analogId} onSelect={selectAnalog} />}
+          <div className="analog-list" role="group" aria-label="Earth location candidates">
+            {choices.map((site,index) => {
+              const match = catalog.matching?.comparisons.find(p => p.planetary_id === targetId && p.earth_id === site.id);
+              return <button key={site.id} className={site.id === analogId ? 'active' : ''} aria-pressed={site.id === analogId} onClick={() => selectAnalog(site.id)}>
+                <span>{index+1}</span><span><strong>{site.name}</strong><small>{site.region}</small>
+                  <small>Match {percent(match?.analog_score_percent)} · Terrain {percent(match?.terrain_similarity_percent)}</small>
+                </span>{site.id === analogId && <Check size={15}/>}</button>;
+            })}
+          </div>
+          <p className="field-help">Research-backed pairings first, then highest match (landform type plus terrain shape).{(h => h && h.count > 0 ? ` ${h.count} other location${h.count === 1 ? ' is' : 's are'} hidden because the match is below ${h.cutoff}%.` : '')(hiddenBelowCutoff(catalog.matching, targetId))} Scores are not validated accuracy.</p>
           {!terrainView && analog.available && profile && <button className="terrain-enter text-button" onClick={()=>setTerrainView(true)}>Zoom into {analog.name}’s measured terrain <ArrowRight size={14}/></button>}
-          <div className="analog-list">{analogs.map(site => <button key={site.id} className={site.id === analogId ? 'active' : ''} aria-pressed={site.id === analogId} onClick={() => selectAnalog(site.id)}><MapPin size={15} /><span><strong>{site.name}</strong><small>{!site.available ? 'Awaiting data' : pairingOf(catalog, targetId, site.id) ? `Proposed pairing · terrain ${pairingOf(catalog, targetId, site.id)!.terrain_score?.toFixed(2) ?? '–'}` : 'Not paired with this target'}</small></span>{site.id === analogId && <Check size={15} />}</button>)}</div>
         </div>
         <div className="analog-details">
           <div className="pair-label">{target.name} <ArrowRight size={14} /> Earth testbed</div>
-          <div className="section-heading"><h2>{analog.name}</h2><span className={`badge ${analog.available ? 'mint' : ''}`}>{!analog.available ? 'Candidate' : pairing ? 'Proposed pairing' : 'Terrain available'}</span></div>
+          <div className="section-heading"><h2>{analog.name}</h2><span className={`badge ${analog.available ? 'mint' : ''}`}>{!analog.available ? 'Unavailable' : 'Selected'}</span></div>
           <p className="location-line">{analog.region} <span> / </span> {coord(analog.lat, true)}</p><p className="analog-description">{analog.description}</p>
+          <AnalogComparison catalog={catalog} targetId={targetId} earthId={analog.id} />
           {analog.available ? <>
             {terrainStatus}
             {profile && <><div className="terrain-stats"><div><strong>{profile.sampleSpacingM}<small> m</small></strong><span>Grid spacing</span></div><div><strong>{((profile.manifest.grid.columns - 1) * profile.sampleSpacingM / 1000).toFixed(1)}<small> km</small></strong><span>Patch width</span></div><div><strong>{(profile.manifest.statistics?.relief_m ?? analog.reliefM)?.toFixed(0) ?? '–'}<small> m</small></strong><span>Terrain relief</span></div></div><TerrainChart profile={profile} /></>}
-            <section className="evidence-panel"><div className="section-heading"><h3><ShieldCheck size={18} /> Why this analog?</h3><span className="badge">{pairing ? 'Proposed, not validated' : 'No pairing proposed'}</span></div>
-              <div className="evidence-row"><span className="evidence-mark">+</span><div><strong>What the catalog records</strong><p>{[analog.morphology, analog.substrate].filter(Boolean).join(' · ') || 'No surface classification'}. {analog.description}</p></div></div>
-              <div className="evidence-row"><span className="evidence-mark amber">!</span><div><strong>Know where the analogy ends</strong><p>{pairing ? <>{pairing.geology_comparison ? `Catalog labels: ${pairing.geology_comparison.same_morphology_label ? 'same' : 'different'} landform, ${pairing.geology_comparison.same_substrate_label ? 'same' : 'different'} surface material. ` : ''}{pairing.interpretation} </> : 'The data team has not proposed this site as an analog for the selected target. '}The {profile?.sampleSpacingM ?? 30} m grid cannot resolve landing-scale boulders.</p></div></div>
-              <div className="score-line"><span>Terrain similarity (slope, roughness, relief)</span><strong>{typeof pairing?.terrain_score === 'number' ? `${pairing.terrain_score.toFixed(2)} of 1` : 'Not calculated'}</strong></div>
-              {pairing && pairing.combined_score === null && <p className="field-help">Combined score withheld: {pairing.reason}</p>}
-              {pairing?.explanation && <details className="pairing-explanation">
-                <summary>Pair-specific evidence and limitations (proposed, unvalidated)</summary>
-                <h4>What matches</h4><ul>{pairing.explanation.matches.map(text => <li key={text}>{text}</li>)}</ul>
-                <h4>What differs</h4><ul>{pairing.explanation.differences.map(text => <li key={text}>{text}</li>)}</ul>
-                <p>{pairing.explanation.scope}</p>
-                <ul>{pairing.explanation.sources.map(url => <li key={url}><a href={url} target="_blank" rel="noreferrer">{url}</a></li>)}</ul>
-              </details>}
-              <button className="text-button" onClick={() => setDialog('sources')}>Inspect evidence & sources <ExternalLink size={13} /></button>
-            </section>
-          </> : <div className="empty-data"><Layers3 size={26} /><h3>Terrain handoff pending</h3><p>This candidate is listed in the project brief. Choose {available[0].name} to configure a mission with real elevation data.</p><button className="subtle-button" onClick={() => selectAnalog(available[0].id)}>Use {available[0].name}</button></div>}
-          <details className="pairing-explanation"><summary>Explore full site data and provenance</summary><CatalogDetails site={selectedSite} /></details>
+
+          </> : <div className="empty-data"><Layers3 size={26} /><h3>Terrain handoff pending</h3><p>No usable terrain is available for this recommendation yet.</p></div>}
           <div className="panel-actions"><button className="subtle-button" onClick={() => setStep(0)}><ArrowLeft size={16} /> Destination</button><button className="primary-button" disabled={!analog.available || !profile} onClick={() => setStep(2)}>Configure mission <ArrowRight size={17} /></button></div>
         </div>
       </section>}
@@ -241,7 +237,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
         </div>
       </section>}
       {step === 3 && mission && profile && <Suspense fallback={<div className="flight-workspace empty-data" role="status">Preparing ship systems…</div>}><GameSession target={target} entry={catalog.entries.get(analog.id)} initialMission={mission} settings={settings} profile={profile} weather={weather} weatherAvailable={weatherAvailable} onExit={next => {setSettings(next);setStep(2);}} onReport={(report, finalMission, finalSettings)=>{setMission(finalMission);setFlightSettings(finalSettings);setFlight(report);setStep(4);}} /></Suspense>}
-      {step === 4 && flight && mission && profile && <Suspense fallback={<p role="status">Preparing debrief…</p>}><FlightReport analogEntry={catalog.entries.get(analog.id)} planetaryEntry={catalog.entries.get(target.id)} flight={flight} mission={mission} profile={profile} onRetry={()=>{setSettings(flightSettings);setStep(2);}} /></Suspense>}
+      {step === 4 && flight && mission && profile && <Suspense fallback={<p role="status">Preparing debrief…</p>}><FlightReport match={catalog.matching?.comparisons.find(p => p.planetary_id === target.id && p.earth_id === analog.id)} analogEntry={catalog.entries.get(analog.id)} planetaryEntry={catalog.entries.get(target.id)} flight={flight} mission={mission} profile={profile} onRetry={()=>{setSettings(flightSettings);setStep(2);}} /></Suspense>}
       {step === 4 && flight && <p className="field-help"><button className="text-button" onClick={() => setReportStyle('nhb')}>View this report in the 1976 manual style (design trial)</button></p>}
       <footer className="workspace-footer"><span><span className="status-dot" /> {step === 0 ? 'Explore first. Validate with evidence.' : 'Real terrain. Explicit assumptions.'}</span><span>Earth data: Copernicus DEM <span className="footer-separator">/</span> <button className="text-button" onClick={() => setDialog('sources')}>Credits & limitations</button></span></footer>
     </main>

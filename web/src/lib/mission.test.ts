@@ -33,7 +33,7 @@ describe('terrain to mission handoff', () => {
     expect(mission.planetaryTarget.gravity).toBe(1.62);
   });
   it('labels the simplified constant Mars atmosphere explicitly', () => {
-    const mission = buildMission(targets[2], fixture().profile, defaultSettings);
+    const mission = buildMission(targets.find(t => t.body === 'Mars')!, fixture().profile, defaultSettings);
     expect(mission.environment.atmosphereModel).toBe('mars-constant');
     expect(mission.environment.gravityMs2).toBe(3.72);
   });

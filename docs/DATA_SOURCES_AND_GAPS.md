@@ -6,13 +6,13 @@ the catalog. This report distinguishes implemented code from ingested data.
 
 | Provider | Used | Investigated / gap |
 |---|---|---|
-| ESA/Copernicus | GLO-30 public AWS mirror windows for all eleven Earth sites, including existing Kilbourne | Approximate 30m DSM, mainly 2011–2015; not bare-earth soil, not a current Sentinel radar retrieval. Quality masks not ingested. |
+| ESA/Copernicus | GLO-30 public AWS mirror windows for all fifty Earth sites, including existing Kilbourne and thirty-five international additions | Approximate 30m DSM, mainly 2011–2015; not bare-earth soil, not a current Sentinel radar retrieval. Quality masks not ingested. |
 | NASA PDS / USGS | MGS MOLA DEM mosaic windows for Jezero, Bagnold, Arsia, Phoenix and Lucus Planum | Approx 463m equatorial native postings; interpolated altimetry cannot resolve dunes/polygons/caves. NASA PDS science redistributed as USGS GeoTIFF, not a new PDS raw-product download. |
-| NASA LRO / USGS | LOLA March 2014 mosaic windows for Marius Hills and Shackleton | Approx 118m equatorial postings, variable physical spacing with latitude; scale 0.5 applied. No cave geometry. |
+| NASA LRO / USGS | LOLA March 2014 mosaic windows for Marius Hills, Shackleton, Malapert Massif and Mons Mouton | Approx 118m equatorial postings, variable physical spacing with latitude; scale 0.5 applied. No cave geometry or base-safety certification. |
 | NASA POWER | 2024 T2M, WS10M, TS, ALLSKY_SRF_ALB daily responses for Earth sites | MERRA-2 temperature/wind regional reanalysis and CERES broadband albedo. 2m air and skin temperature are kept distinct. No vector wind supplied. Missing days excluded and count retained. |
 | NASA Earthdata Search | Existing configurable `fetch_earthdata.py` retained; no new Earthdata granules ingested | MODIS MOD11A2 surface temperature and MCD43A3 BRDF/albedo are useful future higher-resolution replacements. They require product QA and Earthdata Login; no credentials supplied or used. POWER is a separate NASA service, not proof of Earthdata granule ingestion. |
 | NASA Worldview | Discovery only, no screenshots treated as science | Trace MODIS visualizations back to MOD11/MCD43 products and QA before quantitative use. |
-| LRO Diviner | GCP cells for Marius Hills and Shackleton, selected with verified HTTP byte ranges | LRO-L-DLRE-5-GCP-V1.0 bins observations by 0.5-degree coordinates and 0.25h local time, 2009-07-05 through 2015-04-01. Reported min/max are extrema of available bolometric brightness-temperature bins, not footprint extremes or current temperature. Do not compare these with Earth daily air temperature. |
+| LRO Diviner | GCP cells for all four lunar sites, selected with verified HTTP byte ranges | LRO-L-DLRE-5-GCP-V1.0 bins observations by 0.5-degree coordinates and 0.25h local time, 2009-07-05 through 2015-04-01. Reported min/max are extrema of available bolometric brightness-temperature bins, not footprint extremes or current temperature. Do not compare these with Earth daily air temperature. |
 | CSA RCM | No science products ingested | EODMS public account required; vetted access may be required for finer products. Radar backscatter is not elevation or soil friction. No site-matched SAR inversion method implemented. |
 | CSA RADARSAT-1 | No science products ingested | Archive investigated as possible radar context. No appropriate scene selected/processed; this is an unfinished optional radar integration, not a fabricated authentication failure. |
 
@@ -36,6 +36,15 @@ active-layer depth and ground temperature require matched field products or
 higher-resolution data; regional DSM/air temperature cannot fill those fields.
 
 ## Access and remaining steps
+
+The [international handoff](WORLD_EARTH_CATALOG.md) covers Lanzarote, Askja,
+Yungay, Sossusvlei, Lonar and Wolfe Creek, including southern-hemisphere projections
+and the distinction between unknown material classifications and simulation inputs.
+
+See [lunar additions and tested alternative data routes](LUNAR_AREAS_AND_DATA_UPGRADES.md)
+for the two new lunar packs, actual 3DEP point queries, processed ERA5 alternatives
+and HiRISE product discovery. Those alternatives are an assessment, not silent
+replacements for the reviewed production conditions.
 
 Earthdata: set credentials outside Git using Earthdata Login/netrc or environment
 variables. The existing fetch command supports configurable collection/bounds:

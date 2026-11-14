@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "payun-matru",
+  "name": "Payun Matru western flank study area",
+  "body": "earth",
+  "grid": {
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30.0,
+    "dtype": "float32",
+    "byte_order": "little-endian",
+    "sample_file": "elevation.f32",
+    "order": "north-first, west-first",
+    "crs_wkt": "PROJCRS[\"WGS 84 / UTM zone 19S\",BASEGEOGCRS[\"WGS 84\",ENSEMBLE[\"World Geodetic System 1984 ensemble\",MEMBER[\"World Geodetic System 1984 (Transit)\"],MEMBER[\"World Geodetic System 1984 (G730)\"],MEMBER[\"World Geodetic System 1984 (G873)\"],MEMBER[\"World Geodetic System 1984 (G1150)\"],MEMBER[\"World Geodetic System 1984 (G1674)\"],MEMBER[\"World Geodetic System 1984 (G1762)\"],MEMBER[\"World Geodetic System 1984 (G2139)\"],MEMBER[\"World Geodetic System 1984 (G2296)\"],ELLIPSOID[\"WGS 84\",6378137,298.257223563,LENGTHUNIT[\"metre\",1]],ENSEMBLEACCURACY[2.0]],PRIMEM[\"Greenwich\",0,ANGLEUNIT[\"degree\",0.0174532925199433]],ID[\"EPSG\",4326]],CONVERSION[\"UTM zone 19S\",METHOD[\"Transverse Mercator\",ID[\"EPSG\",9807]],PARAMETER[\"Latitude of natural origin\",0,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8801]],PARAMETER[\"Longitude of natural origin\",-69,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8802]],PARAMETER[\"Scale factor at natural origin\",0.9996,SCALEUNIT[\"unity\",1],ID[\"EPSG\",8805]],PARAMETER[\"False easting\",500000,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8806]],PARAMETER[\"False northing\",10000000,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8807]]],CS[Cartesian,2],AXIS[\"(E)\",east,ORDER[1],LENGTHUNIT[\"metre\",1]],AXIS[\"(N)\",north,ORDER[2],LENGTHUNIT[\"metre\",1]],USAGE[SCOPE[\"Navigation and medium accuracy spatial referencing.\"],AREA[\"Between 72\u00b0W and 66\u00b0W, southern hemisphere between 80\u00b0S and equator, onshore and offshore. Argentina. Bolivia. Brazil. Chile. Colombia. Peru.\"],BBOX[-80,-72,0,-66]],ID[\"EPSG\",32719]]",
+    "affine": [
+      30.0,
+      0.0,
+      470683.8780449258,
+      0.0,
+      -30.0,
+      5974057.42223023
+    ]
+  },
+  "local_frame": {
+    "vertical_offset_m": 2417.0
+  },
+  "source": {
+    "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S37_00_W070_00_DEM/Copernicus_DSM_COG_10_S37_00_W070_00_DEM.tif",
+    "native_spacing_m_approx": 30.0,
+    "subset_sha256": "1e6f236b75bb1242f578c311be8ac7744c9e9456a315c708e3003d0950462e80",
+    "vertical_datum": "EGM2008",
+    "coverage": "Copernicus primarily 2011\u20132015",
+    "subset_file": "source-window.tif",
+    "receipt_file": "source-receipt.json"
+  },
+  "limitations": [
+    "Regional surface only; no caves, wheel-scale hazards, or landing safety certification.",
+    "Native sampling varies with latitude; output spacing is not source resolving power."
+  ],
+  "attribution": "produced using Copernicus WorldDEM-30 \u00a9 DLR e.V. 2010-2014 and \u00a9 Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved",
+  "license_url": "/terrain/kilbourne-hole-v1/COPERNICUS-LICENSE.pdf"
+}

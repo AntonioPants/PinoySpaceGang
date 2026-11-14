@@ -111,11 +111,14 @@ def audit_pair(earth, planet, a, b):
                     'planetary': {k:v for k,v in b.items() if k!='samples'} if b else None}}
 
 
-def attach_accuracy(catalog, public):
+def attach_accuracy(catalog, public, sample_cache=None):
     public = Path(public)
     byid = {s['id']:s for s in catalog['sites']}
     used = {p[k] for p in catalog['pairings'] for k in ('earth_id','planetary_id')}
-    samples = {sid:site_samples(byid[sid],public) for sid in sorted(used)}
+    samples = sample_cache if sample_cache is not None else {}
+    for sid in sorted(used):
+        if sid not in samples:
+            samples[sid] = site_samples(byid[sid],public)
     for pair in catalog['pairings']:
         a,b=pair['earth_id'],pair['planetary_id']
         pair['accuracy_check'] = audit_pair(byid[a],byid[b],samples[a],samples[b])

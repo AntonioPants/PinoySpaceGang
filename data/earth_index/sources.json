@@ -1,0 +1,2284 @@
+{
+  "schema_version": "1.0.0",
+  "region_receipts": {
+    "amboy-region": {
+      "region": {
+        "id": "amboy-region",
+        "name": "Amboy Crater region / Cima volcanic field study area region",
+        "bbox": [
+          -115.9979,
+          34.369707,
+          -115.53184,
+          35.396587
+        ],
+        "seed_site_ids": [
+          "amboy",
+          "cima-lava-field"
+        ],
+        "country": "US",
+        "anchor": [
+          -115.78,
+          34.55
+        ],
+        "target_types": [
+          "shield_flank",
+          "volcanic_plain"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://www.blm.gov/visit/amboy-crater-national-natural-landmark",
+        "sources": [
+          "https://www.blm.gov/visit/amboy-crater-national-natural-landmark",
+          "https://www.nps.gov/places/the-lava-tube-at-mojave.htm"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32611",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N34_00_W116_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N34_00_W116_00_DEM/Copernicus_DSM_COG_10_N34_00_W116_00_DEM.tif",
+              "sha256": "d33e98701a8927cd37430841d4d2c316a65641cc6889e1c492e7b9a0f660868c"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N35_00_W116_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N35_00_W116_00_DEM/Copernicus_DSM_COG_10_N35_00_W116_00_DEM.tif",
+              "sha256": "e24669f739b2d5216495b36070a749ced07d1e2005dd0a511739ce6b7bf40860"
+            }
+          ],
+          "sha256": "1af4db07eabf0b0289d76078bbb6f5c6ceafb38a26d5df4f115497433b0b581a",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N33W117_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N33W117_Map.tif",
+              "sha256": "e0da12cba97b3bf9480fd7d88efb4e4518aed6448e4a5d8a83a40d4fbe12545b"
+            }
+          ],
+          "sha256": "e5bb465eafcb06ec8ae048b6862fd007abd6d5f251ef215eef28e5279a40328c",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "askja-east-region": {
+      "region": {
+        "id": "askja-east-region",
+        "name": "Askja eastern volcanic terrain study area region",
+        "bbox": [
+          -17.024816,
+          64.875615,
+          -16.175184,
+          65.234381
+        ],
+        "seed_site_ids": [
+          "askja-east"
+        ],
+        "country": "Iceland",
+        "anchor": [
+          -16.6,
+          65.055
+        ],
+        "target_types": [
+          "shield_flank",
+          "volcanic_plain"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://www.vatnajokulsthjodgardur.is/en/areas/askja/askja-eldstod",
+        "sources": [
+          "https://www.vatnajokulsthjodgardur.is/en/areas/askja/askja-eldstod"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32628",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N64_00_W018_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N64_00_W018_00_DEM/Copernicus_DSM_COG_10_N64_00_W018_00_DEM.tif",
+              "sha256": "e697624e524d825f38af9966cf292f2d8b9c7b44b470e07a4aeeb79eab439abd"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N64_00_W017_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N64_00_W017_00_DEM/Copernicus_DSM_COG_10_N64_00_W017_00_DEM.tif",
+              "sha256": "ef1caf534b843ebb0bc3226c99f29f23bd08e8d2aa6d7096ab9c02a4bf1544b4"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N65_00_W018_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N65_00_W018_00_DEM/Copernicus_DSM_COG_10_N65_00_W018_00_DEM.tif",
+              "sha256": "7d681f32494a6d163a0f357b6446a525e50437d6429a4f1bcdfa0607140714e2"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N65_00_W017_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N65_00_W017_00_DEM/Copernicus_DSM_COG_10_N65_00_W017_00_DEM.tif",
+              "sha256": "1c663c1b6c3263c763ee40e5e20b85dfacdfeddaf3c41acb6b60cac8581cd56e"
+            }
+          ],
+          "sha256": "32c9ea874aac95e615c00b741e3cdd9494071490dfb2a55d017aeef7b7e55c9f",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N63W018_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N63W018_Map.tif",
+              "sha256": "2cd9f61d735c41beff27a470d773773f5b324efb5eb2f376f8d01f288e7fdd05"
+            }
+          ],
+          "sha256": "06bf70f1918bd0ed1b7ea726d69c35b4c769131d00430e58e363a654bda2bd65",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "atacama-yungay-region": {
+      "region": {
+        "id": "atacama-yungay-region",
+        "name": "Atacama Yungay regional study area region",
+        "bbox": [
+          -70.056678,
+          -24.260569,
+          -69.663322,
+          -23.899426
+        ],
+        "seed_site_ids": [
+          "atacama-yungay"
+        ],
+        "country": "Chile",
+        "anchor": [
+          -69.86,
+          -24.08
+        ],
+        "target_types": [
+          "layered_deltaic"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://ahed.nasa.gov/about/about-image?id=4",
+        "sources": [
+          "https://ahed.nasa.gov/about/about-image?id=4"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32719",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S25_00_W071_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S25_00_W071_00_DEM/Copernicus_DSM_COG_10_S25_00_W071_00_DEM.tif",
+              "sha256": "fbe8f6d1b2c68aeb8ce7032dc0b003e6f3fc0717136cb1d426f7d86465086a0f"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S25_00_W070_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S25_00_W070_00_DEM/Copernicus_DSM_COG_10_S25_00_W070_00_DEM.tif",
+              "sha256": "ac7b8fce2e8598c5d522fd0f6ff0b4a1ae6f6c5aecda55671fc6e2bd82ec7710"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S24_00_W071_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S24_00_W071_00_DEM/Copernicus_DSM_COG_10_S24_00_W071_00_DEM.tif",
+              "sha256": "2562c4e6fac92922caa80941505eabf6998be1a32d139a8fe07c78632bc4ea9b"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S24_00_W070_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S24_00_W070_00_DEM/Copernicus_DSM_COG_10_S24_00_W070_00_DEM.tif",
+              "sha256": "4d8745aed594bac867a2fe434fbf7ea7d092580b077de396e67874febb2730f3"
+            }
+          ],
+          "sha256": "0d8b25946ba3c4f60ebf48b0d2583b9416651d0f2efb719c48ac451d66a5a66b",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_S27W072_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S27W072_Map.tif",
+              "sha256": "4ad4d29507703ad8e8443555ecc08c2f08d00361ae1723b7fe178a9935710740"
+            },
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_S24W072_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S24W072_Map.tif",
+              "sha256": "c16525824d76040e6c5ef610ccb903d7bbb28a8b05e1aa21c1c34789e807724b"
+            }
+          ],
+          "sha256": "3919a6208ecdb4a1b59f5125c0df937330f14cd093726b221d0c0bd92a16c85d",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "badain-jaran-region": {
+      "region": {
+        "id": "badain-jaran-region",
+        "name": "Badain Jaran dune study area region",
+        "bbox": [
+          102.21637,
+          39.649868,
+          102.68363,
+          40.010126
+        ],
+        "seed_site_ids": [
+          "badain-jaran"
+        ],
+        "country": "China",
+        "anchor": [
+          102.45,
+          39.83
+        ],
+        "target_types": [
+          "dune_field"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://whc.unesco.org/en/list/1638/",
+        "sources": [
+          "https://whc.unesco.org/en/list/1638/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32648",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N39_00_E102_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N39_00_E102_00_DEM/Copernicus_DSM_COG_10_N39_00_E102_00_DEM.tif",
+              "sha256": "19dd4bc8c6c36f7083ab54f4e3066c8b6e389804b6ba74dffe0c3ea5ce33777f"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N40_00_E102_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N40_00_E102_00_DEM/Copernicus_DSM_COG_10_N40_00_E102_00_DEM.tif",
+              "sha256": "c446df4410182de2f7ff54c1fb2cc26fe41a797d977057d947370ef921567cf5"
+            }
+          ],
+          "sha256": "a9b24720b1b37accc67efb2599b7751b07727721510f1b9e2a61a1aed038078e",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N39E102_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N39E102_Map.tif",
+              "sha256": "c12a2b06b611acade4382ddaf62eecefd3b7c18b813b56426d05bfcd74a2c0b1"
+            }
+          ],
+          "sha256": "52905d14acd7ca276f184bdbc2d0f6c1c846dfd420a168aa00ba7098380af8e7",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "badwater-region": {
+      "region": {
+        "id": "badwater-region",
+        "name": "Badwater Basin region",
+        "bbox": [
+          -117.047509,
+          36.064758,
+          -116.602491,
+          36.425237
+        ],
+        "seed_site_ids": [
+          "badwater"
+        ],
+        "country": "US",
+        "anchor": [
+          -116.825,
+          36.245
+        ],
+        "target_types": [
+          "layered_deltaic"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://doi.org/10.1029/2004JE002315",
+        "sources": [
+          "https://doi.org/10.1029/2004JE002315"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32611",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N36_00_W118_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N36_00_W118_00_DEM/Copernicus_DSM_COG_10_N36_00_W118_00_DEM.tif",
+              "sha256": "f5d944b922c0ffab0be9272aed36687ef520ed2b4a52b47432027672b32a7568"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N36_00_W117_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N36_00_W117_00_DEM/Copernicus_DSM_COG_10_N36_00_W117_00_DEM.tif",
+              "sha256": "1973fbf869dcfdbcda8e22793a9e6938390eb990cbe7ab471309f34434b4e77f"
+            }
+          ],
+          "sha256": "452b98ef05059ee1f7ae587667cefd274e12f4bec3e080cdaa32b5fd0bb00ec2",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N36W120_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N36W120_Map.tif",
+              "sha256": "a667a78591c6b654597df9882dc5a76f5136affadc20896171e096758eb73445"
+            },
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N36W117_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N36W117_Map.tif",
+              "sha256": "e65917c19cb4e525029e719768f9b66b574c74d894490d19d5737f1ed770edce"
+            }
+          ],
+          "sha256": "052533b28a557f6ec6e1a1b9df368e772429fd6863bb249ea1d71a1b179cbed9",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "bardenas-blanca-region": {
+      "region": {
+        "id": "bardenas-blanca-region",
+        "name": "Bardenas Blanca badlands study area region",
+        "bbox": [
+          -1.732195,
+          42.029942,
+          -1.247805,
+          42.390052
+        ],
+        "seed_site_ids": [
+          "bardenas-blanca"
+        ],
+        "country": "Spain",
+        "anchor": [
+          -1.49,
+          42.21
+        ],
+        "target_types": [
+          "layered_deltaic"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://www.unesco.org/en/mab/bardenas-reales",
+        "sources": [
+          "https://www.unesco.org/en/mab/bardenas-reales"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32630",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N42_00_W002_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N42_00_W002_00_DEM/Copernicus_DSM_COG_10_N42_00_W002_00_DEM.tif",
+              "sha256": "a8c1f26cf08718f65a632170e1c06779bb8ea0d24a63668a50ad46d793a5653a"
+            }
+          ],
+          "sha256": "131d6ee62bf4467b3aa29e19958a9895f970b4ff5559de91a785282f971dd64c",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N42W003_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N42W003_Map.tif",
+              "sha256": "be43e3ab3a41b8a29aebcf5ed3db243226f62807a9d512a571f447708e9df668"
+            }
+          ],
+          "sha256": "cf5522c03ba4bd0b4cd62c91e52822a73bc82c5526a79e5e943ce621bdb02ad3",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "barrow-observatory-region": {
+      "region": {
+        "id": "barrow-observatory-region",
+        "name": "Barrow Environmental Observatory regional context region",
+        "bbox": [
+          -157.158097,
+          71.100751,
+          -156.041903,
+          71.459245
+        ],
+        "seed_site_ids": [
+          "barrow-observatory"
+        ],
+        "country": "US",
+        "anchor": [
+          -156.6,
+          71.28
+        ],
+        "target_types": [
+          "polar_ice"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://tc.copernicus.org/articles/20/265/2026/tc-20-265-2026.html",
+        "sources": [
+          "https://tc.copernicus.org/articles/20/265/2026/tc-20-265-2026.html"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32604",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N71_00_W158_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N71_00_W158_00_DEM/Copernicus_DSM_COG_10_N71_00_W158_00_DEM.tif",
+              "sha256": "a3783961744df1815d14b389a7fe2bac2997891589e6edbe32b33a549f03cc98"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N71_00_W157_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N71_00_W157_00_DEM/Copernicus_DSM_COG_10_N71_00_W157_00_DEM.tif",
+              "sha256": "61af5370bb7f92c8813c561aa50a7d3d743513f70d0d10f8991a89947c3c1ab7"
+            }
+          ],
+          "sha256": "4b68cf5b7adafdf1067815daa3bc0f41d38d0e6767d2c7dcc05c0e5f231cf84d",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N69W159_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N69W159_Map.tif",
+              "sha256": "ab75c00edb3e5650623080bda4cabd4b3513f083b6c64d805a86a9204493d288"
+            }
+          ],
+          "sha256": "47b18be6559e8871b9bee7e7172e0400c0701e57873a888dd6b5d9efeab97649",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "bisti-badlands-region": {
+      "region": {
+        "id": "bisti-badlands-region",
+        "name": "Bisti badlands study area region",
+        "bbox": [
+          -108.47258,
+          36.089759,
+          -108.02742,
+          36.450236
+        ],
+        "seed_site_ids": [
+          "bisti-badlands"
+        ],
+        "country": "US",
+        "anchor": [
+          -108.25,
+          36.27
+        ],
+        "target_types": [
+          "layered_deltaic"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://www.blm.gov/programs/national-conservation-lands/new-mexico/bisti-de-na-zin-wilderness",
+        "sources": [
+          "https://www.blm.gov/programs/national-conservation-lands/new-mexico/bisti-de-na-zin-wilderness"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32612",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N36_00_W109_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N36_00_W109_00_DEM/Copernicus_DSM_COG_10_N36_00_W109_00_DEM.tif",
+              "sha256": "b331e26e50db435cbc3868df03cded7671053edeb1e85d7485b70742c730b6db"
+            }
+          ],
+          "sha256": "ed7b270076e2b442b8dee218ef9c1133bbbc24ac4e21bd5f7141d4dec75cb9a6",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N36W111_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N36W111_Map.tif",
+              "sha256": "07d1fdbf36e9ed12520da4805a37d1f6812c1aeb3c3ef519fc0a43e42647949e"
+            }
+          ],
+          "sha256": "378beb572b0703caa7e882e79ae616f4ece7e48717c5b3d3d30dfff8c584d9bc",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "bromo-sandsea-region": {
+      "region": {
+        "id": "bromo-sandsea-region",
+        "name": "Bromo Sandsea caldera study area region",
+        "bbox": [
+          112.768609,
+          -8.120838,
+          113.131391,
+          -7.75916
+        ],
+        "seed_site_ids": [
+          "bromo-sandsea"
+        ],
+        "country": "Indonesia",
+        "anchor": [
+          112.95,
+          -7.94
+        ],
+        "target_types": [
+          "volcanic_plain"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://science.nasa.gov/earth/earth-observatory/gunung-bromo-indonesia-5062/",
+        "sources": [
+          "https://science.nasa.gov/earth/earth-observatory/gunung-bromo-indonesia-5062/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32749",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S09_00_E112_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S09_00_E112_00_DEM/Copernicus_DSM_COG_10_S09_00_E112_00_DEM.tif",
+              "sha256": "383f4b0be6de31c2913420017b718b924aea07707417977c434086527769151d"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S09_00_E113_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S09_00_E113_00_DEM/Copernicus_DSM_COG_10_S09_00_E113_00_DEM.tif",
+              "sha256": "bffdf416e194db1b29a37a0f740a2b56396d97ef5df06c494ad56c9db2428eed"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S08_00_E112_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S08_00_E112_00_DEM/Copernicus_DSM_COG_10_S08_00_E112_00_DEM.tif",
+              "sha256": "780d4e16049fc0fab1c0f68215b4fa02cf920353b46818d443d9e214cffd36cd"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S08_00_E113_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S08_00_E113_00_DEM/Copernicus_DSM_COG_10_S08_00_E113_00_DEM.tif",
+              "sha256": "cbac4de4a095eb91601d85d7a0bd64eabb1e74a53f8367c1e297e7edef974758"
+            }
+          ],
+          "sha256": "a53cafd2446cd9c1871d872530ee6e52cae26c63fb3633bac7ae849d35c43a03",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_S09E111_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S09E111_Map.tif",
+              "sha256": "e8b85b12f763942409bba6ac354e0b90f9e09e94503f4e36e79c38535a20dbd5"
+            }
+          ],
+          "sha256": "0de922b467cc8af9f19ba711e2de9a7ad81e40dbe805ac30f94668250c92e717",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "capitol-reef-region": {
+      "region": {
+        "id": "capitol-reef-region",
+        "name": "Capitol Reef sedimentary study area region",
+        "bbox": [
+          -111.358578,
+          38.09982,
+          -110.901422,
+          38.460175
+        ],
+        "seed_site_ids": [
+          "capitol-reef"
+        ],
+        "country": "US",
+        "anchor": [
+          -111.13,
+          38.28
+        ],
+        "target_types": [
+          "layered_deltaic"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://www.nps.gov/care/learn/nature/geology.htm",
+        "sources": [
+          "https://www.nps.gov/care/learn/nature/geology.htm"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32612",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N38_00_W112_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N38_00_W112_00_DEM/Copernicus_DSM_COG_10_N38_00_W112_00_DEM.tif",
+              "sha256": "fd21a0997050eb34da28b3d548890cd9a2b16909cf7974dfdfc54260448a99d7"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N38_00_W111_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N38_00_W111_00_DEM/Copernicus_DSM_COG_10_N38_00_W111_00_DEM.tif",
+              "sha256": "644d3dc1b67afedb3d51f01491cc6488ab8aa2032bc6c811b9793cf7f830d954"
+            }
+          ],
+          "sha256": "33eb39d8d49a814ba5bcf52c6b86f9b55d4f83f4ae684ce07fed0863faf01ee6",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N36W114_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N36W114_Map.tif",
+              "sha256": "6be14fc314cb098583c0a45a8f2b702cdf1cdc784066e3ab7792efaeab2c1e7a"
+            },
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N36W111_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N36W111_Map.tif",
+              "sha256": "07d1fdbf36e9ed12520da4805a37d1f6812c1aeb3c3ef519fc0a43e42647949e"
+            }
+          ],
+          "sha256": "f8a02a820d47a4f6e1ac3d504d1170a490923048afc917c9bb7f6186587d9633",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "dallol-region": {
+      "region": {
+        "id": "dallol-region",
+        "name": "Dallol salt-dome study area region",
+        "bbox": [
+          40.114679,
+          14.059235,
+          40.485321,
+          14.420763
+        ],
+        "seed_site_ids": [
+          "dallol"
+        ],
+        "country": "Ethiopia",
+        "anchor": [
+          40.3,
+          14.24
+        ],
+        "target_types": [
+          "layered_deltaic"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://volcano.si.edu/volcano.cfm?vn=221041",
+        "sources": [
+          "https://volcano.si.edu/volcano.cfm?vn=221041"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32637",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N14_00_E040_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N14_00_E040_00_DEM/Copernicus_DSM_COG_10_N14_00_E040_00_DEM.tif",
+              "sha256": "40598e3825095a24b95f1064bdf8089c8aa744c93bc3e000dc0dfe9807051dc2"
+            }
+          ],
+          "sha256": "73eb2e0d95fe185121dd5ba00911b6d16d30abcbcd197fb4c229c209db533da1",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N12E039_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N12E039_Map.tif",
+              "sha256": "17c303f6b13845bb8d76707bce5b183e642b461dd2ed946ecd76e886609dc22d"
+            }
+          ],
+          "sha256": "a8acb13ac903eefda66f34a0ed5ff2ae6b45f453ce27909ee17293ded92fcbd0",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "erg-chebbi-region": {
+      "region": {
+        "id": "erg-chebbi-region",
+        "name": "Erg Chebbi dune study area region",
+        "bbox": [
+          -4.169766,
+          30.97961,
+          -3.750234,
+          31.340385
+        ],
+        "seed_site_ids": [
+          "erg-chebbi"
+        ],
+        "country": "Morocco",
+        "anchor": [
+          -3.96,
+          31.16
+        ],
+        "target_types": [
+          "dune_field"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://science.nasa.gov/earth/earth-observatory/the-shallow-aquifers-of-erg-chebbi-89181/",
+        "sources": [
+          "https://science.nasa.gov/earth/earth-observatory/the-shallow-aquifers-of-erg-chebbi-89181/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32630",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N30_00_W005_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N30_00_W005_00_DEM/Copernicus_DSM_COG_10_N30_00_W005_00_DEM.tif",
+              "sha256": "7f7273eebd1b493e42f5b78b4db0e4fdb55ed8d7a899a0da7931113870110f05"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N30_00_W004_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N30_00_W004_00_DEM/Copernicus_DSM_COG_10_N30_00_W004_00_DEM.tif",
+              "sha256": "febdbae2df875825fb6ffcb26e7858227c2f854b99c74cca074e3c1c9eeb670a"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N31_00_W005_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N31_00_W005_00_DEM/Copernicus_DSM_COG_10_N31_00_W005_00_DEM.tif",
+              "sha256": "1a30be66a62a25fe3d59f2a70d9876b1dfafe793e726433d2f077b446056fdab"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N31_00_W004_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N31_00_W004_00_DEM/Copernicus_DSM_COG_10_N31_00_W004_00_DEM.tif",
+              "sha256": "018be675e634f4f89742c74436cfe14a1d91f6eb07a17a399caa64d6a5d783cf"
+            }
+          ],
+          "sha256": "c53d210b386ec26692c83a903b0235370cb5ab4c9540ccc782bf42fd4a317f6a",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N30W006_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N30W006_Map.tif",
+              "sha256": "3a550fa68a5073332ff9a5c7ae85b6620c775269b626bb96981d749c87781b13"
+            }
+          ],
+          "sha256": "5458eadfc57de0d27aff6b30e8095098efab65f9bd787251c06772265c52cc98",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "etna-east-region": {
+      "region": {
+        "id": "etna-east-region",
+        "name": "Etna eastern flank study area region",
+        "bbox": [
+          14.813123,
+          37.549803,
+          15.266877,
+          37.910191
+        ],
+        "seed_site_ids": [
+          "etna-east"
+        ],
+        "country": "Italy",
+        "anchor": [
+          15.04,
+          37.73
+        ],
+        "target_types": [
+          "shield_flank"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://science.nasa.gov/earth/earth-observatory/mount-etna-erupts-15782/",
+        "sources": [
+          "https://science.nasa.gov/earth/earth-observatory/mount-etna-erupts-15782/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32633",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N37_00_E014_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N37_00_E014_00_DEM/Copernicus_DSM_COG_10_N37_00_E014_00_DEM.tif",
+              "sha256": "ef031472f130b02aa46a2f3a93b6295e2700e13fc395d36c3234b340bb90215c"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N37_00_E015_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N37_00_E015_00_DEM/Copernicus_DSM_COG_10_N37_00_E015_00_DEM.tif",
+              "sha256": "76bd0a0140382980d3ec0cdff7187cea3f597f00d875abb62d6c8f1b41000095"
+            }
+          ],
+          "sha256": "4064ce50b50275dae8c4f0661593ccacb344524585d3430f83ef6b33d6c19ddd",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N36E012_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N36E012_Map.tif",
+              "sha256": "868a73947679644d10a522dc5e177fcaa5d5b35f7785179180020678e3f7e801"
+            },
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N36E015_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N36E015_Map.tif",
+              "sha256": "fb9838d3687891252dd941ac14af7118a1f09eb5b5e64dabf8a379fc8c78a803"
+            }
+          ],
+          "sha256": "31eb723e717f23212f37af6c18504c5b9b96b993116d519b65f1a4c743a7cced",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "fogo-caldera-region": {
+      "region": {
+        "id": "fogo-caldera-region",
+        "name": "Fogo caldera study area region",
+        "bbox": [
+          -24.535916,
+          14.769246,
+          -24.164084,
+          15.130752
+        ],
+        "seed_site_ids": [
+          "fogo-caldera"
+        ],
+        "country": "Cabo Verde",
+        "anchor": [
+          -24.35,
+          14.95
+        ],
+        "target_types": [
+          "volcanic_plain"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://science.nasa.gov/earth/earth-observatory/fire-island-cabo-verde-148613/",
+        "sources": [
+          "https://science.nasa.gov/earth/earth-observatory/fire-island-cabo-verde-148613/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32626",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N14_00_W025_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N14_00_W025_00_DEM/Copernicus_DSM_COG_10_N14_00_W025_00_DEM.tif",
+              "sha256": "da31a637011313871ffd77a24fc5603469521abc582939969ffbd8b6b157d48b"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N15_00_W025_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N15_00_W025_00_DEM/Copernicus_DSM_COG_10_N15_00_W025_00_DEM.tif",
+              "sha256": "25440196126d981ae832f3913d74c7689fee4b6392324831ae048e1bf028dca8"
+            }
+          ],
+          "sha256": "c104815dfaaff9772116fc6f2b51fbd57783c287cfb66e51591f4a7d4a375e06",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N12W027_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N12W027_Map.tif",
+              "sha256": "2d94c91ea9d22e9e484c5d46c525cddd4d398897a64f172f4bdf5198ce3e7af9"
+            },
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N15W027_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N15W027_Map.tif",
+              "sha256": "3ee87cf195711a803173c8a5b78ff2f1ee7c734ce6e52ff3fc0e415a70cc83e8"
+            }
+          ],
+          "sha256": "e68b3e515d8f6444330e53a7d0ec6d6f1794133dc5868912ed1b0ae4c6b40794",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "fournaise-enclos-region": {
+      "region": {
+        "id": "fournaise-enclos-region",
+        "name": "Piton de la Fournaise Enclos study area region",
+        "bbox": [
+          55.537328,
+          -21.420634,
+          55.922672,
+          -21.059362
+        ],
+        "seed_site_ids": [
+          "fournaise-enclos"
+        ],
+        "country": "France",
+        "anchor": [
+          55.73,
+          -21.24
+        ],
+        "target_types": [
+          "shield_flank"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://science.nasa.gov/earth/earth-observatory/piton-de-la-fournaise-volcano-18211/",
+        "sources": [
+          "https://science.nasa.gov/earth/earth-observatory/piton-de-la-fournaise-volcano-18211/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32740",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S22_00_E055_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S22_00_E055_00_DEM/Copernicus_DSM_COG_10_S22_00_E055_00_DEM.tif",
+              "sha256": "a77df36d4e4d7318984ce26f3d1ce1212bd09da67a45036b9d66ccbc0c6af54a"
+            }
+          ],
+          "sha256": "7fd09988a00c5659946378880519018184877957ee736236589796411f9b3788",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_S24E054_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S24E054_Map.tif",
+              "sha256": "2909dcf0022b1cda98460a926a33665840eaa345cb21a2457686b236d807304c"
+            }
+          ],
+          "sha256": "8568f91bd1f2579690d627e61bf749f8166abd7f0e71f80b7460de9057695ab7",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "harrat-khaybar-region": {
+      "region": {
+        "id": "harrat-khaybar-region",
+        "name": "Harrat Khaybar volcanic study area region",
+        "bbox": [
+          39.730789,
+          25.489465,
+          40.129211,
+          25.850531
+        ],
+        "seed_site_ids": [
+          "harrat-khaybar"
+        ],
+        "country": "Saudi Arabia",
+        "anchor": [
+          39.93,
+          25.67
+        ],
+        "target_types": [
+          "shield_flank",
+          "volcanic_plain"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://science.nasa.gov/earth/earth-observatory/harrat-khaybar-volcanic-field-8650/",
+        "sources": [
+          "https://science.nasa.gov/earth/earth-observatory/harrat-khaybar-volcanic-field-8650/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32637",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N25_00_E039_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N25_00_E039_00_DEM/Copernicus_DSM_COG_10_N25_00_E039_00_DEM.tif",
+              "sha256": "371c7a721ac5ca34bc3b289ce33f0d3b48745da9318151234423914aa99ab91c"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N25_00_E040_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N25_00_E040_00_DEM/Copernicus_DSM_COG_10_N25_00_E040_00_DEM.tif",
+              "sha256": "6971f80fcc4be320f7d1736ac82bda6623087f52d4e729c5b289a7642a666fe7"
+            }
+          ],
+          "sha256": "7f54605fc6aa4ee06d086c6a75972a1af68d3f04925933c01e4aba01abd70283",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N24E039_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N24E039_Map.tif",
+              "sha256": "379946bc6a3279eaffc24c13082a24125bce64d5b42b2261f6e6547e532309bb"
+            }
+          ],
+          "sha256": "7dfcaba22fe044f972d2d85640d5fdc5e8685e8461fc5c78163c6f232cd34bcb",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "haughton-region": {
+      "region": {
+        "id": "haughton-region",
+        "name": "Haughton Crater floor study area region",
+        "bbox": [
+          -90.389056,
+          75.190822,
+          -88.970944,
+          75.549175
+        ],
+        "seed_site_ids": [
+          "haughton"
+        ],
+        "country": "Canada",
+        "anchor": [
+          -89.68,
+          75.37
+        ],
+        "target_types": [
+          "crater_rim"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://ntrs.nasa.gov/citations/20060013129",
+        "sources": [
+          "https://ntrs.nasa.gov/citations/20060013129"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32616",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N75_00_W091_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N75_00_W091_00_DEM/Copernicus_DSM_COG_10_N75_00_W091_00_DEM.tif",
+              "sha256": "b09c78190c5733accdb1c21b0bcf87bc064da03f508da49426ef740eb5563d30"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N75_00_W090_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N75_00_W090_00_DEM/Copernicus_DSM_COG_10_N75_00_W090_00_DEM.tif",
+              "sha256": "6731d23cff09f4cb7d2c72ec1d41c7ae9b6389565434e820692e08c2a4bcefa7"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N75_00_W089_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N75_00_W089_00_DEM/Copernicus_DSM_COG_10_N75_00_W089_00_DEM.tif",
+              "sha256": "ce3d9e10c520be5057e49fd773e81d411b41daff415e420b15cad02f3998defb"
+            }
+          ],
+          "sha256": "4b906d3a746417c605dfd9521b12712a2b368cff6cfb909732651c5b6622f2e7",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N75W093_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N75W093_Map.tif",
+              "sha256": "6400883388ad6ae2de0c54800f981a17e7c563b3777573b87e5cbfff766142c5"
+            },
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N75W090_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N75W090_Map.tif",
+              "sha256": "f0ef5d19ad532274feeaf3dff36d481fc98918f3ed4a6e86e78aa29c9bd629eb"
+            }
+          ],
+          "sha256": "19b67774c836495b68acb6784c53359f30cd0e3d1956b956f5210eee5e04e550",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "ischigualasto-region": {
+      "region": {
+        "id": "ischigualasto-region",
+        "name": "Ischigualasto sedimentary study area region / Talampaya canyon study area region",
+        "bbox": [
+          -68.157429,
+          -30.250416,
+          -67.633151,
+          -29.609572
+        ],
+        "seed_site_ids": [
+          "ischigualasto",
+          "talampaya-canyon"
+        ],
+        "country": "Argentina",
+        "anchor": [
+          -67.95,
+          -30.07
+        ],
+        "target_types": [
+          "layered_deltaic"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://whc.unesco.org/en/list/966",
+        "sources": [
+          "https://whc.unesco.org/en/list/966"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32719",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S31_00_W069_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S31_00_W069_00_DEM/Copernicus_DSM_COG_10_S31_00_W069_00_DEM.tif",
+              "sha256": "dcaf7936bced65f03777dcd7791796f85dd4b58c7b30a1dd8f16a50876b53b50"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S31_00_W068_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S31_00_W068_00_DEM/Copernicus_DSM_COG_10_S31_00_W068_00_DEM.tif",
+              "sha256": "a223a89674c2667245834f10bdf735d0f660f432c1f6dd52f8512ad2425c3026"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S30_00_W069_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S30_00_W069_00_DEM/Copernicus_DSM_COG_10_S30_00_W069_00_DEM.tif",
+              "sha256": "0f86f9fcc628540ad033759dd57a5deafbaaa93a5d2dd45fdc1b2a28cfdf9c87"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S30_00_W068_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S30_00_W068_00_DEM/Copernicus_DSM_COG_10_S30_00_W068_00_DEM.tif",
+              "sha256": "fe40309350699f31e700bd0f379927a6d8f271149740a42862a75915cd14d332"
+            }
+          ],
+          "sha256": "b82704d95fd3b6c1ae1602328eaa6aa2c19a725d37ef9bdbd895c55cf9024d09",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_S33W069_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S33W069_Map.tif",
+              "sha256": "59bf08e76f0f2253430e29019f91bd4206ffb33574dfad38b210bd03eaddf76b"
+            },
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_S30W069_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S30W069_Map.tif",
+              "sha256": "102d5b62fbec794b88b7bc16777a92db53c49130a10434a86d48adb08997d433"
+            }
+          ],
+          "sha256": "4ba1b51abe71564eefacaffc14fc7247fa75db81ac5a6d1cad3595fb3539fb29",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "lake-abbe-margin-region": {
+      "region": {
+        "id": "lake-abbe-margin-region",
+        "name": "Lake Abbe eastern margin study area region",
+        "bbox": [
+          41.656907,
+          10.964193,
+          42.023093,
+          11.325805
+        ],
+        "seed_site_ids": [
+          "lake-abbe-margin"
+        ],
+        "country": "Djibouti",
+        "anchor": [
+          41.84,
+          11.145
+        ],
+        "target_types": [
+          "layered_deltaic"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://www.esa.int/ESA_Multimedia/Images/2023/07/Earth_from_Space_Ethiopian_painting",
+        "sources": [
+          "https://www.esa.int/ESA_Multimedia/Images/2023/07/Earth_from_Space_Ethiopian_painting"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32637",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N10_00_E041_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N10_00_E041_00_DEM/Copernicus_DSM_COG_10_N10_00_E041_00_DEM.tif",
+              "sha256": "559d09b834e7efac1266d7a0f6085a4aea6235eebe2ee436a1ca458e4756b7cb"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N10_00_E042_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N10_00_E042_00_DEM/Copernicus_DSM_COG_10_N10_00_E042_00_DEM.tif",
+              "sha256": "2e548c1558da92271461f639cf16cc3b3cc6f403ecc7562b679d877569795678"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N11_00_E041_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N11_00_E041_00_DEM/Copernicus_DSM_COG_10_N11_00_E041_00_DEM.tif",
+              "sha256": "645120b0babcfbb50a48dcc5820a3db08fa31ffd526487141ffb9f0af0fe4cea"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N11_00_E042_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N11_00_E042_00_DEM/Copernicus_DSM_COG_10_N11_00_E042_00_DEM.tif",
+              "sha256": "a2c6fee91c9aed0b0b5d56582af16baec0a8e53c090d9506da2674e233d7bf64"
+            }
+          ],
+          "sha256": "f7f871c5fac3574a609ad0de5b4517a28c53384e2608e8d16191f6e116773936",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N09E039_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N09E039_Map.tif",
+              "sha256": "dd8b315c8fc1f4a27ae404d00bfd2f50f04b81246ef6675810788f4532f15b3a"
+            },
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N09E042_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N09E042_Map.tif",
+              "sha256": "0c21c319e73aa4923c4d10ce96fc574027eccfa114c63250f6a09e7cd8f0776e"
+            }
+          ],
+          "sha256": "abf53253591dc2de6947d5541dc6277eb9fa3093014eba13f8bfcc17fa2fe459",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "lonar-crater-region": {
+      "region": {
+        "id": "lonar-crater-region",
+        "name": "Lonar impact crater study area region",
+        "bbox": [
+          76.318912,
+          19.794336,
+          76.701088,
+          20.15566
+        ],
+        "seed_site_ids": [
+          "lonar-crater"
+        ],
+        "country": "India",
+        "anchor": [
+          76.51,
+          19.975
+        ],
+        "target_types": [
+          "crater_rim"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://science.nasa.gov/earth/earth-observatory/lonar-crater-india-8654/",
+        "sources": [
+          "https://science.nasa.gov/earth/earth-observatory/lonar-crater-india-8654/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32643",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N19_00_E076_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N19_00_E076_00_DEM/Copernicus_DSM_COG_10_N19_00_E076_00_DEM.tif",
+              "sha256": "d2529380102f81a5b7952626681c08bf0f91d54d6514158316e48446b1143dab"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N20_00_E076_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N20_00_E076_00_DEM/Copernicus_DSM_COG_10_N20_00_E076_00_DEM.tif",
+              "sha256": "eea6d60e6effd0759a1d8c6c7c983909e00f4104cb54ecac8e7fa17ef29b46ff"
+            }
+          ],
+          "sha256": "9b121a1714276e3c0a9e55644b7a873806c994d9f7aeb24259cb4eb8e9745869",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N18E075_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N18E075_Map.tif",
+              "sha256": "edacd31016ab0b13fdf3d84de41c7dc1a9f42f8faadd5b8e21feef5eae2e4f75"
+            }
+          ],
+          "sha256": "761481e04c05c91efbf07a5d1f994a16b9ae87a15602dfeeb1d14da4a991eb4b",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "lut-yardangs-region": {
+      "region": {
+        "id": "lut-yardangs-region",
+        "name": "Lut western yardang study area region",
+        "bbox": [
+          57.621601,
+          30.349592,
+          58.038399,
+          30.710403
+        ],
+        "seed_site_ids": [
+          "lut-yardangs"
+        ],
+        "country": "Iran",
+        "anchor": [
+          57.83,
+          30.53
+        ],
+        "target_types": [
+          "layered_deltaic"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://whc.unesco.org/en/list/1505/",
+        "sources": [
+          "https://whc.unesco.org/en/list/1505/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32640",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N30_00_E057_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N30_00_E057_00_DEM/Copernicus_DSM_COG_10_N30_00_E057_00_DEM.tif",
+              "sha256": "ebec6cf35708f4bc4fe95881899cf2775bbba5b2a320b1d57c1238c035ddb67a"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N30_00_E058_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N30_00_E058_00_DEM/Copernicus_DSM_COG_10_N30_00_E058_00_DEM.tif",
+              "sha256": "b9bf2289be6140ca32c83503c02f25f84892fc09886bffbb0b545c84ca572f89"
+            }
+          ],
+          "sha256": "29c155f33759cb7d29765867e712544a34093e059f447938c517bbc5662af24a",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N30E057_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N30E057_Map.tif",
+              "sha256": "5b775fb05a97f9e290bcc9af7b4fb2819b9089135f7c305aff179ce6fc8e5740"
+            }
+          ],
+          "sha256": "2389bd3e760f9cffd99974d94b005cb0f821605793508ac1425d51117f3c8825",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "makgadikgadi-kubu-region": {
+      "region": {
+        "id": "makgadikgadi-kubu-region",
+        "name": "Makgadikgadi Kubu pan-margin study area region",
+        "bbox": [
+          25.632778,
+          -21.070641,
+          26.017222,
+          -20.709355
+        ],
+        "seed_site_ids": [
+          "makgadikgadi-kubu"
+        ],
+        "country": "Botswana",
+        "anchor": [
+          25.825,
+          -20.89
+        ],
+        "target_types": [
+          "layered_deltaic"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://modis.gsfc.nasa.gov/gallery/individual.php?db_date=2026-02-05",
+        "sources": [
+          "https://modis.gsfc.nasa.gov/gallery/individual.php?db_date=2026-02-05"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32735",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S22_00_E025_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S22_00_E025_00_DEM/Copernicus_DSM_COG_10_S22_00_E025_00_DEM.tif",
+              "sha256": "0d80c1a7cca242dac5f79dba0a82c84ce99cb09dccfcf5669eb1235fc75a7acb"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S22_00_E026_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S22_00_E026_00_DEM/Copernicus_DSM_COG_10_S22_00_E026_00_DEM.tif",
+              "sha256": "76004caf80163619e328636bc75c8d3becf1220924ee7c569ff1c51930d5b881"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S21_00_E025_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S21_00_E025_00_DEM/Copernicus_DSM_COG_10_S21_00_E025_00_DEM.tif",
+              "sha256": "77a0e53e7bdc7025d066213134621ab9b636245f344522ab0b6481bb5a10bf96"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S21_00_E026_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S21_00_E026_00_DEM/Copernicus_DSM_COG_10_S21_00_E026_00_DEM.tif",
+              "sha256": "4a369c523a997d38a10a41aaf48aff43fef7f48045ef660e3d36c3d0b4981fad"
+            }
+          ],
+          "sha256": "c85019780fc0dae91091241834898dfe3640c1f32f4184012e2a44e8d5a5998e",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_S24E024_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S24E024_Map.tif",
+              "sha256": "61f2d5addfcde16008c5dd5192c5c5b39e3803e0f079f3a6f97e46801b2b9612"
+            },
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_S21E024_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S21E024_Map.tif",
+              "sha256": "bb8ce4388d9757b67137029f25a96cdc73adcca8c70f74e3bbd6afa7d943e08c"
+            }
+          ],
+          "sha256": "797cb1009fe5e327b7afa0dd43516a0b76a486b3835daf0e64323e550fdc154c",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "pinacate-elegante-region": {
+      "region": {
+        "id": "pinacate-elegante-region",
+        "name": "El Pinacate El Elegante study area region",
+        "bbox": [
+          -113.71113,
+          31.589627,
+          -113.28887,
+          31.950368
+        ],
+        "seed_site_ids": [
+          "pinacate-elegante"
+        ],
+        "country": "Mexico",
+        "anchor": [
+          -113.5,
+          31.77
+        ],
+        "target_types": [
+          "shield_flank"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://whc.unesco.org/en/list/1410/",
+        "sources": [
+          "https://whc.unesco.org/en/list/1410/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32612",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N31_00_W114_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N31_00_W114_00_DEM/Copernicus_DSM_COG_10_N31_00_W114_00_DEM.tif",
+              "sha256": "fa2f33fafdb0ca37008989074e4337b54e048fe97dcaa40e935ccb3d55b41f96"
+            }
+          ],
+          "sha256": "3ec7d8c1dd90ec40f5edc7cb34a53798721794b9978ae4238490a8bbe0b5e499",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N30W114_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N30W114_Map.tif",
+              "sha256": "5614b24a5b227de5c6eb8788e3640db07f8ef90cc6e56e1f3e43f16355ec9956"
+            }
+          ],
+          "sha256": "d4992473f641d43623ec8eb2d0257f8f624d26a179d6958bb095e0bf081c9bba",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "richat-ridges-region": {
+      "region": {
+        "id": "richat-ridges-region",
+        "name": "Richat eastern ridges study area region",
+        "bbox": [
+          -11.502568,
+          20.979361,
+          -11.117432,
+          21.340635
+        ],
+        "seed_site_ids": [
+          "richat-ridges"
+        ],
+        "country": "Mauritania",
+        "anchor": [
+          -11.31,
+          21.16
+        ],
+        "target_types": [
+          "layered_deltaic"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://science.nasa.gov/earth/earth-observatory/eyeing-the-richat-structure/",
+        "sources": [
+          "https://science.nasa.gov/earth/earth-observatory/eyeing-the-richat-structure/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32629",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N20_00_W012_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N20_00_W012_00_DEM/Copernicus_DSM_COG_10_N20_00_W012_00_DEM.tif",
+              "sha256": "f78a175b108d3ea7afb0ccca1d993b2835e1d362e5273a71f892ec7dda43a138"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N21_00_W012_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N21_00_W012_00_DEM/Copernicus_DSM_COG_10_N21_00_W012_00_DEM.tif",
+              "sha256": "5dc10e848fe2659029648d4c1ebc0e7f75ab49b31069eae972094fdc0fb46afc"
+            }
+          ],
+          "sha256": "6d223ed0f769a968c2f09a8a1d16314d1dd31d1e4e8ab9c4bfc438bb75d757b4",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N18W012_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N18W012_Map.tif",
+              "sha256": "1cf68d87b8cd256712786ed1d1048876d165a2b4054c7a367f7d5f4d408676f1"
+            },
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N21W012_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N21W012_Map.tif",
+              "sha256": "8ebac832d2016570b6656f5df27a78db9478359ee218e49f07ad3d2c98a5fff7"
+            }
+          ],
+          "sha256": "78ba4875dfa8d52d3bd2755f3fced34be65e9cce8ac35dac89c6fc59d8802db5",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "rub-khali-oman-region": {
+      "region": {
+        "id": "rub-khali-oman-region",
+        "name": "Rub al Khali Oman dune study area region",
+        "bbox": [
+          53.908144,
+          20.419349,
+          54.291856,
+          20.780647
+        ],
+        "seed_site_ids": [
+          "rub-khali-oman"
+        ],
+        "country": "Oman",
+        "anchor": [
+          54.1,
+          20.6
+        ],
+        "target_types": [
+          "dune_field"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://eol.jsc.nasa.gov/Collections/EarthFromSpace/photoinfo.pl?PHOTO=ISS027-E-34290",
+        "sources": [
+          "https://eol.jsc.nasa.gov/Collections/EarthFromSpace/photoinfo.pl?PHOTO=ISS027-E-34290"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32640",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N20_00_E053_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N20_00_E053_00_DEM/Copernicus_DSM_COG_10_N20_00_E053_00_DEM.tif",
+              "sha256": "329bfae8984ff4992aa1a30cfda06800fa423fcf28eccd6d55bad98aa956636e"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N20_00_E054_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N20_00_E054_00_DEM/Copernicus_DSM_COG_10_N20_00_E054_00_DEM.tif",
+              "sha256": "9c5b2f28e88e446167964e3be4ceaa09a0ea20f03e14e0f45f985d4f6d12239d"
+            }
+          ],
+          "sha256": "e4914fd5762c2124debf28584b753deeab96db5ee0bc19b2f5fcd0804dab4675",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N18E051_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N18E051_Map.tif",
+              "sha256": "57a3e6b1c806e0bf1b2551b9e1c3b97f908bf339827eb62d5b856f1eda725bf5"
+            },
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N18E054_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N18E054_Map.tif",
+              "sha256": "6f19a3696b43eef1d8b19af0d2c21307eaefaf616b2a749d8351878ad479c52d"
+            }
+          ],
+          "sha256": "58fdbf6eb96b4a0f906bc0a78d37aad2c49d0cc5f068b342f906471a70933d16",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "sossusvlei-dunes-region": {
+      "region": {
+        "id": "sossusvlei-dunes-region",
+        "name": "Sossusvlei dune and pan study area region",
+        "bbox": [
+          15.102249,
+          -24.950553,
+          15.497751,
+          -24.589443
+        ],
+        "seed_site_ids": [
+          "sossusvlei-dunes"
+        ],
+        "country": "Namibia",
+        "anchor": [
+          15.3,
+          -24.77
+        ],
+        "target_types": [
+          "dune_field"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://science.nasa.gov/earth/earth-observatory/namib-sand-sea-149130/",
+        "sources": [
+          "https://science.nasa.gov/earth/earth-observatory/namib-sand-sea-149130/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32733",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S25_00_E015_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S25_00_E015_00_DEM/Copernicus_DSM_COG_10_S25_00_E015_00_DEM.tif",
+              "sha256": "26f801a166a8f2113208370a0f29d15b308bb842ef7b0822ca7b23ef56a87611"
+            }
+          ],
+          "sha256": "534e43a8f93a2f0d34a33fbe45d707cb238753eec7e2584377699820d54b028a",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_S27E015_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S27E015_Map.tif",
+              "sha256": "d2f676675d38f80d89f9f96555d7af50a3a9842e07e492a52d0ea6817423ce93"
+            }
+          ],
+          "sha256": "30553b598ebab0f96f8625f56c7b4f8d9f0802ca246239c462c3a66490f059c3",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "tongariro-west-region": {
+      "region": {
+        "id": "tongariro-west-region",
+        "name": "Tongariro western volcanic study area region",
+        "bbox": [
+          175.348635,
+          -39.330148,
+          175.811365,
+          -38.969847
+        ],
+        "seed_site_ids": [
+          "tongariro-west"
+        ],
+        "country": "New Zealand",
+        "anchor": [
+          175.58,
+          -39.15
+        ],
+        "target_types": [
+          "shield_flank"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://www.doc.govt.nz/parks-and-recreation/places-to-go/central-north-island/places/tongariro-national-park/about-tongariro-national-park/central-north-island-volcanoes/",
+        "sources": [
+          "https://www.doc.govt.nz/parks-and-recreation/places-to-go/central-north-island/places/tongariro-national-park/about-tongariro-national-park/central-north-island-volcanoes/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32760",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S40_00_E175_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S40_00_E175_00_DEM/Copernicus_DSM_COG_10_S40_00_E175_00_DEM.tif",
+              "sha256": "e095bb3c4ff3cdf525b24ff56f1f5b44ea8b9d1f3a1cc0f6a5b72af626a3a39a"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S39_00_E175_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S39_00_E175_00_DEM/Copernicus_DSM_COG_10_S39_00_E175_00_DEM.tif",
+              "sha256": "e4bb9382adfc12b6e73cf5753d733cf783788d96ec6acfa7ec7fc65cbbb4ff9c"
+            }
+          ],
+          "sha256": "567577470c69959ddebe8a8ee57a62935a0dfdd9ec24b402b5601b21bdc65266",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_S42E174_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S42E174_Map.tif",
+              "sha256": "ae579380212bb6ad4f343dd342740b7e4db8af6f38808ca108abaf39234e7d7e"
+            },
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_S39E174_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S39E174_Map.tif",
+              "sha256": "afd4c6ac155a16793ebd6f6e86b5e33c9bb29559419b3772c9949c77dbdc1fc9"
+            }
+          ],
+          "sha256": "289238895504d46dd9cf2418f2a57fdc03c39fad0b16bd4fbff0eccb4f2667f8",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "uyuni-incahuasi-region": {
+      "region": {
+        "id": "uyuni-incahuasi-region",
+        "name": "Uyuni Incahuasi salt-flat study area region",
+        "bbox": [
+          -67.81641,
+          -20.420655,
+          -67.43359,
+          -20.059342
+        ],
+        "seed_site_ids": [
+          "uyuni-incahuasi"
+        ],
+        "country": "Bolivia",
+        "anchor": [
+          -67.625,
+          -20.24
+        ],
+        "target_types": [
+          "layered_deltaic"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://science.nasa.gov/earth/earth-observatory/salar-de-uyuni-bolivia-6096/",
+        "sources": [
+          "https://science.nasa.gov/earth/earth-observatory/salar-de-uyuni-bolivia-6096/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32719",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S21_00_W068_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S21_00_W068_00_DEM/Copernicus_DSM_COG_10_S21_00_W068_00_DEM.tif",
+              "sha256": "f08b4ecd2faa1e3e2f1ec92e5e9b23b843ba51e4beb8d59889d040f7c1ef1112"
+            }
+          ],
+          "sha256": "8d88c347673ce5411c29e2042b3e4fd22b767f401cf3496131e3a43a409bd25c",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_S21W069_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S21W069_Map.tif",
+              "sha256": "bdbbfa2ff791bd4a778960f3b944533ee754072ae38ef8dfcbf28e9559bb4426"
+            }
+          ],
+          "sha256": "24964f60647b920014cb98eea327dee177737a59c31205c722890795b2aacfef",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "wadi-rum-region": {
+      "region": {
+        "id": "wadi-rum-region",
+        "name": "Wadi Rum desert study area region",
+        "bbox": [
+          35.233662,
+          29.359565,
+          35.646338,
+          29.72043
+        ],
+        "seed_site_ids": [
+          "wadi-rum"
+        ],
+        "country": "Jordan",
+        "anchor": [
+          35.44,
+          29.54
+        ],
+        "target_types": [
+          "layered_deltaic"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://science.nasa.gov/earth/earth-observatory/wadi-rum-jordan-49945/",
+        "sources": [
+          "https://science.nasa.gov/earth/earth-observatory/wadi-rum-jordan-49945/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32636",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_N29_00_E035_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N29_00_E035_00_DEM/Copernicus_DSM_COG_10_N29_00_E035_00_DEM.tif",
+              "sha256": "4841069acb5b240570a63d12eb69ebf39d779859be9e298711640df2b96b9c7a"
+            }
+          ],
+          "sha256": "ee61f08d758414543965356b07c0feb0b688836e07c63319b9d211ad87199759",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_N27E033_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N27E033_Map.tif",
+              "sha256": "e1175f97da47b5ac6b12ea27bb153b42a46aa08d16e5cbd26568dcd40d4ae171"
+            }
+          ],
+          "sha256": "ff5a8c597ea88febe57f710a41a7ccbacd9dc517d1ad9221e9e74978c789f22b",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    },
+    "wolfe-creek-region": {
+      "region": {
+        "id": "wolfe-creek-region",
+        "name": "Wolfe Creek impact crater study area region",
+        "bbox": [
+          127.604857,
+          -19.351676,
+          127.985143,
+          -18.99032
+        ],
+        "seed_site_ids": [
+          "wolfe-creek"
+        ],
+        "country": "Australia",
+        "anchor": [
+          127.795,
+          -19.171
+        ],
+        "target_types": [
+          "crater_rim"
+        ],
+        "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+        "source_url": "https://science.nasa.gov/earth/earth-observatory/wolfe-creek-crater-8488/",
+        "sources": [
+          "https://science.nasa.gov/earth/earth-observatory/wolfe-creek-crater-8488/"
+        ],
+        "enabled": true,
+        "deferred_reason": null
+      },
+      "crs": "EPSG:32752",
+      "sources": {
+        "dem": {
+          "tiles": [
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S20_00_E127_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S20_00_E127_00_DEM/Copernicus_DSM_COG_10_S20_00_E127_00_DEM.tif",
+              "sha256": "0a418c65023cb6e9fcef62b1c12c7534b387d2211e970242323532818cb10932"
+            },
+            {
+              "tile_id": "Copernicus_DSM_COG_10_S19_00_E127_00_DEM",
+              "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S19_00_E127_00_DEM/Copernicus_DSM_COG_10_S19_00_E127_00_DEM.tif",
+              "sha256": "95a9c6e0186a674aaded674d6d2601b6a4035ac25da13e1726397d1f84d880be"
+            }
+          ],
+          "sha256": "3077f9bf070a012875330d3fbefa6aaed66d8d6722e25344df507dccfd52868f",
+          "spacing_m": 30,
+          "method": "Bilinear elevation reprojection",
+          "product_id": "COP-DEM-GLO-30",
+          "native_resolution_m_approx": 30,
+          "time_coverage": "primarily 2011-2015; per-pixel acquisition unknown",
+          "units": "m above EGM2008",
+          "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+        },
+        "mask": {
+          "tiles": [
+            {
+              "tile_id": "ESA_WorldCover_10m_2021_v200_S21E126_Map",
+              "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S21E126_Map.tif",
+              "sha256": "d3613cf11c1bdf7c16a21c34af011f6ac49ef7b9256e26c4cc222e5a2b888bf0"
+            }
+          ],
+          "sha256": "5093378cdd7029881cb4681f6e3575b8af2ac314e2a01ba49b2cd6d7dcf69fe9",
+          "spacing_m": 10,
+          "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+          "product_id": "ESA WorldCover 10m 2021 v200",
+          "native_resolution_m_approx": 10,
+          "time_coverage": "2021",
+          "units": "WorldCover class codes (dimensionless)",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      }
+    }
+  },
+  "provenance_scope": "Each source_receipt applies to all terrain and land-cover numbers for its windows. Elevation summaries are derived from the referenced regional DSM.",
+  "worldcover_classes": {
+    "0": "nodata",
+    "10": "tree_cover",
+    "20": "shrubland",
+    "30": "grassland",
+    "40": "cropland",
+    "50": "built_up",
+    "60": "bare_sparse_vegetation",
+    "70": "snow_ice",
+    "80": "permanent_water",
+    "90": "herbaceous_wetland",
+    "95": "mangroves",
+    "100": "moss_lichen"
+  },
+  "worldcover_doi": "https://doi.org/10.5281/zenodo.7254221",
+  "worldcover_attribution": "ESA WorldCover project 2021 / Contains modified Copernicus Sentinel data (2021) processed by ESA WorldCover consortium",
+  "copernicus_attribution": "Copernicus WorldDEM-30, DLR e.V. 2010-2014 and Airbus Defence and Space GmbH 2014-2018; European Union and ESA."
+}

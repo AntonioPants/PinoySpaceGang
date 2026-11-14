@@ -1,0 +1,1387 @@
+{
+  "method_version": "1.0.0",
+  "analog_score_version": "1.0.0",
+  "descriptor_version": "2.0.0",
+  "index_sha256": "6532fa26fa8640dbeb7513fdf29759bc2d36600909bc1d7cc8f62393ae378fed",
+  "scientifically_validated": false,
+  "scope": "Exploratory candidate discovery among scanned windows. Landforms are inferred from region seed sites and unreviewed. Not validated accuracy and not catalog entries.",
+  "rules": {
+    "min_score_percent": 70.0,
+    "top_k": 10,
+    "inferred_landform_factor": 0.75,
+    "min_separation_km": 4.8,
+    "excluded": "windows centred within min_separation_km of an existing catalog Earth site or a higher-ranked shortlisted window"
+  },
+  "window_count": 3361,
+  "targets": {
+    "arsia-flank": {
+      "comparison_resolution_m": 500.0,
+      "windows_scored": 3361,
+      "windows_at_or_above_cutoff": 604,
+      "shortlist": [
+        {
+          "id": "scan-askja-east-region-r640-c800",
+          "name": "Askja eastern volcanic terrain study area region: 5.8 km E, 1.0 km S",
+          "region_id": "askja-east-region",
+          "longitude": -16.4768294,
+          "latitude": 65.0470002,
+          "inferred_landforms": [
+            "volcanic_plain"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 94.7995,
+          "analog_score_percent": 84.8998,
+          "candidate_rank": 1,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            93.1394,
+            95.6783
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-amboy-region-r2960-c400",
+          "name": "Amboy Crater region / Cima volcanic field study area region: 6.5 km W, 3.0 km N",
+          "region_id": "amboy-region",
+          "longitude": -115.8506891,
+          "latitude": 34.5777153,
+          "inferred_landforms": [
+            "crater",
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 94.6384,
+          "analog_score_percent": 84.8192,
+          "candidate_rank": 2,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            94.0944,
+            94.8536
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-amboy-region-r560-c80",
+          "name": "Amboy Crater region / Cima volcanic field study area region: 16.1 km W, 75.0 km N",
+          "region_id": "amboy-region",
+          "longitude": -115.947085,
+          "latitude": 35.227813,
+          "inferred_landforms": [
+            "crater",
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 94.5485,
+          "analog_score_percent": 84.7743,
+          "candidate_rank": 3,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            94.2427,
+            94.8751
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-amboy-region-r3360-c400",
+          "name": "Amboy Crater region / Cima volcanic field study area region: 6.5 km W, 9.0 km S",
+          "region_id": "amboy-region",
+          "longitude": -115.8521745,
+          "latitude": 34.4695193,
+          "inferred_landforms": [
+            "crater",
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 94.3253,
+          "analog_score_percent": 84.6627,
+          "candidate_rank": 4,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            93.1,
+            94.4038
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-harrat-khaybar-region-r1120-c1120",
+          "name": "Harrat Khaybar volcanic study area region: 15.9 km E, 15.9 km S",
+          "region_id": "harrat-khaybar-region",
+          "longitude": 40.0870337,
+          "latitude": 25.5257781,
+          "inferred_landforms": [
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 94.2491,
+          "analog_score_percent": 84.6246,
+          "candidate_rank": 5,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            92.6901,
+            94.8062
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-amboy-region-r1360-c960",
+          "name": "Amboy Crater region / Cima volcanic field study area region: 10.3 km E, 51.0 km N",
+          "region_id": "amboy-region",
+          "longitude": -115.6605839,
+          "latitude": 35.0085873,
+          "inferred_landforms": [
+            "crater",
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 94.2402,
+          "analog_score_percent": 84.6201,
+          "candidate_rank": 6,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            94.0932,
+            96.3071
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-askja-east-region-r480-c1120",
+          "name": "Askja eastern volcanic terrain study area region: 15.4 km E, 3.8 km N",
+          "region_id": "askja-east-region",
+          "longitude": -16.2750034,
+          "latitude": 65.0919324,
+          "inferred_landforms": [
+            "volcanic_plain"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 93.8613,
+          "analog_score_percent": 84.4306,
+          "candidate_rank": 7,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            92.093,
+            93.9394
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-amboy-region-r1120-c160",
+          "name": "Amboy Crater region / Cima volcanic field study area region: 13.7 km W, 58.2 km N",
+          "region_id": "amboy-region",
+          "longitude": -115.9227139,
+          "latitude": 35.0761184,
+          "inferred_landforms": [
+            "crater",
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 93.5962,
+          "analog_score_percent": 84.2981,
+          "candidate_rank": 8,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            91.6199,
+            94.9039
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-amboy-region-r400-c80",
+          "name": "Amboy Crater region / Cima volcanic field study area region: 16.1 km W, 79.8 km N",
+          "region_id": "amboy-region",
+          "longitude": -115.9465253,
+          "latitude": 35.2710876,
+          "inferred_landforms": [
+            "crater",
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 93.5613,
+          "analog_score_percent": 84.2807,
+          "candidate_rank": 9,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            93.1738,
+            94.0092
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-harrat-khaybar-region-r480-c160",
+          "name": "Harrat Khaybar volcanic study area region: 12.9 km W, 3.3 km N",
+          "region_id": "harrat-khaybar-region",
+          "longitude": 39.801591,
+          "latitude": 25.7009896,
+          "inferred_landforms": [
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 93.0612,
+          "analog_score_percent": 84.0306,
+          "candidate_rank": 10,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            91.4206,
+            93.4657
+          ],
+          "window_sensitivity": "limited_change"
+        }
+      ]
+    },
+    "bagnold": {
+      "comparison_resolution_m": 500.0,
+      "windows_scored": 3361,
+      "windows_at_or_above_cutoff": 532,
+      "shortlist": [
+        {
+          "id": "scan-rub-khali-oman-region-r960-c880",
+          "name": "Rub al Khali Oman dune study area region: 8.4 km E, 10.8 km S",
+          "region_id": "rub-khali-oman-region",
+          "longitude": 54.1823219,
+          "latitude": 20.5037008,
+          "inferred_landforms": [
+            "dune_field"
+          ],
+          "landform": {
+            "earth_family": "aeolian",
+            "planetary_family": "aeolian",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 78.771,
+          "analog_score_percent": 76.8855,
+          "candidate_rank": 1,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            70.9386,
+            79.6838
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-erg-chebbi-region-r800-c800",
+          "name": "Erg Chebbi dune study area region: 6.2 km E, 6.2 km S",
+          "region_id": "erg-chebbi-region",
+          "longitude": -3.8944185,
+          "latitude": 31.1044802,
+          "inferred_landforms": [
+            "dune_field"
+          ],
+          "landform": {
+            "earth_family": "aeolian",
+            "planetary_family": "aeolian",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 78.7119,
+          "analog_score_percent": 76.8559,
+          "candidate_rank": 2,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            75.8677,
+            81.1984
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-rub-khali-oman-region-r480-c80",
+          "name": "Rub al Khali Oman dune study area region: 15.6 km W, 3.6 km N",
+          "region_id": "rub-khali-oman-region",
+          "longitude": 53.9498716,
+          "latitude": 20.6297496,
+          "inferred_landforms": [
+            "dune_field"
+          ],
+          "landform": {
+            "earth_family": "aeolian",
+            "planetary_family": "aeolian",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 78.6057,
+          "analog_score_percent": 76.8028,
+          "candidate_rank": 3,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            73.7081,
+            79.5166
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-rub-khali-oman-region-r400-c480",
+          "name": "Rub al Khali Oman dune study area region: 3.6 km W, 6.0 km N",
+          "region_id": "rub-khali-oman-region",
+          "longitude": 54.0644806,
+          "latitude": 20.6534021,
+          "inferred_landforms": [
+            "dune_field"
+          ],
+          "landform": {
+            "earth_family": "aeolian",
+            "planetary_family": "aeolian",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 78.5774,
+          "analog_score_percent": 76.7887,
+          "candidate_rank": 4,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            73.1186,
+            81.1574
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-rub-khali-oman-region-r80-c960",
+          "name": "Rub al Khali Oman dune study area region: 10.8 km E, 15.6 km N",
+          "region_id": "rub-khali-oman-region",
+          "longitude": 54.2009567,
+          "latitude": 20.7423386,
+          "inferred_landforms": [
+            "dune_field"
+          ],
+          "landform": {
+            "earth_family": "aeolian",
+            "planetary_family": "aeolian",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 78.2466,
+          "analog_score_percent": 76.6233,
+          "candidate_rank": 5,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            72.0191,
+            80.0495
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-rub-khali-oman-region-r720-c720",
+          "name": "Rub al Khali Oman dune study area region: 3.6 km E, 3.6 km S",
+          "region_id": "rub-khali-oman-region",
+          "longitude": 54.1351332,
+          "latitude": 20.5679264,
+          "inferred_landforms": [
+            "dune_field"
+          ],
+          "landform": {
+            "earth_family": "aeolian",
+            "planetary_family": "aeolian",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 78.2422,
+          "analog_score_percent": 76.6211,
+          "candidate_rank": 6,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            74.5921,
+            80.2283
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-rub-khali-oman-region-r640-c240",
+          "name": "Rub al Khali Oman dune study area region: 10.8 km W, 1.2 km S",
+          "region_id": "rub-khali-oman-region",
+          "longitude": 53.9967296,
+          "latitude": 20.5872434,
+          "inferred_landforms": [
+            "dune_field"
+          ],
+          "landform": {
+            "earth_family": "aeolian",
+            "planetary_family": "aeolian",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 77.7403,
+          "analog_score_percent": 76.3702,
+          "candidate_rank": 7,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            72.1668,
+            79.5316
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-rub-khali-oman-region-r480-c320",
+          "name": "Rub al Khali Oman dune study area region: 8.4 km W, 3.6 km N",
+          "region_id": "rub-khali-oman-region",
+          "longitude": 54.0188849,
+          "latitude": 20.6309555,
+          "inferred_landforms": [
+            "dune_field"
+          ],
+          "landform": {
+            "earth_family": "aeolian",
+            "planetary_family": "aeolian",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 77.6092,
+          "analog_score_percent": 76.3046,
+          "candidate_rank": 8,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            72.7227,
+            79.7684
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-rub-khali-oman-region-r800-c1040",
+          "name": "Rub al Khali Oman dune study area region: 13.2 km E, 6.0 km S",
+          "region_id": "rub-khali-oman-region",
+          "longitude": 54.2275212,
+          "latitude": 20.547764,
+          "inferred_landforms": [
+            "dune_field"
+          ],
+          "landform": {
+            "earth_family": "aeolian",
+            "planetary_family": "aeolian",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 77.2814,
+          "analog_score_percent": 76.1407,
+          "candidate_rank": 9,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            68.9392,
+            78.5093
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-rub-khali-oman-region-r1040-c720",
+          "name": "Rub al Khali Oman dune study area region: 3.6 km E, 13.2 km S",
+          "region_id": "rub-khali-oman-region",
+          "longitude": 54.1367464,
+          "latitude": 20.4812883,
+          "inferred_landforms": [
+            "dune_field"
+          ],
+          "landform": {
+            "earth_family": "aeolian",
+            "planetary_family": "aeolian",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 77.2356,
+          "analog_score_percent": 76.1178,
+          "candidate_rank": 10,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            71.9939,
+            81.0397
+          ],
+          "window_sensitivity": "limited_change"
+        }
+      ]
+    },
+    "jezero": {
+      "comparison_resolution_m": 500.0,
+      "windows_scored": 3361,
+      "windows_at_or_above_cutoff": 783,
+      "shortlist": [
+        {
+          "id": "scan-badwater-region-r320-c320",
+          "name": "Badwater Basin region: 8.0 km W, 8.0 km N",
+          "region_id": "badwater-region",
+          "longitude": -116.9138305,
+          "latitude": 36.3175611,
+          "inferred_landforms": [
+            "playa"
+          ],
+          "landform": {
+            "earth_family": "sedimentary",
+            "planetary_family": "sedimentary",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 89.6645,
+          "analog_score_percent": 82.3323,
+          "candidate_rank": 1,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            86.3799,
+            90.007
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-bisti-badlands-region-r800-c160",
+          "name": "Bisti badlands study area region: 13.3 km W, 5.8 km S",
+          "region_id": "bisti-badlands-region",
+          "longitude": -108.3997327,
+          "latitude": 36.2208992,
+          "inferred_landforms": [
+            "badlands"
+          ],
+          "landform": {
+            "earth_family": "sedimentary",
+            "planetary_family": "sedimentary",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 89.6371,
+          "analog_score_percent": 82.3186,
+          "candidate_rank": 2,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            86.7195,
+            91.0361
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-badwater-region-r720-c400",
+          "name": "Badwater Basin region: 5.6 km W, 4.0 km S",
+          "region_id": "badwater-region",
+          "longitude": -116.8872496,
+          "latitude": 36.2093525,
+          "inferred_landforms": [
+            "playa"
+          ],
+          "landform": {
+            "earth_family": "sedimentary",
+            "planetary_family": "sedimentary",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 89.1312,
+          "analog_score_percent": 82.0656,
+          "candidate_rank": 3,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            86.9252,
+            89.7889
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-dallol-region-r240-c1120",
+          "name": "Dallol salt-dome study area region: 15.9 km E, 10.5 km N",
+          "region_id": "dallol-region",
+          "longitude": 40.447892,
+          "latitude": 14.3342795,
+          "inferred_landforms": [
+            "playa"
+          ],
+          "landform": {
+            "earth_family": "sedimentary",
+            "planetary_family": "sedimentary",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 88.713,
+          "analog_score_percent": 81.8565,
+          "candidate_rank": 4,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            83.7578,
+            88.713
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-lake-abbe-margin-region-r960-c1120",
+          "name": "Lake Abbe eastern margin study area region: 15.8 km E, 11.0 km S",
+          "region_id": "lake-abbe-margin-region",
+          "longitude": 41.9836591,
+          "latitude": 11.04439,
+          "inferred_landforms": [
+            "playa"
+          ],
+          "landform": {
+            "earth_family": "sedimentary",
+            "planetary_family": "sedimentary",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 88.6794,
+          "analog_score_percent": 81.8397,
+          "candidate_rank": 5,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            88.5592,
+            91.5112
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-bisti-badlands-region-r1040-c160",
+          "name": "Bisti badlands study area region: 13.3 km W, 13.0 km S",
+          "region_id": "bisti-badlands-region",
+          "longitude": -108.4018769,
+          "latitude": 36.1560534,
+          "inferred_landforms": [
+            "badlands"
+          ],
+          "landform": {
+            "earth_family": "sedimentary",
+            "planetary_family": "sedimentary",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 88.5389,
+          "analog_score_percent": 81.7695,
+          "candidate_rank": 6,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            82.8055,
+            90.2164
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-bisti-badlands-region-r560-c320",
+          "name": "Bisti badlands study area region: 8.5 km W, 1.4 km N",
+          "region_id": "bisti-badlands-region",
+          "longitude": -108.3441872,
+          "latitude": 36.2845694,
+          "inferred_landforms": [
+            "badlands"
+          ],
+          "landform": {
+            "earth_family": "sedimentary",
+            "planetary_family": "sedimentary",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 88.2965,
+          "analog_score_percent": 81.6482,
+          "candidate_rank": 7,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            85.7157,
+            88.9
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-capitol-reef-region-r800-c1120",
+          "name": "Capitol Reef sedimentary study area region: 15.9 km E, 6.4 km S",
+          "region_id": "capitol-reef-region",
+          "longitude": -110.9479614,
+          "latitude": 38.2226928,
+          "inferred_landforms": [
+            "canyon"
+          ],
+          "landform": {
+            "earth_family": "sedimentary",
+            "planetary_family": "sedimentary",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 87.9939,
+          "analog_score_percent": 81.4969,
+          "candidate_rank": 8,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            84.6931,
+            90.5671
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-bisti-badlands-region-r1120-c400",
+          "name": "Bisti badlands study area region: 6.1 km W, 15.4 km S",
+          "region_id": "bisti-badlands-region",
+          "longitude": -108.3226532,
+          "latitude": 36.1326766,
+          "inferred_landforms": [
+            "badlands"
+          ],
+          "landform": {
+            "earth_family": "sedimentary",
+            "planetary_family": "sedimentary",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 87.8724,
+          "analog_score_percent": 81.4362,
+          "candidate_rank": 9,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            84.9711,
+            89.4817
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-lake-abbe-margin-region-r160-c880",
+          "name": "Lake Abbe eastern margin study area region: 8.6 km E, 13.0 km N",
+          "region_id": "lake-abbe-margin-region",
+          "longitude": 41.9199946,
+          "latitude": 11.2618027,
+          "inferred_landforms": [
+            "playa"
+          ],
+          "landform": {
+            "earth_family": "sedimentary",
+            "planetary_family": "sedimentary",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 87.7108,
+          "analog_score_percent": 81.3554,
+          "candidate_rank": 10,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            84.4863,
+            90.209
+          ],
+          "window_sensitivity": "limited_change"
+        }
+      ]
+    },
+    "lucus-planum": {
+      "comparison_resolution_m": 500.0,
+      "windows_scored": 3361,
+      "windows_at_or_above_cutoff": 497,
+      "shortlist": [
+        {
+          "id": "scan-lut-yardangs-region-r1040-c800",
+          "name": "Lut western yardang study area region: 6.3 km E, 13.4 km S",
+          "region_id": "lut-yardangs-region",
+          "longitude": 57.8944599,
+          "latitude": 30.4082624,
+          "inferred_landforms": [
+            "rocky_desert"
+          ],
+          "landform": {
+            "earth_family": "desert",
+            "planetary_family": "desert",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 96.8967,
+          "analog_score_percent": 85.9484,
+          "candidate_rank": 1,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            95.6862,
+            97.5649
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-lut-yardangs-region-r160-c160",
+          "name": "Lut western yardang study area region: 12.9 km W, 13.0 km N",
+          "region_id": "lut-yardangs-region",
+          "longitude": 57.6962798,
+          "latitude": 30.6476914,
+          "inferred_landforms": [
+            "rocky_desert"
+          ],
+          "landform": {
+            "earth_family": "desert",
+            "planetary_family": "desert",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 96.65,
+          "analog_score_percent": 85.825,
+          "candidate_rank": 2,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            96.3448,
+            96.9947
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-atacama-yungay-region-r160-c1040",
+          "name": "Atacama Yungay regional study area region: 13.5 km E, 12.9 km N",
+          "region_id": "atacama-yungay-region",
+          "longitude": -69.7268951,
+          "latitude": -23.9643035,
+          "inferred_landforms": [
+            "rocky_desert"
+          ],
+          "landform": {
+            "earth_family": "desert",
+            "planetary_family": "desert",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 96.4313,
+          "analog_score_percent": 85.7156,
+          "candidate_rank": 3,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            95.6591,
+            96.5567
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-atacama-yungay-region-r80-c880",
+          "name": "Atacama Yungay regional study area region: 8.7 km E, 15.3 km N",
+          "region_id": "atacama-yungay-region",
+          "longitude": -69.7739411,
+          "latitude": -23.9423972,
+          "inferred_landforms": [
+            "rocky_desert"
+          ],
+          "landform": {
+            "earth_family": "desert",
+            "planetary_family": "desert",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 96.1693,
+          "analog_score_percent": 85.5847,
+          "candidate_rank": 4,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            94.6355,
+            96.3435
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-atacama-yungay-region-r1120-c1040",
+          "name": "Atacama Yungay regional study area region: 13.5 km E, 15.9 km S",
+          "region_id": "atacama-yungay-region",
+          "longitude": -69.7283642,
+          "latitude": -24.2244091,
+          "inferred_landforms": [
+            "rocky_desert"
+          ],
+          "landform": {
+            "earth_family": "desert",
+            "planetary_family": "desert",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 96.0804,
+          "analog_score_percent": 85.5402,
+          "candidate_rank": 5,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            94.5677,
+            96.4586
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-atacama-yungay-region-r880-c1120",
+          "name": "Atacama Yungay regional study area region: 15.9 km E, 8.7 km S",
+          "region_id": "atacama-yungay-region",
+          "longitude": -69.7043713,
+          "latitude": -24.1594945,
+          "inferred_landforms": [
+            "rocky_desert"
+          ],
+          "landform": {
+            "earth_family": "desert",
+            "planetary_family": "desert",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 95.9131,
+          "analog_score_percent": 85.4566,
+          "candidate_rank": 6,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            95.518,
+            96.2147
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-lut-yardangs-region-r880-c640",
+          "name": "Lut western yardang study area region: 1.5 km E, 8.6 km S",
+          "region_id": "lut-yardangs-region",
+          "longitude": 57.8448651,
+          "latitude": 30.4519057,
+          "inferred_landforms": [
+            "rocky_desert"
+          ],
+          "landform": {
+            "earth_family": "desert",
+            "planetary_family": "desert",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 95.8595,
+          "analog_score_percent": 85.4297,
+          "candidate_rank": 7,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            92.2641,
+            96.1178
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-lut-yardangs-region-r400-c80",
+          "name": "Lut western yardang study area region: 15.3 km W, 5.8 km N",
+          "region_id": "lut-yardangs-region",
+          "longitude": 57.6707853,
+          "latitude": 30.5828565,
+          "inferred_landforms": [
+            "rocky_desert"
+          ],
+          "landform": {
+            "earth_family": "desert",
+            "planetary_family": "desert",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 95.6072,
+          "analog_score_percent": 85.3036,
+          "candidate_rank": 8,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            95.3508,
+            95.8424
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-lut-yardangs-region-r400-c480",
+          "name": "Lut western yardang study area region: 3.3 km W, 5.8 km N",
+          "region_id": "lut-yardangs-region",
+          "longitude": 57.7959322,
+          "latitude": 30.5821513,
+          "inferred_landforms": [
+            "rocky_desert"
+          ],
+          "landform": {
+            "earth_family": "desert",
+            "planetary_family": "desert",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 95.5284,
+          "analog_score_percent": 85.2642,
+          "candidate_rank": 9,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            94.98,
+            96.2669
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-richat-ridges-region-r720-c800",
+          "name": "Richat eastern ridges study area region: 6.1 km E, 3.7 km S",
+          "region_id": "richat-ridges-region",
+          "longitude": -11.2510546,
+          "latitude": 21.1275043,
+          "inferred_landforms": [
+            "rocky_desert"
+          ],
+          "landform": {
+            "earth_family": "desert",
+            "planetary_family": "desert",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 94.646,
+          "analog_score_percent": 84.823,
+          "candidate_rank": 10,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            92.2531,
+            95.0372
+          ],
+          "window_sensitivity": "limited_change"
+        }
+      ]
+    },
+    "malapert-massif": {
+      "comparison_resolution_m": 150.0,
+      "windows_scored": 3361,
+      "windows_at_or_above_cutoff": 2,
+      "shortlist": []
+    },
+    "marius-hills": {
+      "comparison_resolution_m": 150.0,
+      "windows_scored": 3361,
+      "windows_at_or_above_cutoff": 664,
+      "shortlist": [
+        {
+          "id": "scan-harrat-khaybar-region-r720-c320",
+          "name": "Harrat Khaybar volcanic study area region: 8.1 km W, 3.9 km S",
+          "region_id": "harrat-khaybar-region",
+          "longitude": 39.8489677,
+          "latitude": 25.635708,
+          "inferred_landforms": [
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 93.5465,
+          "analog_score_percent": 84.2733,
+          "candidate_rank": 1,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            90.9034,
+            94.9211
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-amboy-region-r1840-c560",
+          "name": "Amboy Crater region / Cima volcanic field study area region: 1.7 km W, 36.6 km N",
+          "region_id": "amboy-region",
+          "longitude": -115.7939733,
+          "latitude": 34.8801438,
+          "inferred_landforms": [
+            "crater",
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 93.5031,
+          "analog_score_percent": 84.2516,
+          "candidate_rank": 2,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            91.6787,
+            94.9873
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-amboy-region-r1440-c800",
+          "name": "Amboy Crater region / Cima volcanic field study area region: 5.5 km E, 48.6 km N",
+          "region_id": "amboy-region",
+          "longitude": -115.7135162,
+          "latitude": 34.98752,
+          "inferred_landforms": [
+            "crater",
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 93.2586,
+          "analog_score_percent": 84.1293,
+          "candidate_rank": 3,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            92.0253,
+            94.3143
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-askja-east-region-r1040-c160",
+          "name": "Askja eastern volcanic terrain study area region: 13.4 km W, 13.0 km S",
+          "region_id": "askja-east-region",
+          "longitude": -16.8769248,
+          "latitude": 64.9348035,
+          "inferred_landforms": [
+            "volcanic_plain"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 92.8318,
+          "analog_score_percent": 83.9159,
+          "candidate_rank": 4,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            90.0222,
+            95.7906
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-harrat-khaybar-region-r240-c1040",
+          "name": "Harrat Khaybar volcanic study area region: 13.5 km E, 10.5 km N",
+          "region_id": "harrat-khaybar-region",
+          "longitude": 40.0652658,
+          "latitude": 25.764312,
+          "inferred_landforms": [
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 92.7706,
+          "analog_score_percent": 83.8853,
+          "candidate_rank": 5,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            90.7838,
+            93.9139
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-harrat-khaybar-region-r800-c80",
+          "name": "Harrat Khaybar volcanic study area region: 15.3 km W, 6.3 km S",
+          "region_id": "harrat-khaybar-region",
+          "longitude": 39.7771102,
+          "latitude": 25.6144364,
+          "inferred_landforms": [
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 92.7019,
+          "analog_score_percent": 83.8509,
+          "candidate_rank": 6,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            89.3779,
+            94.2675
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-amboy-region-r1520-c640",
+          "name": "Amboy Crater region / Cima volcanic field study area region: 0.7 km E, 46.2 km N",
+          "region_id": "amboy-region",
+          "longitude": -115.766422,
+          "latitude": 34.9664289,
+          "inferred_landforms": [
+            "crater",
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 92.5236,
+          "analog_score_percent": 83.7618,
+          "candidate_rank": 7,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            90.4367,
+            93.5895
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-harrat-khaybar-region-r960-c240",
+          "name": "Harrat Khaybar volcanic study area region: 10.5 km W, 11.1 km S",
+          "region_id": "harrat-khaybar-region",
+          "longitude": 39.824616,
+          "latitude": 25.5708332,
+          "inferred_landforms": [
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 92.3875,
+          "analog_score_percent": 83.6937,
+          "candidate_rank": 8,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            89.954,
+            93.4041
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-amboy-region-r3520-c160",
+          "name": "Amboy Crater region / Cima volcanic field study area region: 13.7 km W, 13.8 km S",
+          "region_id": "amboy-region",
+          "longitude": -115.9311117,
+          "latitude": 34.4269503,
+          "inferred_landforms": [
+            "crater",
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 92.1916,
+          "analog_score_percent": 83.5958,
+          "candidate_rank": 9,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            90.0473,
+            93.1308
+          ],
+          "window_sensitivity": "limited_change"
+        },
+        {
+          "id": "scan-harrat-khaybar-region-r1120-c1120",
+          "name": "Harrat Khaybar volcanic study area region: 15.9 km E, 15.9 km S",
+          "region_id": "harrat-khaybar-region",
+          "longitude": 40.0870337,
+          "latitude": 25.5257781,
+          "inferred_landforms": [
+            "lava_field"
+          ],
+          "landform": {
+            "earth_family": "volcanic",
+            "planetary_family": "volcanic",
+            "relation": "same_family",
+            "match_percent": 75.0,
+            "status": "inferred_from_scan_region_unreviewed"
+          },
+          "terrain_similarity_percent": 92.1908,
+          "analog_score_percent": 83.5954,
+          "candidate_rank": 10,
+          "evidence_status": "exploratory_terrain_only",
+          "terrain_range_percent": [
+            90.9517,
+            93.6473
+          ],
+          "window_sensitivity": "limited_change"
+        }
+      ]
+    },
+    "mons-mouton": {
+      "comparison_resolution_m": 150.0,
+      "windows_scored": 3361,
+      "windows_at_or_above_cutoff": 1,
+      "shortlist": []
+    },
+    "phoenix": {
+      "comparison_resolution_m": 500.0,
+      "windows_scored": 3361,
+      "windows_at_or_above_cutoff": 0,
+      "shortlist": []
+    },
+    "shackleton-rim": {
+      "comparison_resolution_m": 150.0,
+      "windows_scored": 3361,
+      "windows_at_or_above_cutoff": 0,
+      "shortlist": []
+    }
+  }
+}

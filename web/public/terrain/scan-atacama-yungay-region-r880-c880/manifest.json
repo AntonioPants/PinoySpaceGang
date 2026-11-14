@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "scan-atacama-yungay-region-r880-c880",
+  "name": "Atacama Yungay regional study area region: 8.7 km E, 8.7 km S",
+  "body": "earth",
+  "grid": {
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "dtype": "float32",
+    "byte_order": "little-endian",
+    "sample_file": "elevation.f32",
+    "order": "north-first, west-first",
+    "crs_wkt": "PROJCS[\"WGS 84 / UTM zone 19S\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",0],PARAMETER[\"central_meridian\",-69],PARAMETER[\"scale_factor\",0.9996],PARAMETER[\"false_easting\",500000],PARAMETER[\"false_northing\",10000000],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH],AUTHORITY[\"EPSG\",\"32719\"]]",
+    "affine": [
+      30.0,
+      0.0,
+      418830.0,
+      0.0,
+      -30.0,
+      7330350.0
+    ],
+    "sample_coordinates": "GeoTIFF pixel centres; sample endpoints span 4800m; pixel footprint spans 4830m.",
+    "nodata": null,
+    "nodata_policy": "Reject entire window if any elevation sample is missing."
+  },
+  "local_frame": {
+    "vertical_offset_m": 1014.0
+  },
+  "source": {
+    "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S25_00_W071_00_DEM/Copernicus_DSM_COG_10_S25_00_W071_00_DEM.tif",
+    "source_tiles": [
+      {
+        "tile_id": "Copernicus_DSM_COG_10_S25_00_W071_00_DEM",
+        "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S25_00_W071_00_DEM/Copernicus_DSM_COG_10_S25_00_W071_00_DEM.tif",
+        "sha256": "fbe8f6d1b2c68aeb8ce7032dc0b003e6f3fc0717136cb1d426f7d86465086a0f"
+      },
+      {
+        "tile_id": "Copernicus_DSM_COG_10_S25_00_W070_00_DEM",
+        "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S25_00_W070_00_DEM/Copernicus_DSM_COG_10_S25_00_W070_00_DEM.tif",
+        "sha256": "ac7b8fce2e8598c5d522fd0f6ff0b4a1ae6f6c5aecda55671fc6e2bd82ec7710"
+      },
+      {
+        "tile_id": "Copernicus_DSM_COG_10_S24_00_W071_00_DEM",
+        "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S24_00_W071_00_DEM/Copernicus_DSM_COG_10_S24_00_W071_00_DEM.tif",
+        "sha256": "2562c4e6fac92922caa80941505eabf6998be1a32d139a8fe07c78632bc4ea9b"
+      },
+      {
+        "tile_id": "Copernicus_DSM_COG_10_S24_00_W070_00_DEM",
+        "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S24_00_W070_00_DEM/Copernicus_DSM_COG_10_S24_00_W070_00_DEM.tif",
+        "sha256": "4d8745aed594bac867a2fe434fbf7ea7d092580b077de396e67874febb2730f3"
+      }
+    ],
+    "native_spacing_m_approx": 30,
+    "vertical_datum": "EGM2008",
+    "coverage": "Copernicus primarily 2011-2015; local acquisition unknown",
+    "receipt_file": "source-receipt.json",
+    "subset_file": "elevation.tif",
+    "subset_sha256": "0d5f4617d662a30552d3aaec5da878906b7dffa5810147e3e667f5a6ca1c7dff"
+  },
+  "attribution": "produced using Copernicus WorldDEM-30, DLR e.V. 2010-2014 and Airbus Defence and Space GmbH 2014-2018, European Union and ESA",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "limitations": [
+    "Land cover is a 2021 classification, not current traversability or soil mechanics.",
+    "Bare/sparse does not distinguish sand, rock, lava or salt composition. No research-tier pairing inferred.",
+    "DSM may include vegetation and structures; not a guaranteed bare-earth surface.",
+    "Native postings vary with latitude; 30m output does not create new detail.",
+    "Exploratory window without reviewed geological classification or planetary pairing."
+  ]
+}

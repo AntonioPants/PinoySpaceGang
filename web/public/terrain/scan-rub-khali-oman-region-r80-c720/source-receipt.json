@@ -1,0 +1,90 @@
+{
+  "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N20_00_E053_00_DEM/Copernicus_DSM_COG_10_N20_00_E053_00_DEM.tif",
+  "sha256": "1ffdc7d1d764bb8e37adde124924b910262d037f2890d5b75f1ad7950a3918dc",
+  "source_tiles": [
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N20_00_E053_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N20_00_E053_00_DEM/Copernicus_DSM_COG_10_N20_00_E053_00_DEM.tif",
+      "sha256": "329bfae8984ff4992aa1a30cfda06800fa423fcf28eccd6d55bad98aa956636e"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N20_00_E054_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N20_00_E054_00_DEM/Copernicus_DSM_COG_10_N20_00_E054_00_DEM.tif",
+      "sha256": "9c5b2f28e88e446167964e3be4ceaa09a0ea20f03e14e0f45f985d4f6d12239d"
+    }
+  ],
+  "regional_dem_sha256": "e4914fd5762c2124debf28584b753deeab96db5ee0bc19b2f5fcd0804dab4675",
+  "region_id": "rub-khali-oman-region",
+  "window": {
+    "region_dem": "data/raw/location-scan/regions/rub-khali-oman-region/dem.tif",
+    "row": 80,
+    "column": 720,
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "row_order": "north_to_south",
+    "column_order": "west_to_east",
+    "crs": "EPSG:32640",
+    "affine": [
+      30.0,
+      0.0,
+      198900.0,
+      0.0,
+      -30.0,
+      2298570.0
+    ],
+    "elevation_sha256": "efa5987343f941f4d2df461742556601468952f50197f33df7c0ad92cdc8898d"
+  },
+  "land_cover": {
+    "fractions": {
+      "60": 1.0
+    },
+    "allowed_fraction": 1.0,
+    "excluded_fraction": 0,
+    "nodata_fraction": 0,
+    "accepted": true
+  },
+  "worldcover_sources": {
+    "tiles": [
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_N18E051_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N18E051_Map.tif",
+        "sha256": "57a3e6b1c806e0bf1b2551b9e1c3b97f908bf339827eb62d5b856f1eda725bf5"
+      },
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_N18E054_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N18E054_Map.tif",
+        "sha256": "6f19a3696b43eef1d8b19af0d2c21307eaefaf616b2a749d8351878ad479c52d"
+      }
+    ],
+    "sha256": "58fdbf6eb96b4a0f906bc0a78d37aad2c49d0cc5f068b342f906471a70933d16",
+    "spacing_m": 10,
+    "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+    "product_id": "ESA WorldCover 10m 2021 v200",
+    "native_resolution_m_approx": 10,
+    "time_coverage": "2021",
+    "units": "WorldCover class codes (dimensionless)",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "method": "Bilinear Copernicus tile mosaic to local UTM at 30m; integer crop, no nodata filling.",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "land_cover_license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "registration_provenance": {
+    "method_version": "1.0.0",
+    "window_id": "scan-rub-khali-oman-region-r80-c720",
+    "region_id": "rub-khali-oman-region",
+    "seed_site_ids": [
+      "rub-khali-oman"
+    ],
+    "source_urls": [
+      "https://eol.jsc.nasa.gov/Collections/EarthFromSpace/photoinfo.pl?PHOTO=ISS027-E-34290"
+    ],
+    "index_sha256": "6532fa26fa8640dbeb7513fdf29759bc2d36600909bc1d7cc8f62393ae378fed",
+    "shortlist_sha256": "51199fa35e0aca34c3194e579d04f6ccc861ed9c9370b51a7c55072b62333007",
+    "evidence_status": "exploratory_terrain_only",
+    "inference_method": "Region seed labels supplied by scan_matches; unreviewed at this window. The live scorer discounts inferred labels and excludes crater inference.",
+    "shortlisted_for": [
+      "bagnold"
+    ]
+  }
+}

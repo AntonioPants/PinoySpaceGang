@@ -26,7 +26,7 @@ export function CatalogDetails({ site }: { site?: SiteTerrain }) {
   return <section className="catalog-details" aria-label="Site catalog data">
     <h2>Site categories and conditions</h2>
     <p>{data.record.name}. These are source-site properties; a planetary scenario does not turn Earth weather into planetary measurements.</p>
-    <details open><summary>Pairing accuracy checks</summary>
+    <details open><summary>Comparison reliability checks</summary>
       <p>Regional terrain similarity is not an accuracy percentage. These checks reproduce the grid measurements and test sensitivity to moving the analysis window. Independent scientific validation, environmental equivalence and landing safety remain unestablished.</p>
       {data.pairings.map(pair => <details key={`${pair.earth_id}-${pair.planetary_id}`}>
         <summary>{label(pair.earth_id)} → {label(pair.planetary_id)}</summary>

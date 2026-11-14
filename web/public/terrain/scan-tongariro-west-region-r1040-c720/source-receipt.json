@@ -1,0 +1,94 @@
+{
+  "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S40_00_E175_00_DEM/Copernicus_DSM_COG_10_S40_00_E175_00_DEM.tif",
+  "sha256": "a5ea50ef165c0f3c8b0eec968b03b50b62534d1872c3f52ee503a2fcca65913d",
+  "source_tiles": [
+    {
+      "tile_id": "Copernicus_DSM_COG_10_S40_00_E175_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S40_00_E175_00_DEM/Copernicus_DSM_COG_10_S40_00_E175_00_DEM.tif",
+      "sha256": "e095bb3c4ff3cdf525b24ff56f1f5b44ea8b9d1f3a1cc0f6a5b72af626a3a39a"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_S39_00_E175_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S39_00_E175_00_DEM/Copernicus_DSM_COG_10_S39_00_E175_00_DEM.tif",
+      "sha256": "e4bb9382adfc12b6e73cf5753d733cf783788d96ec6acfa7ec7fc65cbbb4ff9c"
+    }
+  ],
+  "regional_dem_sha256": "567577470c69959ddebe8a8ee57a62935a0dfdd9ec24b402b5601b21bdc65266",
+  "region_id": "tongariro-west-region",
+  "window": {
+    "region_dem": "data/raw/location-scan/regions/tongariro-west-region/dem.tif",
+    "row": 1040,
+    "column": 720,
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "row_order": "north_to_south",
+    "column_order": "west_to_east",
+    "crs": "EPSG:32760",
+    "affine": [
+      30.0,
+      0.0,
+      378540.0,
+      0.0,
+      -30.0,
+      5654700.0
+    ],
+    "elevation_sha256": "ab58aee9f39765be08d53e73e1bda72adab9843941ef54228894e0728a22b6d3"
+  },
+  "land_cover": {
+    "fractions": {
+      "10": 4.286528726172258e-06,
+      "20": 4.286528726172258e-06,
+      "30": 0.09118303906313628,
+      "60": 0.9086669324314477,
+      "70": 0.00014145544796368453
+    },
+    "allowed_fraction": 0.9088083878794114,
+    "excluded_fraction": 4.286528726172258e-06,
+    "nodata_fraction": 0,
+    "accepted": true
+  },
+  "worldcover_sources": {
+    "tiles": [
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_S42E174_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S42E174_Map.tif",
+        "sha256": "ae579380212bb6ad4f343dd342740b7e4db8af6f38808ca108abaf39234e7d7e"
+      },
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_S39E174_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S39E174_Map.tif",
+        "sha256": "afd4c6ac155a16793ebd6f6e86b5e33c9bb29559419b3772c9949c77dbdc1fc9"
+      }
+    ],
+    "sha256": "289238895504d46dd9cf2418f2a57fdc03c39fad0b16bd4fbff0eccb4f2667f8",
+    "spacing_m": 10,
+    "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+    "product_id": "ESA WorldCover 10m 2021 v200",
+    "native_resolution_m_approx": 10,
+    "time_coverage": "2021",
+    "units": "WorldCover class codes (dimensionless)",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "method": "Bilinear Copernicus tile mosaic to local UTM at 30m; integer crop, no nodata filling.",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "land_cover_license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "registration_provenance": {
+    "method_version": "1.0.0",
+    "window_id": "scan-tongariro-west-region-r1040-c720",
+    "region_id": "tongariro-west-region",
+    "seed_site_ids": [
+      "tongariro-west"
+    ],
+    "source_urls": [
+      "https://www.doc.govt.nz/parks-and-recreation/places-to-go/central-north-island/places/tongariro-national-park/about-tongariro-national-park/central-north-island-volcanoes/"
+    ],
+    "index_sha256": "6532fa26fa8640dbeb7513fdf29759bc2d36600909bc1d7cc8f62393ae378fed",
+    "shortlist_sha256": "51199fa35e0aca34c3194e579d04f6ccc861ed9c9370b51a7c55072b62333007",
+    "evidence_status": "exploratory_terrain_only",
+    "inference_method": "Region seed labels supplied by scan_matches; unreviewed at this window. The live scorer discounts inferred labels and excludes crater inference.",
+    "shortlisted_for": [
+      "malapert-massif"
+    ]
+  }
+}

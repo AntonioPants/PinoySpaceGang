@@ -10,3 +10,8 @@
 *.glb binary
 *.png binary
 *.pdf binary
+# Generated receipts hash exact bytes, including producer-specific newlines.
+# Do not transform them during add, stash or checkout.
+web/public/terrain/** -text
+data/earth_index/** -text
+data/terrain-scales.json -text

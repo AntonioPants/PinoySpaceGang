@@ -581,6 +581,2337 @@
       "missing_feature_measurements": [],
       "seasonal_profile": null,
       "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "malapert-massif",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "bolometric_temperature_min",
+        "bolometric_temperature_max"
+      ],
+      "unknown_conditions": [
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m"
+      ],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "mons-mouton",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "bolometric_temperature_min",
+        "bolometric_temperature_max"
+      ],
+      "unknown_conditions": [
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m"
+      ],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "cima-lava-field",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "sunset-crater",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "great-sand-dunes",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "bisti-badlands",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "lanzarote-timanfaya",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "askja-east",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "atacama-yungay",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "sossusvlei-dunes",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "lonar-crater",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "wolfe-creek",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "wadi-rum",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "richat-ridges",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "harrat-khaybar",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "payun-matru",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "tongariro-west",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "erg-chebbi",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "teide-canadas",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "etna-east",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "fournaise-enclos",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "fogo-caldera",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "bromo-sandsea",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "pinacate-elegante",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "bardenas-blanca",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "tabernas-badlands",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "ischigualasto",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "talampaya-canyon",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "valle-luna-chile",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "uyuni-incahuasi",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "makgadikgadi-kubu",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "tsondab-dunes",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "rub-khali-oman",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "badain-jaran",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "taklamakan-interior",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "lut-yardangs",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "dunhuang-yardangs",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "dallol",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "lake-abbe-margin",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "hverir-namafjall",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "pingualuit",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_max",
+        "elevation_mean",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max",
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo"
+      ],
+      "unknown_conditions": [
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-amboy-region-r1280-c240",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-amboy-region-r1600-c480",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-amboy-region-r1600-c880",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-amboy-region-r1760-c400",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-amboy-region-r1920-c320",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-amboy-region-r2960-c1200",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-amboy-region-r3040-c80",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-amboy-region-r3120-c1120",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-amboy-region-r3120-c240",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-amboy-region-r3280-c1280",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-atacama-yungay-region-r240-c880",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-atacama-yungay-region-r800-c720",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-atacama-yungay-region-r880-c880",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-badain-jaran-region-r1120-c320",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-badwater-region-r1040-c480",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-dallol-region-r1120-c320",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-dallol-region-r560-c240",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-dallol-region-r960-c400",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-erg-chebbi-region-r320-c1040",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-erg-chebbi-region-r480-c1120",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-erg-chebbi-region-r480-c400",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-erg-chebbi-region-r640-c1120",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-erg-chebbi-region-r80-c1120",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-erg-chebbi-region-r800-c1120",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-erg-chebbi-region-r960-c80",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r1040-c80",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r1120-c320",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r160-c160",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r400-c320",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r480-c1040",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r640-c1120",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r640-c160",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r80-c880",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r960-c1040",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r960-c480",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-ischigualasto-region-r1280-c1040",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-ischigualasto-region-r1440-c720",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-ischigualasto-region-r1920-c800",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-ischigualasto-region-r720-c80",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-lake-abbe-margin-region-r320-c800",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-lake-abbe-margin-region-r400-c1120",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-lut-yardangs-region-r240-c400",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-lut-yardangs-region-r320-c240",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-lut-yardangs-region-r480-c240",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-lut-yardangs-region-r720-c240",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-lut-yardangs-region-r80-c320",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-lut-yardangs-region-r800-c400",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-lut-yardangs-region-r960-c400",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-rub-khali-oman-region-r80-c720",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-sossusvlei-dunes-region-r400-c1040",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-tongariro-west-region-r1040-c720",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
+    },
+    {
+      "id": "scan-tongariro-west-region-r1120-c800",
+      "known_conditions": [
+        "elevation_min",
+        "elevation_mean",
+        "elevation_max",
+        "slope_mean",
+        "slope_p50",
+        "slope_p95",
+        "slope_max"
+      ],
+      "unknown_conditions": [
+        "wind_speed_10m",
+        "air_temperature_2m",
+        "surface_temperature",
+        "albedo",
+        "friction",
+        "cohesion",
+        "bulk_density"
+      ],
+      "not_applicable_conditions": [],
+      "missing_feature_measurements": [],
+      "seasonal_profile": null,
+      "seasonal_reason": "No separate seasonal profile ingested; inspect catalog conditions for available annual or thermal-bin context."
     }
   ]
 }

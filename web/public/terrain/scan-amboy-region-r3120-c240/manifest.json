@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "id": "scan-amboy-region-r3120-c240",
+  "name": "Amboy Crater region / Cima volcanic field study area region: 11.3 km W, 1.8 km S",
+  "body": "earth",
+  "grid": {
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "dtype": "float32",
+    "byte_order": "little-endian",
+    "sample_file": "elevation.f32",
+    "order": "north-first, west-first",
+    "crs_wkt": "PROJCS[\"WGS 84 / UTM zone 11N\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",0],PARAMETER[\"central_meridian\",-117],PARAMETER[\"scale_factor\",0.9996],PARAMETER[\"false_easting\",500000],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH],AUTHORITY[\"EPSG\",\"32611\"]]",
+    "affine": [
+      30.0,
+      0.0,
+      598200.0,
+      0.0,
+      -30.0,
+      3824430.0
+    ],
+    "sample_coordinates": "GeoTIFF pixel centres; sample endpoints span 4800m; pixel footprint spans 4830m.",
+    "nodata": null,
+    "nodata_policy": "Reject entire window if any elevation sample is missing."
+  },
+  "local_frame": {
+    "vertical_offset_m": 184.0
+  },
+  "source": {
+    "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N34_00_W116_00_DEM/Copernicus_DSM_COG_10_N34_00_W116_00_DEM.tif",
+    "source_tiles": [
+      {
+        "tile_id": "Copernicus_DSM_COG_10_N34_00_W116_00_DEM",
+        "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N34_00_W116_00_DEM/Copernicus_DSM_COG_10_N34_00_W116_00_DEM.tif",
+        "sha256": "d33e98701a8927cd37430841d4d2c316a65641cc6889e1c492e7b9a0f660868c"
+      },
+      {
+        "tile_id": "Copernicus_DSM_COG_10_N35_00_W116_00_DEM",
+        "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N35_00_W116_00_DEM/Copernicus_DSM_COG_10_N35_00_W116_00_DEM.tif",
+        "sha256": "e24669f739b2d5216495b36070a749ced07d1e2005dd0a511739ce6b7bf40860"
+      }
+    ],
+    "native_spacing_m_approx": 30,
+    "vertical_datum": "EGM2008",
+    "coverage": "Copernicus primarily 2011-2015; local acquisition unknown",
+    "receipt_file": "source-receipt.json",
+    "subset_file": "elevation.tif",
+    "subset_sha256": "e08d7032d313fdb1d0f1274e2dd6b4bce7344bdd85b6eebd36b7ada91cf404e0"
+  },
+  "attribution": "produced using Copernicus WorldDEM-30, DLR e.V. 2010-2014 and Airbus Defence and Space GmbH 2014-2018, European Union and ESA",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "limitations": [
+    "Land cover is a 2021 classification, not current traversability or soil mechanics.",
+    "Bare/sparse does not distinguish sand, rock, lava or salt composition. No research-tier pairing inferred.",
+    "DSM may include vegetation and structures; not a guaranteed bare-earth surface.",
+    "Native postings vary with latitude; 30m output does not create new detail.",
+    "Exploratory window without reviewed geological classification or planetary pairing."
+  ]
+}

@@ -1,0 +1,257 @@
+{
+  "schema_version": "1.0.0",
+  "config_sha256": "f553c4c33f38ce29542d298a5b6e2c91d45ea861b8b5eee8090fd81e22ec12c5",
+  "scan_defaults": {
+    "stride_m": 2400,
+    "window_samples": 161,
+    "spacing_m": 30,
+    "max_download_gb": 20,
+    "min_allowed_fraction": 0.8,
+    "max_excluded_fraction": 0.05,
+    "max_nodata_fraction": 0.01
+  },
+  "window_count": 3361,
+  "regions": {
+    "amboy-region": {
+      "considered": 782,
+      "accepted": 459,
+      "rejected": {
+        "outside_region": 87,
+        "land_cover": 236
+      }
+    },
+    "askja-east-region": {
+      "considered": 256,
+      "accepted": 154,
+      "rejected": {
+        "outside_region": 57,
+        "land_cover": 45
+      }
+    },
+    "atacama-yungay-region": {
+      "considered": 225,
+      "accepted": 196,
+      "rejected": {
+        "outside_region": 29
+      }
+    },
+    "badain-jaran-region": {
+      "considered": 256,
+      "accepted": 191,
+      "rejected": {
+        "outside_region": 54,
+        "land_cover": 11
+      }
+    },
+    "badwater-region": {
+      "considered": 225,
+      "accepted": 160,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 36
+      }
+    },
+    "bardenas-blanca-region": {
+      "considered": 225,
+      "accepted": 0,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 196
+      }
+    },
+    "barrow-observatory-region": {
+      "considered": 256,
+      "accepted": 0,
+      "rejected": {
+        "outside_region": 50,
+        "land_cover": 206
+      }
+    },
+    "bisti-badlands-region": {
+      "considered": 256,
+      "accepted": 83,
+      "rejected": {
+        "outside_region": 55,
+        "land_cover": 118
+      }
+    },
+    "bromo-sandsea-region": {
+      "considered": 225,
+      "accepted": 0,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 196
+      }
+    },
+    "capitol-reef-region": {
+      "considered": 225,
+      "accepted": 90,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 106
+      }
+    },
+    "dallol-region": {
+      "considered": 225,
+      "accepted": 184,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 12
+      }
+    },
+    "erg-chebbi-region": {
+      "considered": 225,
+      "accepted": 196,
+      "rejected": {
+        "outside_region": 29
+      }
+    },
+    "etna-east-region": {
+      "considered": 225,
+      "accepted": 4,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 192
+      }
+    },
+    "fogo-caldera-region": {
+      "considered": 225,
+      "accepted": 4,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 192
+      }
+    },
+    "fournaise-enclos-region": {
+      "considered": 225,
+      "accepted": 0,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 196
+      }
+    },
+    "harrat-khaybar-region": {
+      "considered": 225,
+      "accepted": 196,
+      "rejected": {
+        "outside_region": 29
+      }
+    },
+    "haughton-region": {
+      "considered": 256,
+      "accepted": 12,
+      "rejected": {
+        "outside_region": 43,
+        "land_cover": 201
+      }
+    },
+    "ischigualasto-region": {
+      "considered": 560,
+      "accepted": 61,
+      "rejected": {
+        "outside_region": 47,
+        "land_cover": 452
+      }
+    },
+    "lake-abbe-margin-region": {
+      "considered": 225,
+      "accepted": 111,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 85
+      }
+    },
+    "lonar-crater-region": {
+      "considered": 225,
+      "accepted": 0,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 196
+      }
+    },
+    "lut-yardangs-region": {
+      "considered": 225,
+      "accepted": 163,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 33
+      }
+    },
+    "makgadikgadi-kubu-region": {
+      "considered": 225,
+      "accepted": 62,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 134
+      }
+    },
+    "pinacate-elegante-region": {
+      "considered": 256,
+      "accepted": 63,
+      "rejected": {
+        "outside_region": 60,
+        "land_cover": 133
+      }
+    },
+    "richat-ridges-region": {
+      "considered": 225,
+      "accepted": 196,
+      "rejected": {
+        "outside_region": 29
+      }
+    },
+    "rub-khali-oman-region": {
+      "considered": 225,
+      "accepted": 196,
+      "rejected": {
+        "outside_region": 29
+      }
+    },
+    "sossusvlei-dunes-region": {
+      "considered": 225,
+      "accepted": 191,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 5
+      }
+    },
+    "tongariro-west-region": {
+      "considered": 225,
+      "accepted": 8,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 188
+      }
+    },
+    "uyuni-incahuasi-region": {
+      "considered": 225,
+      "accepted": 196,
+      "rejected": {
+        "outside_region": 29
+      }
+    },
+    "wadi-rum-region": {
+      "considered": 256,
+      "accepted": 185,
+      "rejected": {
+        "outside_region": 60,
+        "land_cover": 11
+      }
+    },
+    "wolfe-creek-region": {
+      "considered": 225,
+      "accepted": 0,
+      "rejected": {
+        "outside_region": 29,
+        "land_cover": 196
+      }
+    }
+  },
+  "index_bytes": 4269698,
+  "index_sha256": "6532fa26fa8640dbeb7513fdf29759bc2d36600909bc1d7cc8f62393ae378fed",
+  "sources_sha256": "b1b934f641b3b2c6670e95bcc486727c0615c83f9c234e217889268bef3f4bed",
+  "source_bytes": 4304353120,
+  "descriptor_status": "awaiting_accuracy_pipeline",
+  "scores_present": false,
+  "reason": "Location discovery handoff only; calibrated features and ranking are owned by the accuracy pipeline."
+}

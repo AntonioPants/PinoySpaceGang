@@ -1,0 +1,102 @@
+{
+  "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N10_00_E041_00_DEM/Copernicus_DSM_COG_10_N10_00_E041_00_DEM.tif",
+  "sha256": "9a764b79c2336131e65c276afb2f464f2413210caa6a36090ddee54a4079897d",
+  "source_tiles": [
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N10_00_E041_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N10_00_E041_00_DEM/Copernicus_DSM_COG_10_N10_00_E041_00_DEM.tif",
+      "sha256": "559d09b834e7efac1266d7a0f6085a4aea6235eebe2ee436a1ca458e4756b7cb"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N10_00_E042_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N10_00_E042_00_DEM/Copernicus_DSM_COG_10_N10_00_E042_00_DEM.tif",
+      "sha256": "2e548c1558da92271461f639cf16cc3b3cc6f403ecc7562b679d877569795678"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N11_00_E041_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N11_00_E041_00_DEM/Copernicus_DSM_COG_10_N11_00_E041_00_DEM.tif",
+      "sha256": "645120b0babcfbb50a48dcc5820a3db08fa31ffd526487141ffb9f0af0fe4cea"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N11_00_E042_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N11_00_E042_00_DEM/Copernicus_DSM_COG_10_N11_00_E042_00_DEM.tif",
+      "sha256": "a2c6fee91c9aed0b0b5d56582af16baec0a8e53c090d9506da2674e233d7bf64"
+    }
+  ],
+  "regional_dem_sha256": "f7f871c5fac3574a609ad0de5b4517a28c53384e2608e8d16191f6e116773936",
+  "region_id": "lake-abbe-margin-region",
+  "window": {
+    "region_dem": "data/raw/location-scan/regions/lake-abbe-margin-region/dem.tif",
+    "row": 400,
+    "column": 1120,
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "row_order": "north_to_south",
+    "column_order": "west_to_east",
+    "crs": "EPSG:32637",
+    "affine": [
+      30.0,
+      0.0,
+      823620.0,
+      0.0,
+      -30.0,
+      1241730.0
+    ],
+    "elevation_sha256": "2acd59b305e53613aada9ea9ba91129106ca726c17ca24e8573f3f72310ab99b"
+  },
+  "land_cover": {
+    "fractions": {
+      "20": 0.02871545593662796,
+      "30": 0.02271860224871297,
+      "60": 0.948565941814659
+    },
+    "allowed_fraction": 0.948565941814659,
+    "excluded_fraction": 0,
+    "nodata_fraction": 0,
+    "accepted": true
+  },
+  "worldcover_sources": {
+    "tiles": [
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_N09E039_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N09E039_Map.tif",
+        "sha256": "dd8b315c8fc1f4a27ae404d00bfd2f50f04b81246ef6675810788f4532f15b3a"
+      },
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_N09E042_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N09E042_Map.tif",
+        "sha256": "0c21c319e73aa4923c4d10ce96fc574027eccfa114c63250f6a09e7cd8f0776e"
+      }
+    ],
+    "sha256": "abf53253591dc2de6947d5541dc6277eb9fa3093014eba13f8bfcc17fa2fe459",
+    "spacing_m": 10,
+    "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+    "product_id": "ESA WorldCover 10m 2021 v200",
+    "native_resolution_m_approx": 10,
+    "time_coverage": "2021",
+    "units": "WorldCover class codes (dimensionless)",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "method": "Bilinear Copernicus tile mosaic to local UTM at 30m; integer crop, no nodata filling.",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "land_cover_license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "registration_provenance": {
+    "method_version": "1.0.0",
+    "window_id": "scan-lake-abbe-margin-region-r400-c1120",
+    "region_id": "lake-abbe-margin-region",
+    "seed_site_ids": [
+      "lake-abbe-margin"
+    ],
+    "source_urls": [
+      "https://www.esa.int/ESA_Multimedia/Images/2023/07/Earth_from_Space_Ethiopian_painting"
+    ],
+    "index_sha256": "6532fa26fa8640dbeb7513fdf29759bc2d36600909bc1d7cc8f62393ae378fed",
+    "shortlist_sha256": "51199fa35e0aca34c3194e579d04f6ccc861ed9c9370b51a7c55072b62333007",
+    "evidence_status": "exploratory_terrain_only",
+    "inference_method": "Region seed labels supplied by scan_matches; unreviewed at this window. The live scorer discounts inferred labels and excludes crater inference.",
+    "shortlisted_for": [
+      "jezero"
+    ]
+  }
+}
