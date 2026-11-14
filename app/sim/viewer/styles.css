@@ -14,6 +14,12 @@
   background: var(--bg);
 }
 * { box-sizing: border-box; }
+.catalog-details { overflow-wrap: anywhere; margin: 12px 0; }
+.catalog-details details { padding: 5px 0; border-bottom: 1px solid var(--line); }
+.catalog-details summary { cursor: pointer; text-transform: capitalize; }
+.catalog-details dt { color: var(--dim); margin-top: 6px; }
+.catalog-details dd { margin-left: 8px; }
+.catalog-details a { color: var(--accent); }
 body { margin: 0; }
 #root { height: 100vh; display: grid; grid-template-columns: 250px 1fr 320px; grid-template-rows: 44px 1fr; }
 header { grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; padding: 0 16px; border-bottom: 1px solid var(--line); background: var(--panel); }

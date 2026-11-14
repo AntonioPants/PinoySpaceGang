@@ -15,8 +15,10 @@
  */
 import type { Body, SiteTerrain } from './types.ts';
 import { terrainPackToSite, type TerrainPackManifest } from './loaders.ts';
+import { catalogEnvironment, type CatalogEnvironment } from './catalog-environment.ts';
 
 export interface CatalogQuantity {
+  [key: string]: unknown;
   value: number | null;
   unit?: string;
   status?: string;
@@ -24,6 +26,8 @@ export interface CatalogQuantity {
 }
 
 export interface CatalogSite {
+  /** Preserve additional schema fields instead of projecting them away. */
+  [key: string]: unknown;
   id: string;
   name: string;
   body: Body;
@@ -34,9 +38,19 @@ export interface CatalogSite {
   morphology?: string;
   terrain: { manifest_url: string; rows: number; columns: number; spacing_m: number } | null;
   conditions: Record<string, CatalogQuantity>;
+  classification?: Record<string, unknown>;
+  identifiers?: string[];
+  comparison_features?: Record<string, CatalogQuantity>;
+  feature_measurements?: Record<string, CatalogQuantity>;
+  resources?: Record<string, unknown>;
+  resource_indicators?: unknown[];
+  simulation_defaults?: Record<string, unknown>;
+  limitations?: string[];
+  completeness?: Record<string, unknown>;
 }
 
 export interface CatalogPairing {
+  [key: string]: unknown;
   earth_id: string;
   planetary_id: string;
   terrain_score: number | null;
@@ -47,6 +61,15 @@ export interface SiteCatalog {
   schema_version: string;
   sites: CatalogSite[];
   pairings: CatalogPairing[];
+}
+
+/** Complete observational record, independent of the simulation's selected inputs. */
+export interface SiteCatalogData {
+  schema_version: string;
+  record: CatalogSite;
+  pairings: CatalogPairing[];
+  target?: CatalogSite;
+  environment: CatalogEnvironment;
 }
 
 export interface CatalogSiteOptions {
@@ -71,6 +94,7 @@ export function catalogSiteToSite(
   manifest: TerrainPackManifest,
   buffer: ArrayBufferLike,
   opts: CatalogSiteOptions = {},
+  catalog?: SiteCatalog,
 ): SiteTerrain {
   const site = terrainPackToSite(manifest, buffer, { analogOf: opts.analogOf });
   const sources: Record<string, string> = {};
@@ -81,7 +105,10 @@ export function catalogSiteToSite(
     return c.value;
   };
 
-  const out: SiteTerrain = { ...site, id: entry.id, name: entry.name, body: entry.body };
+  const out: SiteTerrain = { ...site, id: entry.id, name: entry.name, body: entry.body,
+    catalog: { schema_version: catalog?.schema_version ?? '1.0.0', record: entry,
+      environment: catalogEnvironment(entry.id),
+      pairings: catalog?.pairings.filter(p => p.earth_id === entry.id || p.planetary_id === entry.id) ?? [] } };
   if (entry.substrate && entry.substrate !== 'unknown') {
     out.soilType = entry.substrate.replace(/_/g, ' ');
     sources.soilType = 'site catalog substrate label (interpreted)';

@@ -1,7 +1,7 @@
 /** Catalog 1.0: north-first assets -> Tim's south-first SiteTerrain interface. */
 import { createTerrainData } from './terrain/kilbourne-hole-v1/load-terrain.mjs';
 
-export function toPhysicsSite(site, manifest, buffer) {
+export function toPhysicsSite(site, manifest, buffer, catalog) {
   const data = createTerrainData(manifest, buffer);
   const { rows, columns: cols, spacing_m: cellSize } = manifest.grid;
   const heights = new Float32Array(rows * cols);
@@ -10,6 +10,8 @@ export function toPhysicsSite(site, manifest, buffer) {
   }
   // POWER scalar wind speed is NOT a wind vector; no implicit environment defaults.
   return { id: site.id, name: site.name, body: site.body,
+    catalog: { schema_version: catalog?.schema_version ?? '1.0.0', record: site,
+      pairings: catalog?.pairings.filter(p => p.earth_id === site.id || p.planetary_id === site.id) ?? [] },
     heightmap: { rows, cols, cellSize, heights }, soilType: site.substrate };
 }
 
@@ -29,7 +31,7 @@ export async function loadCatalog(url = '/sites.json') {
   return catalog;
 }
 
-export async function loadCatalogTerrain(site, base = globalThis.location?.origin) {
+export async function loadCatalogTerrain(site, base = globalThis.location?.origin, catalog) {
   if (!site.terrain) throw new Error(`${site.id}: terrain unavailable`);
   const url = new URL(site.terrain.manifest_url, base);
   const response = await fetch(url);
@@ -37,5 +39,5 @@ export async function loadCatalogTerrain(site, base = globalThis.location?.origi
   const manifest = await response.json();
   const samples = await fetch(new URL(manifest.grid.sample_file, url));
   if (!samples.ok) throw new Error(`Elevation HTTP ${samples.status}`);
-  return toPhysicsSite(site, manifest, await samples.arrayBuffer());
+  return toPhysicsSite(site, manifest, await samples.arrayBuffer(), catalog);
 }
