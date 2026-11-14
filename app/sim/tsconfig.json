@@ -6,6 +6,7 @@
     "strict": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "allowImportingTsExtensions": true,
     "types": ["node"],

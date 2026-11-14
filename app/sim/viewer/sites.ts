@@ -1,18 +1,18 @@
-import { syntheticTerrain, terrainPackToSite } from '../src/index.ts';
-import kilbourneManifestUrl from '../../../web/public/terrain/kilbourne-hole-v1/manifest.json?url';
-import kilbourneF32Url from '../../../web/public/terrain/kilbourne-hole-v1/elevation.f32?url';
+import { catalogSiteToSite, syntheticTerrain } from '../src/index.ts';
+import type { SiteCatalog } from '../src/index.ts';
+import catalogUrl from '../../../web/public/sites.json?url';
 import type { SiteTerrain } from '../src/index.ts';
 
 const boulders = [{ center: { x: 0, y: 0 }, radiusM: 25, count: 60 }];
 
 /** Synthetic test sites until the real sites.json lands. */
 export const PRESETS: Record<string, { label: string; make: () => SiteTerrain }> = {
-  moon: { label: 'Moon — highlands (synthetic)', make: () => syntheticTerrain({ id: 'moon', body: 'moon', craters: 6 }) },
+  moon: { label: 'Moon — highlands (synthetic)', make: () => ({ ...syntheticTerrain({ id: 'moon', body: 'moon', craters: 6 }), soilType: 'regolith', rockAbundance: 0.02 }) },
   moonRocks: {
     label: 'Moon — boulder field at target',
     make: () => syntheticTerrain({ id: 'moon-boulders', body: 'moon', craters: 6, boulderFields: boulders }),
   },
-  mars: { label: 'Mars — plains (synthetic)', make: () => syntheticTerrain({ id: 'mars', body: 'mars', craters: 4, wind: { x: 6, y: 2 } }) },
+  mars: { label: 'Mars — plains (synthetic)', make: () => ({ ...syntheticTerrain({ id: 'mars', body: 'mars', craters: 4, wind: { x: 6, y: 2 } }), soilType: 'dust', rockAbundance: 0.05, windGustMps: 2 }) },
   marsRocks: {
     label: 'Mars — boulder field at target',
     make: () => syntheticTerrain({ id: 'mars-boulders', body: 'mars', craters: 4, wind: { x: 6, y: 2 }, boulderFields: boulders }),
@@ -40,15 +40,35 @@ export function resolveSite(key: string, fileSites: Map<string, SiteTerrain>): S
   return cache.get(key)!;
 }
 
+// Vite resolves every terrain pack under web/public/terrain at build time.
+const manifests = import.meta.glob('../../../web/public/terrain/*/manifest.json', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
+const grids = import.meta.glob('../../../web/public/terrain/*/elevation.f32', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
+const packUrl = (table: Record<string, string>, id: string, file: string) =>
+  table[`../../../web/public/terrain/${id}/${file}`];
+
+export interface LoadedCatalog {
+  catalog: SiteCatalog;
+  sites: SiteTerrain[];
+}
+
 /**
- * Real terrain packs from web/public/terrain/. Kilbourne Hole (NM) was an Apollo field-training
- * site, so it flies as a Moon analog by default.
+ * Every site in the data team's catalog (web/public/sites.json) that has a terrain pack, with
+ * its conditions applied. Earth analogs fly as the body of their best-scoring pairing.
  */
-export async function loadTerrainPacks(): Promise<SiteTerrain[]> {
-  const [manifest, buffer] = await Promise.all([
-    fetch(kilbourneManifestUrl).then((r) => r.json()),
-    fetch(kilbourneF32Url).then((r) => r.arrayBuffer()),
-  ]);
-  const site = terrainPackToSite(manifest, buffer, { analogOf: 'moon' });
-  return [{ ...site, name: `${site.name} — Copernicus DEM, Moon analog` }];
+export async function loadCatalogSites(): Promise<LoadedCatalog> {
+  const catalog: SiteCatalog = await fetch(catalogUrl).then((r) => r.json());
+  const sites = await Promise.all(
+    catalog.sites
+      .filter((entry) => entry.terrain && packUrl(manifests, entry.id, 'manifest.json') && packUrl(grids, entry.id, 'elevation.f32'))
+      .map(async (entry) => {
+        const [manifest, buffer] = await Promise.all([
+          fetch(packUrl(manifests, entry.id, 'manifest.json')).then((r) => r.json()),
+          fetch(packUrl(grids, entry.id, 'elevation.f32')).then((r) => r.arrayBuffer()),
+        ]);
+        const site = catalogSiteToSite(entry, manifest, buffer, catalog);
+        const tag = site.body === 'earth' ? `Earth analog${site.analogOf ? ` for ${site.analogOf}` : ''}` : site.body;
+        return { ...site, name: `${entry.name} (${tag})` };
+      }),
+  );
+  return { catalog, sites };
 }

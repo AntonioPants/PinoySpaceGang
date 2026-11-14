@@ -18,8 +18,8 @@ export function TopView({ onFrame, input }: Props) {
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     return onFrame((sim, _dt, inp) => {
-      if (imageRef.current?.key !== inp.site) {
-        imageRef.current = { key: inp.site, image: renderTopImage(inp.site, inp.target ?? { x: 0, y: 0 }) };
+      if (imageRef.current?.key !== sim) {
+        imageRef.current = { key: sim, image: renderTopImage(sim, inp.site, inp.target ?? { x: 0, y: 0 }) };
       }
       drawTop(ctx, sim, inp, imageRef.current.image);
     });

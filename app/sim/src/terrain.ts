@@ -82,9 +82,21 @@ export function roughnessAt(f: HeightField, x: number, y: number, r: number): nu
 }
 
 /** Wraps a height field with spatially consistent measurement noise (e.g. a glare-blinded camera). */
-export function noisyField(f: HeightField, sigmaM: number, seed: number, cellM = 1): HeightField {
+export function noisyField(
+  f: HeightField & { obstacleWithin?(x: number, y: number, r: number): number },
+  sigmaM: number,
+  seed: number,
+  cellM = 1,
+): HeightField & { obstacleWithin?(x: number, y: number, r: number): number } {
   if (sigmaM <= 0) return f;
   return {
+    // a blinded sensor misses obstacles that are small compared with its noise
+    obstacleWithin: f.obstacleWithin
+      ? (x, y, r) => {
+          const h = f.obstacleWithin!(x, y, r);
+          return h > sigmaM * 0.8 ? h : 0;
+        }
+      : undefined,
     heightAt(x, y) {
       // bilinear value noise so slopes stay finite between lattice points
       const fx = x / cellM;

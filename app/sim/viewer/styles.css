@@ -63,3 +63,8 @@ kbd { border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; backgro
 .warn { color: var(--warn); }
 .bad { color: var(--bad); }
 .check { text-transform: none; letter-spacing: 0; font-size: 13px; }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+fieldset:disabled { opacity: 0.4; }
+.conditions { margin-top: 10px; border-top: 1px dashed var(--line); padding-top: 8px; }
+.conditions .sources { font-size: 11px; color: var(--dim); padding-left: 14px; }
+.conditions .sources b { color: var(--ink); font-weight: 600; }

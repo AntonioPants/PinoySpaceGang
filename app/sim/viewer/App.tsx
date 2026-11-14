@@ -7,14 +7,15 @@ import { TopView } from './components/TopView.tsx';
 import { Hud } from './components/Hud.tsx';
 import { EventLog } from './components/EventLog.tsx';
 import { ResultCard } from './components/ResultCard.tsx';
-import { PRESETS, loadTerrainPacks, resolveSite } from './sites.ts';
+import { PRESETS, loadCatalogSites, resolveSite } from './sites.ts';
 
 function toInput(setup: Setup, fileSites: Map<string, SiteTerrain>): SimInput {
   return {
     site: resolveSite(setup.siteKey, fileSites),
     strategy: setup.strategy,
     sensors: { hazard: setup.hazard, velocimeter: setup.velocimeter },
-    interference: { dust: setup.dust, glare: setup.glare },
+    interference: setup.siteConditions ? undefined : { dust: setup.dust, glare: setup.glare },
+    rockAbundance: setup.rocks ?? undefined,
     gravity: setup.env,
     atmosphere: setup.env,
     lander: { fuelKg: setup.fuelKg, maxThrustN: setup.thrustKN * 1000 },
@@ -69,15 +70,15 @@ export function App() {
   }, [lander.togglePause]);
 
   useEffect(() => {
-    loadTerrainPacks()
-      .then((sites) =>
+    loadCatalogSites()
+      .then(({ sites }) =>
         setFileSites((prev) => {
           const next = new Map(prev);
           for (const s of sites) next.set(s.id, s);
           return next;
         }),
       )
-      .catch((err) => setMessage(`Could not load terrain packs: ${(err as Error).message}`));
+      .catch((err) => setMessage(`Could not load the site catalog: ${(err as Error).message}`));
   }, []);
 
   // ?launch: start once the chosen site is available (terrain packs load asynchronously)
