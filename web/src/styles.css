@@ -392,3 +392,7 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
 .pairing-explanation h4 { margin: 12px 0 6px; }
 .pairing-explanation ul { padding-left: 20px; color: var(--muted); }
 .pairing-explanation a { color: var(--accent); }
+.weather-pickers label { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+.report-panel > ul { font-size: 12px; color: var(--muted); line-height: 1.7; }
+.report-panel p + h3, .report-panel ul + h3, .report-panel .note + h3 { margin-top: 30px; }
+.strategy-options + .segmented, .field-help + .segmented { margin-top: 12px; }

@@ -7,7 +7,6 @@ from contextlib import contextmanager
 import os
 from pathlib import Path
 import shutil
-import tempfile
 import uuid
 
 
@@ -20,9 +19,14 @@ def publication(destination, seed=None):
     with lock.open('x', encoding='utf-8') as handle:
         handle.write(str(os.getpid()))
     backup = destination.parent / f'.{destination.name}.previous-{uuid.uuid4().hex}'
+    # mkdir inherits the workspace ACL on Windows. tempfile.mkdtemp uses a private
+    # owner-only ACL on recent Python, which would lock out other workspace users
+    # when renamed into production.
+    folder = destination.parent / f'.catalog-stage-{uuid.uuid4().hex}'
     try:
-        with tempfile.TemporaryDirectory(prefix='.catalog-stage-', dir=destination.parent) as folder:
-            stage = Path(folder).resolve() / 'public'
+        folder.mkdir()
+        try:
+            stage = folder / 'public'
             source = Path(seed).resolve() if seed else destination
             if source.exists():
                 shutil.copytree(source, stage)
@@ -43,5 +47,9 @@ def publication(destination, seed=None):
                 assert backup.resolve().parent == destination.parent
                 assert backup.name.startswith(f'.{destination.name}.previous-')
                 shutil.rmtree(backup)
+        finally:
+            assert folder.resolve().parent == destination.parent
+            assert folder.name.startswith('.catalog-stage-')
+            shutil.rmtree(folder)
     finally:
         lock.unlink(missing_ok=True)

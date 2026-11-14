@@ -2,6 +2,17 @@
 
 ## Update: catalog, fidelity, sensors, real weather
 
+The merged report retains both guided and stress-test fidelity from Tim's branch.
+It uses the runtime-selected catalog entries and the shared strict terrain loader;
+the mission catalog remains fetched from `/sites.json`. These simulation scores
+remain separate from the catalog's terrain-descriptor score and do not validate
+geological equivalence or landing safety.
+
+Data-team build, staging, recovery and validation commands are in
+[`docs/CATALOG_PUBLICATION.md`](../docs/CATALOG_PUBLICATION.md). Per-location
+environmental coverage and remaining scientific gaps are in
+[`docs/DATA_COVERAGE.md`](../docs/DATA_COVERAGE.md).
+
 - **Sites come from the catalog.** `src/lib/catalog.ts` reads `public/sites.json`: every
   planetary target, every Earth analog with a terrain pack, and the proposed pairings (best
   terrain score first). `src/data/sites.ts` uses that same parser for static consumers and legacy-ID support. Terrain loads from each

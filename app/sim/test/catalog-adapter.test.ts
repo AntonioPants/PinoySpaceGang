@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { analogFidelity, pairingsFor, runSim, siteInterference } from '../src/index.ts';
+import { analogFidelity, pairingsFor, runSim, siteInterference, stressFidelity } from '../src/index.ts';
 import { loadCatalogSite, readCatalog } from '../scripts/catalog-node.ts';
 
 const catalog = readCatalog();
@@ -76,5 +76,37 @@ describe('analog fidelity', { timeout: 30_000 }, () => {
   it('refuses an Earth site as the planetary side', () => {
     const earth = loadCatalogSite(catalog, 'amboy');
     expect(() => analogFidelity(earth, earth)).toThrow(/Moon\/Mars/);
+  });
+});
+
+describe('stress fidelity', { timeout: 60_000 }, () => {
+  it('a site compared with itself scores 100', () => {
+    const moon = loadCatalogSite(catalog, 'marius-hills');
+    const r = stressFidelity(moon, { ...moon, body: 'earth' }, { gridSize: 3 });
+    expect(r.score).toBe(100);
+    expect(r.planetary.flights).toBe(9);
+  });
+
+  it('flies blind whatever sensor the mission configured', () => {
+    const r = stressFidelity(loadCatalogSite(catalog, 'jezero'), loadCatalogSite(catalog, 'capitol-reef'), {
+      gridSize: 3,
+      base: { sensors: { hazard: 'lidar' } },
+    });
+    expect(r.method).toMatch(/blind landings/);
+    expect(r.assumedRockAbundance).toBe(0);
+  });
+
+  it('separates a rugged analog from a gentle one for the same target', () => {
+    const arsia = loadCatalogSite(catalog, 'arsia-flank');
+    const gentle = stressFidelity(arsia, loadCatalogSite(catalog, 'amboy'));
+    const rugged = stressFidelity(arsia, loadCatalogSite(catalog, 'craters-moon'));
+    expect(rugged.analog.successRate).toBeLessThan(gentle.analog.successRate);
+    expect(rugged.score).toBeLessThan(gentle.score - 10);
+  });
+
+  it('labels an assumed rock abundance in the method', () => {
+    const moon = loadCatalogSite(catalog, 'marius-hills');
+    const r = stressFidelity(moon, { ...moon, body: 'earth' }, { gridSize: 2, assumedRockAbundance: 0.1 });
+    expect(r.method).toMatch(/assumed 10% rock abundance/);
   });
 });

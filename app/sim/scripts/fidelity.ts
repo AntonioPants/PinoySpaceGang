@@ -4,7 +4,7 @@
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
-import { analogFidelity } from '../src/index.ts';
+import { analogFidelity, stressFidelity } from '../src/index.ts';
 import { loadCatalogSite, readCatalog } from './catalog-node.ts';
 
 const args = process.argv.slice(2);
@@ -18,11 +18,15 @@ for (const p of catalog.pairings) {
     seeds,
     catalogTerrainScore: p.terrain_score,
   });
-  rows.push({ earthId: p.earth_id, planetaryId: p.planetary_id, ...r });
+  const t0 = Date.now();
+  const stress = stressFidelity(loadCatalogSite(catalog, p.planetary_id), loadCatalogSite(catalog, p.earth_id), { catalogTerrainScore: p.terrain_score });
+  rows.push({ earthId: p.earth_id, planetaryId: p.planetary_id, nominal: r, stress });
+  const pc = (v: number) => `${Math.round(v * 100)}%`.padStart(4);
   console.log(
-    `${p.earth_id.padEnd(20)} → ${p.planetary_id.padEnd(15)} fidelity ${String(r.score).padStart(3)}  ` +
-      `(outcome ${r.components.outcome.toFixed(2)} touchdown ${r.components.touchdown.toFixed(2)} ground ${r.components.ground.toFixed(2)} fuel ${r.components.fuel.toFixed(2)})  ` +
-      `catalog terrain ${p.terrain_score?.toFixed(2) ?? '–'}  planet: ${r.planetary.outcomes.join('/')}  analog: ${r.analog.outcomes.join('/')}`,
+    `${p.earth_id.padEnd(19)} → ${p.planetary_id.padEnd(15)} guided ${String(r.score).padStart(3)}  stress ${String(stress.score).padStart(3)}  ` +
+      `catalog ${p.terrain_score?.toFixed(2) ?? ' – '}  | landable: planet ${pc(stress.planetary.successRate)} analog ${pc(stress.analog.successRate)} ` +
+      `| slope ${stress.planetary.meanSlopeDeg.toFixed(1)}° ${stress.analog.meanSlopeDeg.toFixed(1)}° ` +
+      `| fuel ${stress.planetary.meanFuelUsedKg.toFixed(0)} ${stress.analog.meanFuelUsedKg.toFixed(0)} kg  (${Date.now() - t0} ms)`,
   );
 }
 const out = opt('out', 'out/fidelity.json');

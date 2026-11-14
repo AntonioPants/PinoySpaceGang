@@ -1,18 +1,11 @@
 import { useEffect, useState } from 'react';
 import type { FlightTelemetry } from '../../../app/sim/src/types';
 import type { CatalogSite } from '../../../app/sim/src/catalog';
-import type { FidelityResult } from '../../../app/sim/src/fidelity';
 import type { MissionConfig, TerrainProfile } from '../lib/types';
 import { downloadJson } from '../lib/importSettings';
-import { computeFidelity } from '../lib/fidelity';
-
-interface Props {
-  flight: FlightTelemetry; mission: MissionConfig; profile: TerrainProfile;
-  analogEntry?: CatalogSite; planetaryEntry?: CatalogSite; onRetry: () => void;
-}
-type FidelityState = { status: 'working' } | { status: 'done'; result: FidelityResult } | { status: 'unavailable'; reason: string };
-
-export default function FlightReport({flight,mission,profile,analogEntry,planetaryEntry,onRetry}:Props) {
+import { computeFidelity, type FidelityReport } from '../lib/fidelity';
+type FidelityState = { status: 'working' } | { status: 'done'; result: FidelityReport } | { status: 'unavailable'; reason: string };
+export default function FlightReport({flight,mission,profile,analogEntry,planetaryEntry,onRetry}:{flight:FlightTelemetry;mission:MissionConfig;profile:TerrainProfile;analogEntry?:CatalogSite;planetaryEntry?:CatalogSite;onRetry:()=>void}) {
   const result=flight.summary!;
   const env=flight.environment;
   const [fidelity,setFidelity]=useState<FidelityState>({status:'working'});
@@ -24,22 +17,26 @@ export default function FlightReport({flight,mission,profile,analogEntry,planeta
     return ()=>abort.abort();
   },[mission,profile,analogEntry,planetaryEntry]);
   const sources=Object.entries(env.sources);
-  return <section className="report-panel"><div className="section-heading"><div><span className={`badge ${result.outcome==='success'?'mint':''}`}>Simulation result · {result.outcome}</span><h2>{result.outcome==='success'?'A controlled touchdown.':'A flight to learn from.'}</h2></div><button className="primary-button" onClick={onRetry}>Configure another flight</button></div><p>{mission.planetaryTarget.name} scenario on {mission.earthAnalog.name}. This is a simulated outcome, not an engineering certification.</p>
+  return <section className="report-panel"><div className="section-heading"><div><span className="badge ready">Simulation result · {result.outcome}</span><h2>{result.outcome==='success'?'Touchdown complete.':'Flight ended.'}</h2></div><button className="primary-button" onClick={onRetry}>Configure another flight</button></div><p>{mission.planetaryTarget.name} scenario on {mission.earthAnalog.name}. This is a simulated outcome, not an engineering certification.</p>
     <div className="report-metrics">{[['Vertical contact speed',`${result.verticalSpeedMps.toFixed(2)} m/s`],['Lateral contact speed',`${result.horizontalSpeedMps.toFixed(2)} m/s`],['Ground slope',`${result.slopeDeg.toFixed(2)}°`],['Vehicle tilt',`${result.tiltDeg.toFixed(2)}°`],['Fuel remaining',`${result.fuelRemainingKg.toFixed(1)} kg`],['Distance from target',`${result.distanceFromTargetM.toFixed(1)} m`]].map(([name,value])=><div key={name}><span>{name}</span><strong>{result.outcome==='timeout' && /contact|slope/.test(name)?'No touchdown':value}</strong></div>)}</div>
     <h3>What happened</h3>{result.failureReasons.length?<ul>{result.failureReasons.map(reason=><li key={reason}>{reason}</li>)}</ul>:<p>The simulated touchdown stayed within this vehicle’s speed, slope, tilt, and roughness limits.</p>}
 
     <h3>Analog fidelity</h3>
-    {fidelity.status==='working' && <p role="status">Flying the same vehicle on {mission.planetaryTarget.name}’s own terrain to compare…</p>}
+    {fidelity.status==='working' && <p role="status">Flying the same vehicle over {mission.planetaryTarget.name}’s own terrain and over the analog to compare…</p>}
     {fidelity.status==='unavailable' && <div className="note warning"><p>No fidelity score: {fidelity.reason}</p></div>}
-    {fidelity.status==='done' && <>
+    {fidelity.status==='done' && (({guided,stress})=><>
       <div className="report-metrics">
-        <div><span>Flight fidelity score</span><strong>{fidelity.result.score} / 100</strong></div>
-        <div><span>Catalog terrain similarity</span><strong>{typeof fidelity.result.catalogTerrainScore==='number'?`${fidelity.result.catalogTerrainScore.toFixed(2)} of 1`:'No pairing proposed'}</strong></div>
-        <div><span>Outcomes ({mission.planetaryTarget.body} / Earth analog)</span><strong>{summarise(fidelity.result.planetary.outcomes)} / {summarise(fidelity.result.analog.outcomes)}</strong></div>
-        {([['Same outcome',fidelity.result.components.outcome],['Touchdown speeds',fidelity.result.components.touchdown],['Ground slope & roughness',fidelity.result.components.ground],['Fuel used',fidelity.result.components.fuel]] as const).map(([name,value])=><div key={name}><span>{name}</span><strong>{Math.round(value*100)}%</strong></div>)}
+        <div><span>Stress test score (blind landings)</span><strong>{stress.score} / 100</strong></div>
+        <div><span>Guided flight score</span><strong>{guided.score} / 100</strong></div>
+        <div><span>Catalog terrain similarity</span><strong>{typeof guided.catalogTerrainScore==='number'?`${guided.catalogTerrainScore.toFixed(2)} of 1`:'No pairing proposed'}</strong></div>
+        <div><span>Landable share · {mission.planetaryTarget.body} terrain</span><strong>{Math.round(stress.planetary.successRate*100)}%</strong></div>
+        <div><span>Landable share · Earth analog</span><strong>{Math.round(stress.analog.successRate*100)}%</strong></div>
+        <div><span>Mean touchdown slope ({mission.planetaryTarget.body} / analog)</span><strong>{stress.planetary.meanSlopeDeg.toFixed(1)}° / {stress.analog.meanSlopeDeg.toFixed(1)}°</strong></div>
+        <div><span>Guided outcomes ({mission.planetaryTarget.body} / analog)</span><strong>{summarise(guided.planetary.outcomes)} / {summarise(guided.analog.outcomes)}</strong></div>
       </div>
-      <div className="note"><p>How this is scored: the configured vehicle is flown autonomously over both terrains under {mission.planetaryTarget.body} gravity ({fidelity.result.gravity} m/s²) for {fidelity.result.seeds.length} seeded runs each. {fidelity.result.method} It compares simulated flights over two elevation grids; it is not a geological or soil-mechanics comparison, and the planetary grid is far coarser than the Earth grid.{mission.strategy.mode==='MANUAL_CONTROL'?' Your manual flight is not part of the comparison.':''}</p></div>
-    </>}
+      <div className="note"><p>Both scores fly the configured vehicle autonomously over the planetary target’s own terrain and over the Earth analog, under {mission.planetaryTarget.body} gravity ({guided.gravity} m/s²). <strong>Stress test:</strong> {stress.method} It shows how much of each terrain is landable without hazard avoidance. <strong>Guided:</strong> {guided.seeds.length} hazard-avoiding landings at the centre of each terrain; score = 40% outcome agreement + 25% touchdown speeds + 20% ground slope/roughness + 15% fuel used. Guidance finds a safe spot on almost any terrain, so this score stays high.</p></div>
+      <div className="note"><p>These compare simulated flights over two elevation grids; they are not a geological or soil-mechanics comparison. The planetary grid ({mission.planetaryTarget.body==='Moon'?'150':'500'} m per sample) is far coarser than the Earth grid ({profile.sampleSpacingM} m), so planetary terrain looks smoother than it is and a rugged Earth site scores lower partly for that reason.{mission.strategy.mode==='MANUAL_CONTROL'?' Your manual flight is not part of the comparison.':''}</p></div>
+    </>)(fidelity.result)}
 
     <h3>Site conditions used</h3>
     <div className="report-metrics">

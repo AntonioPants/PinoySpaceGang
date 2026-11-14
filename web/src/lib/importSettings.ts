@@ -55,8 +55,8 @@ export function parseConditions(text: string, current: MissionSettings): Setting
       ['thrusterForceN', `^(?:maximum )?thrust(?: is| of)?[ :=]*${number} n$`, 1],
       ['windSpeedMs', `^(?:cross)?wind(?: is| of)?[ :=]*${number} m/s$`, 1],
       ['maxSlopeToleranceDeg', `^slope(?: tolerance)?[ :=]*${number} (?:deg|degrees|°)$`, 1],
-      ['dust', `^dust[ :=]*${number}\s*%$`, 0.01],
-      ['glare', `^glare[ :=]*${number}\s*%$`, 0.01],
+      ['dust', `^dust[ :=]*${number}\\s*%$`, 0.01],
+      ['glare', `^glare[ :=]*${number}\\s*%$`, 0.01],
     ] as const;
     let matched = false;
     for (const [key, expression, factor] of specs) {

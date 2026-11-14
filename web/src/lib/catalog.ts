@@ -24,6 +24,11 @@ export interface Catalog {
 }
 /** Scenario gravity shown in the planner (m/s²). */
 const GRAVITY = { moon: 1.62, mars: 3.72 } as const;
+const TARGET_ORDER = ['shackleton-rim', 'marius-hills', 'jezero', 'arsia-flank', 'phoenix', 'bagnold'];
+const targetRank = (id: string) => {
+  const index = TARGET_ORDER.indexOf(id);
+  return index < 0 ? TARGET_ORDER.length : index;
+};
 const label = (s?: string) => (s && s !== 'unknown' ? s.replace(/_/g, ' ') : undefined);
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -42,7 +47,7 @@ export function parseCatalog(raw: unknown): Catalog {
   if (entries.size !== data.sites.length) throw new Error('Duplicate catalog site IDs.');
   // Moon targets first, so the planner opens on the nearest destination.
   const targets: PlanetarySite[] = data.sites.filter(s => s.role === 'planetary_target' && s.body !== 'earth')
-    .sort((a, b) => Number(a.body !== 'moon') - Number(b.body !== 'moon')).map(s => ({
+    .sort((a, b) => targetRank(a.id) - targetRank(b.id)).map(s => ({
     id: s.id, name: s.name, body: s.body === 'moon' ? 'Moon' : 'Mars', region: s.region, lat: s.latitude, lon: s.longitude,
     gravity: GRAVITY[s.body as 'moon' | 'mars'], description: s.description,
     interests: [label(s.morphology), label(s.substrate)].filter((v): v is string => !!v).map(cap), source: s.evidence_url,

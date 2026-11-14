@@ -22,7 +22,8 @@ describe('shared catalog through the mission journey', () => {
     const mission = buildMission(target, profile, defaultSettings);
     const result = await computeFidelity(mission, profile,
       catalogSites.find(s => s.id === profile.manifest.id), catalogSites.find(s => s.id === target.id));
-    expect(Number.isFinite(result.score)).toBe(true);
+    expect(Number.isFinite(result.guided.score)).toBe(true);
+    expect(Number.isFinite(result.stress.score)).toBe(true);
     await expect(loadProfile(undefined, '/terrain/marius-hills/manifest.json')).rejects.toThrow('body');
   });
   it.each(terrainSites)('loads, exports and simulates $name with its own terrain', async site => {

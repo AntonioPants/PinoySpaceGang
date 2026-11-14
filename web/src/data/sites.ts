@@ -12,3 +12,5 @@ const legacyIds: Record<string, string> = {
   shackleton_rim: 'shackleton-rim', marius_hills: 'marius-hills', jezero_crater: 'jezero', arsia_mons: 'arsia-flank',
 };
 export const normalizeTargetId = (id: string) => legacyIds[id] ?? id;
+export const terrainScore = (targetId: string, analogId: string): number | null =>
+  siteCatalog.pairings.find(p => p.planetary_id === targetId && p.earth_id === analogId)?.terrain_score ?? null;

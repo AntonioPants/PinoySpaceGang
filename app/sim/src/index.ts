@@ -16,5 +16,5 @@ export { siteInterference, dustFromSoil, glareFromSite, applyEnvironment } from 
 export type { SiteEnvironment } from './environment.ts';
 export { catalogSiteToSite, pairingsFor } from './catalog.ts';
 export type { SiteCatalog, CatalogSite, CatalogPairing, CatalogSiteOptions } from './catalog.ts';
-export { analogFidelity } from './fidelity.ts';
-export type { FidelityResult, FidelityOptions, SiteFlightStats } from './fidelity.ts';
+export { analogFidelity, stressFidelity } from './fidelity.ts';
+export type { FidelityResult, FidelityOptions, SiteFlightStats, StressFidelityResult, StressOptions, StressSiteStats } from './fidelity.ts';
