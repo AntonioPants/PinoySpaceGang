@@ -2,6 +2,10 @@
 
 ## Game direction and team handoff
 
+The default app now opens the interactive three-world game sequence. See
+[team ownership and requirements](docs/TEAM_HANDOFF.md). The engineering planner
+is still accessible with `?planner`.
+
 Read [the agreed game journey](docs/GAME_VISION.md) and [AI guidance](AGENTS.md).
 The planner is the current game shell: select Moon/Mars, match an Earth testbed,
 choose equipment, board the ship systems console, launch, run descent and debrief.

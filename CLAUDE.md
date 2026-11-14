@@ -1,3 +1,7 @@
+# Current team agreement
+
+Read [TEAM_HANDOFF.md](docs/TEAM_HANDOFF.md). Its ownership and current implementation supersede the historical notes below.
+
 # CLAUDE.md
 
 Guidance for Claude Code (claude.ai/code) when working in this repository.

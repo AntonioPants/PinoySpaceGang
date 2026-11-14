@@ -15,7 +15,8 @@ class SceneBoundary extends Component<{ children: ReactNode; fallback: ReactNode
   static getDerivedStateFromError() { return { failed: true }; }
   render() { return this.state.failed ? this.props.fallback : this.props.children; }
 }
-export default function GameSession({ initialMission, settings: initialSettings, target, entry, profile, weather, weatherAvailable, onReport, onExit }: {
+export default function GameSession({ initialMission, settings: initialSettings, target, entry, profile, weather, weatherAvailable, onReport, onExit, immersive = false }: {
+  immersive?: boolean;
   initialMission: MissionConfig; settings: MissionSettings; profile: TerrainProfile;
   target: PlanetarySite; entry?: CatalogSite;
   weather: EnvironmentProfile | null; weatherAvailable: boolean;
@@ -39,12 +40,13 @@ export default function GameSession({ initialMission, settings: initialSettings,
   useEffect(() => { if (phase === 'report' && flight && !reported.current) { reported.current = true; onReport(flight, mission, settings); } }, [phase, flight, mission, settings, onReport]);
   const exit = () => onExit(settings);
   const complete = (expected: GamePhase) => setPhase(current => completePhase(current, expected, gameIntegrations));
-  const sceneProps = { mission, reducedMotion, onExit: exit, onComplete: () => complete(phase) };
+  const sceneProps = { mission, reducedMotion, immersive, onExit: exit, onComplete: () => complete(phase) };
   function launch() {
     try {
       const errors = validateSettings(settings); if (errors.length) throw new Error(errors.join(' '));
       if (settings.environment === 'earth' && settings.realWeatherMonth > 0 && !weatherAvailable) throw new Error('This site has no weather profile. Select manual wind.');
       const locked = buildMission(target, profile, settings, { terrainBase: mission.earthAnalog.terrainBaseUrl, analogName: mission.earthAnalog.name, terrainScore: mission.evidence.quantitativeSimilarityScore, weatherAvailable });
+      if (mission.equipment) locked.equipment = { ...mission.equipment, hazardSensor: settings.hazardSensor };
       toSimInput(locked, profile, entry, weather); // Validate the complete handoff before any departure scene.
       setMission(locked); setError(''); complete('controlCenter');
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not prepare the mission.'); }
@@ -55,7 +57,7 @@ export default function GameSession({ initialMission, settings: initialSettings,
   const Cinematic = cinematic;
   const Outcome = gameIntegrations.outcome;
   const fallback = <section className="systems-console"><h2>Scene unavailable</h2><p>The cinematic could not be displayed. Your mission is preserved.</p><button className="primary-button" onClick={sceneProps.onComplete}>Continue mission</button><button className="text-button" onClick={exit}>Return to equipment</button></section>;
-  return <div className="game-session">
+  return <div className={`game-session${immersive ? ' immersive-game-session' : ''}`} data-phase={phase}>
     <Suspense fallback={<p role="status">Loading mission systems…</p>}>
       {phase === 'controlCenter' && <SceneBoundary fallback={<SystemsConsole {...consoleProps} />}><ControlCenter {...consoleProps} /></SceneBoundary>}
       {Cinematic && <SceneBoundary key={phase} fallback={fallback}><Cinematic {...sceneProps} /><button className="subtle-button scene-skip" onClick={sceneProps.onComplete}>Skip cinematic</button></SceneBoundary>}

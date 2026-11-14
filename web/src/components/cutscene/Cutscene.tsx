@@ -7,6 +7,8 @@ import type { CutsceneEnv, EndingParams } from "./presets";
 import { loadTerrainPack, simToPack, type TerrainPack } from "./terrainPack";
 
 interface Props {
+  /** Game scenes render to the entire host viewport without forced aspect ratio. */
+  fullscreen?: boolean;
   /** "opening" before the simulation, "ending" after it. "success" / "crash" are stand-ins without a flight. */
   kind: CutsceneKind;
   env: CutsceneEnv;
@@ -18,6 +20,7 @@ interface Props {
   params?: EndingParams;       // only for the "success" / "crash" stand-ins
   terrain?: TerrainPack;       // real terrain, already loaded
   terrainUrl?: string;         // or a pack folder to load, e.g. "/terrain/kilbourne-hole-v1/"
+  requiredTerrainId?: string; // mission scenes must not silently use a procedural/wrong-site substitute
   landing?: { x: number; z: number };   // override: scene origin in pack metres
   muted?: boolean;
   showSkip?: boolean;           // false when the host page provides its own Skip control
@@ -29,7 +32,7 @@ interface Props {
  * Plays one cutscene. Mount it after a user click so sound is allowed to start.
  * The scene is centred on the sim's target (opening) or on the flight's touchdown point (ending).
  */
-export default function Cutscene({ kind, env, flight, start, target, params, terrain, terrainUrl, landing, muted = false, showSkip = true, onDone, className }: Props) {
+export default function Cutscene({ kind, env, flight, start, target, params, terrain, terrainUrl, requiredTerrainId, landing, muted = false, showSkip = true, onDone, className, fullscreen = false }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const engine = useRef<CutsceneEngine | null>(null);
   const done = useRef(onDone); done.current = onDone;
@@ -37,6 +40,7 @@ export default function Cutscene({ kind, env, flight, start, target, params, ter
   const [loaded, setLoaded] = useState<TerrainPack | null>(null);
   const [failed, setFailed] = useState(false);
   const pack = terrain ?? loaded;
+  const wrongPack = !!(pack && requiredTerrainId && pack.manifest.id !== requiredTerrainId);
   const waiting = !!terrainUrl && !terrain && !loaded && !failed;
   const lp = flight?.summary?.landingPoint;
   const centre = kind === "opening" ? target ?? { x: 0, y: 0 } : lp ?? target ?? { x: 0, y: 0 };
@@ -46,30 +50,30 @@ export default function Cutscene({ kind, env, flight, start, target, params, ter
   useEffect(() => {
     if (terrain || !terrainUrl) return;
     const ctl = new AbortController();
-    setFailed(false);
-    loadTerrainPack(terrainUrl, ctl.signal).then(setLoaded).catch(() => { if (!ctl.signal.aborted) setFailed(true); });
+    setFailed(false); setLoaded(null);
+    loadTerrainPack(terrainUrl, ctl.signal).then(p => { if (!ctl.signal.aborted) setLoaded(p); }).catch(() => { if (!ctl.signal.aborted) setFailed(true); });
     return () => ctl.abort();
   }, [terrain, terrainUrl]);
 
   useEffect(() => {
-    if (!box.current || waiting) return;
+    if (!box.current || waiting || (requiredTerrainId && (!pack || wrongPack))) return;
     const e = new CutsceneEngine(box.current, JSON.parse(envKey) as CutsceneEnv,
-      { muted, showSkip, terrain: pack ?? undefined, landing: JSON.parse(landKey) ?? undefined });
+      { muted, showSkip, letterbox: !fullscreen, terrain: pack ?? undefined, landing: JSON.parse(landKey) ?? undefined });
     engine.current = e;
     let live = true;
     e.play(kind, play.current).then(() => { if (live) done.current?.(); });
     return () => { live = false; e.dispose(); engine.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [kind, envKey, landKey, pack, waiting, flight]);
+  }, [kind, envKey, landKey, pack, waiting, flight, requiredTerrainId, wrongPack, fullscreen]);
 
   useEffect(() => { engine.current?.setMuted(muted); }, [muted]);
 
   return (
-    <div style={{ position: "relative", width: "100%" }} className={className}>
-      <div ref={box} style={{ width: "100%", aspectRatio: "16 / 9", background: "#000" }} />
-      {(waiting || failed) && (
+    <div style={{ position: "relative", width: "100%", height: fullscreen ? "100%" : undefined }} className={className}>
+      <div ref={box} style={{ width: "100%", height: fullscreen ? "100%" : undefined, aspectRatio: fullscreen ? undefined : "16 / 9", background: "#000" }} />
+      {(waiting || failed || wrongPack) && (
         <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", color: "#999", fontSize: 14 }}>
-          {waiting ? "Loading terrain..." : "Terrain pack not found; using the procedural landscape."}
+          {waiting ? "Loading terrain..." : requiredTerrainId ? "Selected terrain unavailable. Skip this cinematic to continue your mission." : "Terrain pack not found; using the procedural landscape."}
         </div>
       )}
     </div>

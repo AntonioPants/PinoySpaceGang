@@ -1,3 +1,7 @@
+# Current team agreement
+
+Read [TEAM_HANDOFF.md](TEAM_HANDOFF.md). Its ownership and current implementation supersede the historical notes below.
+
 # Planetary Analog game — team direction
 
 Confirmed by Eyad on 14 November 2026. This document supersedes earlier descriptions
@@ -6,6 +10,10 @@ React, Vite and Three.js are the current implementation technology; final deskto
 packaging or distribution is not decided. Do not migrate engines as part of integration.
 
 ## Intended player journey
+
+The title screen offers **Start Journey**. From that point the experience is a
+continuous viewport-sized game: no scrolling website shell and no framed cinematic
+player. Earth terrain remains attached to Earth as the camera approaches its location.
 
 1. Select a lunar or Martian region on the planetary globe.
 2. See similar Earth terrain candidates, based on the catalog's proposed pairings
