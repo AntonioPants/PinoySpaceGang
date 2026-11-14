@@ -1,0 +1,54 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "kilbourne-hole-v1",
+        "name": "Kilbourne Hole terrain footprint",
+        "boundary": "mesh vertices"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -106.99485414338224,
+              31.993242785575095
+            ],
+            [
+              -106.99391799255706,
+              31.949964208624216
+            ],
+            [
+              -106.94315775413203,
+              31.95075140316647
+            ],
+            [
+              -106.94407010992812,
+              31.99403129783462
+            ],
+            [
+              -106.99485414338224,
+              31.993242785575095
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Selected terrain centre",
+        "surveyed": false
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -106.969,
+          31.972
+        ]
+      }
+    }
+  ]
+}

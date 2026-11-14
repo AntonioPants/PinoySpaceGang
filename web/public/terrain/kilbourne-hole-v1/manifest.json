@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "id": "kilbourne-hole-v1",
+  "name": "Kilbourne Hole, New Mexico, USA",
+  "body": "Earth",
+  "status": "known planetary analog; first terrain prototype",
+  "center_wgs84": {
+    "latitude": 31.972,
+    "longitude": -106.969
+  },
+  "source": {
+    "dataset": "Copernicus DEM GLO-30 Public",
+    "mirror_release": "2021 (per AWS registry)",
+    "tile": "Copernicus_DSM_COG_10_N31_00_W107_00_DEM",
+    "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N31_00_W107_00_DEM/Copernicus_DSM_COG_10_N31_00_W107_00_DEM.tif",
+    "sha256": "cb4c83af5da2ef6e44c7a81d3eff743aad95ffa8c78dab65cbbe7e37031d03a8",
+    "retrieved_date": "2026-11-14",
+    "acquisition_period": "Primarily 2011–2015; exact local acquisition and infill not established",
+    "nominal_spacing": "1 arc-second, approximately 30 metres; longitude spacing varies with latitude",
+    "model_type": "DSM, not bare-earth DTM",
+    "vertical_datum": "EGM2008 orthometric heights, metres (EPSG:3855)",
+    "horizontal_crs": "EPSG:4326",
+    "catalog": "https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM",
+    "mirror_documentation": "https://registry.opendata.aws/copernicus-dem/",
+    "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf"
+  },
+  "grid": {
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30.0,
+    "width_m": 4800.0,
+    "depth_m": 4800.0,
+    "order": "row-major; north to south, west to east",
+    "dtype": "float32",
+    "byte_order": "little-endian",
+    "sample_file": "elevation.f32",
+    "projected_crs": "EPSG:32613",
+    "northwest_sample_easting_m": 311544.7191804239,
+    "northwest_sample_northing_m": 3541425.319301258,
+    "geotiff_affine_gdal": [
+      311529.7191804239,
+      30.0,
+      0.0,
+      3541440.319301258,
+      0.0,
+      -30.0
+    ],
+    "resampling": "bilinear",
+    "nodata_count": 0
+  },
+  "local_frame": {
+    "x": "UTM grid east",
+    "y": "up",
+    "z": "UTM grid south",
+    "units": "metres",
+    "origin": "northwest sample at vertical_offset_m",
+    "vertical_offset_m": 1194.0,
+    "vertical_exaggeration": 1,
+    "formula": "x=column*30; y=elevation_EGM2008-vertical_offset_m; z=row*30",
+    "note": "Directions follow UTM grid north/east; not an exact geodetic ENU frame."
+  },
+  "heightmap": {
+    "file": "heightmap-16bit.png",
+    "bits": 16,
+    "decode": "elevation_m = min_m + pixel/65535*(max_m-min_m)",
+    "min_m": 1194.65869140625,
+    "max_m": 1329.9246826171875
+  },
+  "statistics": {
+    "elevation_min_m": 1194.65869140625,
+    "elevation_max_m": 1329.9246826171875,
+    "relief_m": 135.2659912109375,
+    "slope_max_deg": 35.5106086730957,
+    "slope_p95_deg": 15.667872428894043
+  },
+  "physics": {
+    "collision_geometry": "terrain.glb or matching height samples",
+    "friction_coefficient": null,
+    "soil_cohesion_pa": null,
+    "bulk_density_kg_m3": null,
+    "gravity_m_s2": null,
+    "note": "Material parameters require independent measurements or explicitly labelled simulation settings; gravity is a scenario setting, not supplied by the DEM."
+  },
+  "analog": {
+    "known_site": true,
+    "new_discovery": false,
+    "planetary_pair": null,
+    "quantitative_similarity_score": null,
+    "basis": "NASA field-training and volcanic-process analog literature; no matched Mars or lunar DEM comparison has been performed",
+    "sources": [
+      "https://science.nasa.gov/blogs/notes-from-the-field/2018/02/05/the-footsteps-of-apollo-astronauts/",
+      "https://science.nasa.gov/blogs/notes-from-the-field/2018/01/24/kilbourne-and-aden-two-flavors-of-volcanism/",
+      "https://www.blm.gov/visit/kilbourne-hole-volcanic-crater"
+    ]
+  },
+  "limitations": [
+    "30 m data resolves broad landforms, not rocks, wheel-scale hazards, caves or overhangs.",
+    "DSM may include vegetation and structures; quality/error masks were not acquired.",
+    "Slopes are finite-difference estimates on the resampled grid; cliffs are smoothed.",
+    "No measured soil mechanics, imagery texture, climate layers or planetary terrain are included.",
+    "Display material is a neutral illustration, not a land-cover classification."
+  ],
+  "attribution": "produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved"
+}

@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/planetary-analog-sim/terrain_profile.schema.json",
+  "title": "Planetary Analog Terrain Profile",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "site",
+    "source",
+    "spatial",
+    "terrain",
+    "statistics",
+    "generated_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "site": {
+      "type": "object",
+      "required": ["id", "name", "type", "body"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$"},
+        "name": {"type": "string"},
+        "type": {"enum": ["earth_analog", "planetary_site"]},
+        "body": {"enum": ["earth", "moon", "mars"]}
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": ["input_file", "driver", "band", "dataset_id", "dataset", "sha256"],
+      "properties": {
+        "input_file": {"type": "string"},
+        "driver": {"type": "string"},
+        "band": {"type": "integer", "minimum": 1},
+        "dataset_id": {"type": ["string", "null"]},
+        "dataset": {"type": ["object", "null"]},
+        "sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "vertical_scale": {"type": "number"},
+        "vertical_offset": {"type": "number"}
+      },
+      "additionalProperties": false
+    },
+    "spatial": {
+      "type": "object",
+      "required": [
+        "crs",
+        "transform",
+        "requested_bbox",
+        "requested_bbox_crs",
+        "output_bbox_native",
+        "width",
+        "height",
+        "resolution_m"
+      ],
+      "properties": {
+        "crs": {
+          "type": ["object", "null"],
+          "properties": {
+            "authority": {"type": ["string", "null"]},
+            "wkt": {"type": "string"},
+            "is_geographic": {"type": "boolean"}
+          },
+          "required": ["authority", "wkt", "is_geographic"],
+          "additionalProperties": false
+        },
+        "transform": {
+          "type": "array",
+          "items": {"type": "number"},
+          "minItems": 6,
+          "maxItems": 6
+        },
+        "requested_bbox": {"$ref": "#/$defs/bbox"},
+        "requested_bbox_crs": {"type": "string"},
+        "output_bbox_native": {"$ref": "#/$defs/bbox"},
+        "width": {"type": "integer", "minimum": 2},
+        "height": {"type": "integer", "minimum": 2},
+        "resolution_m": {
+          "type": "object",
+          "required": ["x", "y", "x_min", "x_max"],
+          "properties": {
+            "x": {"type": "number", "exclusiveMinimum": 0},
+            "y": {"type": "number", "exclusiveMinimum": 0},
+            "x_min": {"type": "number", "exclusiveMinimum": 0},
+            "x_max": {"type": "number", "exclusiveMinimum": 0}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "terrain": {
+      "type": "object",
+      "required": ["elevation_m", "slope_deg", "roughness_rms_m", "roughness_window_cells"],
+      "properties": {
+        "elevation_m": {"$ref": "#/$defs/grid"},
+        "slope_deg": {"$ref": "#/$defs/grid"},
+        "roughness_rms_m": {"$ref": "#/$defs/grid"},
+        "roughness_window_cells": {"type": "integer", "minimum": 3}
+      },
+      "additionalProperties": false
+    },
+    "statistics": {
+      "type": "object",
+      "required": ["valid_cell_count", "nodata_cell_count", "elevation_m", "slope_deg", "roughness_rms_m"],
+      "properties": {
+        "valid_cell_count": {"type": "integer", "minimum": 1},
+        "nodata_cell_count": {"type": "integer", "minimum": 0},
+        "elevation_m": {"$ref": "#/$defs/stats"},
+        "slope_deg": {"$ref": "#/$defs/stats"},
+        "roughness_rms_m": {"$ref": "#/$defs/stats"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "bbox": {
+      "type": "array",
+      "items": {"type": "number"},
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "grid": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {"type": ["number", "null"]}
+      }
+    },
+    "stats": {
+      "type": "object",
+      "required": ["min", "max", "mean", "stddev"],
+      "properties": {
+        "min": {"type": "number"},
+        "max": {"type": "number"},
+        "mean": {"type": "number"},
+        "stddev": {"type": "number", "minimum": 0}
+      },
+      "additionalProperties": false
+    }
+  }
+}

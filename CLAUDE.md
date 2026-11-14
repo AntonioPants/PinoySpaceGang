@@ -14,33 +14,25 @@ Team PinoySpaceGang is building a web-based landing simulator.
 4. Watch the approach cutscene and run the descent simulation.
 5. View the explosion/success cutscene and the engineering report.
 
-## Current repo state — read this first
+## Repo layout — read this first
 
-The code currently on `main` is **not** the simulator. It is **Field Shift**, the team's earlier
-crop-rotation decision-support tool:
+The Field Shift crop tool is gone. `main` was rebuilt as the simulator (see `README.md`):
 
-- `engine/` is a Python FastAPI science engine.
-- `web/` is a Next.js 14 + Tailwind + Leaflet + Recharts frontend.
-- `data/snapshot/` holds the pilot-farm data.
+- `data/`: the terrain data pipeline (owned by Yousef & Antonio). `terrain_profile.schema.json` is the
+  JSON terrain format, `catalog_manifest.json` lists the data sources, and `processed/` holds the
+  committed profiles.
+- `scripts/`: the Python fetch/extract tools (`extract_profile.py` etc.). Run tests with `pytest`.
+- `web/public/terrain/<id>/`: browser-ready terrain packs (e.g. `kilbourne-hole-v1`: `manifest.json`
+  + `elevation.f32` + `terrain.glb`).
+- `app/`: the real-time frontend and physics engine.
+  - `app/sim/` is the descent physics engine (TypeScript, zero runtime deps, Vitest), owned by Tim.
+    Run `cd app/sim && npm install && npm test`, `npm run typecheck`, `npm run viewer` (React + Vite
+    dev viewer), `npx tsx scripts/run.ts --site moon --hazards`. The contracts are in
+    `app/sim/src/types.ts`. React integration goes through `app/sim/react/useLanderSim.ts`. Loaders
+    for the team's terrain formats are `profileToSite()` (terrain_profile JSON) and
+    `terrainPackToSite()` (manifest + `.f32`). See `app/sim/README.md`.
 
-Treat it as a starting point and a reference, not as the simulator architecture. Ask before
-deleting or repurposing Field Shift code. Existing commands (see `Makefile`, Windows:
-`scripts/dev.ps1`):
-
-- `make setup` creates the venv and installs the engine and web dependencies.
-- `make engine` runs the engine on :8000. `make engine-offline` runs it with no network access.
-- `make web` runs Next.js on :3000.
-- `make test` runs pytest on the engine and type-checks the web app.
-- `make types` regenerates the OpenAPI schema and the TypeScript types.
-
-Simulator code so far:
-
-- `sim/` holds the descent physics engine (TypeScript, zero runtime deps, Vitest). `cd sim && npm test`,
-  `npm run typecheck`, `npx tsx scripts/run.ts --site moon --hazards`. Contracts live in
-  `sim/src/types.ts`; the proposed `sites.json` shape is `sim/fixtures/sites.example.json`. React integration: the `sim/react/useLanderSim.ts` hook. Dev viewer (React + Vite): `npm run viewer`.
-  See `sim/README.md`.
-
-The rest of the simulator's stack and layout (globe, UI, cutscenes) is not decided yet. Record it here once it is.
+The frontend is React. The globe, UI and cutscene layout is not decided yet; record it here once it is.
 
 ## Team roles and ownership
 
@@ -99,7 +91,8 @@ The rest of the simulator's stack and layout (globe, UI, cutscenes) is not decid
 These are the integration contracts. Keep them stable, and when one changes, update every
 consumer in the same change.
 
-- **`sites.json`** (owned by Yousef & Antonio): planetary sites, their Earth analogs,
+- **Terrain data** (owned by Yousef & Antonio, formerly called `sites.json`): `data/terrain_profile.schema.json`
+  profiles and `web/public/terrain/<id>/` packs.: planetary sites, their Earth analogs,
   similarity scores, elevation slices and environmental stats (slope, wind, albedo, soil type).
   - **Hour 6 checkpoint:** lock the key structure early, even with sample numbers, so Eyad and
     Tim can build against real keys immediately.
