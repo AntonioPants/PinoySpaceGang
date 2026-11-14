@@ -1,4 +1,6 @@
-import { syntheticTerrain } from '../src/index.ts';
+import { syntheticTerrain, terrainPackToSite } from '../src/index.ts';
+import kilbourneManifestUrl from '../../../web/public/terrain/kilbourne-hole-v1/manifest.json?url';
+import kilbourneF32Url from '../../../web/public/terrain/kilbourne-hole-v1/elevation.f32?url';
 import type { SiteTerrain } from '../src/index.ts';
 
 const boulders = [{ center: { x: 0, y: 0 }, radiusM: 25, count: 60 }];
@@ -36,4 +38,17 @@ export function resolveSite(key: string, fileSites: Map<string, SiteTerrain>): S
   }
   if (!cache.has(key)) cache.set(key, PRESETS[key.slice(7)].make());
   return cache.get(key)!;
+}
+
+/**
+ * Real terrain packs from web/public/terrain/. Kilbourne Hole (NM) was an Apollo field-training
+ * site, so it flies as a Moon analog by default.
+ */
+export async function loadTerrainPacks(): Promise<SiteTerrain[]> {
+  const [manifest, buffer] = await Promise.all([
+    fetch(kilbourneManifestUrl).then((r) => r.json()),
+    fetch(kilbourneF32Url).then((r) => r.arrayBuffer()),
+  ]);
+  const site = terrainPackToSite(manifest, buffer, { analogOf: 'moon' });
+  return [{ ...site, name: `${site.name} — Copernicus DEM, Moon analog` }];
 }

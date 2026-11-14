@@ -7,7 +7,7 @@ import { TopView } from './components/TopView.tsx';
 import { Hud } from './components/Hud.tsx';
 import { EventLog } from './components/EventLog.tsx';
 import { ResultCard } from './components/ResultCard.tsx';
-import { PRESETS, resolveSite } from './sites.ts';
+import { PRESETS, loadTerrainPacks, resolveSite } from './sites.ts';
 
 function toInput(setup: Setup, fileSites: Map<string, SiteTerrain>): SimInput {
   return {
@@ -26,7 +26,11 @@ function toInput(setup: Setup, fileSites: Map<string, SiteTerrain>): SimInput {
 const params = new URLSearchParams(location.search);
 const initialSetup: Setup = {
   ...DEFAULT_SETUP,
-  siteKey: params.get('site') && PRESETS[params.get('site')!] ? `preset:${params.get('site')}` : DEFAULT_SETUP.siteKey,
+  siteKey: params.get('site')
+    ? PRESETS[params.get('site')!]
+      ? `preset:${params.get('site')}`
+      : `file:${params.get('site')}`
+    : DEFAULT_SETUP.siteKey,
 };
 
 export function App() {
@@ -65,8 +69,25 @@ export function App() {
   }, [lander.togglePause]);
 
   useEffect(() => {
-    if (params.has('launch')) launchRef.current(Number(params.get('at')) || undefined);
+    loadTerrainPacks()
+      .then((sites) =>
+        setFileSites((prev) => {
+          const next = new Map(prev);
+          for (const s of sites) next.set(s.id, s);
+          return next;
+        }),
+      )
+      .catch((err) => setMessage(`Could not load terrain packs: ${(err as Error).message}`));
   }, []);
+
+  // ?launch: start once the chosen site is available (terrain packs load asynchronously)
+  const autoLaunched = useRef(false);
+  useEffect(() => {
+    if (autoLaunched.current || !params.has('launch')) return;
+    if (setup.siteKey.startsWith('file:') && !fileSites.has(setup.siteKey.slice(5))) return;
+    autoLaunched.current = true;
+    launchRef.current(Number(params.get('at')) || undefined);
+  }, [fileSites, setup.siteKey]);
 
   const { sim, input } = lander;
   const aim: Vec2 = useMemo(() => {

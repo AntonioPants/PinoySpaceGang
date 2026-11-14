@@ -65,11 +65,11 @@ export function SetupPanel(p: Props) {
           <option key={k} value={`preset:${k}`}>{v.label}</option>
         ))}
         {[...p.fileSites.values()].map((s) => (
-          <option key={s.id} value={`file:${s.id}`}>sites.json — {s.name ?? s.id}</option>
+          <option key={s.id} value={`file:${s.id}`}>{s.name ?? s.id}</option>
         ))}
       </select>
 
-      <label htmlFor="sitesFile">Load sites.json</label>
+      <label htmlFor="sitesFile">Load sites.json (synthetic format)</label>
       <input key={fileKey} type="file" id="sitesFile" accept=".json,application/json" onChange={(e) => loadFile(e.target.files?.[0])} />
 
       <label htmlFor="strategy">Strategy</label>

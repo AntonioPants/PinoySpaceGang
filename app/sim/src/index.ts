@@ -8,3 +8,5 @@ export type { PilotInput } from './controllers/manual.ts';
 export { evaluateTouchdown } from './touchdown.ts';
 export { GridTerrain, syntheticTerrain, slopeDegAt, roughnessAt, normalAt, gradientAt } from './terrain.ts';
 export { parseSite, parseSites } from './sites.ts';
+export { profileToSite, terrainPackToSite } from './loaders.ts';
+export type { TerrainProfile, TerrainPackManifest } from './loaders.ts';

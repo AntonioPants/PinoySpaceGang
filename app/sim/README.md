@@ -3,12 +3,13 @@
 A headless TypeScript physics engine for the lander. It has no runtime dependencies and imports nothing from the DOM or Three.js, so it works with whichever renderer Eyad picks.
 
 ```bash
-cd sim && npm install
+cd app/sim && npm install
 npm test                 # vitest: physics, autopilot, sites.json parsing
 npm run typecheck
 npx tsx scripts/run.ts --site moon --hazards            # prints a summary, writes out/telemetry.json
 npx tsx scripts/run.ts --site earth-native              # Earth gravity with a lunar engine → crash
-npx tsx scripts/run.ts --site path/sites.json:<id>      # fly a real site
+npx tsx scripts/run.ts --site pack:../../web/public/terrain/kilbourne-hole-v1   # real Copernicus DEM
+npx tsx scripts/run.ts --site profile:../../data/processed/earth_analogs/<id>.json --analog mars
 ```
 
 ## Browser viewer (React)
@@ -48,7 +49,7 @@ useEffect(() => lander.onFrame((sim, dt, input) => drawScene(sim.state)), [lande
 ## Using the engine directly (any framework)
 
 ```ts
-import { createSim, createManualPilot, keysToPilotInput, parseSites } from '../sim/src/index.ts';
+import { createSim, createManualPilot, keysToPilotInput, parseSites } from './sim/src/index.ts'  // path from app/;
 
 const site = parseSites(sitesJson).find((s) => s.id === chosenId)!;
 const sim = createSim({
@@ -72,4 +73,4 @@ function frame(dt: number) {
 }
 ```
 
-The contracts are in `src/types.ts` (`SimInput`, `SimEvent`, `FlightTelemetry`). The proposed `sites.json` shape is in `fixtures/sites.example.json`, and `parseSite()` validates it.
+The contracts are in `src/types.ts` (`SimInput`, `SimEvent`, `FlightTelemetry`). The data team's formats load with `profileToSite()`, for `terrain_profile` JSON from `scripts/extract_profile.py`, and `terrainPackToSite()`, for `web/public/terrain/<id>/manifest.json` + `elevation.f32`. `parseSite()` reads the simpler synthetic format in `fixtures/sites.example.json`.

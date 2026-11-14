@@ -1,13 +1,13 @@
 /**
  * Headless flight from the command line.
- *   npx tsx scripts/run.ts [--site moon|mars|earth-mars|earth-native|<sites.json>:<id>]
+ *   npx tsx scripts/run.ts [--site moon|mars|earth-mars|earth-native|pack:<dir>|profile:<file>|<sites.json>:<id>]
  *                          [--strategy autonomous|manual] [--hazards] [--dust 0..1] [--glare 0..1]
  *                          [--sensor lidar|camera|none] [--seed N] [--out file.json]
  * Prints the summary and writes the full telemetry JSON (for mocking the report screen).
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
-import { runSim, syntheticTerrain, parseSites, createManualPilot } from '../src/index.ts';
+import { runSim, syntheticTerrain, parseSites, createManualPilot, terrainPackToSite, profileToSite } from '../src/index.ts';
 import type { SimInput, SiteTerrain } from '../src/index.ts';
 
 const args = process.argv.slice(2);
@@ -21,7 +21,17 @@ const siteArg = opt('site', 'moon')!;
 const hazards = flag('hazards') ? [{ center: { x: 0, y: 0 }, radiusM: 25, count: 60 }] : [];
 let site: SiteTerrain;
 let gravity: SimInput['gravity'] = 'target';
-if (siteArg.includes(':')) {
+if (siteArg.startsWith('pack:')) {
+  // e.g. pack:../../web/public/terrain/kilbourne-hole-v1  (Earth sites fly as a Moon analog; --analog mars to change)
+  const dir = siteArg.slice(5).replace(/\/?$/, '/');
+  const buf = readFileSync(dir + 'elevation.f32');
+  site = terrainPackToSite(JSON.parse(readFileSync(dir + 'manifest.json', 'utf8')), buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength), {
+    analogOf: (opt('analog', 'moon') as 'moon' | 'mars'),
+  });
+} else if (siteArg.startsWith('profile:')) {
+  // terrain_profile JSON from scripts/extract_profile.py
+  site = profileToSite(JSON.parse(readFileSync(siteArg.slice(8), 'utf8')), { analogOf: (opt('analog', 'mars') as 'moon' | 'mars') });
+} else if (siteArg.includes(':')) {
   const [file, id] = siteArg.split(':');
   const found = parseSites(JSON.parse(readFileSync(file, 'utf8'))).find((s) => s.id === id);
   if (!found) throw new Error(`site ${id} not in ${file}`);
