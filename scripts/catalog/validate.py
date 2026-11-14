@@ -8,6 +8,23 @@ import rasterio
 from .build import PUBLIC, ROOT, sha
 from .scoring import compare
 
+def validate_exploratory_site(site, byid):
+    """Allow an unpaired scan only with explicit, traceable inference metadata."""
+    from .analog_score import FAMILIES
+    assert site['catalog_origin']=='regional_scan'
+    assert site['body']=='earth' and site['role']=='earth_analog'
+    assert site['morphology']=='unknown' and site['substrate']=='unknown'
+    assert site['matches']==[], 'Scanned windows cannot gain literature tier through registration'
+    p=site['scan_provenance']
+    assert p['window_id']==site['id'] and p['evidence_status']=='exploratory_terrain_only'
+    seeds=[byid[sid] for sid in p['seed_site_ids']]
+    assert seeds and all(s['body']=='earth' and s.get('catalog_origin')!='regional_scan' for s in seeds)
+    expected=sorted({s['morphology'] for s in seeds if s['morphology'] in FAMILIES})
+    assert site['inferred_landforms']==expected, 'Borrowed labels must match documented region seeds'
+    assert set(p['source_urls'])=={s['evidence_url'] for s in seeds}
+    assert site['classification']['status']=='unknown'
+
+
 def validate(public=PUBLIC):
     catalog=json.loads((public/'sites.json').read_text(encoding='utf-8'))
     schema=json.loads((ROOT/'data/sites.schema.json').read_text(encoding='utf-8'))
@@ -66,7 +83,14 @@ def validate(public=PUBLIC):
     byid={s['id']:s for s in catalog['sites']}
     for site in catalog['sites']:
         if site['body'] == 'earth' and site['terrain']:
-            assert site['matches'], f"{site['id']}: enabled Earth site needs a proposed pairing"
+            if site.get('catalog_origin')=='regional_scan':
+                validate_exploratory_site(site, byid)
+                pack=public/site['terrain']['manifest_url'].lstrip('/')
+                receipt=json.loads((pack.parent/'source-receipt.json').read_text(encoding='utf-8'))
+                assert receipt['registration_provenance']==site['scan_provenance']
+                assert receipt['window']['elevation_sha256']==site['terrain']['elevation_sha256']
+            else:
+                assert site['matches'], f"{site['id']}: enabled Earth site needs a proposed pairing"
             assert set(site['matches']) == {p['planetary_id'] for p in catalog['pairings'] if p['earth_id'] == site['id']}
     for pair in catalog['pairings']:
         assert pair['explanation']['status'] == 'proposed_unvalidated'
@@ -74,9 +98,13 @@ def validate(public=PUBLIC):
         assert all(pair[k]==v for k,v in expected.items())
     from copy import deepcopy
     from .accuracy import attach_accuracy
-    audited=attach_accuracy(deepcopy(catalog),public)
+    samples={}
+    audited=attach_accuracy(deepcopy(catalog),public,samples)
     for actual,expected in zip(catalog['pairings'],audited['pairings']):
         assert actual.get('accuracy_check')==expected['accuracy_check'], 'Pairing accuracy audit missing or stale; refresh catalog metadata'
+    from .matching import attach_matching
+    expected_matching=attach_matching(audited,public,sample_cache=samples)['analog_matching']
+    assert catalog.get('analog_matching')==expected_matching, 'Analog matching missing or stale; refresh catalog metadata'
     print(f"PASS: {len(ids)} sites, {len(catalog['pairings'])} reproducible pairings; schemas, units, bounds, assets, hashes and missing values")
 
 if __name__=='__main__': validate()

@@ -16,7 +16,8 @@ from rasterio.windows import from_bounds, Window
 from scipy.ndimage import uniform_filter
 
 from .selection import records
-from .metadata import make_catalog, preserve_handoff
+from .global_sites import IDS as GLOBAL_IDS
+from .metadata import make_catalog, preserve_handoff, preserve_registered_scans
 from .publication import publication
 from .diviner import thermal_bins
 
@@ -26,6 +27,17 @@ CACHE = ROOT / 'data/cache/catalog'
 # Public USGS S3 distribution of the same MOLA mosaic; older host may return HTTP 403.
 MARS = 'https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif'
 MOON = 'https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LOLA_Global_LDEM_118m_Mar2014.tif'
+NEW_EARTH_SITES = ('cima-lava-field', 'sunset-crater', 'great-sand-dunes', 'bisti-badlands',
+                   'lanzarote-timanfaya', 'askja-east', 'atacama-yungay', 'sossusvlei-dunes', 'lonar-crater', 'wolfe-creek',
+                   'wadi-rum', 'richat-ridges', 'harrat-khaybar', 'payun-matru', 'tongariro-west', 'erg-chebbi', *GLOBAL_IDS)
+
+
+def earth_utm_crs(lon, lat):
+    """Select the WGS84 UTM hemisphere explicitly; fail outside supported coverage."""
+    if not math.isfinite(lon) or not math.isfinite(lat) or not (-180 <= lon <= 180 and -80 <= lat <= 84):
+        raise ValueError('Earth terrain requires finite longitude [-180,180] and UTM latitude [-80,84].')
+    zone = min(60, int((lon+180)//6)+1)
+    return CRS.from_epsg((32600 if lat >= 0 else 32700)+zone)
 
 def dump(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -54,7 +66,7 @@ def terrain(site, offline, public=PUBLIC):
         lat_tile,lon_tile=math.floor(lat),math.floor(lon)
         tile=f'Copernicus_DSM_COG_10_{"N" if lat_tile>=0 else "S"}{abs(lat_tile):02d}_00_{"E" if lon_tile>=0 else "W"}{abs(lon_tile):03d}_00_DEM'
         url=f'https://copernicus-dem-30m.s3.amazonaws.com/{tile}/{tile}.tif'
-        crs=CRS.from_epsg(32600 + int((lon+180)//6)+1)
+        crs=earth_utm_crs(lon,lat)
         geo=CRS.from_epsg(4326)
         step,native=30.0,30.0
     else:
@@ -107,7 +119,7 @@ def terrain(site, offline, public=PUBLIC):
        'limitations':['Regional surface only; no caves, wheel-scale hazards, or landing safety certification.','Native sampling varies with latitude; output spacing is not source resolving power.']}
     m['attribution']='produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved' if body=='earth' else 'NASA MGS MOLA / LRO LOLA Science Teams; USGS Astrogeology mosaic distribution'
     m['license_url']='/terrain/kilbourne-hole-v1/COPERNICUS-LICENSE.pdf' if body=='earth' else 'https://astrogeology.usgs.gov/search/map/'+('mars_mgs_mola_dem_463m' if body=='mars' else 'moon_lro_lola_dem_118m')
-    if retained.get('subset_file') or sid in ('haughton', 'qaidam', 'lucus-planum'):
+    if retained.get('subset_file') or sid in ('haughton', 'qaidam', 'lucus-planum', 'malapert-massif', 'mons-mouton', *NEW_EARTH_SITES):
         if cached.resolve() != (path/'source-window.tif').resolve():
             shutil.copy2(cached, path/'source-window.tif')
         dump(path/'source-receipt.json', receipt)
@@ -144,13 +156,16 @@ def environment(site, offline):
         na=site['body']=='moon' and key in ('wind_speed_10m','air_temperature_2m')
         result[key]=property_record(None,unit,'not_applicable' if na else 'unknown',reason='No atmosphere supports this meteorological quantity.' if na else 'No validated site-specific product ingested; substrate does not determine this value.')
     if site['body']=='moon':
-        result.update(thermal_bins(site,CACHE,offline))
+        result.update(thermal_bins(site,CACHE,offline,retained=PUBLIC/'terrain'/site['id']/'diviner-cell.tab'))
         return result
     if site['body']!='earth': return result
     cache=CACHE/f"{site['id']}-power-v2.json"
+    retained = PUBLIC/'terrain'/site['id']/'power-daily-2024.json'
+    if not cache.exists() and retained.exists():
+        cache = retained
     url='https://power.larc.nasa.gov/api/temporal/daily/point'
     if not cache.exists():
-        if offline: return result
+        if offline: raise FileNotFoundError(f'Offline weather response missing: {cache}; retrieve it before rebuilding this Earth record')
         response=requests.get(url,params=dict(parameters='T2M,WS10M,TS,ALLSKY_SRF_ALB',community='RE',longitude=site['longitude'],latitude=site['latitude'],start='20240101',end='20241231',format='JSON'),timeout=90)
         response.raise_for_status(); dump(cache,response.json())
     data=json.loads(cache.read_text(encoding='utf-8'))
@@ -202,6 +217,22 @@ def build_records(args, public):
         except Exception as exc:
             failures.append({'site':s['id'],'stage':'environment','error':str(exc)})
             entry['conditions'].update(environment(s,True))
+        if s['id'] in NEW_EARTH_SITES and entry['terrain']:
+            pack = public/'terrain'/s['id']
+            raw = CACHE/f"{s['id']}-power-v2.json"
+            if raw.exists():
+                shutil.copy2(raw, pack/'power-daily-2024.json')
+            if not (pack/'power-daily-2024.json').exists():
+                raise FileNotFoundError('New Earth pack requires its retained POWER response')
+            dump(pack/'checksums.json', {p.name:sha(p) for p in pack.iterdir() if p.name!='checksums.json'})
+        if s['id'] in ('malapert-massif', 'mons-mouton') and entry['terrain']:
+            pack = public/'terrain'/s['id']
+            raw = CACHE/f"{s['id']}-diviner.tab"
+            if raw.exists():
+                shutil.copy2(raw, pack/'diviner-cell.tab')
+            if not (pack/'diviner-cell.tab').exists():
+                raise FileNotFoundError('New lunar pack requires its retained Diviner source cell')
+            dump(pack/'checksums.json', {p.name:sha(p) for p in pack.iterdir() if p.name!='checksums.json'})
         entry['limitations']=['Morphology and substrate are area interpretations, not pixel classifications or soil mechanics.','No validated resource inventory; water/ice/cave hypotheses are not confirmed local resources.']
         entry['feature_measurements']={key:{'value':None,'status':'unknown','reason':'Requires feature delineation or dedicated field/high-resolution time-series data; regional DSM statistics are not a substitute.'} for key in {'kilbourne-hole-v1':['crater_diameter','depth_diameter_ratio','rim_relief'],'meteor-crater':['crater_diameter','depth_diameter_ratio','rim_continuity'],'amboy':['cone_height','flow_morphology'],'badwater':['wet_dry_state','salt_mineral_fractions'],'white-sands':['dune_height','crest_spacing','crest_orientation','migration'],'barrow-observatory':['polygon_size','active_layer_depth','ground_temperature']}.get(s['id'],[])}
         if entry['comparison_features'].get('roughness_rms'):
@@ -228,6 +259,8 @@ def build_records(args, public):
     if args.site:
         previous.update({s['id']: s for s in out})
         out = list(previous.values())
+    else:
+        out = preserve_registered_scans(out, previous)
     catalog = make_catalog(out, public)
     dump(public/'sites.json', catalog)
     return catalog

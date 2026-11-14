@@ -1,0 +1,2003 @@
+{
+  "benchmark_version": "1.0.0",
+  "scientifically_validated": false,
+  "label_policy": "Catalog literature-informed proposals are weak retrieval labels, including engineering hypotheses. Unlisted pairs are unlabeled, not verified non-analogs. Evaluation on fitted labels is in-sample.",
+  "ranking_policy": "All eligible Earth sites, score descending, stable site ID tie break; tier boost and 80% cutoff disabled.",
+  "score_gap_definition": "Mean scorable known score minus highest unlabeled score, percentage points; positive is better.",
+  "earth_count": 50,
+  "targets": [
+    {
+      "target_id": "arsia-flank",
+      "known_count": 14,
+      "eligible_count": 50,
+      "known_unscorable": [],
+      "recall_at_10": 0.07142857142857142,
+      "mean_known_rank": 34.857142857142854,
+      "known_mean_minus_best_unlabeled_pp": -28.98979285714286,
+      "known_ranks": {
+        "amboy": 2,
+        "askja-east": 40,
+        "cima-lava-field": 32,
+        "craters-moon": 26,
+        "etna-east": 47,
+        "fournaise-enclos": 50,
+        "harrat-khaybar": 36,
+        "kilbourne-hole-v1": 29,
+        "lanzarote-timanfaya": 23,
+        "lava-beds": 37,
+        "payun-matru": 45,
+        "pinacate-elegante": 44,
+        "sunset-crater": 35,
+        "tongariro-west": 42
+      },
+      "ranking": [
+        {
+          "earth_id": "dunhuang-yardangs",
+          "score_percent": 99.4904
+        },
+        {
+          "earth_id": "amboy",
+          "score_percent": 99.4808
+        },
+        {
+          "earth_id": "bisti-badlands",
+          "score_percent": 99.3834
+        },
+        {
+          "earth_id": "taklamakan-interior",
+          "score_percent": 99.1331
+        },
+        {
+          "earth_id": "haughton",
+          "score_percent": 98.7197
+        },
+        {
+          "earth_id": "meteor-crater",
+          "score_percent": 98.5291
+        },
+        {
+          "earth_id": "rub-khali-oman",
+          "score_percent": 98.461
+        },
+        {
+          "earth_id": "dallol",
+          "score_percent": 98.3082
+        },
+        {
+          "earth_id": "qaidam",
+          "score_percent": 97.8793
+        },
+        {
+          "earth_id": "wolfe-creek",
+          "score_percent": 97.5442
+        },
+        {
+          "earth_id": "bardenas-blanca",
+          "score_percent": 97.4323
+        },
+        {
+          "earth_id": "lut-yardangs",
+          "score_percent": 96.7178
+        },
+        {
+          "earth_id": "uyuni-incahuasi",
+          "score_percent": 95.8607
+        },
+        {
+          "earth_id": "white-sands",
+          "score_percent": 95.6856
+        },
+        {
+          "earth_id": "barrow-observatory",
+          "score_percent": 95.668
+        },
+        {
+          "earth_id": "makgadikgadi-kubu",
+          "score_percent": 95.6574
+        },
+        {
+          "earth_id": "lake-abbe-margin",
+          "score_percent": 95.3807
+        },
+        {
+          "earth_id": "badwater",
+          "score_percent": 95.3102
+        },
+        {
+          "earth_id": "tsondab-dunes",
+          "score_percent": 94.4606
+        },
+        {
+          "earth_id": "richat-ridges",
+          "score_percent": 94.1869
+        },
+        {
+          "earth_id": "erg-chebbi",
+          "score_percent": 92.9789
+        },
+        {
+          "earth_id": "valle-luna-chile",
+          "score_percent": 92.907
+        },
+        {
+          "earth_id": "lanzarote-timanfaya",
+          "score_percent": 92.7451
+        },
+        {
+          "earth_id": "ischigualasto",
+          "score_percent": 91.8466
+        },
+        {
+          "earth_id": "lonar-crater",
+          "score_percent": 91.201
+        },
+        {
+          "earth_id": "craters-moon",
+          "score_percent": 90.3959
+        },
+        {
+          "earth_id": "capitol-reef",
+          "score_percent": 90.0523
+        },
+        {
+          "earth_id": "hverir-namafjall",
+          "score_percent": 89.595
+        },
+        {
+          "earth_id": "kilbourne-hole-v1",
+          "score_percent": 89.3899
+        },
+        {
+          "earth_id": "pingualuit",
+          "score_percent": 87.1968
+        },
+        {
+          "earth_id": "sossusvlei-dunes",
+          "score_percent": 86.356
+        },
+        {
+          "earth_id": "cima-lava-field",
+          "score_percent": 85.4942
+        },
+        {
+          "earth_id": "atacama-yungay",
+          "score_percent": 85.3604
+        },
+        {
+          "earth_id": "great-sand-dunes",
+          "score_percent": 83.8201
+        },
+        {
+          "earth_id": "sunset-crater",
+          "score_percent": 83.3659
+        },
+        {
+          "earth_id": "harrat-khaybar",
+          "score_percent": 83.046
+        },
+        {
+          "earth_id": "lava-beds",
+          "score_percent": 80.5619
+        },
+        {
+          "earth_id": "talampaya-canyon",
+          "score_percent": 80.3047
+        },
+        {
+          "earth_id": "wadi-rum",
+          "score_percent": 74.4764
+        },
+        {
+          "earth_id": "askja-east",
+          "score_percent": 74.2334
+        },
+        {
+          "earth_id": "tabernas-badlands",
+          "score_percent": 71.3821
+        },
+        {
+          "earth_id": "tongariro-west",
+          "score_percent": 68.2316
+        },
+        {
+          "earth_id": "badain-jaran",
+          "score_percent": 67.8889
+        },
+        {
+          "earth_id": "pinacate-elegante",
+          "score_percent": 62.7851
+        },
+        {
+          "earth_id": "payun-matru",
+          "score_percent": 61.3776
+        },
+        {
+          "earth_id": "bromo-sandsea",
+          "score_percent": 60.7869
+        },
+        {
+          "earth_id": "etna-east",
+          "score_percent": 15.4883
+        },
+        {
+          "earth_id": "fogo-caldera",
+          "score_percent": 9.924
+        },
+        {
+          "earth_id": "teide-canadas",
+          "score_percent": 3.6972
+        },
+        {
+          "earth_id": "fournaise-enclos",
+          "score_percent": 0.4128
+        }
+      ],
+      "reason": null
+    },
+    {
+      "target_id": "bagnold",
+      "known_count": 8,
+      "eligible_count": 50,
+      "known_unscorable": [],
+      "recall_at_10": 0.25,
+      "mean_known_rank": 23.375,
+      "known_mean_minus_best_unlabeled_pp": -13.256625,
+      "known_ranks": {
+        "badain-jaran": 18,
+        "erg-chebbi": 23,
+        "great-sand-dunes": 5,
+        "rub-khali-oman": 30,
+        "sossusvlei-dunes": 10,
+        "taklamakan-interior": 34,
+        "tsondab-dunes": 25,
+        "white-sands": 42
+      },
+      "ranking": [
+        {
+          "earth_id": "talampaya-canyon",
+          "score_percent": 98.6692
+        },
+        {
+          "earth_id": "lava-beds",
+          "score_percent": 98.2359
+        },
+        {
+          "earth_id": "harrat-khaybar",
+          "score_percent": 96.11
+        },
+        {
+          "earth_id": "sunset-crater",
+          "score_percent": 95.7901
+        },
+        {
+          "earth_id": "great-sand-dunes",
+          "score_percent": 95.3359
+        },
+        {
+          "earth_id": "wadi-rum",
+          "score_percent": 95.3204
+        },
+        {
+          "earth_id": "askja-east",
+          "score_percent": 95.0774
+        },
+        {
+          "earth_id": "atacama-yungay",
+          "score_percent": 93.7956
+        },
+        {
+          "earth_id": "cima-lava-field",
+          "score_percent": 93.6618
+        },
+        {
+          "earth_id": "sossusvlei-dunes",
+          "score_percent": 92.8
+        },
+        {
+          "earth_id": "tabernas-badlands",
+          "score_percent": 92.2261
+        },
+        {
+          "earth_id": "pingualuit",
+          "score_percent": 91.9591
+        },
+        {
+          "earth_id": "kilbourne-hole-v1",
+          "score_percent": 89.766
+        },
+        {
+          "earth_id": "hverir-namafjall",
+          "score_percent": 89.561
+        },
+        {
+          "earth_id": "capitol-reef",
+          "score_percent": 89.1037
+        },
+        {
+          "earth_id": "tongariro-west",
+          "score_percent": 89.0756
+        },
+        {
+          "earth_id": "craters-moon",
+          "score_percent": 88.76
+        },
+        {
+          "earth_id": "badain-jaran",
+          "score_percent": 88.7329
+        },
+        {
+          "earth_id": "lonar-crater",
+          "score_percent": 87.955
+        },
+        {
+          "earth_id": "ischigualasto",
+          "score_percent": 87.3094
+        },
+        {
+          "earth_id": "lanzarote-timanfaya",
+          "score_percent": 86.4109
+        },
+        {
+          "earth_id": "valle-luna-chile",
+          "score_percent": 86.249
+        },
+        {
+          "earth_id": "erg-chebbi",
+          "score_percent": 86.1771
+        },
+        {
+          "earth_id": "richat-ridges",
+          "score_percent": 84.969
+        },
+        {
+          "earth_id": "tsondab-dunes",
+          "score_percent": 84.6954
+        },
+        {
+          "earth_id": "pinacate-elegante",
+          "score_percent": 83.6291
+        },
+        {
+          "earth_id": "payun-matru",
+          "score_percent": 82.2216
+        },
+        {
+          "earth_id": "bromo-sandsea",
+          "score_percent": 81.6309
+        },
+        {
+          "earth_id": "qaidam",
+          "score_percent": 81.2767
+        },
+        {
+          "earth_id": "rub-khali-oman",
+          "score_percent": 80.695
+        },
+        {
+          "earth_id": "meteor-crater",
+          "score_percent": 80.6269
+        },
+        {
+          "earth_id": "dallol",
+          "score_percent": 80.6029
+        },
+        {
+          "earth_id": "haughton",
+          "score_percent": 80.4362
+        },
+        {
+          "earth_id": "taklamakan-interior",
+          "score_percent": 80.0228
+        },
+        {
+          "earth_id": "amboy",
+          "score_percent": 79.6752
+        },
+        {
+          "earth_id": "bisti-badlands",
+          "score_percent": 79.5285
+        },
+        {
+          "earth_id": "dunhuang-yardangs",
+          "score_percent": 79.0779
+        },
+        {
+          "earth_id": "wolfe-creek",
+          "score_percent": 76.7002
+        },
+        {
+          "earth_id": "bardenas-blanca",
+          "score_percent": 76.5883
+        },
+        {
+          "earth_id": "lut-yardangs",
+          "score_percent": 75.8738
+        },
+        {
+          "earth_id": "uyuni-incahuasi",
+          "score_percent": 75.0167
+        },
+        {
+          "earth_id": "white-sands",
+          "score_percent": 74.8415
+        },
+        {
+          "earth_id": "barrow-observatory",
+          "score_percent": 74.824
+        },
+        {
+          "earth_id": "makgadikgadi-kubu",
+          "score_percent": 74.8134
+        },
+        {
+          "earth_id": "lake-abbe-margin",
+          "score_percent": 74.5367
+        },
+        {
+          "earth_id": "badwater",
+          "score_percent": 74.4662
+        },
+        {
+          "earth_id": "etna-east",
+          "score_percent": 36.3323
+        },
+        {
+          "earth_id": "fogo-caldera",
+          "score_percent": 20.7618
+        },
+        {
+          "earth_id": "teide-canadas",
+          "score_percent": 14.5349
+        },
+        {
+          "earth_id": "fournaise-enclos",
+          "score_percent": 10.1907
+        }
+      ],
+      "reason": null
+    },
+    {
+      "target_id": "jezero",
+      "known_count": 15,
+      "eligible_count": 50,
+      "known_unscorable": [],
+      "recall_at_10": 0.26666666666666666,
+      "mean_known_rank": 24.4,
+      "known_mean_minus_best_unlabeled_pp": -8.578186666666666,
+      "known_ranks": {
+        "atacama-yungay": 15,
+        "badwater": 38,
+        "bardenas-blanca": 31,
+        "bisti-badlands": 26,
+        "capitol-reef": 5,
+        "dallol": 22,
+        "hverir-namafjall": 1,
+        "ischigualasto": 6,
+        "lake-abbe-margin": 37,
+        "makgadikgadi-kubu": 36,
+        "tabernas-badlands": 41,
+        "talampaya-canyon": 28,
+        "uyuni-incahuasi": 33,
+        "valle-luna-chile": 8,
+        "wadi-rum": 39
+      },
+      "ranking": [
+        {
+          "earth_id": "hverir-namafjall",
+          "score_percent": 99.0887
+        },
+        {
+          "earth_id": "lonar-crater",
+          "score_percent": 98.9626
+        },
+        {
+          "earth_id": "craters-moon",
+          "score_percent": 98.2817
+        },
+        {
+          "earth_id": "kilbourne-hole-v1",
+          "score_percent": 98.2127
+        },
+        {
+          "earth_id": "capitol-reef",
+          "score_percent": 98.1894
+        },
+        {
+          "earth_id": "ischigualasto",
+          "score_percent": 97.7564
+        },
+        {
+          "earth_id": "lanzarote-timanfaya",
+          "score_percent": 97.4185
+        },
+        {
+          "earth_id": "valle-luna-chile",
+          "score_percent": 97.2566
+        },
+        {
+          "earth_id": "erg-chebbi",
+          "score_percent": 97.1847
+        },
+        {
+          "earth_id": "pingualuit",
+          "score_percent": 95.9987
+        },
+        {
+          "earth_id": "richat-ridges",
+          "score_percent": 95.9766
+        },
+        {
+          "earth_id": "tsondab-dunes",
+          "score_percent": 95.703
+        },
+        {
+          "earth_id": "sossusvlei-dunes",
+          "score_percent": 95.5936
+        },
+        {
+          "earth_id": "cima-lava-field",
+          "score_percent": 95.3306
+        },
+        {
+          "earth_id": "atacama-yungay",
+          "score_percent": 95.1968
+        },
+        {
+          "earth_id": "great-sand-dunes",
+          "score_percent": 93.6565
+        },
+        {
+          "earth_id": "sunset-crater",
+          "score_percent": 93.2023
+        },
+        {
+          "earth_id": "harrat-khaybar",
+          "score_percent": 92.8824
+        },
+        {
+          "earth_id": "qaidam",
+          "score_percent": 92.2843
+        },
+        {
+          "earth_id": "rub-khali-oman",
+          "score_percent": 91.7026
+        },
+        {
+          "earth_id": "meteor-crater",
+          "score_percent": 91.6345
+        },
+        {
+          "earth_id": "dallol",
+          "score_percent": 91.6105
+        },
+        {
+          "earth_id": "haughton",
+          "score_percent": 91.4438
+        },
+        {
+          "earth_id": "taklamakan-interior",
+          "score_percent": 91.0304
+        },
+        {
+          "earth_id": "amboy",
+          "score_percent": 90.6828
+        },
+        {
+          "earth_id": "bisti-badlands",
+          "score_percent": 90.5361
+        },
+        {
+          "earth_id": "lava-beds",
+          "score_percent": 90.3984
+        },
+        {
+          "earth_id": "talampaya-canyon",
+          "score_percent": 90.1411
+        },
+        {
+          "earth_id": "dunhuang-yardangs",
+          "score_percent": 90.0855
+        },
+        {
+          "earth_id": "wolfe-creek",
+          "score_percent": 87.7078
+        },
+        {
+          "earth_id": "bardenas-blanca",
+          "score_percent": 87.5959
+        },
+        {
+          "earth_id": "lut-yardangs",
+          "score_percent": 86.8814
+        },
+        {
+          "earth_id": "uyuni-incahuasi",
+          "score_percent": 86.0243
+        },
+        {
+          "earth_id": "white-sands",
+          "score_percent": 85.8491
+        },
+        {
+          "earth_id": "barrow-observatory",
+          "score_percent": 85.8316
+        },
+        {
+          "earth_id": "makgadikgadi-kubu",
+          "score_percent": 85.821
+        },
+        {
+          "earth_id": "lake-abbe-margin",
+          "score_percent": 85.5443
+        },
+        {
+          "earth_id": "badwater",
+          "score_percent": 85.4737
+        },
+        {
+          "earth_id": "wadi-rum",
+          "score_percent": 84.3129
+        },
+        {
+          "earth_id": "askja-east",
+          "score_percent": 84.0698
+        },
+        {
+          "earth_id": "tabernas-badlands",
+          "score_percent": 81.2185
+        },
+        {
+          "earth_id": "tongariro-west",
+          "score_percent": 78.0681
+        },
+        {
+          "earth_id": "badain-jaran",
+          "score_percent": 77.7253
+        },
+        {
+          "earth_id": "pinacate-elegante",
+          "score_percent": 72.6215
+        },
+        {
+          "earth_id": "payun-matru",
+          "score_percent": 71.214
+        },
+        {
+          "earth_id": "bromo-sandsea",
+          "score_percent": 70.6233
+        },
+        {
+          "earth_id": "etna-east",
+          "score_percent": 25.3247
+        },
+        {
+          "earth_id": "fogo-caldera",
+          "score_percent": 15.0069
+        },
+        {
+          "earth_id": "teide-canadas",
+          "score_percent": 8.7801
+        },
+        {
+          "earth_id": "fournaise-enclos",
+          "score_percent": 4.4358
+        }
+      ],
+      "reason": null
+    },
+    {
+      "target_id": "lucus-planum",
+      "known_count": 4,
+      "eligible_count": 50,
+      "known_unscorable": [],
+      "recall_at_10": 0.5,
+      "mean_known_rank": 11,
+      "known_mean_minus_best_unlabeled_pp": -2.006549999999996,
+      "known_ranks": {
+        "dunhuang-yardangs": 1,
+        "lut-yardangs": 7,
+        "qaidam": 16,
+        "richat-ridges": 20
+      },
+      "ranking": [
+        {
+          "earth_id": "dunhuang-yardangs",
+          "score_percent": 98.9595
+        },
+        {
+          "earth_id": "wolfe-creek",
+          "score_percent": 98.6628
+        },
+        {
+          "earth_id": "bardenas-blanca",
+          "score_percent": 98.5509
+        },
+        {
+          "earth_id": "bisti-badlands",
+          "score_percent": 98.5089
+        },
+        {
+          "earth_id": "amboy",
+          "score_percent": 98.3622
+        },
+        {
+          "earth_id": "taklamakan-interior",
+          "score_percent": 98.0145
+        },
+        {
+          "earth_id": "lut-yardangs",
+          "score_percent": 97.8364
+        },
+        {
+          "earth_id": "haughton",
+          "score_percent": 97.6012
+        },
+        {
+          "earth_id": "dallol",
+          "score_percent": 97.4134
+        },
+        {
+          "earth_id": "meteor-crater",
+          "score_percent": 97.4105
+        },
+        {
+          "earth_id": "rub-khali-oman",
+          "score_percent": 97.3424
+        },
+        {
+          "earth_id": "uyuni-incahuasi",
+          "score_percent": 96.9793
+        },
+        {
+          "earth_id": "white-sands",
+          "score_percent": 96.8041
+        },
+        {
+          "earth_id": "barrow-observatory",
+          "score_percent": 96.7866
+        },
+        {
+          "earth_id": "makgadikgadi-kubu",
+          "score_percent": 96.776
+        },
+        {
+          "earth_id": "qaidam",
+          "score_percent": 96.7607
+        },
+        {
+          "earth_id": "lake-abbe-margin",
+          "score_percent": 96.4993
+        },
+        {
+          "earth_id": "badwater",
+          "score_percent": 96.4288
+        },
+        {
+          "earth_id": "tsondab-dunes",
+          "score_percent": 93.342
+        },
+        {
+          "earth_id": "richat-ridges",
+          "score_percent": 93.0684
+        },
+        {
+          "earth_id": "erg-chebbi",
+          "score_percent": 91.8603
+        },
+        {
+          "earth_id": "valle-luna-chile",
+          "score_percent": 91.7884
+        },
+        {
+          "earth_id": "lanzarote-timanfaya",
+          "score_percent": 91.6265
+        },
+        {
+          "earth_id": "ischigualasto",
+          "score_percent": 90.728
+        },
+        {
+          "earth_id": "lonar-crater",
+          "score_percent": 90.0824
+        },
+        {
+          "earth_id": "craters-moon",
+          "score_percent": 89.2774
+        },
+        {
+          "earth_id": "capitol-reef",
+          "score_percent": 88.9337
+        },
+        {
+          "earth_id": "hverir-namafjall",
+          "score_percent": 88.4764
+        },
+        {
+          "earth_id": "kilbourne-hole-v1",
+          "score_percent": 88.2713
+        },
+        {
+          "earth_id": "pingualuit",
+          "score_percent": 86.0782
+        },
+        {
+          "earth_id": "sossusvlei-dunes",
+          "score_percent": 85.2374
+        },
+        {
+          "earth_id": "cima-lava-field",
+          "score_percent": 84.3756
+        },
+        {
+          "earth_id": "atacama-yungay",
+          "score_percent": 84.2418
+        },
+        {
+          "earth_id": "great-sand-dunes",
+          "score_percent": 82.7015
+        },
+        {
+          "earth_id": "sunset-crater",
+          "score_percent": 82.2473
+        },
+        {
+          "earth_id": "harrat-khaybar",
+          "score_percent": 81.9274
+        },
+        {
+          "earth_id": "lava-beds",
+          "score_percent": 79.4434
+        },
+        {
+          "earth_id": "talampaya-canyon",
+          "score_percent": 79.1861
+        },
+        {
+          "earth_id": "wadi-rum",
+          "score_percent": 73.3578
+        },
+        {
+          "earth_id": "askja-east",
+          "score_percent": 73.1148
+        },
+        {
+          "earth_id": "tabernas-badlands",
+          "score_percent": 70.2635
+        },
+        {
+          "earth_id": "tongariro-west",
+          "score_percent": 67.113
+        },
+        {
+          "earth_id": "badain-jaran",
+          "score_percent": 66.7703
+        },
+        {
+          "earth_id": "pinacate-elegante",
+          "score_percent": 61.6665
+        },
+        {
+          "earth_id": "payun-matru",
+          "score_percent": 60.259
+        },
+        {
+          "earth_id": "bromo-sandsea",
+          "score_percent": 59.6683
+        },
+        {
+          "earth_id": "etna-east",
+          "score_percent": 14.4366
+        },
+        {
+          "earth_id": "fogo-caldera",
+          "score_percent": 9.407
+        },
+        {
+          "earth_id": "teide-canadas",
+          "score_percent": 3.1802
+        },
+        {
+          "earth_id": "fournaise-enclos",
+          "score_percent": 0.0077
+        }
+      ],
+      "reason": null
+    },
+    {
+      "target_id": "malapert-massif",
+      "known_count": 0,
+      "eligible_count": 50,
+      "known_unscorable": [],
+      "recall_at_10": null,
+      "mean_known_rank": null,
+      "known_mean_minus_best_unlabeled_pp": null,
+      "known_ranks": {},
+      "ranking": [
+        {
+          "earth_id": "bromo-sandsea",
+          "score_percent": 88.6405
+        },
+        {
+          "earth_id": "payun-matru",
+          "score_percent": 88.0498
+        },
+        {
+          "earth_id": "pinacate-elegante",
+          "score_percent": 86.6422
+        },
+        {
+          "earth_id": "badain-jaran",
+          "score_percent": 81.5384
+        },
+        {
+          "earth_id": "tongariro-west",
+          "score_percent": 81.1957
+        },
+        {
+          "earth_id": "tabernas-badlands",
+          "score_percent": 78.0453
+        },
+        {
+          "earth_id": "askja-east",
+          "score_percent": 75.194
+        },
+        {
+          "earth_id": "wadi-rum",
+          "score_percent": 74.9509
+        },
+        {
+          "earth_id": "talampaya-canyon",
+          "score_percent": 69.1227
+        },
+        {
+          "earth_id": "lava-beds",
+          "score_percent": 68.8654
+        },
+        {
+          "earth_id": "harrat-khaybar",
+          "score_percent": 66.3813
+        },
+        {
+          "earth_id": "sunset-crater",
+          "score_percent": 66.0614
+        },
+        {
+          "earth_id": "etna-east",
+          "score_percent": 66.061
+        },
+        {
+          "earth_id": "great-sand-dunes",
+          "score_percent": 65.6072
+        },
+        {
+          "earth_id": "atacama-yungay",
+          "score_percent": 64.067
+        },
+        {
+          "earth_id": "cima-lava-field",
+          "score_percent": 63.9332
+        },
+        {
+          "earth_id": "sossusvlei-dunes",
+          "score_percent": 63.0714
+        },
+        {
+          "earth_id": "pingualuit",
+          "score_percent": 62.2305
+        },
+        {
+          "earth_id": "kilbourne-hole-v1",
+          "score_percent": 60.0374
+        },
+        {
+          "earth_id": "hverir-namafjall",
+          "score_percent": 59.8323
+        },
+        {
+          "earth_id": "capitol-reef",
+          "score_percent": 59.3751
+        },
+        {
+          "earth_id": "craters-moon",
+          "score_percent": 59.0314
+        },
+        {
+          "earth_id": "lonar-crater",
+          "score_percent": 58.2263
+        },
+        {
+          "earth_id": "ischigualasto",
+          "score_percent": 57.5807
+        },
+        {
+          "earth_id": "lanzarote-timanfaya",
+          "score_percent": 56.6823
+        },
+        {
+          "earth_id": "valle-luna-chile",
+          "score_percent": 56.5203
+        },
+        {
+          "earth_id": "erg-chebbi",
+          "score_percent": 56.4485
+        },
+        {
+          "earth_id": "richat-ridges",
+          "score_percent": 55.2404
+        },
+        {
+          "earth_id": "tsondab-dunes",
+          "score_percent": 54.9667
+        },
+        {
+          "earth_id": "qaidam",
+          "score_percent": 51.548
+        },
+        {
+          "earth_id": "rub-khali-oman",
+          "score_percent": 50.9663
+        },
+        {
+          "earth_id": "meteor-crater",
+          "score_percent": 50.8983
+        },
+        {
+          "earth_id": "dallol",
+          "score_percent": 50.8743
+        },
+        {
+          "earth_id": "haughton",
+          "score_percent": 50.7076
+        },
+        {
+          "earth_id": "taklamakan-interior",
+          "score_percent": 50.2942
+        },
+        {
+          "earth_id": "amboy",
+          "score_percent": 49.9465
+        },
+        {
+          "earth_id": "bisti-badlands",
+          "score_percent": 49.7998
+        },
+        {
+          "earth_id": "dunhuang-yardangs",
+          "score_percent": 49.3493
+        },
+        {
+          "earth_id": "wolfe-creek",
+          "score_percent": 46.9715
+        },
+        {
+          "earth_id": "bardenas-blanca",
+          "score_percent": 46.8597
+        },
+        {
+          "earth_id": "lut-yardangs",
+          "score_percent": 46.1452
+        },
+        {
+          "earth_id": "uyuni-incahuasi",
+          "score_percent": 45.288
+        },
+        {
+          "earth_id": "white-sands",
+          "score_percent": 45.1129
+        },
+        {
+          "earth_id": "barrow-observatory",
+          "score_percent": 45.0954
+        },
+        {
+          "earth_id": "makgadikgadi-kubu",
+          "score_percent": 45.0848
+        },
+        {
+          "earth_id": "lake-abbe-margin",
+          "score_percent": 44.808
+        },
+        {
+          "earth_id": "badwater",
+          "score_percent": 44.7375
+        },
+        {
+          "earth_id": "fogo-caldera",
+          "score_percent": 41.6906
+        },
+        {
+          "earth_id": "teide-canadas",
+          "score_percent": 37.8447
+        },
+        {
+          "earth_id": "fournaise-enclos",
+          "score_percent": 28.4085
+        }
+      ],
+      "reason": "No proposed analog labels for this target; excluded from aggregate metrics."
+    },
+    {
+      "target_id": "marius-hills",
+      "known_count": 11,
+      "eligible_count": 50,
+      "known_unscorable": [],
+      "recall_at_10": 0.0,
+      "mean_known_rank": 37.36363636363637,
+      "known_mean_minus_best_unlabeled_pp": -31.97053636363637,
+      "known_ranks": {
+        "askja-east": 40,
+        "bromo-sandsea": 46,
+        "cima-lava-field": 32,
+        "craters-moon": 26,
+        "fogo-caldera": 48,
+        "harrat-khaybar": 36,
+        "lanzarote-timanfaya": 17,
+        "lava-beds": 37,
+        "payun-matru": 45,
+        "sunset-crater": 35,
+        "teide-canadas": 49
+      },
+      "ranking": [
+        {
+          "earth_id": "haughton",
+          "score_percent": 99.5075
+        },
+        {
+          "earth_id": "rub-khali-oman",
+          "score_percent": 99.4766
+        },
+        {
+          "earth_id": "dallol",
+          "score_percent": 99.416
+        },
+        {
+          "earth_id": "qaidam",
+          "score_percent": 99.2238
+        },
+        {
+          "earth_id": "taklamakan-interior",
+          "score_percent": 99.1934
+        },
+        {
+          "earth_id": "amboy",
+          "score_percent": 98.8458
+        },
+        {
+          "earth_id": "meteor-crater",
+          "score_percent": 98.8426
+        },
+        {
+          "earth_id": "bisti-badlands",
+          "score_percent": 98.6991
+        },
+        {
+          "earth_id": "dunhuang-yardangs",
+          "score_percent": 98.2485
+        },
+        {
+          "earth_id": "tsondab-dunes",
+          "score_percent": 96.134
+        },
+        {
+          "earth_id": "wolfe-creek",
+          "score_percent": 95.8708
+        },
+        {
+          "earth_id": "richat-ridges",
+          "score_percent": 95.8604
+        },
+        {
+          "earth_id": "bardenas-blanca",
+          "score_percent": 95.7589
+        },
+        {
+          "earth_id": "lut-yardangs",
+          "score_percent": 95.0444
+        },
+        {
+          "earth_id": "erg-chebbi",
+          "score_percent": 94.6523
+        },
+        {
+          "earth_id": "valle-luna-chile",
+          "score_percent": 94.5804
+        },
+        {
+          "earth_id": "lanzarote-timanfaya",
+          "score_percent": 94.4185
+        },
+        {
+          "earth_id": "uyuni-incahuasi",
+          "score_percent": 94.1873
+        },
+        {
+          "earth_id": "white-sands",
+          "score_percent": 94.0121
+        },
+        {
+          "earth_id": "barrow-observatory",
+          "score_percent": 93.9946
+        },
+        {
+          "earth_id": "makgadikgadi-kubu",
+          "score_percent": 93.984
+        },
+        {
+          "earth_id": "lake-abbe-margin",
+          "score_percent": 93.7073
+        },
+        {
+          "earth_id": "badwater",
+          "score_percent": 93.6368
+        },
+        {
+          "earth_id": "ischigualasto",
+          "score_percent": 93.52
+        },
+        {
+          "earth_id": "lonar-crater",
+          "score_percent": 92.8744
+        },
+        {
+          "earth_id": "craters-moon",
+          "score_percent": 92.0694
+        },
+        {
+          "earth_id": "capitol-reef",
+          "score_percent": 91.7257
+        },
+        {
+          "earth_id": "hverir-namafjall",
+          "score_percent": 91.2684
+        },
+        {
+          "earth_id": "kilbourne-hole-v1",
+          "score_percent": 91.0634
+        },
+        {
+          "earth_id": "pingualuit",
+          "score_percent": 88.8703
+        },
+        {
+          "earth_id": "sossusvlei-dunes",
+          "score_percent": 88.0294
+        },
+        {
+          "earth_id": "cima-lava-field",
+          "score_percent": 87.1676
+        },
+        {
+          "earth_id": "atacama-yungay",
+          "score_percent": 87.0338
+        },
+        {
+          "earth_id": "great-sand-dunes",
+          "score_percent": 85.4935
+        },
+        {
+          "earth_id": "sunset-crater",
+          "score_percent": 85.0393
+        },
+        {
+          "earth_id": "harrat-khaybar",
+          "score_percent": 84.7194
+        },
+        {
+          "earth_id": "lava-beds",
+          "score_percent": 82.2354
+        },
+        {
+          "earth_id": "talampaya-canyon",
+          "score_percent": 81.9781
+        },
+        {
+          "earth_id": "wadi-rum",
+          "score_percent": 76.1499
+        },
+        {
+          "earth_id": "askja-east",
+          "score_percent": 75.9068
+        },
+        {
+          "earth_id": "tabernas-badlands",
+          "score_percent": 73.0555
+        },
+        {
+          "earth_id": "tongariro-west",
+          "score_percent": 69.905
+        },
+        {
+          "earth_id": "badain-jaran",
+          "score_percent": 69.5623
+        },
+        {
+          "earth_id": "pinacate-elegante",
+          "score_percent": 64.4585
+        },
+        {
+          "earth_id": "payun-matru",
+          "score_percent": 63.051
+        },
+        {
+          "earth_id": "bromo-sandsea",
+          "score_percent": 62.4603
+        },
+        {
+          "earth_id": "etna-east",
+          "score_percent": 17.1617
+        },
+        {
+          "earth_id": "fogo-caldera",
+          "score_percent": 11.0329
+        },
+        {
+          "earth_id": "teide-canadas",
+          "score_percent": 4.806
+        },
+        {
+          "earth_id": "fournaise-enclos",
+          "score_percent": 1.2628
+        }
+      ],
+      "reason": null
+    },
+    {
+      "target_id": "mons-mouton",
+      "known_count": 0,
+      "eligible_count": 50,
+      "known_unscorable": [],
+      "recall_at_10": null,
+      "mean_known_rank": null,
+      "known_mean_minus_best_unlabeled_pp": null,
+      "known_ranks": {},
+      "ranking": [
+        {
+          "earth_id": "tabernas-badlands",
+          "score_percent": 96.8926
+        },
+        {
+          "earth_id": "badain-jaran",
+          "score_percent": 96.8368
+        },
+        {
+          "earth_id": "tongariro-west",
+          "score_percent": 96.6927
+        },
+        {
+          "earth_id": "pinacate-elegante",
+          "score_percent": 94.5104
+        },
+        {
+          "earth_id": "wadi-rum",
+          "score_percent": 93.7982
+        },
+        {
+          "earth_id": "askja-east",
+          "score_percent": 93.4117
+        },
+        {
+          "earth_id": "payun-matru",
+          "score_percent": 93.1029
+        },
+        {
+          "earth_id": "bromo-sandsea",
+          "score_percent": 92.5122
+        },
+        {
+          "earth_id": "talampaya-canyon",
+          "score_percent": 87.97
+        },
+        {
+          "earth_id": "lava-beds",
+          "score_percent": 87.7127
+        },
+        {
+          "earth_id": "harrat-khaybar",
+          "score_percent": 85.2286
+        },
+        {
+          "earth_id": "sunset-crater",
+          "score_percent": 84.9088
+        },
+        {
+          "earth_id": "great-sand-dunes",
+          "score_percent": 84.4546
+        },
+        {
+          "earth_id": "atacama-yungay",
+          "score_percent": 82.9143
+        },
+        {
+          "earth_id": "cima-lava-field",
+          "score_percent": 82.7805
+        },
+        {
+          "earth_id": "sossusvlei-dunes",
+          "score_percent": 81.9187
+        },
+        {
+          "earth_id": "pingualuit",
+          "score_percent": 81.0778
+        },
+        {
+          "earth_id": "kilbourne-hole-v1",
+          "score_percent": 78.8847
+        },
+        {
+          "earth_id": "hverir-namafjall",
+          "score_percent": 78.6797
+        },
+        {
+          "earth_id": "capitol-reef",
+          "score_percent": 78.2224
+        },
+        {
+          "earth_id": "craters-moon",
+          "score_percent": 77.8787
+        },
+        {
+          "earth_id": "lonar-crater",
+          "score_percent": 77.0737
+        },
+        {
+          "earth_id": "ischigualasto",
+          "score_percent": 76.428
+        },
+        {
+          "earth_id": "lanzarote-timanfaya",
+          "score_percent": 75.5296
+        },
+        {
+          "earth_id": "valle-luna-chile",
+          "score_percent": 75.3677
+        },
+        {
+          "earth_id": "erg-chebbi",
+          "score_percent": 75.2958
+        },
+        {
+          "earth_id": "richat-ridges",
+          "score_percent": 74.0877
+        },
+        {
+          "earth_id": "tsondab-dunes",
+          "score_percent": 73.8141
+        },
+        {
+          "earth_id": "qaidam",
+          "score_percent": 70.3954
+        },
+        {
+          "earth_id": "rub-khali-oman",
+          "score_percent": 69.8137
+        },
+        {
+          "earth_id": "meteor-crater",
+          "score_percent": 69.7456
+        },
+        {
+          "earth_id": "dallol",
+          "score_percent": 69.7216
+        },
+        {
+          "earth_id": "haughton",
+          "score_percent": 69.5549
+        },
+        {
+          "earth_id": "taklamakan-interior",
+          "score_percent": 69.1415
+        },
+        {
+          "earth_id": "amboy",
+          "score_percent": 68.7939
+        },
+        {
+          "earth_id": "bisti-badlands",
+          "score_percent": 68.6472
+        },
+        {
+          "earth_id": "dunhuang-yardangs",
+          "score_percent": 68.1966
+        },
+        {
+          "earth_id": "wolfe-creek",
+          "score_percent": 65.8189
+        },
+        {
+          "earth_id": "bardenas-blanca",
+          "score_percent": 65.707
+        },
+        {
+          "earth_id": "lut-yardangs",
+          "score_percent": 64.9925
+        },
+        {
+          "earth_id": "uyuni-incahuasi",
+          "score_percent": 64.1354
+        },
+        {
+          "earth_id": "white-sands",
+          "score_percent": 63.9602
+        },
+        {
+          "earth_id": "barrow-observatory",
+          "score_percent": 63.9427
+        },
+        {
+          "earth_id": "makgadikgadi-kubu",
+          "score_percent": 63.9321
+        },
+        {
+          "earth_id": "lake-abbe-margin",
+          "score_percent": 63.6554
+        },
+        {
+          "earth_id": "badwater",
+          "score_percent": 63.5848
+        },
+        {
+          "earth_id": "etna-east",
+          "score_percent": 47.2136
+        },
+        {
+          "earth_id": "fogo-caldera",
+          "score_percent": 24.7101
+        },
+        {
+          "earth_id": "teide-canadas",
+          "score_percent": 18.9974
+        },
+        {
+          "earth_id": "fournaise-enclos",
+          "score_percent": 14.139
+        }
+      ],
+      "reason": "No proposed analog labels for this target; excluded from aggregate metrics."
+    },
+    {
+      "target_id": "phoenix",
+      "known_count": 1,
+      "eligible_count": 50,
+      "known_unscorable": [],
+      "recall_at_10": 0.0,
+      "mean_known_rank": 20,
+      "known_mean_minus_best_unlabeled_pp": -5.600700000000003,
+      "known_ranks": {
+        "barrow-observatory": 20
+      },
+      "ranking": [
+        {
+          "earth_id": "haughton",
+          "score_percent": 99.5831
+        },
+        {
+          "earth_id": "qaidam",
+          "score_percent": 99.5649
+        },
+        {
+          "earth_id": "meteor-crater",
+          "score_percent": 99.3346
+        },
+        {
+          "earth_id": "dallol",
+          "score_percent": 99.0745
+        },
+        {
+          "earth_id": "amboy",
+          "score_percent": 98.8335
+        },
+        {
+          "earth_id": "taklamakan-interior",
+          "score_percent": 98.8264
+        },
+        {
+          "earth_id": "rub-khali-oman",
+          "score_percent": 98.7296
+        },
+        {
+          "earth_id": "bisti-badlands",
+          "score_percent": 98.6868
+        },
+        {
+          "earth_id": "dunhuang-yardangs",
+          "score_percent": 98.2363
+        },
+        {
+          "earth_id": "tsondab-dunes",
+          "score_percent": 96.1463
+        },
+        {
+          "earth_id": "richat-ridges",
+          "score_percent": 95.8726
+        },
+        {
+          "earth_id": "wolfe-creek",
+          "score_percent": 95.8586
+        },
+        {
+          "earth_id": "bardenas-blanca",
+          "score_percent": 95.7467
+        },
+        {
+          "earth_id": "lut-yardangs",
+          "score_percent": 95.0322
+        },
+        {
+          "earth_id": "erg-chebbi",
+          "score_percent": 94.6645
+        },
+        {
+          "earth_id": "valle-luna-chile",
+          "score_percent": 94.5927
+        },
+        {
+          "earth_id": "lanzarote-timanfaya",
+          "score_percent": 94.4307
+        },
+        {
+          "earth_id": "uyuni-incahuasi",
+          "score_percent": 94.175
+        },
+        {
+          "earth_id": "white-sands",
+          "score_percent": 93.9999
+        },
+        {
+          "earth_id": "barrow-observatory",
+          "score_percent": 93.9824
+        },
+        {
+          "earth_id": "makgadikgadi-kubu",
+          "score_percent": 93.9718
+        },
+        {
+          "earth_id": "lake-abbe-margin",
+          "score_percent": 93.695
+        },
+        {
+          "earth_id": "badwater",
+          "score_percent": 93.6245
+        },
+        {
+          "earth_id": "ischigualasto",
+          "score_percent": 93.5323
+        },
+        {
+          "earth_id": "lonar-crater",
+          "score_percent": 92.8867
+        },
+        {
+          "earth_id": "craters-moon",
+          "score_percent": 92.0816
+        },
+        {
+          "earth_id": "capitol-reef",
+          "score_percent": 91.7379
+        },
+        {
+          "earth_id": "hverir-namafjall",
+          "score_percent": 91.2807
+        },
+        {
+          "earth_id": "kilbourne-hole-v1",
+          "score_percent": 91.0756
+        },
+        {
+          "earth_id": "pingualuit",
+          "score_percent": 88.8825
+        },
+        {
+          "earth_id": "sossusvlei-dunes",
+          "score_percent": 88.0416
+        },
+        {
+          "earth_id": "cima-lava-field",
+          "score_percent": 87.1798
+        },
+        {
+          "earth_id": "atacama-yungay",
+          "score_percent": 87.046
+        },
+        {
+          "earth_id": "great-sand-dunes",
+          "score_percent": 85.5058
+        },
+        {
+          "earth_id": "sunset-crater",
+          "score_percent": 85.0516
+        },
+        {
+          "earth_id": "harrat-khaybar",
+          "score_percent": 84.7317
+        },
+        {
+          "earth_id": "lava-beds",
+          "score_percent": 82.2476
+        },
+        {
+          "earth_id": "talampaya-canyon",
+          "score_percent": 81.9903
+        },
+        {
+          "earth_id": "wadi-rum",
+          "score_percent": 76.1621
+        },
+        {
+          "earth_id": "askja-east",
+          "score_percent": 75.919
+        },
+        {
+          "earth_id": "tabernas-badlands",
+          "score_percent": 73.0677
+        },
+        {
+          "earth_id": "tongariro-west",
+          "score_percent": 69.9173
+        },
+        {
+          "earth_id": "badain-jaran",
+          "score_percent": 69.5745
+        },
+        {
+          "earth_id": "pinacate-elegante",
+          "score_percent": 64.4708
+        },
+        {
+          "earth_id": "payun-matru",
+          "score_percent": 63.0632
+        },
+        {
+          "earth_id": "bromo-sandsea",
+          "score_percent": 62.4725
+        },
+        {
+          "earth_id": "etna-east",
+          "score_percent": 17.174
+        },
+        {
+          "earth_id": "fogo-caldera",
+          "score_percent": 10.7929
+        },
+        {
+          "earth_id": "teide-canadas",
+          "score_percent": 4.5661
+        },
+        {
+          "earth_id": "fournaise-enclos",
+          "score_percent": 0.8954
+        }
+      ],
+      "reason": null
+    },
+    {
+      "target_id": "shackleton-rim",
+      "known_count": 6,
+      "eligible_count": 50,
+      "known_unscorable": [],
+      "recall_at_10": 0.0,
+      "mean_known_rank": 27,
+      "known_mean_minus_best_unlabeled_pp": -33.7952,
+      "known_ranks": {
+        "haughton": 34,
+        "kilbourne-hole-v1": 18,
+        "lonar-crater": 22,
+        "meteor-crater": 32,
+        "pingualuit": 17,
+        "wolfe-creek": 39
+      },
+      "ranking": [
+        {
+          "earth_id": "bromo-sandsea",
+          "score_percent": 93.1567
+        },
+        {
+          "earth_id": "payun-matru",
+          "score_percent": 92.566
+        },
+        {
+          "earth_id": "pinacate-elegante",
+          "score_percent": 91.1584
+        },
+        {
+          "earth_id": "badain-jaran",
+          "score_percent": 86.0547
+        },
+        {
+          "earth_id": "tongariro-west",
+          "score_percent": 85.7119
+        },
+        {
+          "earth_id": "tabernas-badlands",
+          "score_percent": 82.5615
+        },
+        {
+          "earth_id": "askja-east",
+          "score_percent": 79.7102
+        },
+        {
+          "earth_id": "wadi-rum",
+          "score_percent": 79.4671
+        },
+        {
+          "earth_id": "talampaya-canyon",
+          "score_percent": 73.6389
+        },
+        {
+          "earth_id": "lava-beds",
+          "score_percent": 73.3816
+        },
+        {
+          "earth_id": "harrat-khaybar",
+          "score_percent": 70.8975
+        },
+        {
+          "earth_id": "sunset-crater",
+          "score_percent": 70.5776
+        },
+        {
+          "earth_id": "great-sand-dunes",
+          "score_percent": 70.1234
+        },
+        {
+          "earth_id": "atacama-yungay",
+          "score_percent": 68.5832
+        },
+        {
+          "earth_id": "cima-lava-field",
+          "score_percent": 68.4494
+        },
+        {
+          "earth_id": "sossusvlei-dunes",
+          "score_percent": 67.5876
+        },
+        {
+          "earth_id": "pingualuit",
+          "score_percent": 66.7467
+        },
+        {
+          "earth_id": "kilbourne-hole-v1",
+          "score_percent": 64.5536
+        },
+        {
+          "earth_id": "hverir-namafjall",
+          "score_percent": 64.3485
+        },
+        {
+          "earth_id": "capitol-reef",
+          "score_percent": 63.8913
+        },
+        {
+          "earth_id": "craters-moon",
+          "score_percent": 63.5476
+        },
+        {
+          "earth_id": "lonar-crater",
+          "score_percent": 62.7426
+        },
+        {
+          "earth_id": "ischigualasto",
+          "score_percent": 62.0969
+        },
+        {
+          "earth_id": "etna-east",
+          "score_percent": 61.5448
+        },
+        {
+          "earth_id": "lanzarote-timanfaya",
+          "score_percent": 61.1985
+        },
+        {
+          "earth_id": "valle-luna-chile",
+          "score_percent": 61.0365
+        },
+        {
+          "earth_id": "erg-chebbi",
+          "score_percent": 60.9647
+        },
+        {
+          "earth_id": "richat-ridges",
+          "score_percent": 59.7566
+        },
+        {
+          "earth_id": "tsondab-dunes",
+          "score_percent": 59.4829
+        },
+        {
+          "earth_id": "qaidam",
+          "score_percent": 56.0643
+        },
+        {
+          "earth_id": "rub-khali-oman",
+          "score_percent": 55.4825
+        },
+        {
+          "earth_id": "meteor-crater",
+          "score_percent": 55.4145
+        },
+        {
+          "earth_id": "dallol",
+          "score_percent": 55.3905
+        },
+        {
+          "earth_id": "haughton",
+          "score_percent": 55.2238
+        },
+        {
+          "earth_id": "taklamakan-interior",
+          "score_percent": 54.8104
+        },
+        {
+          "earth_id": "amboy",
+          "score_percent": 54.4628
+        },
+        {
+          "earth_id": "bisti-badlands",
+          "score_percent": 54.316
+        },
+        {
+          "earth_id": "dunhuang-yardangs",
+          "score_percent": 53.8655
+        },
+        {
+          "earth_id": "wolfe-creek",
+          "score_percent": 51.4878
+        },
+        {
+          "earth_id": "bardenas-blanca",
+          "score_percent": 51.3759
+        },
+        {
+          "earth_id": "lut-yardangs",
+          "score_percent": 50.6614
+        },
+        {
+          "earth_id": "uyuni-incahuasi",
+          "score_percent": 49.8042
+        },
+        {
+          "earth_id": "white-sands",
+          "score_percent": 49.6291
+        },
+        {
+          "earth_id": "barrow-observatory",
+          "score_percent": 49.6116
+        },
+        {
+          "earth_id": "makgadikgadi-kubu",
+          "score_percent": 49.601
+        },
+        {
+          "earth_id": "lake-abbe-margin",
+          "score_percent": 49.3242
+        },
+        {
+          "earth_id": "badwater",
+          "score_percent": 49.2537
+        },
+        {
+          "earth_id": "fogo-caldera",
+          "score_percent": 37.1744
+        },
+        {
+          "earth_id": "teide-canadas",
+          "score_percent": 33.3285
+        },
+        {
+          "earth_id": "fournaise-enclos",
+          "score_percent": 23.8923
+        }
+      ],
+      "reason": null
+    }
+  ],
+  "aggregate": {
+    "labeled_targets": 7,
+    "known_pairs": 59,
+    "macro_recall_at_10": 0.1554421768707483,
+    "micro_recall_at_10": 0.15254237288135594,
+    "mean_known_rank": 28.440677966101696,
+    "mean_gap_pp": -17.742512983920843
+  },
+  "catalog_sha256": "f8a289fa3378d9cd58c802e3324fa39bb4364a7809b2518ebda4c6875e341a1f",
+  "method_version": "1.2.0"
+}

@@ -1,0 +1,1371 @@
+{
+  "schema_version": "1.0.0",
+  "defaults": {
+    "stride_m": 2400,
+    "window_samples": 161,
+    "spacing_m": 30,
+    "max_download_gb": 20,
+    "min_allowed_fraction": 0.8,
+    "max_excluded_fraction": 0.05,
+    "max_nodata_fraction": 0.01
+  },
+  "scope": "Targeted regional search only. All existing seed sites are represented; active batch starts with 30 regions.",
+  "regions": [
+    {
+      "id": "amboy-region",
+      "name": "Amboy Crater region / Cima volcanic field study area region",
+      "bbox": [
+        -115.9979,
+        34.369707,
+        -115.53184,
+        35.396587
+      ],
+      "seed_site_ids": [
+        "amboy",
+        "cima-lava-field"
+      ],
+      "country": "US",
+      "anchor": [
+        -115.78,
+        34.55
+      ],
+      "target_types": [
+        "shield_flank",
+        "volcanic_plain"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.blm.gov/visit/amboy-crater-national-natural-landmark",
+      "sources": [
+        "https://www.blm.gov/visit/amboy-crater-national-natural-landmark",
+        "https://www.nps.gov/places/the-lava-tube-at-mojave.htm"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "askja-east-region",
+      "name": "Askja eastern volcanic terrain study area region",
+      "bbox": [
+        -17.024816,
+        64.875615,
+        -16.175184,
+        65.234381
+      ],
+      "seed_site_ids": [
+        "askja-east"
+      ],
+      "country": "Iceland",
+      "anchor": [
+        -16.6,
+        65.055
+      ],
+      "target_types": [
+        "shield_flank",
+        "volcanic_plain"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.vatnajokulsthjodgardur.is/en/areas/askja/askja-eldstod",
+      "sources": [
+        "https://www.vatnajokulsthjodgardur.is/en/areas/askja/askja-eldstod"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "atacama-yungay-region",
+      "name": "Atacama Yungay regional study area region",
+      "bbox": [
+        -70.056678,
+        -24.260569,
+        -69.663322,
+        -23.899426
+      ],
+      "seed_site_ids": [
+        "atacama-yungay"
+      ],
+      "country": "Chile",
+      "anchor": [
+        -69.86,
+        -24.08
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://ahed.nasa.gov/about/about-image?id=4",
+      "sources": [
+        "https://ahed.nasa.gov/about/about-image?id=4"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "badain-jaran-region",
+      "name": "Badain Jaran dune study area region",
+      "bbox": [
+        102.21637,
+        39.649868,
+        102.68363,
+        40.010126
+      ],
+      "seed_site_ids": [
+        "badain-jaran"
+      ],
+      "country": "China",
+      "anchor": [
+        102.45,
+        39.83
+      ],
+      "target_types": [
+        "dune_field"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://whc.unesco.org/en/list/1638/",
+      "sources": [
+        "https://whc.unesco.org/en/list/1638/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "badwater-region",
+      "name": "Badwater Basin region",
+      "bbox": [
+        -117.047509,
+        36.064758,
+        -116.602491,
+        36.425237
+      ],
+      "seed_site_ids": [
+        "badwater"
+      ],
+      "country": "US",
+      "anchor": [
+        -116.825,
+        36.245
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://doi.org/10.1029/2004JE002315",
+      "sources": [
+        "https://doi.org/10.1029/2004JE002315"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "bardenas-blanca-region",
+      "name": "Bardenas Blanca badlands study area region",
+      "bbox": [
+        -1.732195,
+        42.029942,
+        -1.247805,
+        42.390052
+      ],
+      "seed_site_ids": [
+        "bardenas-blanca"
+      ],
+      "country": "Spain",
+      "anchor": [
+        -1.49,
+        42.21
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.unesco.org/en/mab/bardenas-reales",
+      "sources": [
+        "https://www.unesco.org/en/mab/bardenas-reales"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "barrow-observatory-region",
+      "name": "Barrow Environmental Observatory regional context region",
+      "bbox": [
+        -157.158097,
+        71.100751,
+        -156.041903,
+        71.459245
+      ],
+      "seed_site_ids": [
+        "barrow-observatory"
+      ],
+      "country": "US",
+      "anchor": [
+        -156.6,
+        71.28
+      ],
+      "target_types": [
+        "polar_ice"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://tc.copernicus.org/articles/20/265/2026/tc-20-265-2026.html",
+      "sources": [
+        "https://tc.copernicus.org/articles/20/265/2026/tc-20-265-2026.html"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "bisti-badlands-region",
+      "name": "Bisti badlands study area region",
+      "bbox": [
+        -108.47258,
+        36.089759,
+        -108.02742,
+        36.450236
+      ],
+      "seed_site_ids": [
+        "bisti-badlands"
+      ],
+      "country": "US",
+      "anchor": [
+        -108.25,
+        36.27
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.blm.gov/programs/national-conservation-lands/new-mexico/bisti-de-na-zin-wilderness",
+      "sources": [
+        "https://www.blm.gov/programs/national-conservation-lands/new-mexico/bisti-de-na-zin-wilderness"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "bromo-sandsea-region",
+      "name": "Bromo Sandsea caldera study area region",
+      "bbox": [
+        112.768609,
+        -8.120838,
+        113.131391,
+        -7.75916
+      ],
+      "seed_site_ids": [
+        "bromo-sandsea"
+      ],
+      "country": "Indonesia",
+      "anchor": [
+        112.95,
+        -7.94
+      ],
+      "target_types": [
+        "volcanic_plain"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/gunung-bromo-indonesia-5062/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/gunung-bromo-indonesia-5062/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "capitol-reef-region",
+      "name": "Capitol Reef sedimentary study area region",
+      "bbox": [
+        -111.358578,
+        38.09982,
+        -110.901422,
+        38.460175
+      ],
+      "seed_site_ids": [
+        "capitol-reef"
+      ],
+      "country": "US",
+      "anchor": [
+        -111.13,
+        38.28
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.nps.gov/care/learn/nature/geology.htm",
+      "sources": [
+        "https://www.nps.gov/care/learn/nature/geology.htm"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "craters-moon-region",
+      "name": "Craters of the Moon region",
+      "bbox": [
+        -113.776964,
+        43.239981,
+        -113.283036,
+        43.600014
+      ],
+      "seed_site_ids": [
+        "craters-moon"
+      ],
+      "country": "US",
+      "anchor": [
+        -113.53,
+        43.42
+      ],
+      "target_types": [
+        "shield_flank",
+        "volcanic_plain"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.nps.gov/crmo/learn/nature/geologicactivity.htm",
+      "sources": [
+        "https://www.nps.gov/crmo/learn/nature/geologicactivity.htm"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "dallol-region",
+      "name": "Dallol salt-dome study area region",
+      "bbox": [
+        40.114679,
+        14.059235,
+        40.485321,
+        14.420763
+      ],
+      "seed_site_ids": [
+        "dallol"
+      ],
+      "country": "Ethiopia",
+      "anchor": [
+        40.3,
+        14.24
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://volcano.si.edu/volcano.cfm?vn=221041",
+      "sources": [
+        "https://volcano.si.edu/volcano.cfm?vn=221041"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "dunhuang-yardangs-region",
+      "name": "Dunhuang yardang study area region",
+      "bbox": [
+        92.994062,
+        40.319889,
+        93.465938,
+        40.680106
+      ],
+      "seed_site_ids": [
+        "dunhuang-yardangs"
+      ],
+      "country": "China",
+      "anchor": [
+        93.23,
+        40.5
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://whc.unesco.org/en/tentativelists/5990",
+      "sources": [
+        "https://whc.unesco.org/en/tentativelists/5990"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "erg-chebbi-region",
+      "name": "Erg Chebbi dune study area region",
+      "bbox": [
+        -4.169766,
+        30.97961,
+        -3.750234,
+        31.340385
+      ],
+      "seed_site_ids": [
+        "erg-chebbi"
+      ],
+      "country": "Morocco",
+      "anchor": [
+        -3.96,
+        31.16
+      ],
+      "target_types": [
+        "dune_field"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/the-shallow-aquifers-of-erg-chebbi-89181/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/the-shallow-aquifers-of-erg-chebbi-89181/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "etna-east-region",
+      "name": "Etna eastern flank study area region",
+      "bbox": [
+        14.813123,
+        37.549803,
+        15.266877,
+        37.910191
+      ],
+      "seed_site_ids": [
+        "etna-east"
+      ],
+      "country": "Italy",
+      "anchor": [
+        15.04,
+        37.73
+      ],
+      "target_types": [
+        "shield_flank"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/mount-etna-erupts-15782/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/mount-etna-erupts-15782/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "fogo-caldera-region",
+      "name": "Fogo caldera study area region",
+      "bbox": [
+        -24.535916,
+        14.769246,
+        -24.164084,
+        15.130752
+      ],
+      "seed_site_ids": [
+        "fogo-caldera"
+      ],
+      "country": "Cabo Verde",
+      "anchor": [
+        -24.35,
+        14.95
+      ],
+      "target_types": [
+        "volcanic_plain"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/fire-island-cabo-verde-148613/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/fire-island-cabo-verde-148613/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "fournaise-enclos-region",
+      "name": "Piton de la Fournaise Enclos study area region",
+      "bbox": [
+        55.537328,
+        -21.420634,
+        55.922672,
+        -21.059362
+      ],
+      "seed_site_ids": [
+        "fournaise-enclos"
+      ],
+      "country": "France",
+      "anchor": [
+        55.73,
+        -21.24
+      ],
+      "target_types": [
+        "shield_flank"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/piton-de-la-fournaise-volcano-18211/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/piton-de-la-fournaise-volcano-18211/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "great-sand-dunes-region",
+      "name": "Great Sand Dunes study area region",
+      "bbox": [
+        -105.756938,
+        37.569804,
+        -105.303062,
+        37.930191
+      ],
+      "seed_site_ids": [
+        "great-sand-dunes"
+      ],
+      "country": "US",
+      "anchor": [
+        -105.53,
+        37.75
+      ],
+      "target_types": [
+        "dune_field"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.nps.gov/grsa/learn/nature/volcanic-origins-of-great-sand-dunes.htm",
+      "sources": [
+        "https://www.nps.gov/grsa/learn/nature/volcanic-origins-of-great-sand-dunes.htm"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "harrat-khaybar-region",
+      "name": "Harrat Khaybar volcanic study area region",
+      "bbox": [
+        39.730789,
+        25.489465,
+        40.129211,
+        25.850531
+      ],
+      "seed_site_ids": [
+        "harrat-khaybar"
+      ],
+      "country": "Saudi Arabia",
+      "anchor": [
+        39.93,
+        25.67
+      ],
+      "target_types": [
+        "shield_flank",
+        "volcanic_plain"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/harrat-khaybar-volcanic-field-8650/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/harrat-khaybar-volcanic-field-8650/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "haughton-region",
+      "name": "Haughton Crater floor study area region",
+      "bbox": [
+        -90.389056,
+        75.190822,
+        -88.970944,
+        75.549175
+      ],
+      "seed_site_ids": [
+        "haughton"
+      ],
+      "country": "Canada",
+      "anchor": [
+        -89.68,
+        75.37
+      ],
+      "target_types": [
+        "crater_rim"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://ntrs.nasa.gov/citations/20060013129",
+      "sources": [
+        "https://ntrs.nasa.gov/citations/20060013129"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "hverir-namafjall-region",
+      "name": "Hverir Namafjall study area region",
+      "bbox": [
+        -17.244361,
+        65.460629,
+        -16.375639,
+        65.819367
+      ],
+      "seed_site_ids": [
+        "hverir-namafjall"
+      ],
+      "country": "Iceland",
+      "anchor": [
+        -16.81,
+        65.64
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://ust.is/library/Skrar/2005/Myvatn_enska.pdf",
+      "sources": [
+        "https://ust.is/library/Skrar/2005/Myvatn_enska.pdf"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "ischigualasto-region",
+      "name": "Ischigualasto sedimentary study area region / Talampaya canyon study area region",
+      "bbox": [
+        -68.157429,
+        -30.250416,
+        -67.633151,
+        -29.609572
+      ],
+      "seed_site_ids": [
+        "ischigualasto",
+        "talampaya-canyon"
+      ],
+      "country": "Argentina",
+      "anchor": [
+        -67.95,
+        -30.07
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://whc.unesco.org/en/list/966",
+      "sources": [
+        "https://whc.unesco.org/en/list/966"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "kilbourne-hole-v1-region",
+      "name": "Kilbourne Hole region",
+      "bbox": [
+        -107.180591,
+        31.791633,
+        -106.757409,
+        32.152362
+      ],
+      "seed_site_ids": [
+        "kilbourne-hole-v1"
+      ],
+      "country": "US",
+      "anchor": [
+        -106.969,
+        31.972
+      ],
+      "target_types": [
+        "crater_rim",
+        "shield_flank"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/blogs/notes-from-the-field/2018/01/24/kilbourne-and-aden-two-flavors-of-volcanism/",
+      "sources": [
+        "https://science.nasa.gov/blogs/notes-from-the-field/2018/01/24/kilbourne-and-aden-two-flavors-of-volcanism/"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "lake-abbe-margin-region",
+      "name": "Lake Abbe eastern margin study area region",
+      "bbox": [
+        41.656907,
+        10.964193,
+        42.023093,
+        11.325805
+      ],
+      "seed_site_ids": [
+        "lake-abbe-margin"
+      ],
+      "country": "Djibouti",
+      "anchor": [
+        41.84,
+        11.145
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.esa.int/ESA_Multimedia/Images/2023/07/Earth_from_Space_Ethiopian_painting",
+      "sources": [
+        "https://www.esa.int/ESA_Multimedia/Images/2023/07/Earth_from_Space_Ethiopian_painting"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "lanzarote-timanfaya-region",
+      "name": "Lanzarote Timanfaya volcanic study area region",
+      "bbox": [
+        -13.955197,
+        28.78955,
+        -13.544803,
+        29.150446
+      ],
+      "seed_site_ids": [
+        "lanzarote-timanfaya"
+      ],
+      "country": "Spain",
+      "anchor": [
+        -13.75,
+        28.97
+      ],
+      "target_types": [
+        "shield_flank",
+        "volcanic_plain"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/CAVES_and_Pangaea/Lanzarote_and_ESA_united_by_space",
+      "sources": [
+        "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/CAVES_and_Pangaea/Lanzarote_and_ESA_united_by_space"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "lava-beds-region",
+      "name": "Lava Beds region",
+      "bbox": [
+        -121.750347,
+        41.539927,
+        -121.269653,
+        41.900067
+      ],
+      "seed_site_ids": [
+        "lava-beds"
+      ],
+      "country": "US",
+      "anchor": [
+        -121.51,
+        41.72
+      ],
+      "target_types": [
+        "shield_flank",
+        "volcanic_plain"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.nps.gov/labe/learn/nature/geology.htm",
+      "sources": [
+        "https://www.nps.gov/labe/learn/nature/geology.htm"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "lonar-crater-region",
+      "name": "Lonar impact crater study area region",
+      "bbox": [
+        76.318912,
+        19.794336,
+        76.701088,
+        20.15566
+      ],
+      "seed_site_ids": [
+        "lonar-crater"
+      ],
+      "country": "India",
+      "anchor": [
+        76.51,
+        19.975
+      ],
+      "target_types": [
+        "crater_rim"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/lonar-crater-india-8654/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/lonar-crater-india-8654/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "lut-yardangs-region",
+      "name": "Lut western yardang study area region",
+      "bbox": [
+        57.621601,
+        30.349592,
+        58.038399,
+        30.710403
+      ],
+      "seed_site_ids": [
+        "lut-yardangs"
+      ],
+      "country": "Iran",
+      "anchor": [
+        57.83,
+        30.53
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://whc.unesco.org/en/list/1505/",
+      "sources": [
+        "https://whc.unesco.org/en/list/1505/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "makgadikgadi-kubu-region",
+      "name": "Makgadikgadi Kubu pan-margin study area region",
+      "bbox": [
+        25.632778,
+        -21.070641,
+        26.017222,
+        -20.709355
+      ],
+      "seed_site_ids": [
+        "makgadikgadi-kubu"
+      ],
+      "country": "Botswana",
+      "anchor": [
+        25.825,
+        -20.89
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://modis.gsfc.nasa.gov/gallery/individual.php?db_date=2026-02-05",
+      "sources": [
+        "https://modis.gsfc.nasa.gov/gallery/individual.php?db_date=2026-02-05"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "meteor-crater-region",
+      "name": "Meteor Crater region",
+      "bbox": [
+        -111.247158,
+        34.846721,
+        -110.808842,
+        35.207273
+      ],
+      "seed_site_ids": [
+        "meteor-crater"
+      ],
+      "country": "US",
+      "anchor": [
+        -111.028,
+        35.027
+      ],
+      "target_types": [
+        "crater_rim"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.usgs.gov/centers/astrogeology-science-center/science/meteor-crater-sample-collection",
+      "sources": [
+        "https://www.usgs.gov/centers/astrogeology-science-center/science/meteor-crater-sample-collection"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "payun-matru-region",
+      "name": "Payun Matru western flank study area region",
+      "bbox": [
+        -69.52295,
+        -36.580232,
+        -69.07705,
+        -36.219763
+      ],
+      "seed_site_ids": [
+        "payun-matru"
+      ],
+      "country": "Argentina",
+      "anchor": [
+        -69.3,
+        -36.4
+      ],
+      "target_types": [
+        "shield_flank",
+        "volcanic_plain"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/payun-volcanic-field-80017/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/payun-volcanic-field-80017/"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "pinacate-elegante-region",
+      "name": "El Pinacate El Elegante study area region",
+      "bbox": [
+        -113.71113,
+        31.589627,
+        -113.28887,
+        31.950368
+      ],
+      "seed_site_ids": [
+        "pinacate-elegante"
+      ],
+      "country": "Mexico",
+      "anchor": [
+        -113.5,
+        31.77
+      ],
+      "target_types": [
+        "shield_flank"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://whc.unesco.org/en/list/1410/",
+      "sources": [
+        "https://whc.unesco.org/en/list/1410/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "pingualuit-region",
+      "name": "Pingualuit crater study area region",
+      "bbox": [
+        -74.032918,
+        61.100519,
+        -73.287082,
+        61.459476
+      ],
+      "seed_site_ids": [
+        "pingualuit"
+      ],
+      "country": "Canada",
+      "anchor": [
+        -73.66,
+        61.28
+      ],
+      "target_types": [
+        "crater_rim"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.nunavikparks.ca/en/parks/pingualuit/",
+      "sources": [
+        "https://www.nunavikparks.ca/en/parks/pingualuit/"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "qaidam-region",
+      "name": "Qaidam Basin yardang study area region",
+      "bbox": [
+        93.04022,
+        38.479832,
+        93.49978,
+        38.840163
+      ],
+      "seed_site_ids": [
+        "qaidam"
+      ],
+      "country": "China",
+      "anchor": [
+        93.27,
+        38.66
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://doi.org/10.1029/2018JE005719",
+      "sources": [
+        "https://doi.org/10.1029/2018JE005719"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "richat-ridges-region",
+      "name": "Richat eastern ridges study area region",
+      "bbox": [
+        -11.502568,
+        20.979361,
+        -11.117432,
+        21.340635
+      ],
+      "seed_site_ids": [
+        "richat-ridges"
+      ],
+      "country": "Mauritania",
+      "anchor": [
+        -11.31,
+        21.16
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/eyeing-the-richat-structure/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/eyeing-the-richat-structure/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "rub-khali-oman-region",
+      "name": "Rub al Khali Oman dune study area region",
+      "bbox": [
+        53.908144,
+        20.419349,
+        54.291856,
+        20.780647
+      ],
+      "seed_site_ids": [
+        "rub-khali-oman"
+      ],
+      "country": "Oman",
+      "anchor": [
+        54.1,
+        20.6
+      ],
+      "target_types": [
+        "dune_field"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://eol.jsc.nasa.gov/Collections/EarthFromSpace/photoinfo.pl?PHOTO=ISS027-E-34290",
+      "sources": [
+        "https://eol.jsc.nasa.gov/Collections/EarthFromSpace/photoinfo.pl?PHOTO=ISS027-E-34290"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "sossusvlei-dunes-region",
+      "name": "Sossusvlei dune and pan study area region",
+      "bbox": [
+        15.102249,
+        -24.950553,
+        15.497751,
+        -24.589443
+      ],
+      "seed_site_ids": [
+        "sossusvlei-dunes"
+      ],
+      "country": "Namibia",
+      "anchor": [
+        15.3,
+        -24.77
+      ],
+      "target_types": [
+        "dune_field"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/namib-sand-sea-149130/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/namib-sand-sea-149130/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "sunset-crater-region",
+      "name": "Sunset Crater and Bonito lava study area region",
+      "bbox": [
+        -111.740068,
+        35.184731,
+        -111.299932,
+        35.545263
+      ],
+      "seed_site_ids": [
+        "sunset-crater"
+      ],
+      "country": "US",
+      "anchor": [
+        -111.52,
+        35.365
+      ],
+      "target_types": [
+        "shield_flank",
+        "volcanic_plain"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.nps.gov/articles/nps-geodiversity-atlas-sunset-crater-volcano-national-monument-arizona.htm",
+      "sources": [
+        "https://www.nps.gov/articles/nps-geodiversity-atlas-sunset-crater-volcano-national-monument-arizona.htm"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "tabernas-badlands-region",
+      "name": "Tabernas badlands study area region",
+      "bbox": [
+        -2.684866,
+        36.879783,
+        -2.235134,
+        37.240212
+      ],
+      "seed_site_ids": [
+        "tabernas-badlands"
+      ],
+      "country": "Spain",
+      "anchor": [
+        -2.46,
+        37.06
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.juntadeandalucia.es/medioambiente/portal/en/web/ventanadelvisitante/detalle-buscador-mapa/-/asset_publisher/Jlbxh2qB3NwR/content/desierto-de-tabernas/255035",
+      "sources": [
+        "https://www.juntadeandalucia.es/medioambiente/portal/en/web/ventanadelvisitante/detalle-buscador-mapa/-/asset_publisher/Jlbxh2qB3NwR/content/desierto-de-tabernas/255035"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "taklamakan-interior-region",
+      "name": "Taklamakan interior dune study area region",
+      "bbox": [
+        82.969771,
+        38.619836,
+        83.430229,
+        38.980158
+      ],
+      "seed_site_ids": [
+        "taklamakan-interior"
+      ],
+      "country": "China",
+      "anchor": [
+        83.2,
+        38.8
+      ],
+      "target_types": [
+        "dune_field"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/taklimakan-desert-1925/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/taklimakan-desert-1925/"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "teide-canadas-region",
+      "name": "Teide Las Canadas study area region",
+      "bbox": [
+        -16.833803,
+        28.06953,
+        -16.426197,
+        28.430465
+      ],
+      "seed_site_ids": [
+        "teide-canadas"
+      ],
+      "country": "Spain",
+      "anchor": [
+        -16.63,
+        28.25
+      ],
+      "target_types": [
+        "volcanic_plain"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/tenerife-canary-islands-88659/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/tenerife-canary-islands-88659/"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "tongariro-west-region",
+      "name": "Tongariro western volcanic study area region",
+      "bbox": [
+        175.348635,
+        -39.330148,
+        175.811365,
+        -38.969847
+      ],
+      "seed_site_ids": [
+        "tongariro-west"
+      ],
+      "country": "New Zealand",
+      "anchor": [
+        175.58,
+        -39.15
+      ],
+      "target_types": [
+        "shield_flank"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.doc.govt.nz/parks-and-recreation/places-to-go/central-north-island/places/tongariro-national-park/about-tongariro-national-park/central-north-island-volcanoes/",
+      "sources": [
+        "https://www.doc.govt.nz/parks-and-recreation/places-to-go/central-north-island/places/tongariro-national-park/about-tongariro-national-park/central-north-island-volcanoes/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "tsondab-dunes-region",
+      "name": "Tsondab northern dune study area region",
+      "bbox": [
+        15.123549,
+        -24.110573,
+        15.516451,
+        -23.749423
+      ],
+      "seed_site_ids": [
+        "tsondab-dunes"
+      ],
+      "country": "Namibia",
+      "anchor": [
+        15.32,
+        -23.93
+      ],
+      "target_types": [
+        "dune_field"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://esrs.jsc.nasa.gov/SearchPhotos/photo.pl?frame=23405&mission=ISS047&roll=E",
+      "sources": [
+        "https://esrs.jsc.nasa.gov/SearchPhotos/photo.pl?frame=23405&mission=ISS047&roll=E"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "uyuni-incahuasi-region",
+      "name": "Uyuni Incahuasi salt-flat study area region",
+      "bbox": [
+        -67.81641,
+        -20.420655,
+        -67.43359,
+        -20.059342
+      ],
+      "seed_site_ids": [
+        "uyuni-incahuasi"
+      ],
+      "country": "Bolivia",
+      "anchor": [
+        -67.625,
+        -20.24
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/salar-de-uyuni-bolivia-6096/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/salar-de-uyuni-bolivia-6096/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "valle-luna-chile-region",
+      "name": "Valle de la Luna salt-range study area region",
+      "bbox": [
+        -68.479971,
+        -23.105596,
+        -68.090029,
+        -22.7444
+      ],
+      "seed_site_ids": [
+        "valle-luna-chile"
+      ],
+      "country": "Chile",
+      "anchor": [
+        -68.285,
+        -22.925
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://simbio.mma.gob.cl/CbaAP/VistaImpresion/1053",
+      "sources": [
+        "https://simbio.mma.gob.cl/CbaAP/VistaImpresion/1053"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "wadi-rum-region",
+      "name": "Wadi Rum desert study area region",
+      "bbox": [
+        35.233662,
+        29.359565,
+        35.646338,
+        29.72043
+      ],
+      "seed_site_ids": [
+        "wadi-rum"
+      ],
+      "country": "Jordan",
+      "anchor": [
+        35.44,
+        29.54
+      ],
+      "target_types": [
+        "layered_deltaic"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/wadi-rum-jordan-49945/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/wadi-rum-jordan-49945/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    },
+    {
+      "id": "white-sands-region",
+      "name": "White Sands region",
+      "bbox": [
+        -106.443578,
+        32.639657,
+        -106.016422,
+        33.000338
+      ],
+      "seed_site_ids": [
+        "white-sands"
+      ],
+      "country": "US",
+      "anchor": [
+        -106.23,
+        32.82
+      ],
+      "target_types": [
+        "dune_field"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://www.nps.gov/whsa/learn/gypsum.htm",
+      "sources": [
+        "https://www.nps.gov/whsa/learn/gypsum.htm"
+      ],
+      "enabled": false,
+      "deferred_reason": "Outside the initial 30-region download batch; set enabled=true to include later."
+    },
+    {
+      "id": "wolfe-creek-region",
+      "name": "Wolfe Creek impact crater study area region",
+      "bbox": [
+        127.604857,
+        -19.351676,
+        127.985143,
+        -18.99032
+      ],
+      "seed_site_ids": [
+        "wolfe-creek"
+      ],
+      "country": "Australia",
+      "anchor": [
+        127.795,
+        -19.171
+      ],
+      "target_types": [
+        "crater_rim"
+      ],
+      "reason": "20 km cardinal buffer around a sourced catalog study area; candidate discovery only, not geological equivalence.",
+      "source_url": "https://science.nasa.gov/earth/earth-observatory/wolfe-creek-crater-8488/",
+      "sources": [
+        "https://science.nasa.gov/earth/earth-observatory/wolfe-creek-crater-8488/"
+      ],
+      "enabled": true,
+      "deferred_reason": null
+    }
+  ]
+}

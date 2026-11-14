@@ -18,3 +18,5 @@ export { catalogSiteToSite, pairingsFor } from './catalog.ts';
 export type { SiteCatalog, CatalogSite, CatalogPairing, CatalogSiteOptions } from './catalog.ts';
 export { analogFidelity, stressFidelity } from './fidelity.ts';
 export type { FidelityResult, FidelityOptions, SiteFlightStats, StressFidelityResult, StressOptions, StressSiteStats } from './fidelity.ts';
+export { assessFlight, SCORING } from './assessment.ts';
+export type { FlightAssessment, FlightStats, Margin, MarginKey, MarginStatus, Finding, Grade, AssessmentContext } from './assessment.ts';

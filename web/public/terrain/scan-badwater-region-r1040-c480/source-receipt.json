@@ -1,0 +1,95 @@
+{
+  "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N36_00_W118_00_DEM/Copernicus_DSM_COG_10_N36_00_W118_00_DEM.tif",
+  "sha256": "1f2bd1405783ca9d6fc6bca403e2ad02a75e9febe284afa4f8f4e431d9a733a8",
+  "source_tiles": [
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N36_00_W118_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N36_00_W118_00_DEM/Copernicus_DSM_COG_10_N36_00_W118_00_DEM.tif",
+      "sha256": "f5d944b922c0ffab0be9272aed36687ef520ed2b4a52b47432027672b32a7568"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N36_00_W117_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N36_00_W117_00_DEM/Copernicus_DSM_COG_10_N36_00_W117_00_DEM.tif",
+      "sha256": "1973fbf869dcfdbcda8e22793a9e6938390eb990cbe7ab471309f34434b4e77f"
+    }
+  ],
+  "regional_dem_sha256": "452b98ef05059ee1f7ae587667cefd274e12f4bec3e080cdaa32b5fd0bb00ec2",
+  "region_id": "badwater-region",
+  "window": {
+    "region_dem": "data/raw/location-scan/regions/badwater-region/dem.tif",
+    "row": 1040,
+    "column": 480,
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "row_order": "north_to_south",
+    "column_order": "west_to_east",
+    "crs": "EPSG:32611",
+    "affine": [
+      30.0,
+      0.0,
+      510120.0,
+      0.0,
+      -30.0,
+      3999990.0
+    ],
+    "elevation_sha256": "3fef73c05c1ea64bae45aed02d7810b3c9acfc059a6fccd905ed627228ee6f4e"
+  },
+  "land_cover": {
+    "fractions": {
+      "10": 0.0005615352631285659,
+      "20": 0.008808816532283992,
+      "30": 5.572487344023936e-05,
+      "40": 0.0005358160907715323,
+      "60": 0.9900338207116495,
+      "90": 4.286528726172258e-06
+    },
+    "allowed_fraction": 0.9900338207116495,
+    "excluded_fraction": 0.0011016378826262704,
+    "nodata_fraction": 0,
+    "accepted": true
+  },
+  "worldcover_sources": {
+    "tiles": [
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_N36W120_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N36W120_Map.tif",
+        "sha256": "a667a78591c6b654597df9882dc5a76f5136affadc20896171e096758eb73445"
+      },
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_N36W117_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N36W117_Map.tif",
+        "sha256": "e65917c19cb4e525029e719768f9b66b574c74d894490d19d5737f1ed770edce"
+      }
+    ],
+    "sha256": "052533b28a557f6ec6e1a1b9df368e772429fd6863bb249ea1d71a1b179cbed9",
+    "spacing_m": 10,
+    "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+    "product_id": "ESA WorldCover 10m 2021 v200",
+    "native_resolution_m_approx": 10,
+    "time_coverage": "2021",
+    "units": "WorldCover class codes (dimensionless)",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "method": "Bilinear Copernicus tile mosaic to local UTM at 30m; integer crop, no nodata filling.",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "land_cover_license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "registration_provenance": {
+    "method_version": "1.0.0",
+    "window_id": "scan-badwater-region-r1040-c480",
+    "region_id": "badwater-region",
+    "seed_site_ids": [
+      "badwater"
+    ],
+    "source_urls": [
+      "https://doi.org/10.1029/2004JE002315"
+    ],
+    "index_sha256": "6532fa26fa8640dbeb7513fdf29759bc2d36600909bc1d7cc8f62393ae378fed",
+    "shortlist_sha256": "51199fa35e0aca34c3194e579d04f6ccc861ed9c9370b51a7c55072b62333007",
+    "evidence_status": "exploratory_terrain_only",
+    "inference_method": "Region seed labels supplied by scan_matches; unreviewed at this window. The live scorer discounts inferred labels and excludes crater inference.",
+    "shortlisted_for": [
+      "jezero"
+    ]
+  }
+}

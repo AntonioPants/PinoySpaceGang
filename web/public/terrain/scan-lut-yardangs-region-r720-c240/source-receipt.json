@@ -1,0 +1,89 @@
+{
+  "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N30_00_E057_00_DEM/Copernicus_DSM_COG_10_N30_00_E057_00_DEM.tif",
+  "sha256": "9ca7f265c5ef626e5ef2404b443347df55ab64ebf92478c8f74eff781f29bf63",
+  "source_tiles": [
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N30_00_E057_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N30_00_E057_00_DEM/Copernicus_DSM_COG_10_N30_00_E057_00_DEM.tif",
+      "sha256": "ebec6cf35708f4bc4fe95881899cf2775bbba5b2a320b1d57c1238c035ddb67a"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N30_00_E058_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N30_00_E058_00_DEM/Copernicus_DSM_COG_10_N30_00_E058_00_DEM.tif",
+      "sha256": "b9bf2289be6140ca32c83503c02f25f84892fc09886bffbb0b545c84ca572f89"
+    }
+  ],
+  "regional_dem_sha256": "29c155f33759cb7d29765867e712544a34093e059f447938c517bbc5662af24a",
+  "region_id": "lut-yardangs-region",
+  "window": {
+    "region_dem": "data/raw/location-scan/regions/lut-yardangs-region/dem.tif",
+    "row": 720,
+    "column": 240,
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "row_order": "north_to_south",
+    "column_order": "west_to_east",
+    "crs": "EPSG:32640",
+    "affine": [
+      30.0,
+      0.0,
+      566700.0,
+      0.0,
+      -30.0,
+      3376380.0
+    ],
+    "elevation_sha256": "e9f42bf8125d09fa792c74556e715fb546ad55067a89ac9c019c86f48243fd9d"
+  },
+  "land_cover": {
+    "fractions": {
+      "20": 0.0014016948934583286,
+      "30": 9.001710324961742e-05,
+      "40": 5.14383447140671e-05,
+      "50": 0.0003086300682844026,
+      "60": 0.9981482195902935
+    },
+    "allowed_fraction": 0.9981482195902935,
+    "excluded_fraction": 0.0003600684129984697,
+    "nodata_fraction": 0,
+    "accepted": true
+  },
+  "worldcover_sources": {
+    "tiles": [
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_N30E057_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N30E057_Map.tif",
+        "sha256": "5b775fb05a97f9e290bcc9af7b4fb2819b9089135f7c305aff179ce6fc8e5740"
+      }
+    ],
+    "sha256": "2389bd3e760f9cffd99974d94b005cb0f821605793508ac1425d51117f3c8825",
+    "spacing_m": 10,
+    "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+    "product_id": "ESA WorldCover 10m 2021 v200",
+    "native_resolution_m_approx": 10,
+    "time_coverage": "2021",
+    "units": "WorldCover class codes (dimensionless)",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "method": "Bilinear Copernicus tile mosaic to local UTM at 30m; integer crop, no nodata filling.",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "land_cover_license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "registration_provenance": {
+    "method_version": "1.0.0",
+    "window_id": "scan-lut-yardangs-region-r720-c240",
+    "region_id": "lut-yardangs-region",
+    "seed_site_ids": [
+      "lut-yardangs"
+    ],
+    "source_urls": [
+      "https://whc.unesco.org/en/list/1505/"
+    ],
+    "index_sha256": "6532fa26fa8640dbeb7513fdf29759bc2d36600909bc1d7cc8f62393ae378fed",
+    "shortlist_sha256": "51199fa35e0aca34c3194e579d04f6ccc861ed9c9370b51a7c55072b62333007",
+    "evidence_status": "exploratory_terrain_only",
+    "inference_method": "Region seed labels supplied by scan_matches; unreviewed at this window. The live scorer discounts inferred labels and excludes crater inference.",
+    "shortlisted_for": [
+      "lucus-planum"
+    ]
+  }
+}

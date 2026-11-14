@@ -1,0 +1,122 @@
+{
+  "reference": "literature_informed_proposal pairings; process-based hypotheses, not validated terrain matches",
+  "ranking": "pure score order, no evidence-tier boost",
+  "methods": {
+    "v1_fixed_scale_1km": {
+      "summary_weighted_by_known_pairs": {
+        "auc": 0.4163,
+        "recall_at_10": 0.1525,
+        "mean_rank": 28.4414
+      },
+      "targets": {
+        "arsia-flank": {
+          "auc": 0.2401,
+          "recall_at_10": 0.0714,
+          "mean_rank": 34.86,
+          "known": 14,
+          "candidates": 50
+        },
+        "bagnold": {
+          "auc": 0.5506,
+          "recall_at_10": 0.25,
+          "mean_rank": 23.38,
+          "known": 8,
+          "candidates": 50
+        },
+        "jezero": {
+          "auc": 0.5314,
+          "recall_at_10": 0.2667,
+          "mean_rank": 24.4,
+          "known": 15,
+          "candidates": 50
+        },
+        "lucus-planum": {
+          "auc": 0.8152,
+          "recall_at_10": 0.5,
+          "mean_rank": 11.0,
+          "known": 4,
+          "candidates": 50
+        },
+        "marius-hills": {
+          "auc": 0.1958,
+          "recall_at_10": 0.0,
+          "mean_rank": 37.36,
+          "known": 11,
+          "candidates": 50
+        },
+        "phoenix": {
+          "auc": 0.6122,
+          "recall_at_10": 0.0,
+          "mean_rank": 20.0,
+          "known": 1,
+          "candidates": 50
+        },
+        "shackleton-rim": {
+          "auc": 0.4659,
+          "recall_at_10": 0.0,
+          "mean_rank": 27.0,
+          "known": 6,
+          "candidates": 50
+        }
+      }
+    },
+    "v2_multifeature_common_resolution": {
+      "summary_weighted_by_known_pairs": {
+        "auc": 0.4776,
+        "recall_at_10": 0.1526,
+        "mean_rank": 26.0842
+      },
+      "targets": {
+        "arsia-flank": {
+          "auc": 0.3294,
+          "recall_at_10": 0.1429,
+          "mean_rank": 31.64,
+          "known": 14,
+          "candidates": 50
+        },
+        "bagnold": {
+          "auc": 0.5804,
+          "recall_at_10": 0.25,
+          "mean_rank": 22.12,
+          "known": 8,
+          "candidates": 50
+        },
+        "jezero": {
+          "auc": 0.5486,
+          "recall_at_10": 0.2,
+          "mean_rank": 23.8,
+          "known": 15,
+          "candidates": 50
+        },
+        "lucus-planum": {
+          "auc": 0.7337,
+          "recall_at_10": 0.0,
+          "mean_rank": 14.75,
+          "known": 4,
+          "candidates": 50
+        },
+        "marius-hills": {
+          "auc": 0.3403,
+          "recall_at_10": 0.0909,
+          "mean_rank": 31.73,
+          "known": 11,
+          "candidates": 50
+        },
+        "phoenix": {
+          "auc": 0.8367,
+          "recall_at_10": 1.0,
+          "mean_rank": 9.0,
+          "known": 1,
+          "candidates": 50
+        },
+        "shackleton-rim": {
+          "auc": 0.5303,
+          "recall_at_10": 0.0,
+          "mean_rank": 24.17,
+          "known": 6,
+          "candidates": 50
+        }
+      }
+    }
+  }
+}

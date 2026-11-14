@@ -96,8 +96,11 @@ def test_all_asset_validation_detects_missing_inventory_and_modified_bytes(tmp_p
     site = next(s for s in catalog['sites'] if s['id'] == 'phoenix')
     catalog['sites'] = [site]
     catalog['pairings'] = []
+    catalog['analog_matching']['comparisons'] = []
     folder = tmp_path/'terrain/phoenix'
     shutil.copytree(source/'terrain/phoenix',folder)
+    from scripts.catalog.matching import attach_matching
+    attach_matching(catalog,tmp_path)
     dump(tmp_path/'sites.json',catalog)
     validate(tmp_path)
     receipts = json.loads((folder/'checksums.json').read_text())

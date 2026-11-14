@@ -83,8 +83,8 @@ Version changes require a schema/method version change.
 
 | Field | Definition |
 |---|---|
-| morphology | crater (origin further identified), impact_crater, volcanic_plain, lava_field, dune_field, canyon, rocky_desert, delta, playa, polygonal_ground |
-| substrate | basalt, basaltic_sand, gypsum_sand, sedimentary_rock, evaporite, permafrost, icy_regolith, lunar_regolith, unknown |
+| morphology | crater (origin further identified), impact_crater, volcanic_plain, lava_field, dune_field, canyon, rocky_desert, delta, playa, polygonal_ground, massif (mountain mass), badlands (strongly eroded terrain in soft sedimentary units) |
+| substrate | basalt, basaltic_sand, gypsum_sand, mixed_sand (mixed mineral/rock grains; proportions unmeasured), sedimentary_rock, evaporite, permafrost, icy_regolith, lunar_regolith, unknown |
 | slope_p95_class | level: [0,5) degrees; gentle: [5,15); steep: [15,30); very_steep: [30,90] |
 | roughness_3km | low: [0,10) m; moderate: [10,50); high: >=50; RMS height about local mean in 3x3 cells at 1km spacing |
 | atmosphere | terrestrial, thin_co2, airless; body-level context, not local measured pressure |
@@ -179,7 +179,8 @@ No commits, merges, pushes or deployment are performed by these commands.
 
 ## Haughton and Qaidam terrain additions
 
-The catalog now includes eleven Earth sites and seven planetary sites. Both new
+The catalog now includes fifty Earth sites and nine planetary sites (including
+the [two lunar additions](LUNAR_AREAS_AND_DATA_UPGRADES.md)). Both Haughton and Qaidam
 Earth packs use real Copernicus GLO-30 elevation, 161 × 161 north-first float32
 samples at 30 m output spacing, and selected 4.8 km windows. Native source windows
 and receipts are retained alongside the output for reprocessing. Licence and

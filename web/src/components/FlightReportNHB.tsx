@@ -7,16 +7,17 @@ import { useEffect, useState } from 'react';
 import type { FlightTelemetry, SimEvent } from '../../../app/sim/src/types';
 import type { CatalogSite } from '../../../app/sim/src/catalog';
 import type { MissionConfig, TerrainProfile } from '../lib/types';
-import { downloadJson } from '../lib/importSettings';
 import { computeFidelity, type FidelityReport } from '../lib/fidelity';
+import type { MatchCheck } from '../lib/matching';
+import FlightDebrief from './FlightDebrief';
 import './nhb.css';
 
-interface Props { flight: FlightTelemetry; mission: MissionConfig; profile: TerrainProfile; analogEntry?: CatalogSite; planetaryEntry?: CatalogSite; onRetry: () => void; onStandardView: () => void }
+interface Props { flight: FlightTelemetry; mission: MissionConfig; profile: TerrainProfile; analogEntry?: CatalogSite; planetaryEntry?: CatalogSite; match?: MatchCheck; onRetry: () => void; onStandardView: () => void }
 type FidelityState = { status: 'working' } | { status: 'done'; result: FidelityReport } | { status: 'unavailable'; reason: string };
 
 const OUTCOME_TITLE: Record<string, string> = { crash: 'Crash', 'tip-over': 'Tip-over', 'hard-landing': 'Hard landing', timeout: 'No touchdown' };
 
-export default function FlightReportNHB({ flight, mission, profile, analogEntry, planetaryEntry, onRetry, onStandardView }: Props) {
+export default function FlightReportNHB({ flight, mission, profile, analogEntry, planetaryEntry, match, onRetry, onStandardView }: Props) {
   const result = flight.summary!;
   const env = flight.environment;
   const limits = flight.lander.limits;
@@ -40,7 +41,7 @@ export default function FlightReportNHB({ flight, mission, profile, analogEntry,
     { label: 'Ground slope', value: `${result.slopeDeg.toFixed(1)}°`, limit: `${limits.maxSlopeDeg}°`, over: result.slopeDeg > limits.maxSlopeDeg },
     { label: 'Vehicle tilt', value: `${result.tiltDeg.toFixed(1)}°`, limit: `${limits.maxTiltDeg}°`, over: result.tiltDeg > limits.maxTiltDeg },
     { label: 'Fuel remaining', value: `${result.fuelRemainingKg.toFixed(0)} kg` },
-    { label: 'Distance from target', value: `${result.distanceFromTargetM.toFixed(1)} m` },
+    { label: 'Distance from target', value: result.distanceFromTargetM < 0.5 ? 'Reached' : `${result.distanceFromTargetM.toFixed(1)} m` },
   ];
   const conditions: Array<{ label: string; value: string; status: string; source: string }> = [
     { label: 'Gravity', value: `${env.gravity} m/s²`, status: 'Modeled', source: 'Scenario constant' },
@@ -85,7 +86,6 @@ export default function FlightReportNHB({ flight, mission, profile, analogEntry,
         </div>
         <div className="nhb-actions">
           <button className="nhb-button solid" onClick={onRetry}>{ok ? 'Configure another flight' : 'Reconfigure and fly again'}</button>
-          <button className="nhb-button" onClick={() => downloadJson({ schemaVersion: '1.0.0', mission, flight, fidelity: fidelity.status === 'done' ? fidelity.result : null }, `flight-${mission.planetaryTarget.id}.json`)}>Download telemetry</button>
           <button className="nhb-button" onClick={onStandardView}>Standard view</button>
         </div>
       </section>
@@ -105,6 +105,10 @@ export default function FlightReportNHB({ flight, mission, profile, analogEntry,
           </li>)}</ul>
         </aside>
       </div>
+
+      <section className="nhb-section">
+        <FlightDebrief flight={flight} mission={mission} fidelity={fidelity.status === 'done' ? fidelity.result : null} match={match} />
+      </section>
 
       <section className="nhb-section">
         <h2>Analog fidelity</h2>

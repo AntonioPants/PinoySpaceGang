@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Location scan window, engineering candidate without a score",
+  "type": "object",
+  "required": ["id","name","region_id","longitude","latitude","bbox","evidence_status","land_cover","terrain_window","source_receipt","descriptor_status"],
+  "properties": {
+    "id": {"type":"string","pattern":"^scan-[a-z0-9-]+$"},
+    "name": {"type":"string","minLength":1},
+    "region_id": {"type":"string"},
+    "longitude": {"type":"number","minimum":-180,"maximum":180},
+    "latitude": {"type":"number","minimum":-80,"maximum":84},
+    "bbox": {"type":"array","minItems":4,"maxItems":4,"items":{"type":"number"}},
+    "evidence_status": {"const":"exploratory_terrain_only"},
+    "descriptor_status": {"const":"awaiting_accuracy_pipeline"},
+    "source_receipt": {"type":"string"},
+    "land_cover": {
+      "type":"object","required":["fractions","allowed_fraction","excluded_fraction","nodata_fraction","accepted"],
+      "properties": {
+        "accepted":{"const":true},
+        "fractions":{"type":"object","additionalProperties":{"type":"number","minimum":0,"maximum":1}},
+        "allowed_fraction":{"type":"number","minimum":0,"maximum":1},
+        "excluded_fraction":{"type":"number","minimum":0,"maximum":1},
+        "nodata_fraction":{"type":"number","minimum":0,"maximum":1}
+      }
+    },
+    "terrain_window": {
+      "type":"object","required":["region_dem","row","column","rows","columns","spacing_m","row_order","column_order","crs","affine","elevation_sha256"],
+      "properties": {
+        "rows":{"const":161},"columns":{"const":161},"spacing_m":{"const":30},
+        "row":{"type":"integer","minimum":0},"column":{"type":"integer","minimum":0},
+        "row_order":{"const":"north_to_south"},"column_order":{"const":"west_to_east"},
+        "elevation_sha256":{"type":"string","pattern":"^[a-f0-9]{64}$"},
+        "affine":{"type":"array","minItems":6,"maxItems":6,"items":{"type":"number"}}
+      }
+    }
+  },
+  "not": {"anyOf":[{"required":["terrain_similarity_percent"]},{"required":["candidate_rank"]}]}
+}

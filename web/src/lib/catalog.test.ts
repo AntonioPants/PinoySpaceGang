@@ -19,14 +19,14 @@ function profileOf(id: string) {
 
 describe('site catalog in the mission planner', () => {
   it('lists every planetary target and Earth analog from the catalog', () => {
-    expect(catalog.targets.map(t => t.id).sort()).toEqual(['arsia-flank', 'bagnold', 'jezero', 'lucus-planum', 'marius-hills', 'phoenix', 'shackleton-rim']);
+    expect(catalog.targets.map(t => t.id).sort()).toEqual(['arsia-flank', 'bagnold', 'jezero', 'lucus-planum', 'malapert-massif', 'marius-hills', 'mons-mouton', 'phoenix', 'shackleton-rim']);
     expect(catalog.targets.find(t => t.id === 'jezero')).toMatchObject({ body: 'Mars', gravity: 3.72 });
-    expect(catalog.analogs.filter(a => a.available)).toHaveLength(11);
+    expect(catalog.analogs.filter(a => a.available)).toHaveLength([...catalog.entries.values()].filter(s => s.body === 'earth' && s.terrain).length);
     expect(catalog.analogs.filter(a => !a.available)).toEqual([]);
   });
   it('exposes the new Qaidam yardang pairing with its sourced limitations', () => {
     const pairing = pairingOf(catalog, 'lucus-planum', 'qaidam');
-    expect(analogsFor(catalog, 'lucus-planum')[0].id).toBe('qaidam');
+    expect(analogsFor(catalog, 'lucus-planum').map(site => site.id)).toContain('qaidam');
     expect(pairing?.explanation?.status).toBe('proposed_unvalidated');
     expect(pairing?.explanation?.matches.length).toBeGreaterThan(0);
     expect(pairing?.explanation?.differences.length).toBeGreaterThan(0);
@@ -37,7 +37,9 @@ describe('site catalog in the mission planner', () => {
     expect(list[0].id).toBe('amboy');
     expect(pairingOf(catalog, 'arsia-flank', list[0].id)!.terrain_score).toBeGreaterThan(0.99);
     expect(pairingOf(catalog, 'arsia-flank', 'white-sands')).toBeUndefined();
-    expect(list.at(-1)!.id).toBe('qaidam');
+    const firstUnpaired=list.findIndex(site=>!pairingOf(catalog,'arsia-flank',site.id));
+    expect(firstUnpaired).toBeGreaterThan(0);
+    expect(list.slice(firstUnpaired).every(site=>!pairingOf(catalog,'arsia-flank',site.id))).toBe(true);
   });
   it('every available analog pack loads and flies with its catalog surface data', () => {
     const target = catalog.targets.find(t => t.id === 'marius-hills')!;
@@ -47,7 +49,12 @@ describe('site catalog in the mission planner', () => {
       const input = toSimInput(mission, profile, catalog.entries.get(analog.id));
       expect(input.site.id).toBe(analog.id);
       expect(input.interference).toBeUndefined(); // derived from site data by the engine
-      expect(input.site.sources?.soilType).toBeTruthy();
+      if (catalog.entries.get(analog.id)?.substrate === 'unknown') {
+        expect(input.site.soilType).toBeUndefined();
+        expect(input.site.sources?.soilType).toBeUndefined();
+      } else {
+        expect(input.site.sources?.soilType).toBeTruthy();
+      }
     }
   });
   it('carries the pairing score, sensor choice and interference source through export and import', () => {

@@ -6,14 +6,21 @@ import requests
 
 BASE='https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_gcp/'
 
-def thermal_bins(site, cache, offline=False):
-    band,lat0=('10n20n',10) if site['id']=='marius-hills' else ('90s80s',-90)
+def thermal_bins(site, cache, offline=False, retained=None):
+    if 10 <= site['latitude'] < 20:
+        band, lat0 = '10n20n', 10
+    elif -90 <= site['latitude'] < -80:
+        band, lat0 = '90s80s', -90
+    else:
+        raise ValueError('Diviner retrieval supports only 10N-20N and 90S-80S; select and verify another product band first')
     stem=f'global_cumul_avg_cyl_{band}_002'
     x=math.floor((site['longitude']+180)/0.5)
     y=math.floor((site['latitude']-lat0)/0.5)
     record=1+(x*20+y)*96
     start,end=record*113,(record+96)*113-1
     path=cache/f"{site['id']}-diviner.tab"
+    if not path.exists() and retained is not None and retained.exists():
+        path = retained
     if not path.exists():
         if offline: return {}
         with requests.get(BASE+stem+'.tab',headers={'Range':f'bytes={start}-{end}'},stream=True,timeout=60) as r:

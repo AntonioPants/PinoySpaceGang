@@ -1,0 +1,101 @@
+{
+  "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N30_00_W005_00_DEM/Copernicus_DSM_COG_10_N30_00_W005_00_DEM.tif",
+  "sha256": "5d0c31ed18d6f8b619269750e2a206f6a782c247984fcbc40f8ca0c399b1a354",
+  "source_tiles": [
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N30_00_W005_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N30_00_W005_00_DEM/Copernicus_DSM_COG_10_N30_00_W005_00_DEM.tif",
+      "sha256": "7f7273eebd1b493e42f5b78b4db0e4fdb55ed8d7a899a0da7931113870110f05"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N30_00_W004_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N30_00_W004_00_DEM/Copernicus_DSM_COG_10_N30_00_W004_00_DEM.tif",
+      "sha256": "febdbae2df875825fb6ffcb26e7858227c2f854b99c74cca074e3c1c9eeb670a"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N31_00_W005_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N31_00_W005_00_DEM/Copernicus_DSM_COG_10_N31_00_W005_00_DEM.tif",
+      "sha256": "1a30be66a62a25fe3d59f2a70d9876b1dfafe793e726433d2f077b446056fdab"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N31_00_W004_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N31_00_W004_00_DEM/Copernicus_DSM_COG_10_N31_00_W004_00_DEM.tif",
+      "sha256": "018be675e634f4f89742c74436cfe14a1d91f6eb07a17a399caa64d6a5d783cf"
+    }
+  ],
+  "regional_dem_sha256": "c53d210b386ec26692c83a903b0235370cb5ab4c9540ccc782bf42fd4a317f6a",
+  "region_id": "erg-chebbi-region",
+  "window": {
+    "region_dem": "data/raw/location-scan/regions/erg-chebbi-region/dem.tif",
+    "row": 480,
+    "column": 400,
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "row_order": "north_to_south",
+    "column_order": "west_to_east",
+    "crs": "EPSG:32630",
+    "affine": [
+      30.0,
+      0.0,
+      400290.0,
+      0.0,
+      -30.0,
+      3453540.0
+    ],
+    "elevation_sha256": "88828d3cf3e5673a2707597b2446176d063e701e25c74da42d49bdc4509ccdc6"
+  },
+  "land_cover": {
+    "fractions": {
+      "10": 2.571917235703355e-05,
+      "20": 0.0004029337002601923,
+      "30": 0.00020146685013009615,
+      "40": 2.571917235703355e-05,
+      "50": 0.0013416834912919169,
+      "60": 0.9979939045561513,
+      "80": 8.573057452344517e-06
+    },
+    "allowed_fraction": 0.9979939045561513,
+    "excluded_fraction": 0.0014016948934583286,
+    "nodata_fraction": 0,
+    "accepted": true
+  },
+  "worldcover_sources": {
+    "tiles": [
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_N30W006_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N30W006_Map.tif",
+        "sha256": "3a550fa68a5073332ff9a5c7ae85b6620c775269b626bb96981d749c87781b13"
+      }
+    ],
+    "sha256": "5458eadfc57de0d27aff6b30e8095098efab65f9bd787251c06772265c52cc98",
+    "spacing_m": 10,
+    "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+    "product_id": "ESA WorldCover 10m 2021 v200",
+    "native_resolution_m_approx": 10,
+    "time_coverage": "2021",
+    "units": "WorldCover class codes (dimensionless)",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "method": "Bilinear Copernicus tile mosaic to local UTM at 30m; integer crop, no nodata filling.",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "land_cover_license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "registration_provenance": {
+    "method_version": "1.0.0",
+    "window_id": "scan-erg-chebbi-region-r480-c400",
+    "region_id": "erg-chebbi-region",
+    "seed_site_ids": [
+      "erg-chebbi"
+    ],
+    "source_urls": [
+      "https://science.nasa.gov/earth/earth-observatory/the-shallow-aquifers-of-erg-chebbi-89181/"
+    ],
+    "index_sha256": "6532fa26fa8640dbeb7513fdf29759bc2d36600909bc1d7cc8f62393ae378fed",
+    "shortlist_sha256": "51199fa35e0aca34c3194e579d04f6ccc861ed9c9370b51a7c55072b62333007",
+    "evidence_status": "exploratory_terrain_only",
+    "inference_method": "Region seed labels supplied by scan_matches; unreviewed at this window. The live scorer discounts inferred labels and excludes crater inference.",
+    "shortlisted_for": [
+      "bagnold"
+    ]
+  }
+}

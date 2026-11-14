@@ -1,0 +1,13 @@
+{
+  "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N20_00_E054_00_DEM/Copernicus_DSM_COG_10_N20_00_E054_00_DEM.tif",
+  "sha256": "e701a5d0ecb9989a4b2cdff07534b5868d1f161d531473ff04878f5dfb850c04",
+  "scale_applied": 1.0,
+  "offset_applied": 0.0,
+  "window": [
+    273,
+    1358,
+    175,
+    165
+  ],
+  "source_crs": "GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AXIS[\"Latitude\",NORTH],AXIS[\"Longitude\",EAST],AUTHORITY[\"EPSG\",\"4326\"]]"
+}

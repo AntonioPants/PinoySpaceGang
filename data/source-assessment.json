@@ -1,0 +1,1170 @@
+{
+  "method_version": "1.0.0",
+  "scope": "Alternative-data assessment; does not change catalog conditions or similarity.",
+  "sites": [
+    {
+      "site_id": "meteor-crater",
+      "era5": {
+        "status": "processed_alternative_not_promoted",
+        "source": {
+          "request_url": "https://archive-api.open-meteo.com/v1/archive?latitude=35.027&longitude=-111.028&start_date=2024-01-01&end_date=2024-12-31&daily=temperature_2m_mean%2Cwind_speed_10m_mean&models=era5&wind_speed_unit=ms&timezone=GMT&elevation=nan",
+          "parameters": {
+            "latitude": 35.027,
+            "longitude": -111.028,
+            "start_date": "2024-01-01",
+            "end_date": "2024-12-31",
+            "daily": "temperature_2m_mean,wind_speed_10m_mean",
+            "models": "era5",
+            "wind_speed_unit": "ms",
+            "timezone": "GMT",
+            "elevation": "nan"
+          },
+          "retrieved_utc": "2026-11-14T17:51:12.718485+00:00",
+          "sha256": "715af67a4a72c4b201cd8cc4d751a7a93e07594dd285b0e58b019fc85a9faf1f"
+        },
+        "product_id": "ERA5 via Open-Meteo historical API",
+        "time_coverage": "2024-01-01/2024-12-31 UTC",
+        "native_resolution_degrees": 0.25,
+        "returned_grid_point": {
+          "latitude": 35.0,
+          "longitude": -111.0,
+          "elevation": 1645.0
+        },
+        "conditions": {
+          "temperature_2m_mean": {
+            "value": 15.054371584699453,
+            "unit": "degC",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          },
+          "wind_speed_10m_mean": {
+            "value": 4.08707650273224,
+            "unit": "m/s",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          }
+        },
+        "caveat": "Pinned ERA5 model; elevation downscaling disabled. Finer regional support than POWER meteorology does not demonstrate local accuracy. No skin-temperature or albedo substitution.",
+        "license_url": "https://open-meteo.com/en/terms",
+        "attribution": "Open-Meteo; Copernicus Climate Change Service / ECMWF ERA5."
+      },
+      "usgs_elevation_point": {
+        "status": "derived",
+        "value": 1662.222900391,
+        "unit": "m",
+        "source": {
+          "request_url": "https://epqs.nationalmap.gov/v1/json?x=-111.028&y=35.027&wkid=4326&units=Meters&includeDate=True",
+          "parameters": {
+            "x": -111.028,
+            "y": 35.027,
+            "wkid": 4326,
+            "units": "Meters",
+            "includeDate": true
+          },
+          "retrieved_utc": "2026-11-14T17:51:26.911801+00:00",
+          "sha256": "796f9cbe3f617bb1a59d4060bb09ec008721b7eeb97edd2d27838451e3a5089a"
+        },
+        "reason": null,
+        "resolution_m": 1,
+        "raster_id": 136022,
+        "acquisition_date": "8/6/2023",
+        "method": "USGS EPQS interpolated 3DEP elevation at the catalog centre.",
+        "caveat": "One point, not a terrain pack or validation. 3DEP generally uses NAVD88 (regional exceptions); Copernicus uses EGM2008. Datum harmonization and matched bare-earth/surface definitions are required before error statistics."
+      }
+    },
+    {
+      "site_id": "badwater",
+      "era5": {
+        "status": "processed_alternative_not_promoted",
+        "source": {
+          "request_url": "https://archive-api.open-meteo.com/v1/archive?latitude=36.245&longitude=-116.825&start_date=2024-01-01&end_date=2024-12-31&daily=temperature_2m_mean%2Cwind_speed_10m_mean&models=era5&wind_speed_unit=ms&timezone=GMT&elevation=nan",
+          "parameters": {
+            "latitude": 36.245,
+            "longitude": -116.825,
+            "start_date": "2024-01-01",
+            "end_date": "2024-12-31",
+            "daily": "temperature_2m_mean,wind_speed_10m_mean",
+            "models": "era5",
+            "wind_speed_unit": "ms",
+            "timezone": "GMT",
+            "elevation": "nan"
+          },
+          "retrieved_utc": "2026-11-14T17:51:26.993308+00:00",
+          "sha256": "51cb92ff7bb5796659ee861c938454d5e3d6d9323190acb80db35715e8509f24"
+        },
+        "product_id": "ERA5 via Open-Meteo historical API",
+        "time_coverage": "2024-01-01/2024-12-31 UTC",
+        "native_resolution_degrees": 0.25,
+        "returned_grid_point": {
+          "latitude": 36.25,
+          "longitude": -116.75,
+          "elevation": 872.0
+        },
+        "conditions": {
+          "temperature_2m_mean": {
+            "value": 20.96393442622951,
+            "unit": "degC",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          },
+          "wind_speed_10m_mean": {
+            "value": 1.3613661202185792,
+            "unit": "m/s",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          }
+        },
+        "caveat": "Pinned ERA5 model; elevation downscaling disabled. Finer regional support than POWER meteorology does not demonstrate local accuracy. No skin-temperature or albedo substitution.",
+        "license_url": "https://open-meteo.com/en/terms",
+        "attribution": "Open-Meteo; Copernicus Climate Change Service / ECMWF ERA5."
+      },
+      "usgs_elevation_point": {
+        "status": "derived",
+        "value": -84.977348328,
+        "unit": "m",
+        "source": {
+          "request_url": "https://epqs.nationalmap.gov/v1/json?x=-116.825&y=36.245&wkid=4326&units=Meters&includeDate=True",
+          "parameters": {
+            "x": -116.825,
+            "y": 36.245,
+            "wkid": 4326,
+            "units": "Meters",
+            "includeDate": true
+          },
+          "retrieved_utc": "2026-11-14T17:51:37.174011+00:00",
+          "sha256": "baf4490593b5d22f48192f1d59c9c01024abb1971d977457bfa73268875d6642"
+        },
+        "reason": null,
+        "resolution_m": 1,
+        "raster_id": 21440,
+        "acquisition_date": "5/1/2025",
+        "method": "USGS EPQS interpolated 3DEP elevation at the catalog centre.",
+        "caveat": "One point, not a terrain pack or validation. 3DEP generally uses NAVD88 (regional exceptions); Copernicus uses EGM2008. Datum harmonization and matched bare-earth/surface definitions are required before error statistics."
+      }
+    },
+    {
+      "site_id": "barrow-observatory",
+      "era5": {
+        "status": "processed_alternative_not_promoted",
+        "source": {
+          "request_url": "https://archive-api.open-meteo.com/v1/archive?latitude=71.28&longitude=-156.6&start_date=2024-01-01&end_date=2024-12-31&daily=temperature_2m_mean%2Cwind_speed_10m_mean&models=era5&wind_speed_unit=ms&timezone=GMT&elevation=nan",
+          "parameters": {
+            "latitude": 71.28,
+            "longitude": -156.6,
+            "start_date": "2024-01-01",
+            "end_date": "2024-12-31",
+            "daily": "temperature_2m_mean,wind_speed_10m_mean",
+            "models": "era5",
+            "wind_speed_unit": "ms",
+            "timezone": "GMT",
+            "elevation": "nan"
+          },
+          "retrieved_utc": "2026-11-14T17:51:37.270392+00:00",
+          "sha256": "b887275911d7d2ab33e36ce223ffc7eac3b3f40971c1b56e4290d34e1ec5beae"
+        },
+        "product_id": "ERA5 via Open-Meteo historical API",
+        "time_coverage": "2024-01-01/2024-12-31 UTC",
+        "native_resolution_degrees": 0.25,
+        "returned_grid_point": {
+          "latitude": 71.25,
+          "longitude": -156.5,
+          "elevation": 4.0
+        },
+        "conditions": {
+          "temperature_2m_mean": {
+            "value": -8.529508196721311,
+            "unit": "degC",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          },
+          "wind_speed_10m_mean": {
+            "value": 5.883333333333334,
+            "unit": "m/s",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          }
+        },
+        "caveat": "Pinned ERA5 model; elevation downscaling disabled. Finer regional support than POWER meteorology does not demonstrate local accuracy. No skin-temperature or albedo substitution.",
+        "license_url": "https://open-meteo.com/en/terms",
+        "attribution": "Open-Meteo; Copernicus Climate Change Service / ECMWF ERA5."
+      },
+      "usgs_elevation_point": {
+        "status": "derived",
+        "value": 5.250943661,
+        "unit": "m",
+        "source": {
+          "request_url": "https://epqs.nationalmap.gov/v1/json?x=-156.6&y=71.28&wkid=4326&units=Meters&includeDate=True",
+          "parameters": {
+            "x": -156.6,
+            "y": 71.28,
+            "wkid": 4326,
+            "units": "Meters",
+            "includeDate": true
+          },
+          "retrieved_utc": "2026-11-14T17:51:49.457832+00:00",
+          "sha256": "92725e9c67be38d5a56491bab9515eea9692f772dd8d23182afbed7f96827ae4"
+        },
+        "reason": null,
+        "resolution_m": 5,
+        "raster_id": 6463,
+        "acquisition_date": "6/0/2018",
+        "method": "USGS EPQS interpolated 3DEP elevation at the catalog centre.",
+        "caveat": "One point, not a terrain pack or validation. 3DEP generally uses NAVD88 (regional exceptions); Copernicus uses EGM2008. Datum harmonization and matched bare-earth/surface definitions are required before error statistics."
+      }
+    },
+    {
+      "site_id": "phoenix",
+      "hirise": {
+        "status": "discovery_only",
+        "source": {
+          "request_url": "https://stac.astrogeology.usgs.gov/api/search?collections=mro_hirise_socet_dtms&bbox=-126.12740126184369%2C68.08039712106333%2C-125.37259873815628%2C68.35918249007946&limit=20",
+          "parameters": {
+            "collections": "mro_hirise_socet_dtms",
+            "bbox": "-126.12740126184369,68.08039712106333,-125.37259873815628,68.35918249007946",
+            "limit": 20
+          },
+          "retrieved_utc": "2026-11-14T17:51:50.306966+00:00",
+          "sha256": "e676784e54d855288bac3140a76681d08e2695c9498623938930d615105dba3c"
+        },
+        "number_matched": 2,
+        "products": [
+          {
+            "id": "DTEPC_008591_2485_008644_2485_U01",
+            "bbox": [
+              -125.914,
+              68.1215,
+              -125.567,
+              68.2923
+            ],
+            "gsd_m": 0.996514980811846,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/PSP_008591_2485_PSP_008644_2485/DTEPC_008591_2485_008644_2485_U01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEPD_063394_2485_063526_2485_A01",
+            "bbox": [
+              -126.1511,
+              68.1552,
+              -125.8458,
+              68.3193
+            ],
+            "gsd_m": 1.9929876879442356,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_063394_2485_ESP_063526_2485/DTEPD_063394_2485_063526_2485_A01.tif",
+              "fom": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_063394_2485_ESP_063526_2485/DTFPD_063394_2485_063526_2485_A01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          }
+        ],
+        "truncated": false,
+        "caveat": "Bounding-box intersection does not guarantee full study-footprint coverage or valid pixels. No raster is ingested by this search. Inspect DTM, Figure of Merit, PDS dates and scale/offset before promotion."
+      }
+    },
+    {
+      "site_id": "kilbourne-hole-v1",
+      "era5": {
+        "status": "processed_alternative_not_promoted",
+        "source": {
+          "request_url": "https://archive-api.open-meteo.com/v1/archive?latitude=31.972&longitude=-106.969&start_date=2024-01-01&end_date=2024-12-31&daily=temperature_2m_mean%2Cwind_speed_10m_mean&models=era5&wind_speed_unit=ms&timezone=GMT&elevation=nan",
+          "parameters": {
+            "latitude": 31.972,
+            "longitude": -106.969,
+            "start_date": "2024-01-01",
+            "end_date": "2024-12-31",
+            "daily": "temperature_2m_mean,wind_speed_10m_mean",
+            "models": "era5",
+            "wind_speed_unit": "ms",
+            "timezone": "GMT",
+            "elevation": "nan"
+          },
+          "retrieved_utc": "2026-11-14T17:51:50.413156+00:00",
+          "sha256": "ca0cf7624f0a663ffa94162080f2669c9975d52d3c4fe833c906317aaf84981a"
+        },
+        "product_id": "ERA5 via Open-Meteo historical API",
+        "time_coverage": "2024-01-01/2024-12-31 UTC",
+        "native_resolution_degrees": 0.25,
+        "returned_grid_point": {
+          "latitude": 32.0,
+          "longitude": -107.0,
+          "elevation": 1304.0
+        },
+        "conditions": {
+          "temperature_2m_mean": {
+            "value": 19.618579234972678,
+            "unit": "degC",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          },
+          "wind_speed_10m_mean": {
+            "value": 3.786857923497268,
+            "unit": "m/s",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          }
+        },
+        "caveat": "Pinned ERA5 model; elevation downscaling disabled. Finer regional support than POWER meteorology does not demonstrate local accuracy. No skin-temperature or albedo substitution.",
+        "license_url": "https://open-meteo.com/en/terms",
+        "attribution": "Open-Meteo; Copernicus Climate Change Service / ECMWF ERA5."
+      },
+      "usgs_elevation_point": {
+        "status": "derived",
+        "value": 1199.450073242,
+        "unit": "m",
+        "source": {
+          "request_url": "https://epqs.nationalmap.gov/v1/json?x=-106.969&y=31.972&wkid=4326&units=Meters&includeDate=True",
+          "parameters": {
+            "x": -106.969,
+            "y": 31.972,
+            "wkid": 4326,
+            "units": "Meters",
+            "includeDate": true
+          },
+          "retrieved_utc": "2026-11-14T17:52:03.595766+00:00",
+          "sha256": "2cd2523223dbbf1eeb44af7676ca2ede7911b5cec8fc668607f5717de9926911"
+        },
+        "reason": null,
+        "resolution_m": 1,
+        "raster_id": 41623,
+        "acquisition_date": "5/4/2019",
+        "method": "USGS EPQS interpolated 3DEP elevation at the catalog centre.",
+        "caveat": "One point, not a terrain pack or validation. 3DEP generally uses NAVD88 (regional exceptions); Copernicus uses EGM2008. Datum harmonization and matched bare-earth/surface definitions are required before error statistics."
+      }
+    },
+    {
+      "site_id": "craters-moon",
+      "era5": {
+        "status": "processed_alternative_not_promoted",
+        "source": {
+          "request_url": "https://archive-api.open-meteo.com/v1/archive?latitude=43.42&longitude=-113.53&start_date=2024-01-01&end_date=2024-12-31&daily=temperature_2m_mean%2Cwind_speed_10m_mean&models=era5&wind_speed_unit=ms&timezone=GMT&elevation=nan",
+          "parameters": {
+            "latitude": 43.42,
+            "longitude": -113.53,
+            "start_date": "2024-01-01",
+            "end_date": "2024-12-31",
+            "daily": "temperature_2m_mean,wind_speed_10m_mean",
+            "models": "era5",
+            "wind_speed_unit": "ms",
+            "timezone": "GMT",
+            "elevation": "nan"
+          },
+          "retrieved_utc": "2026-11-14T17:52:03.676661+00:00",
+          "sha256": "e00792be35ef9308d91edf9e4a084267fd4e66087d1f8bf5ada675934c3319d9"
+        },
+        "product_id": "ERA5 via Open-Meteo historical API",
+        "time_coverage": "2024-01-01/2024-12-31 UTC",
+        "native_resolution_degrees": 0.25,
+        "returned_grid_point": {
+          "latitude": 43.5,
+          "longitude": -113.5,
+          "elevation": 1867.0
+        },
+        "conditions": {
+          "temperature_2m_mean": {
+            "value": 6.892349726775956,
+            "unit": "degC",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          },
+          "wind_speed_10m_mean": {
+            "value": 2.789890710382514,
+            "unit": "m/s",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          }
+        },
+        "caveat": "Pinned ERA5 model; elevation downscaling disabled. Finer regional support than POWER meteorology does not demonstrate local accuracy. No skin-temperature or albedo substitution.",
+        "license_url": "https://open-meteo.com/en/terms",
+        "attribution": "Open-Meteo; Copernicus Climate Change Service / ECMWF ERA5."
+      },
+      "usgs_elevation_point": {
+        "status": "derived",
+        "value": 1774.358886719,
+        "unit": "m",
+        "source": {
+          "request_url": "https://epqs.nationalmap.gov/v1/json?x=-113.53&y=43.42&wkid=4326&units=Meters&includeDate=True",
+          "parameters": {
+            "x": -113.53,
+            "y": 43.42,
+            "wkid": 4326,
+            "units": "Meters",
+            "includeDate": true
+          },
+          "retrieved_utc": "2026-11-14T17:52:13.771732+00:00",
+          "sha256": "636db0cafc9d81cee1035efb13f9094c531e6048fb5fc8bafc53769f0b6826b4"
+        },
+        "reason": null,
+        "resolution_m": 1,
+        "raster_id": 121703,
+        "acquisition_date": "7/2/2024",
+        "method": "USGS EPQS interpolated 3DEP elevation at the catalog centre.",
+        "caveat": "One point, not a terrain pack or validation. 3DEP generally uses NAVD88 (regional exceptions); Copernicus uses EGM2008. Datum harmonization and matched bare-earth/surface definitions are required before error statistics."
+      }
+    },
+    {
+      "site_id": "lava-beds",
+      "era5": {
+        "status": "processed_alternative_not_promoted",
+        "source": {
+          "request_url": "https://archive-api.open-meteo.com/v1/archive?latitude=41.72&longitude=-121.51&start_date=2024-01-01&end_date=2024-12-31&daily=temperature_2m_mean%2Cwind_speed_10m_mean&models=era5&wind_speed_unit=ms&timezone=GMT&elevation=nan",
+          "parameters": {
+            "latitude": 41.72,
+            "longitude": -121.51,
+            "start_date": "2024-01-01",
+            "end_date": "2024-12-31",
+            "daily": "temperature_2m_mean,wind_speed_10m_mean",
+            "models": "era5",
+            "wind_speed_unit": "ms",
+            "timezone": "GMT",
+            "elevation": "nan"
+          },
+          "retrieved_utc": "2026-11-14T17:52:13.872684+00:00",
+          "sha256": "b1955ac89a9eeba33c3fa7bcefca3c1ebfa28b4828c3bc614413163628707f40"
+        },
+        "product_id": "ERA5 via Open-Meteo historical API",
+        "time_coverage": "2024-01-01/2024-12-31 UTC",
+        "native_resolution_degrees": 0.25,
+        "returned_grid_point": {
+          "latitude": 41.75,
+          "longitude": -121.5,
+          "elevation": 1427.0
+        },
+        "conditions": {
+          "temperature_2m_mean": {
+            "value": 10.712295081967213,
+            "unit": "degC",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          },
+          "wind_speed_10m_mean": {
+            "value": 2.6330601092896178,
+            "unit": "m/s",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          }
+        },
+        "caveat": "Pinned ERA5 model; elevation downscaling disabled. Finer regional support than POWER meteorology does not demonstrate local accuracy. No skin-temperature or albedo substitution.",
+        "license_url": "https://open-meteo.com/en/terms",
+        "attribution": "Open-Meteo; Copernicus Climate Change Service / ECMWF ERA5."
+      },
+      "usgs_elevation_point": {
+        "status": "derived",
+        "value": 1410.680053711,
+        "unit": "m",
+        "source": {
+          "request_url": "https://epqs.nationalmap.gov/v1/json?x=-121.51&y=41.72&wkid=4326&units=Meters&includeDate=True",
+          "parameters": {
+            "x": -121.51,
+            "y": 41.72,
+            "wkid": 4326,
+            "units": "Meters",
+            "includeDate": true
+          },
+          "retrieved_utc": "2026-11-14T17:52:25.696799+00:00",
+          "sha256": "fd8652f37de3504375529bc02aaaca10f403de58af8c9ffde230398ea199fff8"
+        },
+        "reason": null,
+        "resolution_m": 1,
+        "raster_id": 129329,
+        "acquisition_date": "3/0/2024",
+        "method": "USGS EPQS interpolated 3DEP elevation at the catalog centre.",
+        "caveat": "One point, not a terrain pack or validation. 3DEP generally uses NAVD88 (regional exceptions); Copernicus uses EGM2008. Datum harmonization and matched bare-earth/surface definitions are required before error statistics."
+      }
+    },
+    {
+      "site_id": "amboy",
+      "era5": {
+        "status": "processed_alternative_not_promoted",
+        "source": {
+          "request_url": "https://archive-api.open-meteo.com/v1/archive?latitude=34.55&longitude=-115.78&start_date=2024-01-01&end_date=2024-12-31&daily=temperature_2m_mean%2Cwind_speed_10m_mean&models=era5&wind_speed_unit=ms&timezone=GMT&elevation=nan",
+          "parameters": {
+            "latitude": 34.55,
+            "longitude": -115.78,
+            "start_date": "2024-01-01",
+            "end_date": "2024-12-31",
+            "daily": "temperature_2m_mean,wind_speed_10m_mean",
+            "models": "era5",
+            "wind_speed_unit": "ms",
+            "timezone": "GMT",
+            "elevation": "nan"
+          },
+          "retrieved_utc": "2026-11-14T17:52:25.784870+00:00",
+          "sha256": "b59b561b6534f668d1f665dc65eea7b22546c441134f2023b772a1b49518af73"
+        },
+        "product_id": "ERA5 via Open-Meteo historical API",
+        "time_coverage": "2024-01-01/2024-12-31 UTC",
+        "native_resolution_degrees": 0.25,
+        "returned_grid_point": {
+          "latitude": 34.5,
+          "longitude": -115.75,
+          "elevation": 513.0
+        },
+        "conditions": {
+          "temperature_2m_mean": {
+            "value": 22.463387978142077,
+            "unit": "degC",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          },
+          "wind_speed_10m_mean": {
+            "value": 2.2449726775956282,
+            "unit": "m/s",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          }
+        },
+        "caveat": "Pinned ERA5 model; elevation downscaling disabled. Finer regional support than POWER meteorology does not demonstrate local accuracy. No skin-temperature or albedo substitution.",
+        "license_url": "https://open-meteo.com/en/terms",
+        "attribution": "Open-Meteo; Copernicus Climate Change Service / ECMWF ERA5."
+      },
+      "usgs_elevation_point": {
+        "status": "derived",
+        "value": 204.079971313,
+        "unit": "m",
+        "source": {
+          "request_url": "https://epqs.nationalmap.gov/v1/json?x=-115.78&y=34.55&wkid=4326&units=Meters&includeDate=True",
+          "parameters": {
+            "x": -115.78,
+            "y": 34.55,
+            "wkid": 4326,
+            "units": "Meters",
+            "includeDate": true
+          },
+          "retrieved_utc": "2026-11-14T17:52:40.729346+00:00",
+          "sha256": "e87186aae19c2256c34e4c11362afe5db7e1322d3898f4461190f1dfe0c195db"
+        },
+        "reason": null,
+        "resolution_m": 1,
+        "raster_id": 26772,
+        "acquisition_date": "5/4/2023",
+        "method": "USGS EPQS interpolated 3DEP elevation at the catalog centre.",
+        "caveat": "One point, not a terrain pack or validation. 3DEP generally uses NAVD88 (regional exceptions); Copernicus uses EGM2008. Datum harmonization and matched bare-earth/surface definitions are required before error statistics."
+      }
+    },
+    {
+      "site_id": "white-sands",
+      "era5": {
+        "status": "processed_alternative_not_promoted",
+        "source": {
+          "request_url": "https://archive-api.open-meteo.com/v1/archive?latitude=32.82&longitude=-106.23&start_date=2024-01-01&end_date=2024-12-31&daily=temperature_2m_mean%2Cwind_speed_10m_mean&models=era5&wind_speed_unit=ms&timezone=GMT&elevation=nan",
+          "parameters": {
+            "latitude": 32.82,
+            "longitude": -106.23,
+            "start_date": "2024-01-01",
+            "end_date": "2024-12-31",
+            "daily": "temperature_2m_mean,wind_speed_10m_mean",
+            "models": "era5",
+            "wind_speed_unit": "ms",
+            "timezone": "GMT",
+            "elevation": "nan"
+          },
+          "retrieved_utc": "2026-11-14T17:52:40.812122+00:00",
+          "sha256": "cae00bc6e6e24124366fee679b139f710d31cfee5214f3c9eb5b54d3f8e825ad"
+        },
+        "product_id": "ERA5 via Open-Meteo historical API",
+        "time_coverage": "2024-01-01/2024-12-31 UTC",
+        "native_resolution_degrees": 0.25,
+        "returned_grid_point": {
+          "latitude": 32.75,
+          "longitude": -106.25,
+          "elevation": 1220.0
+        },
+        "conditions": {
+          "temperature_2m_mean": {
+            "value": 19.047267759562843,
+            "unit": "degC",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          },
+          "wind_speed_10m_mean": {
+            "value": 2.66672131147541,
+            "unit": "m/s",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          }
+        },
+        "caveat": "Pinned ERA5 model; elevation downscaling disabled. Finer regional support than POWER meteorology does not demonstrate local accuracy. No skin-temperature or albedo substitution.",
+        "license_url": "https://open-meteo.com/en/terms",
+        "attribution": "Open-Meteo; Copernicus Climate Change Service / ECMWF ERA5."
+      },
+      "usgs_elevation_point": {
+        "status": "derived",
+        "value": 1216.153442383,
+        "unit": "m",
+        "source": {
+          "request_url": "https://epqs.nationalmap.gov/v1/json?x=-106.23&y=32.82&wkid=4326&units=Meters&includeDate=True",
+          "parameters": {
+            "x": -106.23,
+            "y": 32.82,
+            "wkid": 4326,
+            "units": "Meters",
+            "includeDate": true
+          },
+          "retrieved_utc": "2026-11-14T17:52:48.994162+00:00",
+          "sha256": "b7e777a760ac3adc03ae498bdbd6dd65f3037ee3173525d0dfb4188b13e3dd8d"
+        },
+        "reason": null,
+        "resolution_m": 1,
+        "raster_id": 135923,
+        "acquisition_date": "3/5/2019",
+        "method": "USGS EPQS interpolated 3DEP elevation at the catalog centre.",
+        "caveat": "One point, not a terrain pack or validation. 3DEP generally uses NAVD88 (regional exceptions); Copernicus uses EGM2008. Datum harmonization and matched bare-earth/surface definitions are required before error statistics."
+      }
+    },
+    {
+      "site_id": "capitol-reef",
+      "era5": {
+        "status": "processed_alternative_not_promoted",
+        "source": {
+          "request_url": "https://archive-api.open-meteo.com/v1/archive?latitude=38.28&longitude=-111.13&start_date=2024-01-01&end_date=2024-12-31&daily=temperature_2m_mean%2Cwind_speed_10m_mean&models=era5&wind_speed_unit=ms&timezone=GMT&elevation=nan",
+          "parameters": {
+            "latitude": 38.28,
+            "longitude": -111.13,
+            "start_date": "2024-01-01",
+            "end_date": "2024-12-31",
+            "daily": "temperature_2m_mean,wind_speed_10m_mean",
+            "models": "era5",
+            "wind_speed_unit": "ms",
+            "timezone": "GMT",
+            "elevation": "nan"
+          },
+          "retrieved_utc": "2026-11-14T17:52:49.077401+00:00",
+          "sha256": "eba2e455dfc50346598e22e2f4ee2795b102d7d2878be190eb5d9f7246f38d5f"
+        },
+        "product_id": "ERA5 via Open-Meteo historical API",
+        "time_coverage": "2024-01-01/2024-12-31 UTC",
+        "native_resolution_degrees": 0.25,
+        "returned_grid_point": {
+          "latitude": 38.25,
+          "longitude": -111.25,
+          "elevation": 2100.0
+        },
+        "conditions": {
+          "temperature_2m_mean": {
+            "value": 10.16311475409836,
+            "unit": "degC",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          },
+          "wind_speed_10m_mean": {
+            "value": 2.392704918032787,
+            "unit": "m/s",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          }
+        },
+        "caveat": "Pinned ERA5 model; elevation downscaling disabled. Finer regional support than POWER meteorology does not demonstrate local accuracy. No skin-temperature or albedo substitution.",
+        "license_url": "https://open-meteo.com/en/terms",
+        "attribution": "Open-Meteo; Copernicus Climate Change Service / ECMWF ERA5."
+      },
+      "usgs_elevation_point": {
+        "status": "derived",
+        "value": 1541.723876953,
+        "unit": "m",
+        "source": {
+          "request_url": "https://epqs.nationalmap.gov/v1/json?x=-111.13&y=38.28&wkid=4326&units=Meters&includeDate=True",
+          "parameters": {
+            "x": -111.13,
+            "y": 38.28,
+            "wkid": 4326,
+            "units": "Meters",
+            "includeDate": true
+          },
+          "retrieved_utc": "2026-11-14T17:52:57.830292+00:00",
+          "sha256": "674820228cb68ff79588f31b9ebe23548dbbce5cb2e7918fa748e58a3d5e0269"
+        },
+        "reason": null,
+        "resolution_m": 1,
+        "raster_id": 68765,
+        "acquisition_date": "7/0/2020",
+        "method": "USGS EPQS interpolated 3DEP elevation at the catalog centre.",
+        "caveat": "One point, not a terrain pack or validation. 3DEP generally uses NAVD88 (regional exceptions); Copernicus uses EGM2008. Datum harmonization and matched bare-earth/surface definitions are required before error statistics."
+      }
+    },
+    {
+      "site_id": "jezero",
+      "hirise": {
+        "status": "discovery_only",
+        "source": {
+          "request_url": "https://stac.astrogeology.usgs.gov/api/search?collections=mro_hirise_socet_dtms&bbox=77.25315665665735%2C18.31076129276425%2C77.54684334334267%2C18.589182490079452&limit=20",
+          "parameters": {
+            "collections": "mro_hirise_socet_dtms",
+            "bbox": "77.25315665665735,18.31076129276425,77.54684334334267,18.589182490079452",
+            "limit": 20
+          },
+          "retrieved_utc": "2026-11-14T17:52:58.464923+00:00",
+          "sha256": "018ee9fa05cfe75d043208de51f498368680439a0afcdc9c8a4d70629d7ced5a"
+        },
+        "number_matched": 5,
+        "products": [
+          {
+            "id": "DTEEC_002387_1985_003798_1985_A01",
+            "bbox": [
+              77.3441,
+              18.3923,
+              77.4661,
+              18.5886
+            ],
+            "gsd_m": 1.0196246530775452,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/PSP_002387_1985_PSP_003798_1985/DTEEC_002387_1985_003798_1985_A01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_022680_1985_022746_1985_A01",
+            "bbox": [
+              77.3709,
+              18.0965,
+              77.5029,
+              18.3686
+            ],
+            "gsd_m": 1.0166585625971127,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_022680_1985_ESP_022746_1985/DTEEC_022680_1985_022746_1985_A01.tif",
+              "fom": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_022680_1985_ESP_022746_1985/DTFEC_022680_1985_022746_1985_A01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_023524_1985_023379_1985_U01",
+            "bbox": [
+              77.453,
+              18.16,
+              77.5981,
+              18.521
+            ],
+            "gsd_m": 1.0147851940441874,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_023524_1985_ESP_023379_1985/DTEEC_023524_1985_023379_1985_U01.tif",
+              "fom": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_023524_1985_ESP_023379_1985/DTFEC_023524_1985_023379_1985_U01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_045994_1985_046060_1985_U01",
+            "bbox": [
+              77.3834,
+              18.3055,
+              77.5008,
+              18.548
+            ],
+            "gsd_m": 1.0165533020257713,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.tif",
+              "fom": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/DTFEC_045994_1985_046060_1985_U01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_048842_1985_048908_1985_U01",
+            "bbox": [
+              77.4615,
+              18.3372,
+              77.5841,
+              18.5883
+            ],
+            "gsd_m": 1.0166207954197803,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_048842_1985_ESP_048908_1985/DTEEC_048842_1985_048908_1985_U01.tif",
+              "fom": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_048842_1985_ESP_048908_1985/DTFEC_048842_1985_048908_1985_U01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          }
+        ],
+        "truncated": false,
+        "caveat": "Bounding-box intersection does not guarantee full study-footprint coverage or valid pixels. No raster is ingested by this search. Inspect DTM, Figure of Merit, PDS dates and scale/offset before promotion."
+      }
+    },
+    {
+      "site_id": "bagnold",
+      "hirise": {
+        "status": "discovery_only",
+        "source": {
+          "request_url": "https://stac.astrogeology.usgs.gov/api/search?collections=mro_hirise_socet_dtms&bbox=137.2303218065262%2C-4.829182490079451%2C137.5096781934738%2C-4.550803780741133&limit=20",
+          "parameters": {
+            "collections": "mro_hirise_socet_dtms",
+            "bbox": "137.2303218065262,-4.829182490079451,137.5096781934738,-4.550803780741133",
+            "limit": 20
+          },
+          "retrieved_utc": "2026-11-14T17:52:59.472805+00:00",
+          "sha256": "2301313544464deef86805f18c689e7b6a72bfc6ba83c5f3c72522ddf32600af"
+        },
+        "number_matched": 11,
+        "products": [
+          {
+            "id": "DTEEC_001488_1750_001752_1750_U02",
+            "bbox": [
+              137.239,
+              -4.9481,
+              137.354,
+              -4.7207
+            ],
+            "gsd_m": 1.0117467945794967,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/PSP_001488_1750_PSP_001752_1750/DTEEC_001488_1750_001752_1750_U02.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_009149_1750_009294_1750_U01",
+            "bbox": [
+              137.353,
+              -4.923,
+              137.468,
+              -4.6764
+            ],
+            "gsd_m": 1.0117467945795113,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/PSP_009149_1750_PSP_009294_1750/DTEEC_009149_1750_009294_1750_U01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_009505_1755_009571_1755_U01",
+            "bbox": [
+              137.424,
+              -4.6757,
+              137.566,
+              -4.2514
+            ],
+            "gsd_m": 1.0117671078926846,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/PSP_009505_1755_PSP_009571_1755/DTEEC_009505_1755_009571_1755_U01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_009650_1755_009716_1755_U01",
+            "bbox": [
+              137.235,
+              -4.825,
+              137.378,
+              -4.4019
+            ],
+            "gsd_m": 1.0117671078927066,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/PSP_009650_1755_PSP_009716_1755/DTEEC_009650_1755_009716_1755_U01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_010573_1755_010639_1755_U01",
+            "bbox": [
+              137.345,
+              -4.6344,
+              137.467,
+              -4.3546
+            ],
+            "gsd_m": 1.0117648673517987,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/PSP_010573_1755_PSP_010639_1755/DTEEC_010573_1755_010639_1755_U01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_012551_1750_012841_1750_U01",
+            "bbox": [
+              137.159,
+              -5.0026,
+              137.284,
+              -4.6988
+            ],
+            "gsd_m": 1.011746794579496,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_012551_1750_ESP_012841_1750/DTEEC_012551_1750_012841_1750_U01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_018854_1755_018920_1755_U01",
+            "bbox": [
+              137.336,
+              -4.7142,
+              137.457,
+              -4.458
+            ],
+            "gsd_m": 1.0117630165416043,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_018854_1755_ESP_018920_1755/DTEEC_018854_1755_018920_1755_U01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_019698_1750_019988_1750_U01",
+            "bbox": [
+              137.312,
+              -5.0398,
+              137.439,
+              -4.7294
+            ],
+            "gsd_m": 1.0117467945795104,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_019698_1750_ESP_019988_1750/DTEEC_019698_1750_019988_1750_U01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_023957_1755_024023_1755_U01",
+            "bbox": [
+              137.43,
+              -4.7012,
+              137.544,
+              -4.4128
+            ],
+            "gsd_m": 1.0117630165416158,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_023957_1755_ESP_024023_1755/DTEEC_023957_1755_024023_1755_U01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_024234_1755_024300_1755_U01",
+            "bbox": [
+              137.186,
+              -4.7848,
+              137.3,
+              -4.5039
+            ],
+            "gsd_m": 1.0117571649190744,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_024234_1755_ESP_024300_1755/DTEEC_024234_1755_024300_1755_U01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          },
+          {
+            "id": "DTEEC_040770_1755_039280_1755_A01",
+            "bbox": [
+              137.33522540551462,
+              -4.792136927942608,
+              137.44264096272758,
+              -4.583348258654664
+            ],
+            "gsd_m": 1.011757165008657,
+            "license": "CC0-1.0",
+            "assets": {
+              "dtm": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/DTEEC_040770_1755_039280_1755_A01.tif"
+            },
+            "metadata_datetime": "2006-09-29T00:00:00Z",
+            "time_caveat": "STAC timestamps require checking against the source PDS labels; not adopted as acquisition dates."
+          }
+        ],
+        "truncated": false,
+        "caveat": "Bounding-box intersection does not guarantee full study-footprint coverage or valid pixels. No raster is ingested by this search. Inspect DTM, Figure of Merit, PDS dates and scale/offset before promotion."
+      }
+    },
+    {
+      "site_id": "arsia-flank",
+      "hirise": {
+        "status": "discovery_only",
+        "source": {
+          "request_url": "https://stac.astrogeology.usgs.gov/api/search?collections=mro_hirise_socet_dtms&bbox=-120.14097192598176%2C-9.13918249007945%2C-119.85902807401823%2C-8.86079088203674&limit=20",
+          "parameters": {
+            "collections": "mro_hirise_socet_dtms",
+            "bbox": "-120.14097192598176,-9.13918249007945,-119.85902807401823,-8.86079088203674",
+            "limit": 20
+          },
+          "retrieved_utc": "2026-11-14T17:52:59.809297+00:00",
+          "sha256": "c6b1636c0b1a0159c3434483bd09e9268431db47958de049e4ae280f0539ffb5"
+        },
+        "number_matched": 0,
+        "products": [],
+        "truncated": false,
+        "caveat": "Bounding-box intersection does not guarantee full study-footprint coverage or valid pixels. No raster is ingested by this search. Inspect DTM, Figure of Merit, PDS dates and scale/offset before promotion."
+      }
+    },
+    {
+      "site_id": "haughton",
+      "era5": {
+        "status": "processed_alternative_not_promoted",
+        "source": {
+          "request_url": "https://archive-api.open-meteo.com/v1/archive?latitude=75.37&longitude=-89.68&start_date=2024-01-01&end_date=2024-12-31&daily=temperature_2m_mean%2Cwind_speed_10m_mean&models=era5&wind_speed_unit=ms&timezone=GMT&elevation=nan",
+          "parameters": {
+            "latitude": 75.37,
+            "longitude": -89.68,
+            "start_date": "2024-01-01",
+            "end_date": "2024-12-31",
+            "daily": "temperature_2m_mean,wind_speed_10m_mean",
+            "models": "era5",
+            "wind_speed_unit": "ms",
+            "timezone": "GMT",
+            "elevation": "nan"
+          },
+          "retrieved_utc": "2026-11-14T17:53:00.013300+00:00",
+          "sha256": "e713156196a7fca38bc43597d090c72c25ec2f309186dc87f1e9c0a943251da1"
+        },
+        "product_id": "ERA5 via Open-Meteo historical API",
+        "time_coverage": "2024-01-01/2024-12-31 UTC",
+        "native_resolution_degrees": 0.25,
+        "returned_grid_point": {
+          "latitude": 75.25,
+          "longitude": -89.75,
+          "elevation": 274.0
+        },
+        "conditions": {
+          "temperature_2m_mean": {
+            "value": -13.992349726775956,
+            "unit": "degC",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          },
+          "wind_speed_10m_mean": {
+            "value": 4.429125683060109,
+            "unit": "m/s",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          }
+        },
+        "caveat": "Pinned ERA5 model; elevation downscaling disabled. Finer regional support than POWER meteorology does not demonstrate local accuracy. No skin-temperature or albedo substitution.",
+        "license_url": "https://open-meteo.com/en/terms",
+        "attribution": "Open-Meteo; Copernicus Climate Change Service / ECMWF ERA5."
+      }
+    },
+    {
+      "site_id": "qaidam",
+      "era5": {
+        "status": "processed_alternative_not_promoted",
+        "source": {
+          "request_url": "https://archive-api.open-meteo.com/v1/archive?latitude=38.66&longitude=93.27&start_date=2024-01-01&end_date=2024-12-31&daily=temperature_2m_mean%2Cwind_speed_10m_mean&models=era5&wind_speed_unit=ms&timezone=GMT&elevation=nan",
+          "parameters": {
+            "latitude": 38.66,
+            "longitude": 93.27,
+            "start_date": "2024-01-01",
+            "end_date": "2024-12-31",
+            "daily": "temperature_2m_mean,wind_speed_10m_mean",
+            "models": "era5",
+            "wind_speed_unit": "ms",
+            "timezone": "GMT",
+            "elevation": "nan"
+          },
+          "retrieved_utc": "2026-11-14T17:53:00.098305+00:00",
+          "sha256": "9db7df2aca36c9d389db759e19ff9205f55ea77f1c165d364fe58089cfae799a"
+        },
+        "product_id": "ERA5 via Open-Meteo historical API",
+        "time_coverage": "2024-01-01/2024-12-31 UTC",
+        "native_resolution_degrees": 0.25,
+        "returned_grid_point": {
+          "latitude": 38.75,
+          "longitude": 93.25,
+          "elevation": 2789.0
+        },
+        "conditions": {
+          "temperature_2m_mean": {
+            "value": 4.872950819672131,
+            "unit": "degC",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          },
+          "wind_speed_10m_mean": {
+            "value": 2.519726775956284,
+            "unit": "m/s",
+            "status": "modeled",
+            "sample_count": 366,
+            "reason": null,
+            "method": "Arithmetic mean of available daily mean values; missing days excluded."
+          }
+        },
+        "caveat": "Pinned ERA5 model; elevation downscaling disabled. Finer regional support than POWER meteorology does not demonstrate local accuracy. No skin-temperature or albedo substitution.",
+        "license_url": "https://open-meteo.com/en/terms",
+        "attribution": "Open-Meteo; Copernicus Climate Change Service / ECMWF ERA5."
+      }
+    },
+    {
+      "site_id": "lucus-planum",
+      "hirise": {
+        "status": "discovery_only",
+        "source": {
+          "request_url": "https://stac.astrogeology.usgs.gov/api/search?collections=mro_hirise_socet_dtms&bbox=-172.91224768753898%2C-1.7552224900794506%2C-172.633752312461%2C-1.4768528777442873&limit=20",
+          "parameters": {
+            "collections": "mro_hirise_socet_dtms",
+            "bbox": "-172.91224768753898,-1.7552224900794506,-172.633752312461,-1.4768528777442873",
+            "limit": 20
+          },
+          "retrieved_utc": "2026-11-14T17:53:00.365892+00:00",
+          "sha256": "c6b1636c0b1a0159c3434483bd09e9268431db47958de049e4ae280f0539ffb5"
+        },
+        "number_matched": 0,
+        "products": [],
+        "truncated": false,
+        "caveat": "Bounding-box intersection does not guarantee full study-footprint coverage or valid pixels. No raster is ingested by this search. Inspect DTM, Figure of Merit, PDS dates and scale/offset before promotion."
+      }
+    }
+  ]
+}

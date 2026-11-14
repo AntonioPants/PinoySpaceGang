@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "id": "scan-dallol-region-r1120-c320",
+  "name": "Dallol salt-dome study area region: 8.1 km W, 15.9 km S",
+  "body": "earth",
+  "grid": {
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "dtype": "float32",
+    "byte_order": "little-endian",
+    "sample_file": "elevation.f32",
+    "order": "north-first, west-first",
+    "crs_wkt": "PROJCS[\"WGS 84 / UTM zone 37N\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",0],PARAMETER[\"central_meridian\",39],PARAMETER[\"scale_factor\",0.9996],PARAMETER[\"false_easting\",500000],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH],AUTHORITY[\"EPSG\",\"32637\"]]",
+    "affine": [
+      30.0,
+      0.0,
+      629730.0,
+      0.0,
+      -30.0,
+      1561200.0
+    ],
+    "sample_coordinates": "GeoTIFF pixel centres; sample endpoints span 4800m; pixel footprint spans 4830m.",
+    "nodata": null,
+    "nodata_policy": "Reject entire window if any elevation sample is missing."
+  },
+  "local_frame": {
+    "vertical_offset_m": -58.0
+  },
+  "source": {
+    "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N14_00_E040_00_DEM/Copernicus_DSM_COG_10_N14_00_E040_00_DEM.tif",
+    "source_tiles": [
+      {
+        "tile_id": "Copernicus_DSM_COG_10_N14_00_E040_00_DEM",
+        "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N14_00_E040_00_DEM/Copernicus_DSM_COG_10_N14_00_E040_00_DEM.tif",
+        "sha256": "40598e3825095a24b95f1064bdf8089c8aa744c93bc3e000dc0dfe9807051dc2"
+      }
+    ],
+    "native_spacing_m_approx": 30,
+    "vertical_datum": "EGM2008",
+    "coverage": "Copernicus primarily 2011-2015; local acquisition unknown",
+    "receipt_file": "source-receipt.json",
+    "subset_file": "elevation.tif",
+    "subset_sha256": "1eefec85e2430ea90053b215d17b4bdce83083c04c975685b206959ebc20702d"
+  },
+  "attribution": "produced using Copernicus WorldDEM-30, DLR e.V. 2010-2014 and Airbus Defence and Space GmbH 2014-2018, European Union and ESA",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "limitations": [
+    "Land cover is a 2021 classification, not current traversability or soil mechanics.",
+    "Bare/sparse does not distinguish sand, rock, lava or salt composition. No research-tier pairing inferred.",
+    "DSM may include vegetation and structures; not a guaranteed bare-earth surface.",
+    "Native postings vary with latitude; 30m output does not create new detail.",
+    "Exploratory window without reviewed geological classification or planetary pairing."
+  ]
+}

@@ -10,6 +10,13 @@ FEATURES = {
 }
 
 
+def preserve_registered_scans(rebuilt, previous):
+    """Curated rebuilds retain registered scan packs from the staged public tree."""
+    ids={s['id'] for s in rebuilt}
+    return rebuilt + [s for s in previous.values()
+                      if s.get('catalog_origin')=='regional_scan' and s['id'] not in ids]
+
+
 def preserve_handoff(record, previous=None):
     # Only explicitly curated metadata survives; never reuse stale terrain/weather stats.
     previous = previous or {}
@@ -45,4 +52,7 @@ def make_catalog(sites, public=None):
         'sites': sites, 'pairings': pairs})
     from pathlib import Path
     from .accuracy import attach_accuracy
-    return attach_accuracy(catalog, public or Path(__file__).resolve().parents[2]/'web/public')
+    public = public or Path(__file__).resolve().parents[2]/'web/public'
+    from .matching import attach_matching
+    samples = {}
+    return attach_matching(attach_accuracy(catalog, public, samples), public, sample_cache=samples)

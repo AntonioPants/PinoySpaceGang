@@ -1,0 +1,80 @@
+{
+  "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N14_00_E040_00_DEM/Copernicus_DSM_COG_10_N14_00_E040_00_DEM.tif",
+  "sha256": "bce27298d703cdc9bc253118773baae08e904cb71c40eff1f9f7bca0555a35b7",
+  "source_tiles": [
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N14_00_E040_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N14_00_E040_00_DEM/Copernicus_DSM_COG_10_N14_00_E040_00_DEM.tif",
+      "sha256": "40598e3825095a24b95f1064bdf8089c8aa744c93bc3e000dc0dfe9807051dc2"
+    }
+  ],
+  "regional_dem_sha256": "73eb2e0d95fe185121dd5ba00911b6d16d30abcbcd197fb4c229c209db533da1",
+  "region_id": "dallol-region",
+  "window": {
+    "region_dem": "data/raw/location-scan/regions/dallol-region/dem.tif",
+    "row": 960,
+    "column": 400,
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "row_order": "north_to_south",
+    "column_order": "west_to_east",
+    "crs": "EPSG:32637",
+    "affine": [
+      30.0,
+      0.0,
+      632130.0,
+      0.0,
+      -30.0,
+      1566000.0
+    ],
+    "elevation_sha256": "0c23583a79d32375b98fea1ba4e235b684645f4aa031045f5c00881a045d454e"
+  },
+  "land_cover": {
+    "fractions": {
+      "60": 1.0
+    },
+    "allowed_fraction": 1.0,
+    "excluded_fraction": 0,
+    "nodata_fraction": 0,
+    "accepted": true
+  },
+  "worldcover_sources": {
+    "tiles": [
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_N12E039_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N12E039_Map.tif",
+        "sha256": "17c303f6b13845bb8d76707bce5b183e642b461dd2ed946ecd76e886609dc22d"
+      }
+    ],
+    "sha256": "a8acb13ac903eefda66f34a0ed5ff2ae6b45f453ce27909ee17293ded92fcbd0",
+    "spacing_m": 10,
+    "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+    "product_id": "ESA WorldCover 10m 2021 v200",
+    "native_resolution_m_approx": 10,
+    "time_coverage": "2021",
+    "units": "WorldCover class codes (dimensionless)",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "method": "Bilinear Copernicus tile mosaic to local UTM at 30m; integer crop, no nodata filling.",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "land_cover_license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "registration_provenance": {
+    "method_version": "1.0.0",
+    "window_id": "scan-dallol-region-r960-c400",
+    "region_id": "dallol-region",
+    "seed_site_ids": [
+      "dallol"
+    ],
+    "source_urls": [
+      "https://volcano.si.edu/volcano.cfm?vn=221041"
+    ],
+    "index_sha256": "6532fa26fa8640dbeb7513fdf29759bc2d36600909bc1d7cc8f62393ae378fed",
+    "shortlist_sha256": "51199fa35e0aca34c3194e579d04f6ccc861ed9c9370b51a7c55072b62333007",
+    "evidence_status": "exploratory_terrain_only",
+    "inference_method": "Region seed labels supplied by scan_matches; unreviewed at this window. The live scorer discounts inferred labels and excludes crater inference.",
+    "shortlisted_for": [
+      "jezero"
+    ]
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N34_00_W116_00_DEM/Copernicus_DSM_COG_10_N34_00_W116_00_DEM.tif",
+  "sha256": "379b32018bc590f85d48fc6d0cf9ac9eb45a7e7dad6f144e1c885841c2b3fdbc",
+  "source_tiles": [
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N34_00_W116_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N34_00_W116_00_DEM/Copernicus_DSM_COG_10_N34_00_W116_00_DEM.tif",
+      "sha256": "d33e98701a8927cd37430841d4d2c316a65641cc6889e1c492e7b9a0f660868c"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N35_00_W116_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N35_00_W116_00_DEM/Copernicus_DSM_COG_10_N35_00_W116_00_DEM.tif",
+      "sha256": "e24669f739b2d5216495b36070a749ced07d1e2005dd0a511739ce6b7bf40860"
+    }
+  ],
+  "regional_dem_sha256": "1af4db07eabf0b0289d76078bbb6f5c6ceafb38a26d5df4f115497433b0b581a",
+  "region_id": "amboy-region",
+  "window": {
+    "region_dem": "data/raw/location-scan/regions/amboy-region/dem.tif",
+    "row": 1280,
+    "column": 240,
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "row_order": "north_to_south",
+    "column_order": "west_to_east",
+    "crs": "EPSG:32611",
+    "affine": [
+      30.0,
+      0.0,
+      598200.0,
+      0.0,
+      -30.0,
+      3879630.0
+    ],
+    "elevation_sha256": "b3750da67ed61854a3fe5e6c4a1a3b44bfe93406ed2f1c8d23ca4b4ba6106ac4"
+  },
+  "land_cover": {
+    "fractions": {
+      "30": 4.286528726172258e-06,
+      "60": 0.9999957134712738
+    },
+    "allowed_fraction": 0.9999957134712738,
+    "excluded_fraction": 0,
+    "nodata_fraction": 0,
+    "accepted": true
+  },
+  "worldcover_sources": {
+    "tiles": [
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_N33W117_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N33W117_Map.tif",
+        "sha256": "e0da12cba97b3bf9480fd7d88efb4e4518aed6448e4a5d8a83a40d4fbe12545b"
+      }
+    ],
+    "sha256": "e5bb465eafcb06ec8ae048b6862fd007abd6d5f251ef215eef28e5279a40328c",
+    "spacing_m": 10,
+    "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+    "product_id": "ESA WorldCover 10m 2021 v200",
+    "native_resolution_m_approx": 10,
+    "time_coverage": "2021",
+    "units": "WorldCover class codes (dimensionless)",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "method": "Bilinear Copernicus tile mosaic to local UTM at 30m; integer crop, no nodata filling.",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "land_cover_license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "registration_provenance": {
+    "method_version": "1.0.0",
+    "window_id": "scan-amboy-region-r1280-c240",
+    "region_id": "amboy-region",
+    "seed_site_ids": [
+      "amboy",
+      "cima-lava-field"
+    ],
+    "source_urls": [
+      "https://www.blm.gov/visit/amboy-crater-national-natural-landmark",
+      "https://www.nps.gov/places/the-lava-tube-at-mojave.htm"
+    ],
+    "index_sha256": "6532fa26fa8640dbeb7513fdf29759bc2d36600909bc1d7cc8f62393ae378fed",
+    "shortlist_sha256": "51199fa35e0aca34c3194e579d04f6ccc861ed9c9370b51a7c55072b62333007",
+    "evidence_status": "exploratory_terrain_only",
+    "inference_method": "Region seed labels supplied by scan_matches; unreviewed at this window. The live scorer discounts inferred labels and excludes crater inference.",
+    "shortlisted_for": [
+      "arsia-flank"
+    ]
+  }
+}

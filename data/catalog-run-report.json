@@ -1,10 +1,31 @@
 {
-  "operation": "register-site-records",
+  "operation": "register",
   "registered_sites": [
-    "lucus-planum",
-    "qaidam"
+    "teide-canadas",
+    "etna-east",
+    "fournaise-enclos",
+    "fogo-caldera",
+    "bromo-sandsea",
+    "pinacate-elegante",
+    "bardenas-blanca",
+    "tabernas-badlands",
+    "ischigualasto",
+    "talampaya-canyon",
+    "valle-luna-chile",
+    "uyuni-incahuasi",
+    "makgadikgadi-kubu",
+    "tsondab-dunes",
+    "rub-khali-oman",
+    "badain-jaran",
+    "taklamakan-interior",
+    "lut-yardangs",
+    "dunhuang-yardangs",
+    "dallol",
+    "lake-abbe-margin",
+    "hverir-namafjall",
+    "pingualuit"
   ],
+  "published": true,
   "failures": [],
-  "sites": 18,
-  "terrain_available": 18
+  "sites": 59
 }

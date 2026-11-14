@@ -1,0 +1,100 @@
+{
+  "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S25_00_W071_00_DEM/Copernicus_DSM_COG_10_S25_00_W071_00_DEM.tif",
+  "sha256": "0d5f4617d662a30552d3aaec5da878906b7dffa5810147e3e667f5a6ca1c7dff",
+  "source_tiles": [
+    {
+      "tile_id": "Copernicus_DSM_COG_10_S25_00_W071_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S25_00_W071_00_DEM/Copernicus_DSM_COG_10_S25_00_W071_00_DEM.tif",
+      "sha256": "fbe8f6d1b2c68aeb8ce7032dc0b003e6f3fc0717136cb1d426f7d86465086a0f"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_S25_00_W070_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S25_00_W070_00_DEM/Copernicus_DSM_COG_10_S25_00_W070_00_DEM.tif",
+      "sha256": "ac7b8fce2e8598c5d522fd0f6ff0b4a1ae6f6c5aecda55671fc6e2bd82ec7710"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_S24_00_W071_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S24_00_W071_00_DEM/Copernicus_DSM_COG_10_S24_00_W071_00_DEM.tif",
+      "sha256": "2562c4e6fac92922caa80941505eabf6998be1a32d139a8fe07c78632bc4ea9b"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_S24_00_W070_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S24_00_W070_00_DEM/Copernicus_DSM_COG_10_S24_00_W070_00_DEM.tif",
+      "sha256": "4d8745aed594bac867a2fe434fbf7ea7d092580b077de396e67874febb2730f3"
+    }
+  ],
+  "regional_dem_sha256": "0d8b25946ba3c4f60ebf48b0d2583b9416651d0f2efb719c48ac451d66a5a66b",
+  "region_id": "atacama-yungay-region",
+  "window": {
+    "region_dem": "data/raw/location-scan/regions/atacama-yungay-region/dem.tif",
+    "row": 880,
+    "column": 880,
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "row_order": "north_to_south",
+    "column_order": "west_to_east",
+    "crs": "EPSG:32719",
+    "affine": [
+      30.0,
+      0.0,
+      418830.0,
+      0.0,
+      -30.0,
+      7330350.0
+    ],
+    "elevation_sha256": "d351d5d413fc802047a9933315d29f3577e94867c89bd6ce4e57017c49c6dd72"
+  },
+  "land_cover": {
+    "fractions": {
+      "60": 1.0
+    },
+    "allowed_fraction": 1.0,
+    "excluded_fraction": 0,
+    "nodata_fraction": 0,
+    "accepted": true
+  },
+  "worldcover_sources": {
+    "tiles": [
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_S27W072_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S27W072_Map.tif",
+        "sha256": "4ad4d29507703ad8e8443555ecc08c2f08d00361ae1723b7fe178a9935710740"
+      },
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_S24W072_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S24W072_Map.tif",
+        "sha256": "c16525824d76040e6c5ef610ccb903d7bbb28a8b05e1aa21c1c34789e807724b"
+      }
+    ],
+    "sha256": "3919a6208ecdb4a1b59f5125c0df937330f14cd093726b221d0c0bd92a16c85d",
+    "spacing_m": 10,
+    "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+    "product_id": "ESA WorldCover 10m 2021 v200",
+    "native_resolution_m_approx": 10,
+    "time_coverage": "2021",
+    "units": "WorldCover class codes (dimensionless)",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "method": "Bilinear Copernicus tile mosaic to local UTM at 30m; integer crop, no nodata filling.",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "land_cover_license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "registration_provenance": {
+    "method_version": "1.0.0",
+    "window_id": "scan-atacama-yungay-region-r880-c880",
+    "region_id": "atacama-yungay-region",
+    "seed_site_ids": [
+      "atacama-yungay"
+    ],
+    "source_urls": [
+      "https://ahed.nasa.gov/about/about-image?id=4"
+    ],
+    "index_sha256": "6532fa26fa8640dbeb7513fdf29759bc2d36600909bc1d7cc8f62393ae378fed",
+    "shortlist_sha256": "51199fa35e0aca34c3194e579d04f6ccc861ed9c9370b51a7c55072b62333007",
+    "evidence_status": "exploratory_terrain_only",
+    "inference_method": "Region seed labels supplied by scan_matches; unreviewed at this window. The live scorer discounts inferred labels and excludes crater inference.",
+    "shortlisted_for": [
+      "lucus-planum"
+    ]
+  }
+}

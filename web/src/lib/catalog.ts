@@ -5,6 +5,7 @@
  */
 import type { CatalogSite as PhysicsCatalogSite, SiteCatalog } from '../../../app/sim/src/catalog';
 import type { AnalogSite, PlanetarySite } from './types';
+import type { AnalogMatching } from './matching';
 
 export interface CatalogEntry extends PhysicsCatalogSite {
   region: string; description: string; evidence_url: string; study_status?: string; limitations?: string[];
@@ -21,10 +22,11 @@ export interface Catalog {
   targets: PlanetarySite[];
   analogs: AnalogSite[];
   pairings: Pairing[];
+  matching?: AnalogMatching;
 }
 /** Scenario gravity shown in the planner (m/s²). */
 const GRAVITY = { moon: 1.62, mars: 3.72 } as const;
-const TARGET_ORDER = ['shackleton-rim', 'marius-hills', 'jezero', 'arsia-flank', 'phoenix', 'bagnold'];
+const TARGET_ORDER = ['shackleton-rim', 'marius-hills', 'malapert-massif', 'mons-mouton', 'jezero', 'arsia-flank', 'phoenix', 'bagnold'];
 const targetRank = (id: string) => {
   const index = TARGET_ORDER.indexOf(id);
   return index < 0 ? TARGET_ORDER.length : index;
@@ -41,7 +43,7 @@ const candidates: AnalogSite[] = [
 ];
 
 export function parseCatalog(raw: unknown): Catalog {
-  const data = raw as { schema_version?: string; sites?: CatalogEntry[]; pairings?: Pairing[] };
+  const data = raw as { schema_version?: string; sites?: CatalogEntry[]; pairings?: Pairing[]; analog_matching?: AnalogMatching };
   if (data?.schema_version !== '1.0.0' || !Array.isArray(data.sites) || !Array.isArray(data.pairings)) throw new Error('Unsupported site catalog.');
   const entries = new Map(data.sites.map(site => [site.id, site]));
   if (entries.size !== data.sites.length) throw new Error('Duplicate catalog site IDs.');
@@ -64,7 +66,7 @@ export function parseCatalog(raw: unknown): Catalog {
     };
   });
   if (!targets.length || !analogs.some(a => a.available)) throw new Error('The site catalog has no usable target or analog.');
-  return { source: raw as SiteCatalog, entries, targets, analogs: [...analogs, ...candidates.filter(c => !entries.has(c.id))], pairings: data.pairings };
+  return { source: raw as SiteCatalog, entries, targets, analogs: [...analogs, ...candidates.filter(c => !entries.has(c.id))], pairings: data.pairings, matching: data.analog_matching };
 }
 
 export async function loadCatalog(signal?: AbortSignal): Promise<Catalog> {
@@ -82,4 +84,25 @@ export function analogsFor(catalog: Catalog, targetId: string): AnalogSite[] {
   const paired = catalog.analogs.filter(a => pairingOf(catalog, targetId, a.id)).sort((a, b) => score(b) - score(a));
   const rest = catalog.analogs.filter(a => !pairingOf(catalog, targetId, a.id));
   return [...paired, ...rest.filter(a => a.available), ...rest.filter(a => !a.available)];
+}
+
+/** Up to ten available candidates after the pipeline's conservative screening. */
+export function recommendedAnalogs(catalog: Catalog, targetId: string): AnalogSite[] {
+  if (!catalog.matching) return analogsFor(catalog,targetId).filter(s => s.available).slice(0,10);
+  const reviewed = catalog.matching?.comparisons
+    .filter(p => p.planetary_id === targetId && p.verification.catalog_features_reproduced
+      && p.verification.input_hashes_checked && p.terrain_similarity_percent !== null)
+    .sort((a,b) => a.candidate_rank-b.candidate_rank || a.earth_id.localeCompare(b.earth_id));
+  const candidates: AnalogSite[] = [];
+  for (const match of reviewed) {
+    const site = catalog.analogs.find(s => s.id === match.earth_id && s.available);
+    if (site && !candidates.some(s => s.id === site.id)) candidates.push(site);
+    if (candidates.length === 10) break;
+  }
+  return candidates;
+}
+
+/** Default selection; callers can offer the remaining recommendedAnalogs. */
+export function recommendedAnalog(catalog: Catalog, targetId: string): AnalogSite | undefined {
+  return recommendedAnalogs(catalog,targetId)[0];
 }

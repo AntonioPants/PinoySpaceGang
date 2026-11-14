@@ -10,7 +10,7 @@ it('exposes generalized categories, temperatures, unknowns and downloadable prov
   for (const text of ['classification', 'morphology', 'substrate', 'atmosphere',
     'slope p95 class', 'roughness 3km', 'air temperature 2m', 'surface temperature',
     'friction', 'unknown', 'source', 'limitations', 'Download complete site record',
-    'Pairing accuracy checks', 'window sensitivity', 'validated accuracy percent', 'catalog features reproduced']) {
+    'Comparison reliability checks', 'window sensitivity', 'validated accuracy percent', 'catalog features reproduced']) {
     expect(html).toContain(text);
   }
   expect(site.catalog?.record.conditions.friction.value).toBeNull();

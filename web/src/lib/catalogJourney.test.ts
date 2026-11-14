@@ -40,7 +40,12 @@ describe('shared catalog through the mission journey', () => {
     expect(mission.earthAnalog.terrainBaseUrl).toBe(site.manifestUrl!.replace('manifest.json', ''));
     const input = toSimInput(mission, profile);
     expect(input.site.id).toBe(site.id);
-    expect(input.site.sources?.soilType).toBeDefined();
+    if (catalogSites.find(s=>s.id===site.id)?.substrate === 'unknown') {
+      expect(input.site.soilType).toBeUndefined();
+      expect(input.site.sources?.soilType).toBeUndefined();
+    } else {
+      expect(input.site.sources?.soilType).toBeDefined();
+    }
     const flight = runSim(input);
     expect(flight.summary).toBeDefined();
     expect(Number.isFinite(flight.summary!.verticalSpeedMps)).toBe(true);

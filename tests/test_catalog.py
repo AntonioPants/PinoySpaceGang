@@ -74,6 +74,10 @@ def test_every_enabled_earth_site_has_a_sourced_unvalidated_pairing():
     for site in catalog['sites']:
         if site['body'] != 'earth': continue
         related = [p for p in catalog['pairings'] if p['earth_id'] == site['id']]
+        if site.get('catalog_origin') == 'regional_scan':
+            assert not related and site['matches'] == []
+            assert site['pairing_status'] == 'exploratory_terrain_only'
+            continue
         assert related and set(site['matches']) == {p['planetary_id'] for p in related}
         for pair in related:
             explanation = pair['explanation']

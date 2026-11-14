@@ -1,0 +1,90 @@
+{
+  "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N25_00_E039_00_DEM/Copernicus_DSM_COG_10_N25_00_E039_00_DEM.tif",
+  "sha256": "4975389716a77665e89ad72177f02299bf8ef698d0b57365c042d0a1dd8a4238",
+  "source_tiles": [
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N25_00_E039_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N25_00_E039_00_DEM/Copernicus_DSM_COG_10_N25_00_E039_00_DEM.tif",
+      "sha256": "371c7a721ac5ca34bc3b289ce33f0d3b48745da9318151234423914aa99ab91c"
+    },
+    {
+      "tile_id": "Copernicus_DSM_COG_10_N25_00_E040_00_DEM",
+      "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N25_00_E040_00_DEM/Copernicus_DSM_COG_10_N25_00_E040_00_DEM.tif",
+      "sha256": "6971f80fcc4be320f7d1736ac82bda6623087f52d4e729c5b289a7642a666fe7"
+    }
+  ],
+  "regional_dem_sha256": "7f54605fc6aa4ee06d086c6a75972a1af68d3f04925933c01e4aba01abd70283",
+  "region_id": "harrat-khaybar-region",
+  "window": {
+    "region_dem": "data/raw/location-scan/regions/harrat-khaybar-region/dem.tif",
+    "row": 160,
+    "column": 160,
+    "rows": 161,
+    "columns": 161,
+    "spacing_m": 30,
+    "row_order": "north_to_south",
+    "column_order": "west_to_east",
+    "crs": "EPSG:32637",
+    "affine": [
+      30.0,
+      0.0,
+      578010.0,
+      0.0,
+      -30.0,
+      2854830.0
+    ],
+    "elevation_sha256": "41391d634a606b1364d1e424a19a056b296e348b463d9549b37d8507601141be"
+  },
+  "land_cover": {
+    "fractions": {
+      "10": 0.00010716321815430646,
+      "20": 0.0003257761831890916,
+      "30": 2.571917235703355e-05,
+      "40": 0.00012859586178516776,
+      "60": 0.9993655937485265,
+      "80": 4.7151815987894844e-05
+    },
+    "allowed_fraction": 0.9993655937485265,
+    "excluded_fraction": 0.00028291089592736906,
+    "nodata_fraction": 0,
+    "accepted": true
+  },
+  "worldcover_sources": {
+    "tiles": [
+      {
+        "tile_id": "ESA_WorldCover_10m_2021_v200_N24E039_Map",
+        "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N24E039_Map.tif",
+        "sha256": "379946bc6a3279eaffc24c13082a24125bce64d5b42b2261f6e6547e532309bb"
+      }
+    ],
+    "sha256": "7dfcaba22fe044f972d2d85640d5fdc5e8685e8461fc5c78163c6f232cd34bcb",
+    "spacing_m": 10,
+    "method": "Nearest categorical reprojection to 10m; full-window class fractions",
+    "product_id": "ESA WorldCover 10m 2021 v200",
+    "native_resolution_m_approx": 10,
+    "time_coverage": "2021",
+    "units": "WorldCover class codes (dimensionless)",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "method": "Bilinear Copernicus tile mosaic to local UTM at 30m; integer crop, no nodata filling.",
+  "license_url": "https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf",
+  "land_cover_license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "registration_provenance": {
+    "method_version": "1.0.0",
+    "window_id": "scan-harrat-khaybar-region-r160-c160",
+    "region_id": "harrat-khaybar-region",
+    "seed_site_ids": [
+      "harrat-khaybar"
+    ],
+    "source_urls": [
+      "https://science.nasa.gov/earth/earth-observatory/harrat-khaybar-volcanic-field-8650/"
+    ],
+    "index_sha256": "6532fa26fa8640dbeb7513fdf29759bc2d36600909bc1d7cc8f62393ae378fed",
+    "shortlist_sha256": "51199fa35e0aca34c3194e579d04f6ccc861ed9c9370b51a7c55072b62333007",
+    "evidence_status": "exploratory_terrain_only",
+    "inference_method": "Region seed labels supplied by scan_matches; unreviewed at this window. The live scorer discounts inferred labels and excludes crater inference.",
+    "shortlisted_for": [
+      "marius-hills"
+    ]
+  }
+}
