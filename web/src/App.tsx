@@ -8,6 +8,9 @@ import ConditionsImport from './components/ConditionsImport';
 import FlightReport from './components/FlightReport';
 import type { FlightTelemetry } from '../../app/sim/src/types';
 import { analogs, normalizeTargetId, targets } from './data/sites';
+import { hasWeatherProfile, loadWeatherProfile } from './lib/weather';
+import type { EnvironmentProfile } from '../../app/lib/environment.mjs';
+import { terrainScore } from './data/sites';
 import { buildMission, defaultSettings, gravityFor, loadProfile, validateSettings } from './lib/mission';
 import type { Body, MissionConfig, MissionSettings, TerrainProfile } from './lib/types';
 
@@ -66,10 +69,21 @@ export default function App() {
     setAnalogId(id);
     setTerrainView(analogs.some(site => site.id === id && site.available));
   };
+  const weatherAvailable = hasWeatherProfile(analog.id);
+  const [weather, setWeather] = useState<EnvironmentProfile | null>(null), [weatherError, setWeatherError] = useState('');
+  useEffect(() => {
+    const abort = new AbortController(); setWeather(null); setWeatherError('');
+    if (!weatherAvailable) return () => abort.abort();
+    loadWeatherProfile(analog.id, abort.signal).then(result => { if (!abort.signal.aborted) setWeather(result); }).catch(error => { if (!abort.signal.aborted) setWeatherError(error instanceof Error ? error.message : 'Could not load weather.'); });
+    return () => abort.abort();
+  }, [analog.id, weatherAvailable]);
+  const realWeather = settings.environment === 'earth' && settings.realWeatherMonth > 0 && weatherAvailable;
+  const weatherHour = realWeather && weather ? weather.months[String(settings.realWeatherMonth)]?.scenarios[settings.weatherScenario] : null;
+  const pairScore = terrainScore(targetId, analog.id);
   const update = <K extends keyof MissionSettings>(key: K, value: MissionSettings[K]) => setSettings(s => ({ ...s, [key]: value }));
   function reviewMission() {
     if (!profile || !analog.available) return;
-    setMission(buildMission(target, profile, settings)); setDialog('mission'); setDownloadError('');
+    setMission(buildMission(target, profile, settings, { terrainScore: pairScore, weatherAvailable })); setDialog('mission'); setDownloadError('');
   }
   function downloadMission() {
     if (!mission) return;
@@ -146,29 +160,39 @@ export default function App() {
         <div className="mission-overview"><div className="panel-topline"><span><Rocket size={17} /> Your mission</span><span className="badge ready">Draft</span></div>
           <h2>{target.name}</h2><p className="muted">Planetary target on {target.body}</p><div className="route-connector"><span /><span /><span /></div><h3>{analog.name}</h3><p className="muted">Earth terrain testbed · {analog.region}</p>
           {terrainStatus}{profile && <TerrainChart profile={profile} />}
-          <div className="mission-summary"><div><span>Simulation gravity</span><strong>{gravity.toFixed(2)} m/s²</strong></div><div><span>Wet vehicle mass</span><strong>{settings.dryMassKg + settings.fuelMassKg} kg</strong></div><div><span>Initial thrust / weight</span><strong className="accent-text">{twr.toFixed(2)}</strong></div><div><span>Analog fidelity</span><strong>Unvalidated</strong></div></div>
+          <div className="mission-summary"><div><span>Simulation gravity</span><strong>{gravity.toFixed(2)} m/s²</strong></div><div><span>Wet vehicle mass</span><strong>{settings.dryMassKg + settings.fuelMassKg} kg</strong></div><div><span>Initial thrust / weight</span><strong className="accent-text">{twr.toFixed(2)}</strong></div><div><span>Analog fidelity</span><strong>Scored after the flight</strong></div></div>
           {twr < 1 && <div className="note warning"><CircleHelp size={18} /><p>Initial thrust is lower than vehicle weight. This configuration cannot initially hover; review thrust and mass.</p></div>}
           <div className="note"><CircleHelp size={18} /><p>These are experiment settings, not measured vehicle specifications. Changing gravity does not make the Earth terrain a planetary observation.</p></div>
           <button className="text-button" onClick={() => setStep(1)}><ArrowLeft size={15} /> Change Earth analog</button>
         </div>
         <div className="config-panel"><div className="section-heading"><h2><SlidersHorizontal size={21} /> Mission configuration</h2><button className="text-button" onClick={() => setSettings({ ...defaultSettings })}>Reset</button></div>
           <ConditionsImport settings={settings} targetId={targetId} onApply={proposal=>{setSettings(proposal.settings);if(proposal.targetId)setTargetId(proposal.targetId);setFlight(null);}} />
-          <fieldset><legend>01 <span>Control strategy</span></legend><div className="strategy-options">{([{ mode: 'AUTONOMOUS_HAZARD_AVOID', name: 'Autonomous', detail: 'Hazard-avoidance controller' }, { mode: 'MANUAL_CONTROL', name: 'Manual', detail: 'Pilot-controlled thrust' }] as const).map(item => <button key={item.mode} className={settings.mode === item.mode ? 'selected' : ''} aria-pressed={settings.mode === item.mode} onClick={() => update('mode', item.mode)}>{item.mode === 'MANUAL_CONTROL' ? <Settings2 size={20} /> : <Orbit size={20} />}<strong>{item.name}</strong><small>{item.detail}</small></button>)}</div><p className="field-help">Lidar hazard detection and velocity sensing are enabled.</p></fieldset>
-          <fieldset><legend>02 <span>Environment</span></legend><div className="segmented environment"><button aria-pressed={settings.environment === 'planetary'} onClick={() => update('environment', 'planetary')}>{target.body} physics scenario</button><button aria-pressed={settings.environment === 'earth'} onClick={() => update('environment', 'earth')}>Earth field test</button></div><p className="field-help">{vacuum ? 'Lunar gravity and vacuum over Earth terrain. Wind is disabled.' : settings.environment === 'earth' ? 'Earth gravity with user-defined wind. Soil mechanics remain unmeasured.' : 'Mars gravity over Earth terrain, with constant 0.02 kg/m³ atmospheric density.'}</p></fieldset>
+          <fieldset><legend>01 <span>Control strategy</span></legend><div className="strategy-options">{([{ mode: 'AUTONOMOUS_HAZARD_AVOID', name: 'Autonomous', detail: 'Hazard-avoidance controller' }, { mode: 'MANUAL_CONTROL', name: 'Manual', detail: 'Pilot-controlled thrust' }] as const).map(item => <button key={item.mode} className={settings.mode === item.mode ? 'selected' : ''} aria-pressed={settings.mode === item.mode} onClick={() => update('mode', item.mode)}>{item.mode === 'MANUAL_CONTROL' ? <Settings2 size={20} /> : <Orbit size={20} />}<strong>{item.name}</strong><small>{item.detail}</small></button>)}</div><div className="segmented environment" aria-label="Hazard sensor">{([['lidar', 'Lidar'], ['camera', 'Camera'], ['none', 'No hazard sensor']] as const).map(([value, name]) => <button key={value} aria-pressed={settings.hazardSensor === value} onClick={() => update('hazardSensor', value)}>{name}</button>)}</div><p className="field-help">{settings.hazardSensor === 'lidar' ? 'Lidar maps hazards and is barely affected by glare.' : settings.hazardSensor === 'camera' ? 'A camera maps hazards but is degraded by glare and low sun.' : 'No hazard detection: the lander cannot see rocks or slopes and never diverts.'} Velocity sensing is enabled.</p></fieldset>
+          <fieldset><legend>02 <span>Environment</span></legend><div className="segmented environment"><button aria-pressed={settings.environment === 'planetary'} onClick={() => update('environment', 'planetary')}>{target.body} physics scenario</button><button aria-pressed={settings.environment === 'earth'} onClick={() => update('environment', 'earth')}>Earth field test</button></div><p className="field-help">{vacuum ? 'Lunar gravity and vacuum over Earth terrain. Wind is disabled.' : settings.environment === 'earth' ? 'Earth gravity with user-defined wind. Soil mechanics remain unmeasured.' : 'Mars gravity over Earth terrain, with constant 0.02 kg/m³ atmospheric density.'}</p>
+            {settings.environment === 'earth' && (weatherAvailable ? <>
+              <div className="segmented environment" aria-label="Wind source"><button aria-pressed={!realWeather} onClick={() => update('realWeatherMonth', 0)}>Manual wind</button><button aria-pressed={realWeather} onClick={() => update('realWeatherMonth', settings.realWeatherMonth || 7)}>Real weather</button></div>
+              {realWeather && <div className="weather-pickers"><label>Month <select aria-label="Weather month" value={settings.realWeatherMonth} onChange={e => update('realWeatherMonth', Number(e.target.value))}>{['January','February','March','April','May','June','July','August','September','October','November','December'].map((name, i) => <option key={name} value={i + 1}>{name}</option>)}</select></label><label>Hour <select aria-label="Weather scenario" value={settings.weatherScenario} onChange={e => update('weatherScenario', e.target.value as MissionSettings['weatherScenario'])}><option value="typical">Typical</option><option value="high_wind">High wind</option></select></label></div>}
+              {realWeather && <p className="field-help">{weatherError ? weatherError : !weather ? 'Loading weather profile…' : weatherHour ? `One real modelled hour for ${analog.name}: ${weatherHour.wind_speed_m_s.toFixed(1)} m/s from ${weatherHour.wind_from_deg.toFixed(0)}°, air ${weatherHour.air_density_kg_m3.toFixed(2)} kg/m³ (NASA POWER, ${weatherHour.timestamp_utc.slice(0, 10)}). Regional reanalysis, not a measurement at the pad.` : 'No complete weather record for this month and scenario.'}</p>}
+            </> : <p className="field-help">No real weather profile exists for {analog.name}; wind is your scenario setting.</p>)}</fieldset>
           <fieldset><legend>03 <span>Vehicle & landing limits</span></legend><div className="slider-grid">
             <Slider label="Propellant mass" value={settings.fuelMassKg} min={50} max={2000} step={50} unit="kg" onChange={v => update('fuelMassKg', v)} />
             <Slider label="Dry vehicle mass" value={settings.dryMassKg} min={100} max={5000} step={100} unit="kg" onChange={v => update('dryMassKg', v)} />
             <Slider label="Maximum thrust" value={settings.thrusterForceN} min={1000} max={50000} step={500} unit="N" onChange={v => update('thrusterForceN', v)} />
             <Slider label="Slope tolerance" value={settings.maxSlopeToleranceDeg} min={1} max={30} step={1} unit="°" onChange={v => update('maxSlopeToleranceDeg', v)} />
-            <Slider label="Crosswind" value={vacuum ? 0 : settings.windSpeedMs} min={0} max={30} step={1} unit="m/s" disabled={vacuum} onChange={v => update('windSpeedMs', v)} />
-          <Slider label="Dust interference" value={Math.round(settings.dust*100)} min={0} max={100} step={5} unit="%" onChange={v => update('dust', v/100)} />
-            <Slider label="Glare interference" value={Math.round(settings.glare*100)} min={0} max={100} step={5} unit="%" onChange={v => update('glare', v/100)} />
+            <Slider label="Crosswind" value={vacuum ? 0 : settings.windSpeedMs} min={0} max={30} step={1} unit="m/s" disabled={vacuum || realWeather} onChange={v => update('windSpeedMs', v)} />
           </div></fieldset>
-          <div className="config-footer"><span><span className="status-dot" />{storageAvailable ? 'Draft saved on this device' : 'Draft held in this session'}</span><button className="primary-button" disabled={!profile || validateSettings(settings).length > 0} onClick={reviewMission}>Review mission <ArrowRight size={17} /></button></div>
+          <fieldset><legend>04 <span>Sensor interference</span></legend><div className="segmented environment" aria-label="Interference source"><button aria-pressed={settings.siteConditions} onClick={() => update('siteConditions', true)}>From site data</button><button aria-pressed={!settings.siteConditions} onClick={() => update('siteConditions', false)}>Set manually</button></div>
+            <p className="field-help">{settings.siteConditions ? `Dust and glare are derived from ${analog.name}’s catalog surface data (material, albedo, sun elevation). The values used are listed in the flight report.` : 'Dust and glare are your scenario assumptions, not measurements.'}</p>
+            <div className="slider-grid">{!settings.siteConditions && <>
+            <Slider label="Dust interference" value={Math.round(settings.dust*100)} min={0} max={100} step={5} unit="%" onChange={v => update('dust', v/100)} />
+            <Slider label="Glare interference" value={Math.round(settings.glare*100)} min={0} max={100} step={5} unit="%" onChange={v => update('glare', v/100)} />
+            </>}
+          </div></fieldset>
+          <div className="config-footer"><span><span className="status-dot" />{storageAvailable ? 'Draft saved on this device' : 'Draft held in this session'}</span><button className="primary-button" disabled={!profile || validateSettings(settings).length > 0 || (realWeather && !weatherHour)} onClick={reviewMission}>Review mission <ArrowRight size={17} /></button></div>
         </div>
       </section>}
-      {step === 3 && mission && profile && <Suspense fallback={<div className="flight-workspace empty-data" role="status">Preparing descent controls…</div>}><Descent mission={mission} profile={profile} onExit={()=>setStep(2)} onReport={report=>{setFlight(report);setStep(4);}} /></Suspense>}
-      {step === 4 && flight && mission && <FlightReport flight={flight} mission={mission} onRetry={()=>setStep(2)} />}
+      {step === 3 && mission && profile && <Suspense fallback={<div className="flight-workspace empty-data" role="status">Preparing descent controls…</div>}><Descent mission={mission} profile={profile} weather={weather} onExit={()=>setStep(2)} onReport={report=>{setFlight(report);setStep(4);}} /></Suspense>}
+      {step === 4 && flight && mission && profile && <FlightReport flight={flight} mission={mission} profile={profile} onRetry={()=>setStep(2)} />}
       <footer className="workspace-footer"><span><span className="status-dot" /> {step === 0 ? 'Explore first. Validate with evidence.' : 'Real terrain. Explicit assumptions.'}</span><span>Earth data: Copernicus DEM <span className="footer-separator">/</span> <button className="text-button" onClick={() => setDialog('sources')}>Credits & limitations</button></span></footer>
     </main>
     {dialog === 'sources' && <Dialog title="Data, evidence & limitations" onClose={() => setDialog(null)}><div className="source-content">

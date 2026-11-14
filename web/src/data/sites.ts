@@ -28,9 +28,14 @@ export const analogs: AnalogSite[] = catalogJson.sites.filter(s => s.role === 'e
   available: !!s.terrain, description: s.description, manifestUrl: s.terrain?.manifest_url,
   source: s.evidence_url, matches: s.matches,
 })).sort((a, b) => Number(b.id === 'kilbourne-hole-v1') - Number(a.id === 'kilbourne-hole-v1'));
-analogs.push(
+// Placeholders only while the catalog has no entry for these candidates.
+const candidates: AnalogSite[] = [
   { id: 'haughton_crater', name: 'Haughton crater', region: 'Devon Island, Canada', lat: 75.38, lon: -89.68,
     available: false, description: 'Candidate location. A processed terrain pack and study footprint are still needed.', matches: [] },
   { id: 'qaidam_basin', name: 'Qaidam Basin', region: 'Qinghai, China', lat: 37.5, lon: 93.5,
     available: false, description: 'Candidate location. A processed terrain pack and study footprint are still needed.', matches: [] },
-);
+];
+analogs.push(...candidates.filter(c => !catalogSites.some(s => c.id.startsWith(s.id))));
+/** The catalog's terrain-descriptor score (0–1) for a proposed pairing, or null. */
+export const terrainScore = (targetId: string, analogId: string): number | null =>
+  siteCatalog.pairings.find(p => p.planetary_id === targetId && p.earth_id === analogId)?.terrain_score ?? null;

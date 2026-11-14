@@ -1,5 +1,25 @@
 # Team integration boundary — proposed v1
 
+## Update: fidelity score, sensor choice, site-derived interference, real weather
+
+- **Analog Fidelity Score.** The flight report flies the configured vehicle autonomously on the
+  planetary target's own terrain pack and on the Earth analog (`src/lib/fidelity.ts`, engine
+  `app/sim/src/fidelity.ts`). It shows the score, its four components and the catalog terrain
+  score for a proposed pairing. It compares simulated flights over two elevation grids only.
+- **Hazard sensor.** The configurator offers lidar, camera or no hazard sensor
+  (`MissionConfig.strategy.hazardSensor`).
+- **Sensor interference.** Dust and glare default to values the engine derives from the
+  analog's catalog surface data (`environment.interferenceSource: 'site'`); the manual sliders
+  remain (`'manual'`). The report lists the values used and their sources.
+- **Real weather.** In an Earth field test, six sites can use one real modelled hour (month,
+  typical or high-wind) from `data/environment` through `app/lib/environment-site.ts`
+  (`environment.realWeather`). The catalog and weather site IDs differ; the mapping is
+  `WEATHER_PROFILE_ID` in `src/lib/weather.ts`. Earth weather is never applied to a Moon or
+  Mars scenario.
+- `buildMission` takes an optional context (`terrainScore`, `weatherAvailable`);
+  `toSimInput` takes the loaded weather profile as an optional third argument.
+
+
 Updated after merging main at dd4cb18. The UI uses the shared location catalog and
 Tim's catalog-aware physics adapter. The only physics-source cleanup is removing
 an unused type import that prevented the frontend's strict TypeScript build.

@@ -2,7 +2,7 @@ import { normalizeTargetId, targets } from '../data/sites';
 import { validateSettings } from './mission';
 import type { MissionSettings } from './types';
 export interface SettingsProposal { settings: MissionSettings; targetId?: string; changed: string[] }
-const fields = ['mode', 'environment', 'fuelMassKg', 'dryMassKg', 'thrusterForceN', 'maxSlopeToleranceDeg', 'windSpeedMs', 'dust', 'glare'] as const;
+const fields = ['mode', 'environment', 'fuelMassKg', 'dryMassKg', 'thrusterForceN', 'maxSlopeToleranceDeg', 'windSpeedMs', 'dust', 'glare', 'hazardSensor', 'siteConditions', 'realWeatherMonth', 'weatherScenario'] as const;
 const obj = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
 function proposal(patch: Record<string, unknown>, current: MissionSettings, targetId?: unknown): SettingsProposal {
   if (typeof targetId === 'string') targetId = normalizeTargetId(targetId);
@@ -22,6 +22,9 @@ export function parseSettingsFile(text: string, current: MissionSettings): Setti
     const patch: Record<string, unknown> = { ...data.strategy, environment: data.environment.mode, windSpeedMs: data.environment.windSpeedMs };
     if (data.environment.dust !== undefined) patch.dust = data.environment.dust;
     if (data.environment.glare !== undefined) patch.glare = data.environment.glare;
+    if (data.environment.interferenceSource !== undefined) patch.siteConditions = data.environment.interferenceSource === 'site';
+    if (obj(data.environment.realWeather)) { patch.realWeatherMonth = data.environment.realWeather.month; patch.weatherScenario = data.environment.realWeather.scenario; }
+    else if (data.environment.realWeather === null) patch.realWeatherMonth = 0;
     return proposal(patch, current, obj(data.planetaryTarget) ? data.planetaryTarget.id : undefined);
   }
   if (obj(data.settings)) {
@@ -41,6 +44,7 @@ export function parseConditions(text: string, current: MissionSettings): Setting
     const clause = raw.trim().toLowerCase().replace(/\s+/g, ' ');
     if (/^(earth|earth field test)$/.test(clause)) { set('environment', 'earth'); continue; }
     if (/^(planetary|planetary physics)$/.test(clause)) { set('environment', 'planetary'); continue; }
+    if (/^(lidar|camera|no hazard sensor)$/.test(clause)) { set('hazardSensor', clause === 'no hazard sensor' ? 'none' : clause); continue; }
     if (/^(manual|autonomous)$/.test(clause)) { set('mode', clause === 'manual' ? 'MANUAL_CONTROL' : 'AUTONOMOUS_HAZARD_AVOID'); continue; }
     const specs = [
       ['fuelMassKg', `^(?:fuel|propellant)(?: mass)?(?: is| of)?[ :=]*${number} kg$`, 1],
@@ -49,14 +53,16 @@ export function parseConditions(text: string, current: MissionSettings): Setting
       ['thrusterForceN', `^(?:maximum )?thrust(?: is| of)?[ :=]*${number} n$`, 1],
       ['windSpeedMs', `^(?:cross)?wind(?: is| of)?[ :=]*${number} m/s$`, 1],
       ['maxSlopeToleranceDeg', `^slope(?: tolerance)?[ :=]*${number} (?:deg|degrees|°)$`, 1],
-      ['dust', `^dust[ :=]*${number}\s*%$`, 0.01],
-      ['glare', `^glare[ :=]*${number}\s*%$`, 0.01],
+      ['dust', `^dust[ :=]*${number}\\s*%$`, 0.01],
+      ['glare', `^glare[ :=]*${number}\\s*%$`, 0.01],
     ] as const;
     let matched = false;
     for (const [key, expression, factor] of specs) {
       const match = clause.match(new RegExp(expression));
       if (match) { set(key, Number(match[1]) * factor); matched = true; break; }
     }
+    // An explicit dust or glare value means manual interference.
+    if (matched && (('dust' in patch) || ('glare' in patch))) patch.siteConditions = false;
     if (!matched) throw new Error(`Could not interpret “${raw.trim()}”. Use explicit values and units like “wind 12 m/s”. Nothing has been applied.`);
   }
   return proposal(patch, current);

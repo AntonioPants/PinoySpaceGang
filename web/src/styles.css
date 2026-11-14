@@ -375,3 +375,9 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+.weather-pickers { display: flex; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
+.weather-pickers label { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+.weather-pickers select { background: #080808; color: inherit; border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; font: inherit; }
+.report-panel > ul { font-size: 12px; color: var(--muted); line-height: 1.7; }
+.report-panel p + h3, .report-panel ul + h3, .report-panel .note + h3 { margin-top: 30px; }
+.strategy-options + .segmented, .field-help + .segmented { margin-top: 12px; }

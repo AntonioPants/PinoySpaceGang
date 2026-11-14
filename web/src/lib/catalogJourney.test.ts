@@ -17,8 +17,9 @@ describe('shared catalog through the mission journey', () => {
   it.each(terrainSites)('loads, exports and simulates $name with its own terrain', async site => {
     localFetch();
     const profile = await loadProfile(undefined, site.manifestUrl, site.id);
-    const target = targets.find(t => site.matches.includes(t.id))!;
-    expect(target).toBeDefined();
+    // A site without a proposed pairing (e.g. Qaidam) is still flyable as an independent experiment.
+    const target = targets.find(t => site.matches.includes(t.id)) ?? targets[0];
+    if (site.matches.length) expect(site.matches).toContain(target.id);
     expect(profile.manifest.grid.width_m).toBe(4800);
     expect(profile.manifest.statistics.relief_m).toBeGreaterThan(0);
     expect(profile.manifest.source.sha256).toMatch(/^[a-f0-9]{64}$/);

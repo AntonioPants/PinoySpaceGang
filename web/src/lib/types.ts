@@ -30,6 +30,13 @@ export interface MissionSettings {
   fuelMassKg: number; dryMassKg: number; thrusterForceN: number;
   maxSlopeToleranceDeg: number; windSpeedMs: number;
   dust: number; glare: number;
+  /** Terrain sensor used for hazard detection. */
+  hazardSensor: 'lidar' | 'camera' | 'none';
+  /** True: dust and glare come from the analog site's catalog surface data; false: the manual sliders. */
+  siteConditions: boolean;
+  /** Earth field test only: 0 = manual wind; 1–12 = use the real weather profile for that month. */
+  realWeatherMonth: number;
+  weatherScenario: 'typical' | 'high_wind';
 }
 /** Proposed frontend handoff v1. Coordinate and unit conventions are explicit. */
 export interface MissionConfig {
@@ -40,9 +47,13 @@ export interface MissionConfig {
     sampleSpacingM: number; profileRow: number; verticalOffsetM: number;
     sourceSha256: string;
   };
-  strategy: { mode: MissionSettings['mode']; thrusterForceN: number; fuelMassKg: number; dryMassKg: number; maxSlopeToleranceDeg: number };
-  environment: { mode: MissionSettings['environment']; gravityMs2: number; windSpeedMs: number; atmosphereModel: 'none' | 'earth-standard' | 'mars-constant'; dust: number; glare: number };
-  evidence: { quantitativeSimilarityScore: null; analogFidelityScore: null; status: 'unvalidated-pair'; limitations: string[] };
+  strategy: { mode: MissionSettings['mode']; hazardSensor: MissionSettings['hazardSensor']; thrusterForceN: number; fuelMassKg: number; dryMassKg: number; maxSlopeToleranceDeg: number };
+  environment: { mode: MissionSettings['environment']; gravityMs2: number; windSpeedMs: number; atmosphereModel: 'none' | 'earth-standard' | 'mars-constant'; dust: number; glare: number;
+    interferenceSource: 'site' | 'manual';
+    /** Set when an Earth field test uses a real modelled hour instead of the manual wind. */
+    realWeather: { month: number; scenario: 'typical' | 'high_wind' } | null };
+  /** quantitativeSimilarityScore: the catalog's terrain-descriptor score for a proposed pairing (0–1), else null. */
+  evidence: { quantitativeSimilarityScore: number | null; analogFidelityScore: null; status: 'unvalidated-pair' | 'proposed-pair'; limitations: string[] };
 }
 export interface SimulationResult {
   success: boolean; failureReason?: string;

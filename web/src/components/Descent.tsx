@@ -4,11 +4,12 @@ import { SideView } from '../../../app/sim/viewer/components/SideView';
 import type { FlightTelemetry } from '../../../app/sim/src/types';
 import type { MissionConfig, TerrainProfile } from '../lib/types';
 import { toSimInput } from '../lib/simulation';
-export default function Descent({ mission, profile, onReport, onExit }: {mission:MissionConfig;profile:TerrainProfile;onReport:(flight:FlightTelemetry)=>void;onExit:()=>void}) {
+import type { EnvironmentProfile } from '../../../app/lib/environment.mjs';
+export default function Descent({ mission, profile, weather, onReport, onExit }: {mission:MissionConfig;profile:TerrainProfile;weather?:EnvironmentProfile|null;onReport:(flight:FlightTelemetry)=>void;onExit:()=>void}) {
   const lander = useLanderSim({speed:1,keyboard:mission.strategy.mode==='MANUAL_CONTROL'});
   const [error,setError]=useState(''), [started,setStarted]=useState(false);
   const outside=useRef(false);
-  function launch() { try { outside.current=false; setError(''); lander.launch(toSimInput(mission,profile)); setStarted(true); } catch(e) {setError(e instanceof Error?e.message:'Could not launch.');} }
+  function launch() { try { outside.current=false; setError(''); lander.launch(toSimInput(mission,profile,weather)); setStarted(true); } catch(e) {setError(e instanceof Error?e.message:'Could not launch.');} }
   useEffect(()=>lander.onFrame(sim=>{
     const boundX=(profile.manifest.grid.columns-1)*profile.sampleSpacingM/2;
     const boundY=(profile.manifest.grid.rows-1)*profile.sampleSpacingM/2;
