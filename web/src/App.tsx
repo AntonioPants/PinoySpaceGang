@@ -192,7 +192,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
               <button className="text-button" onClick={() => setDialog('sources')}>Inspect evidence & sources <ExternalLink size={13} /></button>
             </section>
           </> : <div className="empty-data"><Layers3 size={26} /><h3>Terrain handoff pending</h3><p>This candidate is listed in the project brief. Choose {available[0].name} to configure a mission with real elevation data.</p><button className="subtle-button" onClick={() => selectAnalog(available[0].id)}>Use {available[0].name}</button></div>}
-          <CatalogDetails site={selectedSite} />
+          <details className="pairing-explanation"><summary>Explore full site data and provenance</summary><CatalogDetails site={selectedSite} /></details>
           <div className="panel-actions"><button className="subtle-button" onClick={() => setStep(0)}><ArrowLeft size={16} /> Destination</button><button className="primary-button" disabled={!analog.available || !profile} onClick={() => setStep(2)}>Configure mission <ArrowRight size={17} /></button></div>
         </div>
       </section>}

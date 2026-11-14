@@ -117,7 +117,7 @@ See `../docs/GAME_VISION.md` for the full sequence and Tim's control-center inte
 
 ## Data team
 
-`src/data/sites.ts` projects `public/sites.json` into navigation labels; it does
+`src/lib/catalog.ts` loads `public/sites.json` into navigation labels; it does
 not own separate scientific records. Eleven Earth packs and seven planetary regions
 are available, including Haughton, Qaidam and Lucus Planum. Proposed pairings sort
 first, ranked by available terrain scores; other sites remain usable as experiments.

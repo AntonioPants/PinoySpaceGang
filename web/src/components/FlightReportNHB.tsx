@@ -75,7 +75,7 @@ export default function FlightReportNHB({ flight, mission, profile, analogEntry,
 
       <section className="nhb-outcome">
         <div>
-          <p className="nhb-parent">{body} scenario over Earth terrain</p>
+          <p className="nhb-parent">{mission.environment.mode === 'earth' ? 'Earth field test' : `${body} scenario over Earth terrain`}</p>
           <h1 id="nhb-title" tabIndex={-1}>{ok ? 'Touchdown complete' : 'Flight ended'}</h1>
           {ok ? <p className="nhb-lede">The simulated touchdown stayed within this vehicle’s speed, slope, tilt and roughness limits. This is a simulated outcome, not an engineering certification.</p>
             : <div className="nhb-bracket">

@@ -69,7 +69,7 @@ provider integration; never embed its credentials in the frontend.
 
 ## Data boundaries
 
-`src/data/sites.ts` derives navigation from `public/sites.json`. Proposed pairings
+`src/lib/catalog.ts` loads navigation from `public/sites.json`. Proposed pairings
 sort first, ranked by available terrain scores. Haughton and Qaidam now have local packs.
 Each available Earth site loads its own measured terrain and retains provenance
 through mission export and descent. Planetary DEMs feed report comparisons;

@@ -28,11 +28,15 @@ an Earth field test. Never silently switch physics because a scene changes locat
 
 ## Current implementation
 
-- Main through `e6a40e3` includes Tim's sensor controls, site interference, modelled
+- Main through `a1c7e5b` includes Tim's sensor controls, site interference, modelled
   Earth weather, guided comparison and stress-test scores. Existing physics remains
   the authoritative simulation. Scores are model outputs, not validated equivalence.
 - The shared catalog now has 11 Earth packs and 7 planetary targets, including
   Haughton, Qaidam and Lucus Planum. The UI reads this catalog rather than a second list.
+  Runtime-selected catalog entries pass through the console, physics and both reports.
+  Full source records and provenance remain expandable on the Earth testbed screen.
+- Tim's `tim/nhb-report-trial` is merged as an optional report view; the black/gold
+  game interface remains the default. Both presentations use the same final mission.
 - `web/src/game/GameSession.tsx` owns the scene sequence and final mission snapshot.
   It validates settings/terrain/weather before departure, ignores late completion
   callbacks, and passes the exact flown mission to the report.
@@ -94,3 +98,15 @@ new location, changing a loadout, boarding, changing console conditions, launchi
 completion/Skip, descent outcome and debrief. Confirm the report uses console edits.
 Test return-to-setup, rapid duplicate completion, reduced motion and a missing asset.
 Include scene credits/licences. No placeholder success results or invented imagery claims.
+
+## Integration verification (14 November 2026)
+
+- Production TypeScript/Vite build passes; a bundle-size advisory remains.
+- 115 web/physics tests pass, including all 11 Earth packs through load/export/simulation,
+  scene ordering, duplicate completion guards and wrong-site weather rejection.
+- Catalog consumer checks and all four Node environment tests pass.
+- Browser: equipment → console edits → automatic descent → touchdown → both report
+  styles → retry retains the flown settings. Invalid wind blocks launch. Console
+  checked at 390 px width without horizontal overflow.
+- Python publication tests were not run in this checkout because pytest is not installed.
+  The catalog assets are consumed unchanged from main and pass the JavaScript checks.
