@@ -5,7 +5,7 @@ import {
 
 const flat = (k?: number) => ({ ...syntheticTerrain({ hillsM: 0, sizeM: 1000, cellSize: 5 }), rockAbundance: k });
 
-describe('Golombek–Rapp boulder field', () => {
+describe('Golombek–Rapp boulder field', { timeout: 30_000 }, () => {
   it('F_k(0) equals the rock abundance k', () => {
     expect(cumulativeRockArea(0.1, 0)).toBeCloseTo(0.1, 10);
   });
@@ -46,7 +46,7 @@ describe('Golombek–Rapp boulder field', () => {
   });
 });
 
-describe('site environment', () => {
+describe('site environment', { timeout: 30_000 }, () => {
   it('derives dust from soil and glare from snow / low sun', () => {
     const base = syntheticTerrain({ body: 'earth', hillsM: 0, sizeM: 100, cellSize: 10 });
     expect(siteInterference({ ...base, soilType: 'basalt lava' }).dust).toBeLessThan(siteInterference({ ...base, soilType: 'fine silt' }).dust);

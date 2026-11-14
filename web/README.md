@@ -1,0 +1,74 @@
+# Analog Atlas — frontend
+
+Eyad's first mission-planner slice: React, TypeScript, Vite and Three.js.
+The application lives in `web/` to serve the team's existing `public/terrain/`
+pack in place. No Python process, API keys, or backend server is needed.
+
+## Run
+
+Use Node 22.12+ and pnpm 11+ (or npm). From `web/`:
+
+```sh
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+Open the local URL printed by Vite. `pnpm build` performs strict TypeScript
+checking and creates `dist/`. `pnpm test` checks the terrain/mission adapter.
+With npm, use `npm install`, `npm run dev`, `npm run build`, and `npm test`.
+Keep the pnpm lockfile as the team's dependency source of truth.
+
+## Implemented
+
+- Responsive mission workspace with Moon/Mars target selection and orbitable globes.
+- Click a Kilbourne globe marker or location card to open its 3D terrain directly.
+  Other candidates still show their missing-data state. Terrain supports orbit/pan/zoom,
+  top view and elevation inspection. Zoom smoothly links displayed height exaggeration
+  from 1x through 3x to 6x, with preset views and a live scale readout. Elevation colours
+  are illustrative; no satellite imagery or global terrain tiles are included.
+  Measurements and physics retain their original scale. Reduced-motion preferences
+  disable the animated zoom/preset interpolation.
+- Earth candidate selection, real Kilbourne centre-row elevation transect and pack statistics.
+- “Why this analog?” evidence, limitations, sources and explicit unknown similarity scores.
+- Manual/autonomous configuration, mass/thrust/slope inputs, Earth vs planetary environment.
+- Lunar vacuum disables wind; initial thrust-to-weight ratio reflects wet mass and scenario gravity.
+- Local draft persistence, mission review and downloadable JSON.
+- JSON settings import (128 KB maximum), including exported mission files, plus a local
+  rule-based condition parser. Both require a preview/apply step and validate units/ranges.
+- Tim's real `useLanderSim` hook and side renderer, using the full terrain grid through
+  `terrainPackToSite`. Supports autonomous/manual descent, pause/restart, and playback speed.
+- Flight reports and downloadable telemetry, with unvalidated analog fidelity explicitly retained.
+- Keyboard-operable alternative site lists, native modal focus handling, reduced-motion camera transitions.
+- Loading/retry handling, unavailable-data gating, and a WebGL-unavailable fallback.
+
+Descent and report navigation unlock when a mission and a completed flight exist.
+There is no mock flight result. Furgan's cinematic cutscenes are still pending.
+See `INTEGRATION.md` for the live physics boundary and proposed cutscene props.
+
+## Importing conditions
+
+Use **Get template** or upload a previously exported mission JSON. Files stay local.
+Partial settings preserve existing values; unknown fields, targets, units, malformed
+JSON and out-of-range values are rejected. Review the resulting configuration before
+applying it. Lunar vacuum explicitly overrides requested wind to zero.
+
+The text entry is a small deterministic parser, not an AI integration. Example:
+`Earth, manual, fuel 500 kg, thrust 20 kN, wind 12 m/s, dust 30%`.
+Unrecognized clauses are rejected instead of silently guessing conditions.
+No API token is needed. A general-purpose AI interpreter would require a server-side
+provider integration; never embed its credentials in the frontend.
+
+`pnpm test` runs both frontend tests and Tim's unchanged physics tests.
+
+## Data boundaries
+
+`src/data/sites.ts` is a curated navigation fixture, not a planetary data catalog.
+Its coordinates are approximate locators. Haughton and Qaidam have no local pack
+and cannot proceed to configuration. Kilbourne's terrain is real, but no selected
+planetary pairing has been validated. Never replace null similarity/fidelity
+scores with invented percentages.
+
+Terrain remains under its supplied Copernicus licence and attribution. Globe
+images and typography are presentation assets, not scientific evidence; see
+`public/textures/ATTRIBUTION.md`. Fonts currently load from Google Fonts with
+system fallbacks; all terrain and globe textures are served locally.

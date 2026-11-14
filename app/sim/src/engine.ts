@@ -25,7 +25,7 @@ import {
   G0,
 } from './constants.ts';
 import { createRng } from './rng.ts';
-import { noisyField, roughnessAt, slopeDegAt, type HeightField } from './terrain.ts';
+import { noisyField, roughnessAt, slopeDegAt } from './terrain.ts';
 import { Surface, type HazardField } from './surface.ts';
 import { siteInterference } from './environment.ts';
 import { evaluateTouchdown } from './touchdown.ts';

@@ -32,7 +32,14 @@ The Field Shift crop tool is gone. `main` was rebuilt as the simulator (see `REA
     for the team's terrain formats are `profileToSite()` (terrain_profile JSON) and
     `terrainPackToSite()` (manifest + `.f32`). See `app/sim/README.md`.
 
-The frontend is React. The globe, UI and cutscene layout is not decided yet; record it here once it is.
+Eyad's mission frontend is React/TypeScript + Vite in `web/`, beside the terrain
+pack's existing public assets. It uses Three.js globes and a local measured 3D
+terrain explorer, JSON/text condition import, and connects to Tim's engine through
+`web/src/lib/simulation.ts` and the unchanged `useLanderSim` hook. Flight reports
+consume actual telemetry. Run `cd web && pnpm install && pnpm dev`; `pnpm build`
+typechecks/builds and `pnpm test` includes frontend and physics tests. See
+`web/INTEGRATION.md` for coordinate conventions and cutscene interfaces.
+Furgan's cinematic cutscenes are not connected yet.
 
 ## Team roles and ownership
 

@@ -17,6 +17,10 @@ Thumbs.db
 # Environment and credentials
 .env
 .netrc
+node_modules/
+dist/
+*.tsbuildinfo
+web/.vite/
 
 # Downloaded source rasters are large and reproducible.
 data/raw/**

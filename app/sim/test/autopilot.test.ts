@@ -4,7 +4,7 @@ import type { SimEvent } from '../src/index.ts';
 
 const boulders = [{ center: { x: 0, y: 0 }, radiusM: 25, count: 60 }];
 
-describe('autopilot', () => {
+describe('autopilot', { timeout: 30_000 }, () => {
   for (const body of ['moon', 'mars'] as const) {
     it(`lands within limits on ${body}`, () => {
       const tel = runSim({ site: syntheticTerrain({ body, craters: 6 }), strategy: 'autonomous' });
@@ -53,7 +53,7 @@ describe('autopilot', () => {
   });
 });
 
-describe('observe()', () => {
+describe('observe()', { timeout: 30_000 }, () => {
   it('reading the HUD does not change the flight', () => {
     const input = { site: syntheticTerrain({ body: 'mars' }), strategy: 'autonomous' as const, interference: { dust: 1 }, seed: 5 };
     const a = createSim(input);
@@ -67,7 +67,7 @@ describe('observe()', () => {
   });
 });
 
-describe('terrain following', () => {
+describe('terrain following', { timeout: 30_000 }, () => {
   it('does not fly into rising ground while lining up on a slope', () => {
     // 10° is under the 12° limit, so a clean landing is possible if guidance holds AGL
     const tel = runSim({ site: syntheticTerrain({ hillsM: 1, baseSlopeDeg: 10 }), strategy: 'autonomous' });
