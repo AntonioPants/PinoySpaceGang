@@ -39,7 +39,10 @@ terrain explorer, JSON/text condition import, and connects to Tim's engine throu
 consume actual telemetry. Run `cd web && pnpm install && pnpm dev`; `pnpm build`
 typechecks/builds and `pnpm test` includes frontend and physics tests. See
 `web/INTEGRATION.md` for coordinate conventions and cutscene interfaces.
-Furgan's cinematic cutscenes are not connected yet.
+Furgan's cutscenes (Three.js, generated in code) are in `web/src/components/cutscene/`; test bench:
+open the web app with `?cutscene-demo`. They are not yet wired into the descent screen. His Flight
+Lab (live 3D descent with sliders) is in `app/flightlab/`: `npm install && npm run build` writes
+`dist/flight-lab.html`. Prebuilt previews are in `docs/previews/`.
 
 ## Team roles and ownership
 
