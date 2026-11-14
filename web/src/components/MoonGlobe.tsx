@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import * as Cesium from 'cesium';
 import Globe from './Globe';
+import { createLunarSiteMarkers } from '../lib/lunarSiteMarkers';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 type Point = { id: string; name: string; lat: number; lon: number };
@@ -48,7 +49,7 @@ export default function MoonGlobe({ points, selected, onSelect }: Props) {
         tileset.tileFailed.addEventListener(() => { if (!disposed) setRenderStatus('Some Cesium tiles failed to load'); });
         tileset.tileVisible.addEventListener(() => { if (!disposed && !firstTile) { firstTile = true; window.clearTimeout(timeout); setRenderStatus('Detailed Cesium Moon · live terrain'); } });
         viewer.scene.primitives.add(tileset);
-        for (const point of points) viewer.entities.add({ id: point.id, name: point.name, position: Cesium.Cartesian3.fromDegrees(point.lon, point.lat, 5000, Cesium.Ellipsoid.MOON), point: { pixelSize: 10, color: Cesium.Color.GOLD, outlineColor: Cesium.Color.BLACK, outlineWidth: 2, disableDepthTestDistance: 0 } });
+        for (const marker of createLunarSiteMarkers(points, () => viewer!.camera.positionWC, () => selectedRef.current)) viewer.entities.add(marker);
         const point = points.find(p => p.id === selectedRef.current) ?? points[0];
         if (point) viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(point.lon, point.lat, 4500000, Cesium.Ellipsoid.MOON) });
         handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
@@ -65,8 +66,7 @@ export default function MoonGlobe({ points, selected, onSelect }: Props) {
     const viewer = viewerRef.current, point = points.find(p => p.id === selected);
     if (!viewer || viewer.isDestroyed() || !point) return;
     viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(point.lon, point.lat, 4500000, Cesium.Ellipsoid.MOON), duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1.2 });
-    for (const entity of viewer.entities.values) if (entity.point) entity.point.color = new Cesium.ConstantProperty(entity.id === selected ? Cesium.Color.GOLD : Cesium.Color.WHITE);
   }, [selected, points]);
   if (!online || failed) return <div className="moon-fallback"><Globe body="Moon" points={points} selected={selected} onSelect={onSelect} /><span className="moon-status" role="status">Using old offline Moon model · {!online ? 'No network connection' : renderStatus}<button onClick={() => { setOnline(navigator.onLine); setFailed(false); }}>Retry Cesium</button></span></div>;
-  return <div className="globe-view"><div ref={host} className="globe-canvas" aria-label="Cesium Moon. Drag to orbit; use the destination list to select a site." /><span className="globe-disclaimer">Cesium Moon · approximate site locators</span><span className="moon-status" role="status">{renderStatus}</span></div>;
+  return <div className="globe-view"><div ref={host} className="globe-canvas" aria-label="Cesium Moon. Click a site dot to select it, or use the destination list. Drag to orbit." /><span className="globe-disclaimer">Cesium Moon · Click a site dot to select · Approximate study-area locators</span><span className="moon-status" role="status">{renderStatus}</span></div>;
 }
