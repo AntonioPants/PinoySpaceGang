@@ -6,6 +6,7 @@ import Dialog from './components/Dialog';
 import TerrainExplorer from './components/TerrainExplorer';
 import ConditionsImport from './components/ConditionsImport';
 import FlightReport from './components/FlightReport';
+import FlightReportNHB from './components/FlightReportNHB';
 import type { FlightTelemetry } from '../../app/sim/src/types';
 import { analogs, normalizeTargetId, targets } from './data/sites';
 import { hasWeatherProfile, loadWeatherProfile } from './lib/weather';
@@ -44,6 +45,8 @@ export default function App() {
   const [downloadError, setDownloadError] = useState('');
   const [terrainView, setTerrainView] = useState(false);
   const [flight, setFlight] = useState<FlightTelemetry | null>(null);
+  // Design trial: ?style=nhb opens the report in the 1976 manual style (docs/DESIGN_FRAMEWORK.md).
+  const [reportStyle, setReportStyle] = useState<'standard' | 'nhb'>(() => new URLSearchParams(location.search).get('style') === 'nhb' ? 'nhb' : 'standard');
   const bodyPoints = useMemo(() => targets.filter(t => t.body === target.body), [target.body]);
   const sortedAnalogs = useMemo(() => [...analogs].sort((a, b) => Number(b.matches.includes(targetId)) - Number(a.matches.includes(targetId))), [targetId]);
   const vacuum = settings.environment === 'planetary' && target.body === 'Moon';
@@ -192,7 +195,11 @@ export default function App() {
         </div>
       </section>}
       {step === 3 && mission && profile && <Suspense fallback={<div className="flight-workspace empty-data" role="status">Preparing descent controls…</div>}><Descent mission={mission} profile={profile} weather={weather} onExit={()=>setStep(2)} onReport={report=>{setFlight(report);setStep(4);}} /></Suspense>}
-      {step === 4 && flight && mission && profile && <FlightReport flight={flight} mission={mission} profile={profile} onRetry={()=>setStep(2)} />}
+      {step === 4 && flight && mission && profile && <>
+        <FlightReport flight={flight} mission={mission} profile={profile} onRetry={()=>setStep(2)} />
+        <p className="field-help"><button className="text-button" onClick={() => setReportStyle('nhb')}>View this report in the 1976 manual style (design trial)</button></p>
+        {reportStyle === 'nhb' && <FlightReportNHB flight={flight} mission={mission} profile={profile} onRetry={()=>{setReportStyle('standard');setStep(2);}} onStandardView={() => setReportStyle('standard')} />}
+      </>}
       <footer className="workspace-footer"><span><span className="status-dot" /> {step === 0 ? 'Explore first. Validate with evidence.' : 'Real terrain. Explicit assumptions.'}</span><span>Earth data: Copernicus DEM <span className="footer-separator">/</span> <button className="text-button" onClick={() => setDialog('sources')}>Credits & limitations</button></span></footer>
     </main>
     {dialog === 'sources' && <Dialog title="Data, evidence & limitations" onClose={() => setDialog(null)}><div className="source-content">

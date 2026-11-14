@@ -1,0 +1,137 @@
+/*
+ * Trial: 1976 NASA Graphics Standards Manual style (docs/DESIGN_FRAMEWORK.md).
+ * Everything is scoped under .nhb so the rest of the app is untouched.
+ * Rules followed: white surface, black hairlines, no shadows, no tints of red, flush-left text,
+ * red only on white, 100% white on dark. Colours are screen approximations of the manual's inks.
+ */
+.nhb {
+  --white: #ffffff;
+  --black: #000000;
+  --red: #fc3d21;        /* NASA Red */
+  --blue: #0b3d91;       /* Federal Blue, masthead band only */
+  --gray: #8a857c;       /* NASA Warm Gray */
+  --unit: 6px;           /* 3 units = one clear-space buffer */
+  --ui: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --data: Futura, "Jost", "Century Gothic", "Trebuchet MS", sans-serif;
+  --log: "Times New Roman", Times, serif;
+  --doc: "EB Garamond", Garamond, "Adobe Garamond Pro", Georgia, serif;
+
+  position: fixed; inset: 0; z-index: 50; overflow-y: auto;
+  background: var(--white); color: var(--black);
+  font-family: var(--ui); font-size: 15px; line-height: 1.45; text-align: left;
+  display: flex; flex-direction: column;
+}
+.nhb *, .nhb *::before, .nhb *::after { box-sizing: border-box; box-shadow: none; text-shadow: none; letter-spacing: normal; }
+.nhb h1, .nhb h2, .nhb h3, .nhb p, .nhb ul, .nhb ol, .nhb dl, .nhb dd, .nhb figure { margin: 0; padding: 0; }
+.nhb ul, .nhb ol { list-style: none; }
+.nhb :focus-visible { outline: 3px solid var(--black); outline-offset: 2px; }
+
+/* ---- masthead: white band over Federal Blue band ---- */
+.nhb-white-band { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: calc(var(--unit) * 3) 36px; }
+.nhb-stem { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.nhb-stem-mark { font-family: var(--data); font-weight: 600; font-size: 34px; line-height: 1; }
+.nhb-stem-light { font-weight: 300; font-size: 26px; line-height: 1; }
+.nhb-patch-bay { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 13px; white-space: nowrap; flex: none; }
+.nhb-patch-bay small { display: block; font-weight: 300; font-size: 12px; }
+.nhb .nhb-blue-band { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); background: var(--blue); color: var(--white); padding: 0 36px; }
+.nhb-blue-band > div { padding: 12px 18px 12px 0; }
+.nhb-blue-band dt { font-family: var(--data); font-weight: 600; font-size: 11px; text-transform: uppercase; }
+.nhb-blue-band dd { font-family: var(--data); font-weight: 300; font-size: 17px; margin-top: 2px; overflow-wrap: anywhere; }
+.nhb-status dd { font-weight: 600; font-size: 22px; }
+.nhb-status.nogo { background: var(--white); color: var(--red); padding-left: 14px; margin: 6px 0; }
+.nhb-status.nogo dt { color: var(--black); }
+
+/* ---- sheet ---- */
+.nhb-sheet { flex: 1; align-self: flex-start; width: 100%; max-width: 1276px; padding: 0 36px 48px; }
+.nhb-folio { display: flex; justify-content: space-between; font-family: var(--data); font-weight: 300; font-size: 13px; padding: 12px 0; border-bottom: 1px solid var(--black); }
+.nhb-outcome { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 36px; align-items: start; padding: 30px 0; }
+.nhb-parent { font-weight: 300; font-size: 19px; }
+.nhb h1 { font-weight: 500; font-size: clamp(34px, 5vw, 56px); line-height: 1.05; margin-top: 2px; }
+.nhb .nhb-lede { font-family: var(--doc); font-size: 19px; line-height: 1.5; max-width: 62ch; margin-top: 14px; }
+.nhb-actions { display: flex; flex-direction: column; gap: 8px; min-width: 230px; }
+.nhb-button { font: 500 14px var(--ui); text-align: left; padding: 11px 14px; background: var(--white); color: var(--black); border: 1px solid var(--black); border-radius: 0; cursor: pointer; transition: background 110ms linear, color 110ms linear; }
+.nhb-button:hover, .nhb-button.solid { background: var(--black); color: var(--white); }
+.nhb-button.solid:hover { background: var(--white); color: var(--black); }
+
+/* failure: bracket isolation + emergency patch and sub-patch */
+.nhb-bracket { position: relative; margin-top: 18px; padding: 14px 22px; max-width: 560px; }
+.nhb-bracket::before, .nhb-bracket::after { content: ""; position: absolute; top: 0; bottom: 0; width: 12px; border: 4px solid var(--black); }
+.nhb-bracket::before { left: 0; border-right: 0; }
+.nhb-bracket::after { right: 0; border-left: 0; }
+.nhb-patch { background: var(--red); padding: 5px; }
+.nhb-patch span { display: block; border: 2px solid var(--white); color: var(--white); font-weight: 500; font-size: 26px; text-transform: uppercase; padding: 10px 14px; }
+.nhb-subpatch { background: var(--black); color: var(--white); margin-top: 6px; padding: 10px 19px; font-family: var(--data); font-size: 15px; }
+.nhb-subpatch span { display: block; }
+
+/* ---- diagram + readings ---- */
+.nhb-columns { display: grid; grid-template-columns: minmax(0, 1fr) 320px; border-top: 1px solid var(--black); }
+.nhb-diagram { border: 1px solid var(--black); margin: 18px 18px 18px 0 !important; }
+.nhb-breathing { display: flex; justify-content: space-between; gap: 12px; padding: 9px 12px; border-bottom: 1px solid var(--black); font-weight: 500; font-size: 13px; }
+.nhb-breathing span:last-child { font-weight: 300; }
+.nhb-diagram svg { display: block; width: 100%; height: auto; }
+.nhb-diagram svg text { font: 300 12px var(--data); fill: var(--black); }
+.nhb-diagram svg text.tag { font-weight: 600; }
+.nhb-diagram figcaption { font-family: var(--log); font-size: 14px; padding: 8px 12px; border-top: 1px solid var(--black); }
+.nhb-side { border-left: 1px solid var(--black); padding: 18px 0 18px 18px; }
+.nhb h2 { font-weight: 500; font-size: 17px; margin-bottom: 10px; }
+.nhb-slats li { display: grid; grid-template-columns: 1fr auto 14px; column-gap: 10px; align-items: baseline; padding: 9px 0; border-top: 1px solid var(--black); }
+.nhb-slats li:last-child { border-bottom: 1px solid var(--black); }
+.nhb-slat-label { font-weight: 500; font-size: 14px; }
+.nhb-slat-value { font-family: var(--data); font-weight: 600; font-size: 20px; font-variant-numeric: tabular-nums; text-align: right; }
+.nhb-slat-limit { grid-column: 1 / 3; font-family: var(--data); font-weight: 300; font-size: 12px; color: var(--black); }
+.nhb-dot { grid-row: 1; grid-column: 3; width: 10px; height: 10px; background: var(--black); align-self: center; }
+.nhb-slats li:not(:has(.nhb-slat-limit:not(:empty))) .nhb-dot { background: none; }
+.nhb-slats li.over .nhb-dot { background: var(--red); }
+.nhb-slats li.over .nhb-slat-value { color: var(--red); }
+
+/* ---- sections ---- */
+.nhb-section { border-top: 1px solid var(--black); padding: 24px 0; }
+.nhb-scores { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--black); }
+.nhb-scores > div { padding: 14px 16px; border-left: 1px solid var(--black); }
+.nhb-scores > div:first-child { border-left: 0; }
+.nhb-scores span { display: block; font-weight: 500; font-size: 13px; }
+.nhb-scores strong { display: block; font-family: var(--data); font-weight: 600; font-size: 44px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.nhb-scores small { font-weight: 300; font-size: 15px; }
+.nhb-bars { margin-top: 18px; max-width: 760px; }
+.nhb-bars p { font-weight: 500; font-size: 13px; margin-bottom: 6px; }
+.nhb-bar-row { display: grid; grid-template-columns: 130px 1fr 48px; gap: 10px; align-items: center; padding: 4px 0; font-size: 14px; }
+.nhb-bar-track { height: 16px; border: 1px solid var(--black); }
+.nhb-bar-track i { display: block; height: 100%; background: var(--black); }
+.nhb-bar-track i.analog { background: var(--gray); }
+.nhb-bar-row b { font-family: var(--data); font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.nhb-method { margin-top: 18px; max-width: 70ch; font-family: var(--doc); font-size: 17px; line-height: 1.55; }
+.nhb-method p + p { margin-top: 1em; }
+.nhb-table { border-collapse: collapse; width: 100%; max-width: 760px; }
+.nhb-table th, .nhb-table td { text-align: left; padding: 8px 12px 8px 0; border-top: 1px solid var(--black); vertical-align: baseline; }
+.nhb-table tr:last-child th, .nhb-table tr:last-child td { border-bottom: 1px solid var(--black); }
+.nhb-table th { font-weight: 500; font-size: 14px; }
+.nhb-num { font-family: var(--data); font-weight: 600; font-size: 16px; font-variant-numeric: tabular-nums; }
+/* provenance badge, after the Vinylcal: a white rounded field that works on any background */
+.nhb-vinylcal { display: inline-flex; gap: 8px; align-items: baseline; background: var(--white); border: 1px solid var(--black); border-radius: 5px; padding: 2px 9px; font-family: var(--data); font-weight: 300; font-size: 12px; }
+.nhb-vinylcal b { font-weight: 600; text-transform: uppercase; }
+.nhb-vinylcal b.alert { color: var(--red); }
+
+/* ---- ceremonial mode ---- */
+.nhb-certificate { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 30px; align-items: center; margin-top: 18px; padding: 30px; border: 1px solid var(--black); max-width: 820px; font-family: var(--doc); font-size: 19px; line-height: 1.5; }
+.nhb-certificate h3 { font-family: var(--doc); font-weight: 700; font-size: 34px; line-height: 1.1; margin-bottom: 12px; }
+.nhb-certificate p + p { margin-top: 0.8em; }
+
+/* ---- CAPCOM strip: dark surface, so everything is pure white ---- */
+.nhb-capcom { background: var(--black); color: var(--white); padding: 14px 36px 18px; }
+.nhb-capcom h2 { font-size: 13px; margin-bottom: 6px; }
+.nhb-capcom ol { font-family: var(--log); font-size: 15px; line-height: 1.5; columns: 2; column-gap: 48px; }
+.nhb-capcom time { font-family: var(--data); font-weight: 600; font-size: 13px; margin-right: 12px; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 900px) {
+  .nhb-white-band, .nhb-sheet, .nhb-capcom { padding-left: 16px; padding-right: 16px; }
+  .nhb .nhb-blue-band { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 0 16px; }
+  .nhb-outcome, .nhb-columns, .nhb-scores { grid-template-columns: minmax(0, 1fr); }
+  .nhb-diagram { margin-right: 0 !important; }
+  .nhb-side { border-left: 0; padding-left: 0; }
+  .nhb-scores > div { border-left: 0; border-top: 1px solid var(--black); }
+  .nhb-scores > div:first-child { border-top: 0; }
+  .nhb-capcom ol { columns: 1; }
+  .nhb-white-band { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .nhb-certificate { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { .nhb-button { transition: none; } }
