@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { CutsceneAudio } from "./audio";
-import { buildLander, type Lander } from "./lander";
+import { buildLander, type Lander, type LanderSpec } from "./lander";
 import { Particles } from "./particles";
 import { DEFAULT_START, type FlightLike, type FlightOutcome } from "./flight";
 import { PRESETS, type CutsceneEnv, type EndingParams, type EnvLook } from "./presets";
@@ -13,6 +13,7 @@ export interface EngineOptions {
   muted?: boolean; showSkip?: boolean;
   letterbox?: boolean;                   // cinema bars top and bottom (default true)
   boulders?: Boulder[];                  // extra rocks to draw (scene metres), e.g. synthetic test hazards
+  equipment?: LanderSpec;                // which lander hardware to draw; omit for the generic lander
   terrain?: TerrainPack;                 // real terrain; omit for the procedural landscape
   landing?: { x: number; z: number };    // pad position in pack metres; default: flat spot picked from the data
 }
@@ -127,7 +128,7 @@ export class CutsceneEngine {
 
     this.terrain = buildTerrain(this.look, opts.terrain ? undefined : env.elevation, env.seed ?? 7, opts.terrain, opts.landing, opts.boulders);
     this.scene.add(this.terrain.group);
-    this.lander = buildLander();
+    this.lander = buildLander(opts.equipment);
     this.smoke.points.renderOrder = 2; this.fire.points.renderOrder = 3;
     this.scene.add(this.lander.group, this.fire.points, this.smoke.points, this.engineLight, this.flashLight);
 

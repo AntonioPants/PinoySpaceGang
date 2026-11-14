@@ -13,6 +13,6 @@ export default function EarthApproachScene({ mission, reducedMotion, onComplete,
   const { start, target } = flightSetup(mission);
   return <SceneFrame title={`Approaching ${mission.earthAnalog.name}`} reducedMotion={reducedMotion} onComplete={onComplete}
     detail="The lander arrives 1,000 m above the ground, 400 m west of the target, and the descent begins.">
-    {muted => <Cutscene fullscreen={immersive} kind="opening" env={env} terrainUrl={terrainUrl} requiredTerrainId={mission.earthAnalog.id} start={start} target={target} muted={muted} showSkip={false} onDone={onComplete} />}
+    {muted => <Cutscene fullscreen={immersive} kind="opening" env={env} terrainUrl={terrainUrl} requiredTerrainId={mission.earthAnalog.id} start={start} target={target} equipment={mission.equipment} muted={muted} showSkip={false} onDone={onComplete} />}
   </SceneFrame>;
 }

@@ -46,7 +46,7 @@ export default function Descent3D({ mission, profile, entry, weather, autoStart 
       const target = input.target ?? { x: 0, y: 0 };
       const conditions = flight.telemetry().environment;
       view.current?.dispose();
-      const scene = new FlightView(box.current, sceneEnv(mission).env, { terrain: pack, landing: simToPack(pack, target), letterbox: false, showSkip: false, muted });
+      const scene = new FlightView(box.current, sceneEnv(mission).env, { terrain: pack, landing: simToPack(pack, target), letterbox: false, showSkip: false, muted, equipment: mission.equipment });
       scene.speed = speed; scene.camMode = camera;
       const setup: FlightSetup = {
         target, refElevation: flight.terrain.baseHeightAt(target.x, target.y), gravity: flight.gravity, airDensity: flight.airDensity,

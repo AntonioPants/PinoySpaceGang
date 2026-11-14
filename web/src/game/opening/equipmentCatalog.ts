@@ -4,9 +4,9 @@ import { equipmentLoadouts } from '../equipment';
 /** Yousef owns replacement data and physics mappings. These are explicitly prototype choices. */
 export const vehicles = equipmentLoadouts.map(v => ({ ...v, detail: `${v.settings.dryMassKg?.toLocaleString()} kg dry · ${(v.settings.thrusterForceN! / 1000).toFixed(0)} kN thrust` }));
 export const landingGear = [
-  { id: 'standard-four', name: 'Four-point gear', detail: 'Compact stance with four circular footpads.', radius: 3, pad: .42 },
-  { id: 'wide-four', name: 'Wide stance gear', detail: 'A wider four-leg layout for visual comparison.', radius: 3.8, pad: .55 },
-  { id: 'survey-six', name: 'Six-point gear', detail: 'Six radial supports and broad contact pads.', radius: 3.3, pad: .5 },
+  { id: 'standard-four', name: 'Four-point gear', detail: 'Compact stance with four circular footpads.' },
+  { id: 'wide-four', name: 'Wide stance gear', detail: 'A wider four-leg layout for visual comparison.' },
+  { id: 'survey-six', name: 'Six-point gear', detail: 'Six radial supports and broad contact pads.' },
 ] as const;
 export const sensors: { id: MissionSettings['hazardSensor']; name: string; detail: string }[] = [
   { id: 'lidar', name: 'Lidar scanner', detail: 'Active terrain sensing for hazard avoidance.' },

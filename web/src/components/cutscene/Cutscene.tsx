@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { LanderSpec } from "./lander";
 import { CutsceneEngine, type CutsceneKind } from "./engine";
 import type { FlightLike, StartState } from "./flight";
 import type { CutsceneEnv, EndingParams } from "./presets";
@@ -22,6 +23,7 @@ interface Props {
   terrainUrl?: string;         // or a pack folder to load, e.g. "/terrain/kilbourne-hole-v1/"
   requiredTerrainId?: string; // mission scenes must not silently use a procedural/wrong-site substitute
   landing?: { x: number; z: number };   // override: scene origin in pack metres
+  equipment?: LanderSpec;      // the selected lander hardware, drawn on the ship
   muted?: boolean;
   showSkip?: boolean;           // false when the host page provides its own Skip control
   onDone?: () => void;         // fires when the cutscene ends or is skipped
@@ -32,7 +34,7 @@ interface Props {
  * Plays one cutscene. Mount it after a user click so sound is allowed to start.
  * The scene is centred on the sim's target (opening) or on the flight's touchdown point (ending).
  */
-export default function Cutscene({ kind, env, flight, start, target, params, terrain, terrainUrl, requiredTerrainId, landing, muted = false, showSkip = true, onDone, className, fullscreen = false }: Props) {
+export default function Cutscene({ kind, env, flight, start, target, params, terrain, terrainUrl, requiredTerrainId, landing, equipment, muted = false, showSkip = true, onDone, className, fullscreen = false }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const engine = useRef<CutsceneEngine | null>(null);
   const done = useRef(onDone); done.current = onDone;
@@ -45,7 +47,7 @@ export default function Cutscene({ kind, env, flight, start, target, params, ter
   const lp = flight?.summary?.landingPoint;
   const centre = kind === "opening" ? target ?? { x: 0, y: 0 } : lp ?? target ?? { x: 0, y: 0 };
   const origin = landing ?? (pack ? simToPack(pack, centre) : null);
-  const envKey = JSON.stringify(env), landKey = JSON.stringify(origin);
+  const envKey = JSON.stringify(env), landKey = JSON.stringify(origin), equipKey = JSON.stringify(equipment ?? null);
 
   useEffect(() => {
     if (terrain || !terrainUrl) return;
@@ -58,13 +60,13 @@ export default function Cutscene({ kind, env, flight, start, target, params, ter
   useEffect(() => {
     if (!box.current || waiting || (requiredTerrainId && (!pack || wrongPack))) return;
     const e = new CutsceneEngine(box.current, JSON.parse(envKey) as CutsceneEnv,
-      { muted, showSkip, letterbox: !fullscreen, terrain: pack ?? undefined, landing: JSON.parse(landKey) ?? undefined });
+      { muted, showSkip, letterbox: !fullscreen, equipment: JSON.parse(equipKey) ?? undefined, terrain: pack ?? undefined, landing: JSON.parse(landKey) ?? undefined });
     engine.current = e;
     let live = true;
     e.play(kind, play.current).then(() => { if (live) done.current?.(); });
     return () => { live = false; e.dispose(); engine.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [kind, envKey, landKey, pack, waiting, flight, requiredTerrainId, wrongPack, fullscreen]);
+  }, [kind, envKey, landKey, equipKey, pack, waiting, flight, requiredTerrainId, wrongPack, fullscreen]);
 
   useEffect(() => { engine.current?.setMuted(muted); }, [muted]);
 
