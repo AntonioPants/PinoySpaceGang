@@ -3,10 +3,10 @@ import type { SiteTerrain } from '../src/types.ts';
 export interface UnavailableSite { id: string; name: string; reason: string }
 export interface CatalogResult { sites: SiteTerrain[]; unavailable: UnavailableSite[] }
 
-// Deferred candidates have no production terrain or invented study footprint.
+// Fallback entries if a deployment omits these real catalog sites. Existing catalog records take precedence.
 const candidates: UnavailableSite[] = [
-  { id: 'haughton', name: 'Haughton Crater', reason: 'Candidate only; no production terrain pack' },
-  { id: 'qaidam', name: 'Qaidam Basin', reason: 'Candidate only; no production terrain pack' },
+  { id: 'haughton', name: 'Haughton Crater', reason: 'Site missing from the deployed catalog' },
+  { id: 'qaidam', name: 'Qaidam Basin', reason: 'Site missing from the deployed catalog' },
 ];
 
 /** Native sites plus explicitly labelled Earth/target scenarios. No scientific defaults inferred. */

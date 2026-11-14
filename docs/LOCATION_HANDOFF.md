@@ -2,8 +2,8 @@
 
 Generated from `web/public/sites.json` with `python -m scripts.catalog.handoff`.
 
-Nine Earth locations have production terrain packs. Haughton and Qaidam remain
-unavailable candidates; no terrain or study footprints are invented for them.
+11 Earth locations have production terrain packs, including Haughton and Qaidam.
+These are selected study windows; they do not cover entire craters or basins.
 
 Pairings below are proposed engineering comparisons, not validated geological
 equivalence, landing safety, or mission suitability. The numerical terrain scores
@@ -187,5 +187,45 @@ Proposed pairing: **Jezero western delta study area** (`jezero`). Target context
 Limitations: Morphology and substrate are area interpretations, not pixel classifications or soil mechanics. No validated resource inventory; water/ice/cave hypotheses are not confirmed local resources.
 
 Unknown feature measurements: .
+
+Friction, cohesion and bulk density are not inferred from substrate. Environmental values retain their modeled/observed status, resolution and time coverage in the catalog; annual wind magnitudes are not wind vectors.
+
+## Haughton Crater floor study area (`haughton`)
+
+Centre (longitude, latitude): -89.68, 75.37.
+Study bbox: `[-89.76956194752482, 75.34738613293392, -89.59068477813, 75.39258554129579]`. Raster outer bounds of square local metric study area centred on selected coordinates; includes surrounding context.
+
+Terrain: [manifest](../web/public/terrain/haughton/manifest.json); [elevation](../web/public/terrain/haughton/elevation.f32).
+Source: [Copernicus GLO-30 tile](https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N75_00_W090_00_DEM/Copernicus_DSM_COG_10_N75_00_W090_00_DEM.tif); [licence](../web/public/terrain/kilbourne-hole-v1/COPERNICUS-LICENSE.pdf). Manifest and elevation SHA-256 checksums are in the catalog.
+
+Interpretation: A 4.8 km impact-crater floor window, not the entire Haughton structure. Polar desert and impact context support proposed comparisons; Earth atmosphere, weathering and seasonal water differ from lunar conditions. [Evidence](https://ntrs.nasa.gov/citations/20060013129).
+
+Proposed pairing: **Shackleton northern rim study area** (`shackleton-rim`). Target context and limitations: Rim neighbourhood, not entire crater or a verified landing site. Ice evidence is regional, not confirmed within this footprint. [Target evidence](https://science.nasa.gov/resource/shackleton-craters-illuminated-rim-shadowed-interior/).
+
+Pair-specific explanation (shackleton-rim):
+Matches: Impact-generated terrain and local relief offer a proposed operations/terrain comparison.
+Differences: This crop is Haughton floor context; the target crop is a Shackleton rim neighbourhood. Earth atmosphere, seasonal water, weathering and illumination differ from lunar polar conditions. Neither this crop nor its descriptor score establishes whole-crater similarity or local ice resources.
+
+Limitations: Morphology and substrate are area interpretations, not pixel classifications or soil mechanics. No validated resource inventory; water/ice/cave hypotheses are not confirmed local resources.
+
+Unknown feature measurements: crater_diameter, rim_geometry, ground_ice_depth.
+
+Friction, cohesion and bulk density are not inferred from substrate. Environmental values retain their modeled/observed status, resolution and time coverage in the catalog; annual wind magnitudes are not wind vectors.
+
+## Qaidam Basin yardang study area (`qaidam`)
+
+Centre (longitude, latitude): 93.27, 38.66.
+Study bbox: `[93.24216985323615, 38.63816919448528, 93.29784694669169, 38.68182423704416]`. Raster outer bounds of square local metric study area centred on selected coordinates; includes surrounding context.
+
+Terrain: [manifest](../web/public/terrain/qaidam/manifest.json); [elevation](../web/public/terrain/qaidam/elevation.f32).
+Source: [Copernicus GLO-30 tile](https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N38_00_E093_00_DEM/Copernicus_DSM_COG_10_N38_00_E093_00_DEM.tif); [licence](../web/public/terrain/kilbourne-hole-v1/COPERNICUS-LICENSE.pdf). Manifest and elevation SHA-256 checksums are in the catalog.
+
+Interpretation: Study window around published multilayered yardangs at 38.66 N, 93.27 E. Thirty-metre DSM supplies regional relief, not fine yardang walls or soil mechanics. A specific planetary catalog pairing is deferred; yardangs are not equivalent to the Bagnold sand dunes. [Evidence](https://doi.org/10.1029/2018JE005719).
+
+Proposed pairing: deferred pending selection of an appropriate planetary study footprint; no match score is claimed.
+
+Limitations: Morphology and substrate are area interpretations, not pixel classifications or soil mechanics. No validated resource inventory; water/ice/cave hypotheses are not confirmed local resources.
+
+Unknown feature measurements: yardang_height, yardang_width, yardang_orientation, surface_material_fractions.
 
 Friction, cohesion and bulk density are not inferred from substrate. Environmental values retain their modeled/observed status, resolution and time coverage in the catalog; annual wind magnitudes are not wind vectors.

@@ -26,3 +26,31 @@ def test_fixed_distance_contributions_and_nonfinite():
     b['relief']['value']=float('nan')
     assert compare(a,b)['terrain_score'] is None
     assert compare(a,b)['coverage']==0.8
+
+
+def test_new_real_terrain_windows_reproduce_from_native_samples():
+    import json
+    from pathlib import Path
+    import rasterio
+    from rasterio.warp import reproject, Resampling
+    root = Path(__file__).resolve().parents[1]
+    catalog = json.loads((root / 'web/public/sites.json').read_text())
+    for sid in ['haughton', 'qaidam']:
+        site = next(s for s in catalog['sites'] if s['id'] == sid)
+        folder = root / 'web/public/terrain' / sid
+        manifest = json.loads((folder / 'manifest.json').read_text())
+        values = np.fromfile(folder / 'elevation.f32', dtype='<f4').reshape(161, 161)
+        assert np.isfinite(values).all() and np.ptp(values) > 1
+        with rasterio.open(folder / 'elevation.tif') as dst:
+            np.testing.assert_array_equal(values, dst.read(1))
+            reprojection = np.full_like(values, np.nan)
+            with rasterio.open(folder / manifest['source']['subset_file']) as src:
+                reproject(rasterio.band(src, 1), reprojection,
+                          src_transform=src.transform, src_crs=src.crs,
+                          dst_transform=dst.transform, dst_crs=dst.crs,
+                          dst_nodata=np.nan, resampling=Resampling.bilinear)
+            np.testing.assert_allclose(values, reprojection, rtol=0, atol=0.001)
+        assert site['completeness']['terrain_available'] is True
+        assert manifest['source']['vertical_datum'] == 'EGM2008'
+    assert next(s for s in catalog['sites'] if s['id'] == 'qaidam')['matches'] == []
+    assert not any(p['earth_id'] == 'qaidam' for p in catalog['pairings'])
