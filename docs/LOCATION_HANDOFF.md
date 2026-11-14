@@ -190,7 +190,7 @@ Differences: Amboy cinder-cone terrain differs from the regional shield-volcano 
 
 Limitations: Morphology and substrate are area interpretations, not pixel classifications or soil mechanics. No validated resource inventory; water/ice/cave hypotheses are not confirmed local resources.
 
-Unknown feature measurements: cone_height, flow_morphology.
+Unknown feature measurements: flow_morphology.
 
 Friction, cohesion and bulk density are not inferred from substrate. Environmental values retain their modeled/observed status, resolution and time coverage in the catalog; annual wind magnitudes are not wind vectors.
 

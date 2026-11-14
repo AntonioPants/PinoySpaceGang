@@ -50,5 +50,22 @@ describe('terrain loaders', () => {
    it('rejects malformed rows and overflowing sample values', () => {
      expect(() => profileToSite({...profile,terrain:{elevation_m:[[1],[2]]}})).toThrow('columns');
      expect(() => profileToSite({...profile,terrain:{elevation_m:[[1,1e100],[3,4]]}})).toThrow('float32');
+     expect(() => profileToSite({...profile,terrain:{...profile.terrain,roughness_rms_m:[[0,1e100],[0,0]]}})).toThrow('float32');
+   });
+   it('rejects unequal spacing and inconsistent declared dimensions', () => {
+     expect(() => profileToSite({...profile,spatial:{...profile.spatial,resolution_m:{x:30,y:60}}})).toThrow('equal X/Y');
+     expect(() => profileToSite({...profile,spatial:{...profile.spatial,width:3}})).toThrow('dimensions');
+   });
+   it('rejects unsupported manifest versions, invalid spacing and ambiguous orientation', () => {
+     const manifest = JSON.parse(readFileSync(new URL('manifest.json', PACK), 'utf8'));
+     const buf = readFileSync(new URL('elevation.f32', PACK));
+     const data = buf.buffer.slice(buf.byteOffset,buf.byteOffset+buf.byteLength);
+     expect(() => terrainPackToSite({...manifest,schema_version:999},data)).toThrow('schema');
+     for (const spacing_m of [0,-30,NaN,Infinity]) {
+       expect(() => terrainPackToSite({...manifest,grid:{...manifest.grid,spacing_m}},data)).toThrow();
+     }
+     for (const order of [undefined,'south-first, west-first','north-first, east-first']) {
+       expect(() => terrainPackToSite({...manifest,grid:{...manifest.grid,order}},data)).toThrow('order');
+     }
    });
  });

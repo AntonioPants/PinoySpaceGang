@@ -209,10 +209,9 @@ python -m scripts.catalog.validate
 node scripts/catalog/check-consumers.mjs
 ```
 
-Registration validates raw/processed receipts before enabling a site. It also
-migrates old CRLF manifest hashes to the committed LF bytes after checking the
-exact CRLF correspondence; any unexplained mismatch fails. Existing elevation
-bytes and hashes are preserved.
+Registration validates the complete staged snapshot and resulting catalog before
+enabling a site. It rejects unexplained checksum mismatches. Existing elevation
+bytes and hashes are preserved. See [transactional build and recovery commands](CATALOG_PUBLICATION.md).
 
 Evidence: [NASA Haughton field report](https://ntrs.nasa.gov/citations/20060013129)
 and [Qaidam yardang field study](https://doi.org/10.1029/2018JE005719).
