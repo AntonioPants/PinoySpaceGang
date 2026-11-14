@@ -45,10 +45,12 @@ an Earth field test. Never silently switch physics because a scene changes locat
 - The descent flies in Furgan's live 3D view (`app/flightlab/view.ts`, wrapped by
   `web/src/components/Descent3D.tsx`). The view steps Tim's physics each frame and draws its
   true state; at touchdown it plays the ending for the real outcome, so the `outcome` slot is
-  null. The 2D side view (`Descent2D.tsx`) remains as an alternative: a "2D view" button, and
-  the automatic choice when 3D cannot start or the system asks for reduced motion.
+  null. The 2D side view (`Descent2D.tsx`) remains as an alternative: a "2D view" button
+  (the choice is remembered), and the automatic choice when 3D cannot start. With reduced
+  motion the 3D view still opens and a note points to the calmer 2D view.
 - Furgan's opening cutscene is registered as `earthApproach` (adapter in
-  `web/src/game/scenes/`) and hands over at the simulation's start state. Sound starts off.
+  `web/src/game/scenes/`) and hands over at the simulation's start state. Sound starts off. With reduced motion a
+  still card is shown first, with the option to play the cinematic anyway.
   `liftoff` and `planetaryArrival` remain null and are skipped. The standalone test bench is
   still available with `?cutscene-demo`. The 3D cockpit remains pending.
 - All earlier planner controls remain available as initial setup/debug controls.
