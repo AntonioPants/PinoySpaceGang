@@ -1,0 +1,39 @@
+# Runs on every push and pull request, so a change that breaks the game is caught before it
+# reaches main or the deployed site. The same checks run locally with `npm run check`.
+name: CI
+on:
+  push:
+  pull_request:
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  game:
+    name: Game (web build, tests, physics)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm run setup
+      - name: Type-check and build the web app
+        run: npx -y pnpm@10 --dir web build
+      - name: Web tests
+        run: npx -y pnpm@10 --dir web test
+      - name: Physics engine tests and type-check
+        run: npm --prefix app/sim test && npm --prefix app/sim run typecheck
+      - name: Catalog loads for every consumer
+        run: node scripts/catalog/check-consumers.mjs
+
+  data:
+    name: Data pipeline (Python)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip }
+      - run: pip install -r requirements-dev.txt
+      - run: pytest -q
