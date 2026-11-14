@@ -1,0 +1,12 @@
+{
+  "name": "pinoy-space-gang",
+  "private": true,
+  "description": "One-command entry points for the whole repo. The game itself lives in web/ (pnpm) and app/sim/ (npm).",
+  "scripts": {
+    "setup": "npx -y pnpm@10 --dir web install --frozen-lockfile && npm --prefix app/sim ci",
+    "dev": "npx -y pnpm@10 --dir web dev",
+    "check": "npx -y pnpm@10 --dir web build && npx -y pnpm@10 --dir web test && npm --prefix app/sim test && npm --prefix app/sim run typecheck && node scripts/catalog/check-consumers.mjs",
+    "preview": "npx -y pnpm@10 --dir web build && npx -y pnpm@10 --dir web preview",
+    "preview:docker": "docker compose up --build"
+  }
+}

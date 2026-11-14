@@ -4,7 +4,7 @@ import * as THREE from "three";
 export interface LanderSpec { vehicleId?: string; landingGearId?: string; hazardSensor?: 'lidar' | 'camera' | 'none' }
 
 /** Footprint of each landing gear option: leg count, foot-circle radius and pad radius, in metres. */
-const GEAR: Record<string, { legs: number; radius: number; pad: number }> = {
+export const GEAR: Record<string, { legs: number; radius: number; pad: number }> = {
   'standard-four': { legs: 4, radius: 3, pad: 0.42 },
   'wide-four': { legs: 4, radius: 3.8, pad: 0.55 },
   'survey-six': { legs: 6, radius: 3.3, pad: 0.5 },

@@ -16,13 +16,25 @@ export interface TerrainPack {
 
 export const DEFAULT_TERRAIN_URL = "/terrain/kilbourne-hole-v1/";
 
+// Loaded packs, so the opening and the descent that follows it share one load.
+const loaded = new Map<string, TerrainPack>();
+const norm = (baseUrl: string) => (baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`);
+
+/** A pack that has already been loaded, or null. Lets a view start on its first frame. */
+export function peekTerrainPack(baseUrl = DEFAULT_TERRAIN_URL): TerrainPack | null {
+  return loaded.get(norm(baseUrl)) ?? null;
+}
+
 /** Loads a pack with the team's shared pack loader, so there is one source of truth. Browser only. */
 export async function loadTerrainPack(baseUrl = DEFAULT_TERRAIN_URL, signal?: AbortSignal): Promise<TerrainPack> {
-  const base = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+  const base = norm(baseUrl), hit = loaded.get(base);
+  if (hit) return hit;
   // Only the Kilbourne pack ships a loader module, and its loader reads any pack's manifest and
   // grid, so it is used for every pack (asking each pack for its own would log a 404).
   const mod = await import(/* @vite-ignore */ /* webpackIgnore: true */ `${DEFAULT_TERRAIN_URL}load-terrain.mjs?v=2`);   // ?v=2: browsers that cached the module from a server sending the wrong type must refetch it
-  return mod.loadTerrain(base, { signal }) as Promise<TerrainPack>;
+  const pack = await (mod.loadTerrain(base, { signal }) as Promise<TerrainPack>);
+  loaded.set(base, pack);
+  return pack;
 }
 
 /**

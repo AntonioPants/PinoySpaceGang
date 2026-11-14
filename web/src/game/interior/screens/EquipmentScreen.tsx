@@ -20,7 +20,7 @@ export default function EquipmentScreen({ mission, settings, onSettingsChange }:
         <p className="mon-note">Presets for the simulation, not specifications of real spacecraft. A loadout also sets the hazard sensor.</p>
         <dl className="mon-facts compact"><div><dt>Fuelled mass</dt><dd>{(settings.dryMassKg + settings.fuelMassKg).toLocaleString()} kg</dd></div>
           <div><dt>Hazard sensor</dt><dd>{settings.hazardSensor === 'none' ? 'None' : settings.hazardSensor === 'lidar' ? 'Lidar' : 'Camera'}</dd></div>
-          {gear && <div><dt>Landing gear</dt><dd>{gear.name}<small>Chosen in the equipment bay. Shown only; not yet in the physics.</small></dd></div>}</dl>
+          {gear && <div><dt>Landing gear</dt><dd>{gear.name}<small>Chosen in the equipment bay. Only its footprint width is in the physics.</small></dd></div>}</dl>
       </section>
       <section>
         <h3>Vehicle</h3>

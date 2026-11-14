@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { FlightView, type CamMode, type FlightSetup } from '../../../app/flightlab/view';
 import { createManualPilot, createSim, keysToPilotInput } from '../../../app/sim/src/index';
 import type { FlightSummary, Sim, SimEvent, SimState } from '../../../app/sim/src/index';
-import { loadTerrainPack, simToPack, type TerrainPack } from './cutscene';
+import { loadTerrainPack, peekTerrainPack, simToPack, type TerrainPack } from './cutscene';
 import { sceneEnv } from '../game/scenes/sceneEnv';
 import { toSimInput } from '../lib/simulation';
 import type { DescentProps } from './Descent2D';
@@ -18,7 +18,11 @@ export default function Descent3D({ mission, profile, entry, weather, autoStart 
   const view = useRef<FlightView | null>(null);
   const sim = useRef<Sim | null>(null);
   const pressed = useRef(new Set<string>());
-  const [pack, setPack] = useState<TerrainPack | null>(null);
+  // after the opening cutscene the pack is already loaded, so the flight can start on the first frame
+  const [pack, setPack] = useState<TerrainPack | null>(() => {
+    const p = peekTerrainPack(mission.earthAnalog.terrainBaseUrl);
+    return p && p.manifest.id === mission.earthAnalog.id ? p : null;
+  });
   const [started, setStarted] = useState(false), [paused, setPaused] = useState(false);
   const [speed, setSpeed] = useState(1), [camera, setCamera] = useState<CamMode>('auto'), [muted, setMuted] = useState(true);
   const [hud, setHud] = useState<SimState | null>(null), [summary, setSummary] = useState<FlightSummary | null>(null);
@@ -73,7 +77,9 @@ export default function Descent3D({ mission, profile, entry, weather, autoStart 
 
   const autoStarted = useRef(false);
   useEffect(() => { if (autoStart && pack && !autoStarted.current) { autoStarted.current = true; launch(); } }, [autoStart, pack, launch]);
-  useEffect(() => () => { view.current?.dispose(); view.current = null; }, []);
+  // Unmounting drops the view, so a remount (React StrictMode mounts twice in development) must start
+  // the flight again; with the terrain already cached, the first mount launches before that happens.
+  useEffect(() => () => { view.current?.dispose(); view.current = null; autoStarted.current = false; }, []);
   useEffect(() => { if (view.current) view.current.speed = speed; }, [speed]);
   useEffect(() => { if (view.current) view.current.camMode = camera; }, [camera]);
   useEffect(() => { view.current?.setMuted(muted); }, [muted]);

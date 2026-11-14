@@ -215,6 +215,17 @@ export function buildCabin(): { group: THREE.Group; mounts: Record<StationId, Sc
   const right = wall(kit, p, D, -0.4, 8); right.position.set(W, 0, 0); right.rotation.y = -Math.PI / 2;
   const hx = 3.0, back = wall(kit, p, W, 0, 21, hx); back.position.set(0, 0, D); back.rotation.y = Math.PI;
   group.add(left, right, back);
+  // a few one-off fittings so the walls are not the same three modules repeated
+  const extinguisher = (w: THREE.Group, x: number) => {
+    w.add(kit.box(0.22, 0.5, 0.03, p.structure, x, 1.05, 0.065), kit.cyl(0.075, 0.075, 0.38, kit.mat(0xa5382e, { rough: 0.5, smooth: true }), x, 1.02, 0.15, 12),
+      kit.cyl(0.03, 0.045, 0.07, p.black, x, 1.245, 0.15, 8), kit.box(0.2, 0.03, 0.02, p.metal, x, 1.08, 0.23), placard(kit, p, 7, 0.22, x, 1.36, 0.052));
+  };
+  const drawers = (w: THREE.Group, x: number) => {
+    w.add(kit.box(0.74, 0.92, 0.12, p.housing, x, 1.72, 0.11));
+    for (let i = 0; i < 4; i++) w.add(kit.box(0.68, 0.19, 0.02, p.panelA, x, 1.39 + i * 0.22, 0.18), kit.box(0.2, 0.025, 0.03, p.metal, x, 1.39 + i * 0.22, 0.2));
+    w.add(placard(kit, p, 5, 0.3, x, 2.24, 0.052));
+  };
+  extinguisher(right, 3.6); extinguisher(back, -4.2); drawers(left, 3.1); drawers(back, -2.75);
   // hatch in the back wall, with the one caution stripe on the bridge at its sill
   back.add(kit.box(1.2, 2.1, 0.09, p.structure, hx, 1.12, 0.045), kit.box(1.0, 1.9, 0.05, p.panelA, hx, 1.12, 0.1));
   const port = kit.cyl(0.17, 0.17, 0.03, p.black, hx, 1.7, 0.13, 20); port.rotation.x = Math.PI / 2;
