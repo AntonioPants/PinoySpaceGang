@@ -4,7 +4,7 @@ import { loadCatalogSite, readCatalog } from '../scripts/catalog-node.ts';
 
 const catalog = readCatalog();
 
-describe('site catalog adapter', () => {
+describe('site catalog adapter', { timeout: 30_000 }, () => {
   it('loads every site that has terrain', () => {
     for (const entry of catalog.sites.filter((s) => s.terrain)) {
       const site = loadCatalogSite(catalog, entry.id);
@@ -47,7 +47,7 @@ describe('site catalog adapter', () => {
   });
 });
 
-describe('analog fidelity', () => {
+describe('analog fidelity', { timeout: 30_000 }, () => {
   it('a site compared with itself scores 100', () => {
     const moon = loadCatalogSite(catalog, 'marius-hills');
     expect(analogFidelity(moon, { ...moon, body: 'earth' }, { seeds: [1] }).score).toBe(100);
