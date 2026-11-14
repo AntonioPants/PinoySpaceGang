@@ -1,0 +1,14 @@
+.git
+**/node_modules
+**/dist
+**/*.tsbuildinfo
+web/.vite
+docs
+tests
+scripts
+vendor
+data/raw
+data/cache
+*eyad unfinished*
+flightlab-and-cutscenes_*
+flight-lab_*.html

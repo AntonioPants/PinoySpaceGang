@@ -58,7 +58,10 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
   useEffect(() => {
     const host = mount.current!;
     let webgl: THREE.WebGLRenderer;
-    try { webgl = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+    // On a high-density screen the pixels are already fine, and multisampling there costs more
+    // than everything else in the scene put together on an integrated GPU.
+    const dense = devicePixelRatio >= 1.5;
+    try { webgl = new THREE.WebGLRenderer({ antialias: !dense, alpha: true, powerPreference: 'high-performance' }); }
     catch (e) { fail.current(e instanceof Error ? e.message : 'WebGL is not available'); return; }
     webgl.setPixelRatio(Math.min(devicePixelRatio, 2));
     webgl.setClearColor(0x000000, 0);
@@ -94,7 +97,8 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
     const overhead = shadowed(new THREE.DirectionalLight(0xfff6ec, 1.15), 7.5, 4, 2048);
     overhead.position.set(0, ROOM.heightM - 0.25, 0); overhead.target.position.set(0, 0, 0.001);     // starts below the ceiling, so the ceiling casts nothing
     scene.add(sun, sun.target, overhead, overhead.target, new THREE.HemisphereLight(0xf3efe8, 0x3a3b3d, 0.85));
-    for (const [x, z] of [[-3.2, -2], [3.2, -2], [-3.2, 2], [3.2, 2]] as const) { const l = new THREE.PointLight(0xfff3e4, 5, 9, 1.6); l.position.set(x, ROOM.heightM - 0.35, z); scene.add(l); }
+    // two unshadowed side fills shade the walls; point lights here cost far more per pixel
+    for (const sx of [-1, 1]) { const fill = new THREE.DirectionalLight(0xfff3e4, 0.55); fill.position.set(sx * 4, 5, 3 * sx); scene.add(fill); }
 
     const holeGeo = new THREE.PlaneGeometry(SCREEN.widthM, SCREEN.heightM);
     // writes "fully transparent" into the picture wherever a screen is the nearest thing
@@ -129,7 +133,8 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
     };
     const ro = new ResizeObserver(resize); ro.observe(host); resize();
 
-    let raf = 0, last = performance.now();
+    const maxRatio = Math.min(devicePixelRatio, 2);
+    let raf = 0, last = performance.now(), prev = last, slow = 16, ratio = maxRatio, sinceChange = 0;
     const frame = (now: number) => {
       const dt = Math.min(0.05, (now - last) / 1000); last = now;
       tp.setReducedMotion(motion.current);
@@ -142,6 +147,12 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
       camera.position.set(tp.camera.x, tp.camera.y, tp.camera.z);
       camera.lookAt(tp.camera.tx, tp.camera.ty, tp.camera.tz);
       webgl.render(scene, camera); css.render(scene, camera);
+      // keep it smooth on slow GPUs: drop the drawing resolution when frames run long, raise it again when there is room
+      slow += ((now - prev) - slow) * 0.05; prev = now;
+      if (++sinceChange > 45 && (slow > 24 && ratio > 0.75 || slow < 17.5 && ratio < maxRatio)) {
+        ratio = Math.max(0.75, Math.min(maxRatio, ratio * (slow > 24 ? 0.8 : 1.15))); sinceChange = 0;
+        webgl.setPixelRatio(ratio); webgl.setSize(host.clientWidth, host.clientHeight, false);
+      }
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);

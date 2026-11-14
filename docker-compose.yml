@@ -1,0 +1,16 @@
+# Analog Atlas (the Space Apps game) on the Pi. cloudflared routes analog.timhufnagel.org → 127.0.0.1:3021.
+services:
+  analog-atlas:
+    build: .
+    image: analog-atlas:latest
+    container_name: analog-atlas
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3021:3021"
+    mem_limit: 64m
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3021/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s

@@ -188,6 +188,8 @@ export class ThirdPerson {
     if (this.mode.kind !== 'walk' && this.target) { this.target = null; this.opts.onTarget?.(null); }
     const k = this.opts.reducedMotion ? 1 : Math.min(1, dt * (this.mode.kind === 'walk' ? 9 : 4.5));
     const c = this.camera;
+    // settle exactly: a camera that keeps creeping makes the browser redraw the monitor pages every frame
+    if (Math.abs(want.x - c.x) + Math.abs(want.y - c.y) + Math.abs(want.z - c.z) + Math.abs(want.tx - c.tx) + Math.abs(want.ty - c.ty) + Math.abs(want.tz - c.tz) < 2e-3) { this.camera = want; return; }
     this.camera = { x: c.x + (want.x - c.x) * k, y: c.y + (want.y - c.y) * k, z: c.z + (want.z - c.z) * k,
       tx: c.tx + (want.tx - c.tx) * k, ty: c.ty + (want.ty - c.ty) * k, tz: c.tz + (want.tz - c.tz) * k };
   }
