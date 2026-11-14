@@ -24,7 +24,7 @@ export default function Descent3D({ mission, profile, entry, weather, autoStart 
     return p && p.manifest.id === mission.earthAnalog.id ? p : null;
   });
   const [started, setStarted] = useState(false), [paused, setPaused] = useState(false);
-  const [speed, setSpeed] = useState(1), [camera, setCamera] = useState<CamMode>('auto'), [muted, setMuted] = useState(true);
+  const [speed, setSpeed] = useState(1), [camera, setCamera] = useState<CamMode>('auto'), [muted, setMuted] = useState(false);
   const [hud, setHud] = useState<SimState | null>(null), [summary, setSummary] = useState<FlightSummary | null>(null);
   const [events, setEvents] = useState<SimEvent[]>([]), [error, setError] = useState('');
   const manual = mission.strategy.mode === 'MANUAL_CONTROL';

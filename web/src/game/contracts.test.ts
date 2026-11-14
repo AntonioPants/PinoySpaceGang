@@ -31,11 +31,11 @@ describe('game scene handoffs', () => {
 });
 
 describe('registered scenes', () => {
-  it('plays the Earth approach before the descent, whose 3D view carries the ending', async () => {
+  it('lifts off, plays the Earth approach, then the descent, whose 3D view carries the ending', async () => {
     const { gameIntegrations } = await import('./integrations');
     const phases: GamePhase[] = [];
     let phase = nextPhase(null, gameIntegrations);
     while (true) { phases.push(phase); if (phase === 'report') break; phase = nextPhase(phase, gameIntegrations); }
-    expect(phases).toEqual(['controlCenter', 'earthApproach', 'descent', 'report']);
+    expect(phases).toEqual(['controlCenter', 'liftoff', 'earthApproach', 'descent', 'report']);
   });
 });

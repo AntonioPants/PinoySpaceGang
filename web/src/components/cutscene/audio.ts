@@ -3,6 +3,7 @@ export class CutsceneAudio {
   private ctx: AudioContext | null = null;
   private master!: GainNode;
   private rumbleGain!: GainNode;
+  private roarGain!: GainNode;
   private windGain!: GainNode;
   private noise!: AudioBuffer;
   muted = false;
@@ -19,21 +20,29 @@ export class CutsceneAudio {
     const d = this.noise.getChannelData(0);
     for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
     this.rumbleGain = this.loop(140, "lowpass");
+    // The rumble is below what laptop and phone speakers can play, so the engine also gets a roar
+    // in the range they do reproduce.
+    this.roarGain = this.loop(750, "bandpass", 0.6);
     this.windGain = this.loop(500, "bandpass");
     void ctx.resume();
   }
 
-  private loop(freq: number, type: BiquadFilterType) {
+  private loop(freq: number, type: BiquadFilterType, q = 1) {
     const ctx = this.ctx!;
     const src = ctx.createBufferSource(); src.buffer = this.noise; src.loop = true;
-    const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq;
+    const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
     const g = ctx.createGain(); g.gain.value = 0;
     src.connect(f).connect(g).connect(this.master); src.start();
     return g;
   }
 
   setMuted(m: boolean) { this.muted = m; if (this.ctx) this.master.gain.value = m ? 0 : 0.8; }
-  setThrust(v: number) { if (this.ctx) this.rumbleGain.gain.setTargetAtTime(v * 0.9, this.ctx.currentTime, 0.08); }
+  setThrust(v: number) {
+    if (!this.ctx) return;
+    if (this.ctx.state === "suspended") void this.ctx.resume();        // resumes once the page has had a click
+    this.rumbleGain.gain.setTargetAtTime(v * 0.9, this.ctx.currentTime, 0.08);
+    this.roarGain.gain.setTargetAtTime(v * 0.55, this.ctx.currentTime, 0.08);
+  }
   setWind(v: number) { if (this.ctx) this.windGain.gain.setTargetAtTime(v * 0.12, this.ctx.currentTime, 0.4); }
 
   explosion(power = 1) {

@@ -4,13 +4,13 @@ import { cinematicsChoice } from '../interior/LaunchMenu';
 /**
  * Shared frame for the cinematic scenes: the sound switch, and the still alternative shown when
  * the player has asked for reduced motion (with the option to play it anyway). The "Play
- * cinematics" choice made at the pilot seat overrides both ways. Sound starts off.
+ * cinematics" choice made at the pilot seat overrides both ways. Sound starts on.
  */
 export function SceneFrame({ title, detail, reducedMotion, onComplete, children }: {
   title: string; detail: string; reducedMotion: boolean; onComplete: () => void;
   children: (muted: boolean) => ReactNode;
 }) {
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(false);       // sound on: the click that started the mission allows it
   // The player's choice at the pilot seat wins: 'on' plays even with reduced motion, 'off' skips.
   const [choice] = useState(cinematicsChoice);
   const [playAnyway, setPlayAnyway] = useState(choice === 'on');
