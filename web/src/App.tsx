@@ -19,6 +19,7 @@ import type { Body, MissionConfig, MissionSettings, TerrainProfile } from './lib
 const STORAGE_KEY = 'analog-atlas-draft-v1';
 const GameSession = lazy(() => import('./game/GameSession'));
 const FlightReport = lazy(() => import('./components/FlightReport'));
+const FlightReportNHB = lazy(() => import('./components/FlightReportNHB'));
 function restoreDraft(catalog: Catalog) {
   const { targets, analogs } = catalog;
   try {
@@ -83,6 +84,8 @@ function Mission({ catalog }: { catalog: Catalog }) {
   const [terrainView, setTerrainView] = useState(false);
   const [flight, setFlight] = useState<FlightTelemetry | null>(null);
   const [flightSettings, setFlightSettings] = useState<MissionSettings>(draft.settings);
+  // Design trial: ?style=nhb opens the report in the 1976 manual style (docs/DESIGN_FRAMEWORK.md).
+  const [reportStyle, setReportStyle] = useState<'standard' | 'nhb'>(() => new URLSearchParams(location.search).get('style') === 'nhb' ? 'nhb' : 'standard');
   const bodyPoints = useMemo(() => targets.filter(t => t.body === target.body), [target.body]);
   const vacuum = settings.environment === 'planetary' && target.body === 'Moon';
   const gravity = gravityFor(target, settings);
@@ -96,7 +99,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.getElementById('mission-title')?.focus({ preventScroll: true });
-  }, [step]);
+  }, [step, reportStyle]);
   useEffect(() => {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ targetId, analogId, settings })); setStorageAvailable(true); }
     catch { setStorageAvailable(false); }
@@ -123,6 +126,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
   const terrainStatus = <div className={`data-notice ${loadError ? 'warning' : ''}`} role="status">
     {loadError ? <><span>{loadError}</span><button className="text-button" onClick={() => setRetry(v => v + 1)}>Retry download</button></> : <><span className={`status-dot ${profile ? '' : 'pending'}`} />{profile ? `${analog.name} terrain loaded` : 'Loading terrain pack…'}</>}
   </div>;
+  if (step === 4 && flight && mission && profile && reportStyle === 'nhb') return <Suspense fallback={<p role="status">Preparing alternate report...</p>}><FlightReportNHB flight={flight} mission={mission} profile={profile} analogEntry={catalog.entries.get(analog.id)} planetaryEntry={catalog.entries.get(target.id)} onRetry={() => {setSettings(flightSettings);setReportStyle('standard');setStep(2);}} onStandardView={() => setReportStyle('standard')} /></Suspense>;
   return <>
     <a className="skip-link" href="#mission-main">Skip to mission workspace</a>
     <header className="app-header">
@@ -229,6 +233,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
       </section>}
       {step === 3 && mission && profile && <Suspense fallback={<div className="flight-workspace empty-data" role="status">Preparing ship systems…</div>}><GameSession target={target} entry={catalog.entries.get(analog.id)} initialMission={mission} settings={settings} profile={profile} weather={weather} weatherAvailable={weatherAvailable} onExit={next => {setSettings(next);setStep(2);}} onReport={(report, finalMission, finalSettings)=>{setMission(finalMission);setFlightSettings(finalSettings);setFlight(report);setStep(4);}} /></Suspense>}
       {step === 4 && flight && mission && profile && <Suspense fallback={<p role="status">Preparing debrief…</p>}><FlightReport analogEntry={catalog.entries.get(analog.id)} planetaryEntry={catalog.entries.get(target.id)} flight={flight} mission={mission} profile={profile} onRetry={()=>{setSettings(flightSettings);setStep(2);}} /></Suspense>}
+      {step === 4 && flight && <p className="field-help"><button className="text-button" onClick={() => setReportStyle('nhb')}>View this report in the 1976 manual style (design trial)</button></p>}
       <footer className="workspace-footer"><span><span className="status-dot" /> {step === 0 ? 'Explore first. Validate with evidence.' : 'Real terrain. Explicit assumptions.'}</span><span>Earth data: Copernicus DEM <span className="footer-separator">/</span> <button className="text-button" onClick={() => setDialog('sources')}>Credits & limitations</button></span></footer>
     </main>
     {dialog === 'sources' && <Dialog title="Data, evidence & limitations" onClose={() => setDialog(null)}><div className="source-content">
