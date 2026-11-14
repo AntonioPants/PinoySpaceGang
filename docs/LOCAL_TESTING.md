@@ -30,7 +30,7 @@ Most "it works for them but not for me" cases have been one of these:
 
 Run `npm run check`. CI runs the same on every push and pull request and shows a red cross on
 the commit if it fails. The Python data pipeline is tested separately (`pip install -r
-requirements-dev.txt && pytest`) and also runs in CI.
+requirements-dev.txt && python -m pytest`) and also runs in CI.
 
 Useful addresses while developing: `/?planner` (engineering planner), `/?cutscene-demo`
 (cutscene bench), `/?moon` (Moon explorer).
