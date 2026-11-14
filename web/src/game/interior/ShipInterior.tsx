@@ -4,87 +4,126 @@ import * as THREE from 'three';
 import { CSS3DObject, CSS3DRenderer } from 'three/addons/renderers/CSS3DRenderer.js';
 import type { ControlCenterProps } from '../contracts';
 import SystemsConsole from '../SystemsConsole';
-import { buildCabin, SCREEN, wallMount } from './cabin';
+import { buildAstronaut } from './astronaut';
+import { buildCabin } from './cabin';
 import { buildChecklist } from './checklist';
-import { buildExterior } from './exterior';
-import { FirstPerson } from './firstPerson';
-import { CABIN, STATIONS, type StationId } from './stations';
+import { buildSpace } from './exterior';
+import LaunchMenu from './LaunchMenu';
+import { ThirdPerson, type Mode, type Target } from './player';
+import { ROOM, SCREEN, SEAT, STATIONS, type StationId } from './stations';
 import EquipmentScreen from './screens/EquipmentScreen';
 import FlightConfigScreen from './screens/FlightConfigScreen';
-import LaunchScreen from './screens/LaunchScreen';
 import MissionControlScreen from './screens/MissionControlScreen';
 import './interior.css';
 
 /** Size of each monitor's page in CSS pixels; scaled to SCREEN metres in the scene. */
-const PAGE = { width: 760, height: Math.round(760 * SCREEN.heightM / SCREEN.widthM) };
+const PAGE = { width: 840, height: Math.round(840 * SCREEN.heightM / SCREEN.widthM) };
 
 /**
- * The control centre: the inside of the lander, in first person. The player walks the cabin and
- * sets up the mission on four monitors. The monitors are real pages placed in the 3D scene, so
- * their buttons and menus work with mouse, keyboard and screen readers. The flat console stays
- * one click away, and is used automatically when 3D cannot start or the window is phone-sized.
+ * The control centre: the bridge of the ship, in third person. The player walks an astronaut
+ * round the bridge, sets up the mission on three glowing monitors, then sits in the pilot's seat
+ * to start it. The monitors are real pages placed in the 3D scene, so their sliders, switches
+ * and drop-downs work with mouse and keyboard. The flat console stays one click away, and is
+ * used automatically when 3D cannot start or the window is phone-sized.
  */
 export default function ShipInterior(props: ControlCenterProps) {
   const [flat, setFlat] = useState(() => window.innerWidth < 760);
   const [failure, setFailure] = useState('');
   if (flat || failure) return <div className="ship-interior-flat">
-    <p className="field-help" role="status">{failure ? `The 3D cabin could not start (${failure}). Showing the flat console.` : 'Flat console view.'}{' '}
-      {!failure && <button className="text-button" onClick={() => setFlat(false)}>Enter the cabin</button>}</p>
+    <p className="field-help" role="status">{failure ? `The 3D bridge could not start (${failure}). Showing the flat console.` : 'Flat console view.'}{' '}
+      {!failure && <button className="text-button" onClick={() => setFlat(false)}>Enter the bridge</button>}</p>
     <SystemsConsole {...props} />
   </div>;
-  return <Cabin {...props} onFlat={() => setFlat(true)} onFailure={setFailure} />;
+  return <Bridge {...props} onFlat={() => setFlat(true)} onFailure={setFailure} />;
 }
 
-function Cabin({ mission, settings, onSettingsChange, onLaunch, onExit, error, weatherAvailable, weather, reducedMotion, onFlat, onFailure }:
+function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, weatherAvailable, weather, reducedMotion, onFlat, onFailure }:
   ControlCenterProps & { onFlat: () => void; onFailure: (reason: string) => void }) {
   const mount = useRef<HTMLDivElement>(null);
-  const player = useRef<FirstPerson | null>(null);
+  const player = useRef<ThirdPerson | null>(null);
+  const [mode, setMode] = useState<Mode>({ kind: 'walk' });
+  const [target, setTarget] = useState<Target | null>(null);
   // one page element per monitor; React renders into them, the scene places them
   const pages = useMemo(() => Object.fromEntries(STATIONS.map(s => {
     const el = document.createElement('div');
-    el.className = 'monitor-screen'; el.dataset.station = s.id;
+    el.className = `monitor-screen monitor-${s.id}`; el.dataset.station = s.id;
     el.style.width = `${PAGE.width}px`; el.style.height = `${PAGE.height}px`;
     el.setAttribute('role', 'group'); el.setAttribute('aria-label', `${s.title} monitor`);
     return [s.id, el];
   })) as Record<StationId, HTMLDivElement>, []);
   const body = mission.planetaryTarget.body;
   const fail = useRef(onFailure); fail.current = onFailure;
+  const motion = useRef(reducedMotion); motion.current = reducedMotion;
 
   useEffect(() => {
     const host = mount.current!;
     let webgl: THREE.WebGLRenderer;
-    try { webgl = new THREE.WebGLRenderer({ antialias: true }); }
+    // On a high-density screen the pixels are already fine, and multisampling there costs more
+    // than everything else in the scene put together on an integrated GPU.
+    const dense = devicePixelRatio >= 1.5;
+    try { webgl = new THREE.WebGLRenderer({ antialias: !dense, alpha: true, powerPreference: 'high-performance' }); }
     catch (e) { fail.current(e instanceof Error ? e.message : 'WebGL is not available'); return; }
     webgl.setPixelRatio(Math.min(devicePixelRatio, 2));
+    webgl.setClearColor(0x000000, 0);
+    webgl.toneMapping = THREE.ACESFilmicToneMapping; webgl.toneMappingExposure = 1.05;
+    webgl.shadowMap.enabled = true; webgl.shadowMap.type = THREE.PCFSoftShadowMap;
     webgl.domElement.className = 'cabin-canvas';
+    // The monitor pages sit BEHIND the canvas. Each monitor is a see-through hole in the 3D
+    // picture, so the astronaut and the furniture pass in front of the screens correctly.
     const css = new CSS3DRenderer();
     css.domElement.className = 'cabin-screens';
-    host.append(webgl.domElement, css.domElement);
+    // Focusing a control makes the browser scroll its page "into view", which would slide the
+    // whole 3D layer sideways. Clipping (not hiding) overflow forbids that; the listener covers
+    // browsers without overflow: clip.
+    css.domElement.style.overflow = 'clip';
+    const unscroll = (e: Event) => { const el = e.currentTarget as HTMLElement; if (el.scrollLeft || el.scrollTop) el.scrollTo(0, 0); };
+    css.domElement.addEventListener('scroll', unscroll); host.addEventListener('scroll', unscroll);
+    host.append(css.domElement, webgl.domElement);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(72, 1, 0.05, 2500);
-    const cabin = buildCabin(), outside = buildExterior(body);
-    scene.add(cabin.group, outside.group);
-    scene.background = outside.sky; scene.fog = outside.fog;
-    const sun = new THREE.DirectionalLight(0xfff4e0, 2.2); sun.position.copy(outside.sunDirection).multiplyScalar(50);
-    const lamp = new THREE.PointLight(0xffe9c8, 14, 10, 1.4); lamp.position.set(0, CABIN.heightM - 0.3, 0);
-    scene.add(sun, lamp, new THREE.HemisphereLight(0xdfe6ff, 0x3a3630, 1.5));
+    scene.background = new THREE.Color(0x02040b);
+    const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 4000);
+    const cabin = buildCabin(), space = buildSpace(body), astronaut = buildAstronaut();
+    scene.add(cabin.group, space.group, astronaut.group);
+    // Light: the Sun through the window (the only strong, warm light), the ceiling panels as a
+    // soft overhead light that puts shadows under things, and a little neutral fill.
+    const shadowed = (light: THREE.DirectionalLight, half: number, far: number, size: number) => {
+      light.castShadow = true; light.shadow.mapSize.set(size, size); light.shadow.bias = -0.0004; light.shadow.normalBias = 0.03;
+      const c = light.shadow.camera; c.left = -half; c.right = half; c.top = half; c.bottom = -half; c.near = 0.05; c.far = far; c.updateProjectionMatrix();
+      return light;
+    };
+    const sun = shadowed(new THREE.DirectionalLight(0xfff0dc, 4.2), 9, 70, 2048);
+    sun.position.copy(space.sunDirection).multiplyScalar(32); sun.target.position.set(0, 1, 0);
+    const overhead = shadowed(new THREE.DirectionalLight(0xfff6ec, 1.15), 7.5, 4, 2048);
+    overhead.position.set(0, ROOM.heightM - 0.25, 0); overhead.target.position.set(0, 0, 0.001);     // starts below the ceiling, so the ceiling casts nothing
+    scene.add(sun, sun.target, overhead, overhead.target, new THREE.HemisphereLight(0xf3efe8, 0x3a3b3d, 0.85));
+    // two unshadowed side fills shade the walls; point lights here cost far more per pixel
+    for (const sx of [-1, 1]) { const fill = new THREE.DirectionalLight(0xfff3e4, 0.55); fill.position.set(sx * 4, 5, 3 * sx); scene.add(fill); }
 
-    const mounted: CSS3DObject[] = [];
+    const holeGeo = new THREE.PlaneGeometry(SCREEN.widthM, SCREEN.heightM);
+    // writes "fully transparent" into the picture wherever a screen is the nearest thing
+    const holeMat = new THREE.MeshBasicMaterial({ color: 0x000000, opacity: 0, transparent: true, blending: THREE.NoBlending });
+    const mounted: THREE.Object3D[] = [];
     for (const station of STATIONS) {
+      const { position, rotationY } = cabin.mounts[station.id];
       const page = new CSS3DObject(pages[station.id]);
-      const { position, rotationY } = wallMount(station.angleDeg, 0.13);
       page.position.copy(position); page.rotation.y = rotationY; page.scale.setScalar(SCREEN.widthM / PAGE.width);
-      scene.add(page); mounted.push(page);
+      const hole = new THREE.Mesh(holeGeo, holeMat); hole.position.copy(position); hole.rotation.y = rotationY;
+      scene.add(page, hole); mounted.push(page, hole);
     }
 
-    const fp = new FirstPerson(host, {
-      reducedMotion,
-      onStation: id => pages[id].querySelector<HTMLElement>('button, select, input')?.focus({ preventScroll: true }),
+    const tp = new ThirdPerson(host, {
+      reducedMotion: motion.current,
+      onMode: m => {
+        setMode(m);
+        if (m.kind === 'station') pages[m.id].querySelector<HTMLElement>('button, input')?.focus({ preventScroll: true });
+        else if (document.activeElement instanceof HTMLElement && document.activeElement.closest('.monitor-screen')) document.activeElement.blur();
+      },
+      onTarget: setTarget,
     });
-    player.current = fp;
-    // tabbing into a monitor's controls walks the player to that monitor
-    const focusIn = (e: FocusEvent) => { const id = (e.currentTarget as HTMLElement).dataset.station as StationId; fp.goTo(id); };
+    player.current = tp;
+    // tabbing into a monitor's controls brings the astronaut and the camera to that monitor
+    const focusIn = (e: FocusEvent) => { const id = (e.currentTarget as HTMLElement).dataset.station as StationId; if (!(tp.mode.kind === 'station' && tp.mode.id === id)) tp.use(id); };
     for (const s of STATIONS) pages[s.id].addEventListener('focusin', focusIn);
 
     const resize = () => {
@@ -94,46 +133,60 @@ function Cabin({ mission, settings, onSettingsChange, onLaunch, onExit, error, w
     };
     const ro = new ResizeObserver(resize); ro.observe(host); resize();
 
-    let raf = 0, last = performance.now();
+    const maxRatio = Math.min(devicePixelRatio, 2);
+    let raf = 0, last = performance.now(), prev = last, slow = 16, ratio = maxRatio, sinceChange = 0;
     const frame = (now: number) => {
       const dt = Math.min(0.05, (now - last) / 1000); last = now;
-      fp.update(dt);
-      camera.position.set(fp.pose.x, CABIN.eyeM, fp.pose.z);
-      camera.rotation.set(fp.pose.pitch, -fp.pose.yaw, 0, 'YXZ');
+      tp.setReducedMotion(motion.current);
+      tp.update(dt);
+      const seated = tp.mode.kind === 'seated';
+      astronaut.group.position.set(tp.pos.x, seated ? SEAT.seatHeightM - 0.2 : 0, tp.pos.z + (seated ? 0.02 : 0));
+      astronaut.group.rotation.y = -tp.heading;
+      astronaut.animate(dt, tp.speed, seated);
+      if (!motion.current) space.drift(dt);
+      camera.position.set(tp.camera.x, tp.camera.y, tp.camera.z);
+      camera.lookAt(tp.camera.tx, tp.camera.ty, tp.camera.tz);
       webgl.render(scene, camera); css.render(scene, camera);
+      // keep it smooth on slow GPUs: drop the drawing resolution when frames run long, raise it again when there is room
+      slow += ((now - prev) - slow) * 0.05; prev = now;
+      if (++sinceChange > 45 && (slow > 24 && ratio > 0.75 || slow < 17.5 && ratio < maxRatio)) {
+        ratio = Math.max(0.75, Math.min(maxRatio, ratio * (slow > 24 ? 0.8 : 1.15))); sinceChange = 0;
+        webgl.setPixelRatio(ratio); webgl.setSize(host.clientWidth, host.clientHeight, false);
+      }
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
 
     return () => {
-      cancelAnimationFrame(raf); ro.disconnect(); fp.dispose(); player.current = null;
+      cancelAnimationFrame(raf); ro.disconnect(); host.removeEventListener('scroll', unscroll); tp.dispose(); player.current = null;
       for (const s of STATIONS) pages[s.id].removeEventListener('focusin', focusIn);
-      for (const page of mounted) scene.remove(page);
-      cabin.dispose(); outside.dispose();
+      for (const o of mounted) scene.remove(o);
+      holeGeo.dispose(); holeMat.dispose(); cabin.dispose(); space.dispose(); astronaut.dispose();
       webgl.dispose(); webgl.forceContextLoss();
       webgl.domElement.remove(); css.domElement.remove();
     };
-    // the scene is built once per departure body; live values reach it through refs and portals
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [body, pages]);
 
-  useEffect(() => { player.current?.setReducedMotion(reducedMotion); }, [reducedMotion]);
-
   const checks = buildChecklist({ mission, settings, weatherAvailable, weatherLoaded: !!weather, error });
-  return <section className="ship-interior" aria-label="Lander cabin">
+  const using = mode.kind === 'station' ? STATIONS.find(s => s.id === mode.id)! : null;
+  return <section className="ship-interior" aria-label="Ship's bridge">
     <div className="cabin-toolbar">
-      <div><strong>Lander cabin</strong><small>On the surface of {body === 'Moon' ? 'the Moon' : 'Mars'} · {mission.planetaryTarget.name}</small></div>
+      <div><strong>Bridge</strong><small>Outbound from {body === 'Moon' ? 'the Moon' : 'Mars'} · {mission.planetaryTarget.name} → {mission.earthAnalog.name}</small></div>
       <div role="group" aria-label="Go to">
-        {STATIONS.map(s => <button key={s.id} className="subtle-button" onClick={() => player.current?.goTo(s.id, true)}><kbd>{s.key}</kbd> {s.title}</button>)}
-        <button className="subtle-button" onClick={() => player.current?.lookAtWindow()}><kbd>5</kbd> Window</button>
+        {STATIONS.map(s => <button key={s.id} className="subtle-button" aria-pressed={using?.id === s.id} onClick={() => player.current?.use(s.id)}><kbd>{s.key}</kbd> {s.title}</button>)}
+        <button className="subtle-button" aria-pressed={mode.kind === 'seated'} onClick={() => player.current?.sit()}><kbd>{SEAT.key}</kbd> {SEAT.title}</button>
         <button className="text-button" onClick={onFlat}>Use flat console</button>
+        <button className="text-button" onClick={onExit}>Back to setup</button>
       </div>
     </div>
-    <div ref={mount} className="cabin-view" />
-    <p className="cabin-hint">Walk with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>, turn with <kbd>←</kbd> <kbd>→</kbd> or by dragging, step up to the nearest monitor with <kbd>E</kbd>. The cabin and the view outside are illustrative.</p>
+    <div ref={mount} className="cabin-view">
+      {mode.kind === 'walk' && target && <div className="cabin-overlay cabin-prompt" role="status"><kbd>E</kbd> {target.kind === 'seat' ? 'Sit in the pilot seat' : `Use ${target.title}`}</div>}
+      {using && <div className="cabin-overlay cabin-prompt" role="status"><kbd>Esc</kbd> Step back from {using.title}</div>}
+      {mode.kind === 'seated' && <LaunchMenu checks={checks} reducedMotion={reducedMotion} onLaunch={onLaunch} onStand={() => player.current?.walk()} />}
+    </div>
+    <p className="cabin-hint">Walk with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>, turn the camera with <kbd>←</kbd> <kbd>→</kbd> or by dragging, use what is in front of you with <kbd>E</kbd>. Sit in the pilot seat to start the mission. The ship is illustrative, and the view outside does not show your landing site. Moon, Mars and Earth imagery: NASA.</p>
     {createPortal(<MissionControlScreen mission={mission} settings={settings} checks={checks} />, pages.mission)}
-    {createPortal(<EquipmentScreen settings={settings} onSettingsChange={onSettingsChange} equipment={mission.equipment} onEquipment={onExit} />, pages.equipment)}
+    {createPortal(<EquipmentScreen mission={mission} settings={settings} onSettingsChange={onSettingsChange} />, pages.equipment)}
     {createPortal(<FlightConfigScreen mission={mission} settings={settings} onSettingsChange={onSettingsChange} weatherAvailable={weatherAvailable} weather={weather} />, pages.config)}
-    {createPortal(<LaunchScreen checks={checks} onLaunch={onLaunch} onExit={onExit} />, pages.launch)}
   </section>;
 }

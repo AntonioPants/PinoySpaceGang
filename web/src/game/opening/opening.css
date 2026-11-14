@@ -52,6 +52,7 @@
 .immersive-game-session .flight-hud{position:absolute;z-index:1;bottom:32px;left:0;right:0;padding:35px 4vw 25px;border:0;pointer-events:none;background:linear-gradient(transparent,#030405aa);gap:12px}.immersive-game-session .flight-hud strong{font-size:clamp(17px,2.3vw,30px);color:#eee4d0}.immersive-game-session .flight-hud span{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#c4bba7}
 .immersive-game-session .flight-help{position:absolute;bottom:8px;left:4%;right:110px;padding:0;font-size:10px;color:#b5ad9c;pointer-events:none}
 .journey-credits{position:absolute;right:26px;bottom:12px;z-index:6;font-size:11px;color:#d6c39b;padding:5px 8px;background:#03040588}
+.immersive-game-session .terrain-credit{right:120px!important;left:120px!important}
 .immersive-game-session .flight-3d .terrain-credit{bottom:155px!important;left:4%!important;right:4%!important;text-shadow:0 1px 6px #000}
 .immersive-game-session .model-assumptions{position:absolute;z-index:2;left:30px;top:100px;max-width:min(500px,80%);max-height:55%;overflow:auto;border:0;padding:10px;font-size:11px;background:#03040588;backdrop-filter:blur(10px)}
 .immersive-game-session .flight-result{position:absolute;z-index:3;left:50%;top:45%;transform:translate(-50%,-50%);width:min(600px,90%);background:#090b0de8;backdrop-filter:blur(16px);border:1px solid #c4ad794d;display:flex;flex-wrap:wrap;padding:28px}.immersive-game-session .flight-result h2{font-size:28px}

@@ -85,8 +85,9 @@ Scene controls (sound, skip) float above the scene; the game adds a Credits over
 ## Tim — playable character, ship controls and physics
 
 Own the character, locomotion/input, in-ship interaction and landing settings plus
-`app/sim/`. The first-person cabin from `tim/ship-interior` is now integrated as
-`controlCenter`, with its four interactive monitors and a flat console fallback.
+`app/sim/`. The third-person ship bridge from `tim/ship-interior` is integrated as
+`controlCenter`: three interactive monitors, a pilot seat that opens the launch menu, and a
+flat console fallback (see "Ship interior" in `docs/GAME_VISION.md`).
 Keep it satisfying `ControlCenterProps`. Read settings, call `onSettingsChange`, show launch errors and
 call `onLaunch` for an explicit player action. The host rebuilds and locks the mission.
 Keep the systems console as a functional accessibility fallback.
