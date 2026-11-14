@@ -5,7 +5,7 @@ it supersedes earlier allocations in planning notes and agent context.
 
 ## Shared player journey
 
-Three worlds together → choose Moon/Mars → choose a study region → transition to
+Title screen / Start Journey → three worlds together → choose Moon/Mars → choose a study region → transition to
 Earth → select a proposed matching site → fly continuously into its measured terrain
 → Select Equipment → configure the lander using arrow controls → Launch Journey
 → Furgan's departure cinematics → Tim's playable character and ship controls
@@ -27,6 +27,20 @@ Current delivery: the opening is the default app. The prior engineering planner 
 retained at `?planner`. One Three.js scene stays mounted from worlds through Earth
 terrain; keyboard/touch-accessible controls duplicate raycast selections. Reduced
 motion snaps cameras instead of animating. Missing WebGL still permits setup.
+
+The game occupies one fixed viewport at every stage, including cinematics and live
+descent. Start Journey requests browser fullscreen when supported; rejecting or exiting
+browser fullscreen must leave a fully playable viewport game. Do not restore page
+headers, max-width wrappers or aspect-ratio video windows around gameplay. Use compact
+HUD overlays and internally scrolling controls on small screens.
+
+`earthSurface.ts` attaches the DEM to its geographic tangent frame on a curved Earth
+cap, using the globe's reference texture. DEM relief is 1:1 inside its footprint;
+the outer curved context is explicitly unmeasured and must never enter physics.
+`earthFlight` interpolates above the sphere, including interrupted flights and
+opposite-side site changes. Keep Earth visible throughout approach, and preserve the
+departing patch until the next approach finishes. Do not replace Earth with a detached
+rectangle or teleport to a second terrain scene.
 
 ## Yousef — equipment and landing gear
 
@@ -60,6 +74,11 @@ Use selected equipment IDs for the future animated model; the current cutscene l
 is generic and does not yet depict all selected gear. Keep Skip available, honor reduced
 motion, release renderers/listeners/timers on exit, and start audio only after consent.
 Terrain-load failure offers continuation rather than silently substituting terrain.
+
+The host passes optional `SceneProps.immersive` to registered scenes. Forward it to
+`Cutscene.fullscreen`: the renderer fills the host, resizes to its actual aspect ratio,
+and removes cinema bars in game mode. Embedded planner/demo sizing is unchanged.
+Scene controls (sound, skip) float above the scene; the game adds a Credits overlay.
 
 ## Tim — playable character, ship controls and physics
 

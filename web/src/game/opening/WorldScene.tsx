@@ -2,20 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import * as T from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import type { AnalogSite, Body, PlanetarySite, TerrainProfile } from '../../lib/types';
+import { earthFlight, earthSurface, globePoint, EARTH_CENTRE, METRE_SCALE, type CameraPose } from './earthSurface';
 
 export interface WorldProps {
-  stage: 'worlds' | 'destination' | 'earth'; body: Body; hover: Body | null;
+  stage: 'title' | 'worlds' | 'destination' | 'earth'; body: Body; hover: Body | null;
   targets: PlanetarySite[]; analogs: AnalogSite[]; targetId: string; analogId: string;
   profile: TerrainProfile | null; surface: boolean;
   onBody: (body: Body) => void; onHover: (body: Body | null) => void;
   onTarget: (id: string) => void; onAnalog: (id: string) => void;
 }
-const centres = { Moon: new T.Vector3(-3.6, .4, 0), Earth: new T.Vector3(0, -.35, 0), Mars: new T.Vector3(3.7, .1, 0) };
+const centres = { Moon: new T.Vector3(-3.6, .4, 0), Earth: EARTH_CENTRE, Mars: new T.Vector3(3.7, .1, 0) };
 const radii = { Moon: .85, Earth: 1.5, Mars: 1.18 };
-export function globePoint(lat: number, lon: number, radius: number) {
-  const p = T.MathUtils.degToRad(90 - lat), t = T.MathUtils.degToRad(lon + 180);
-  return new T.Vector3(-radius * Math.sin(p) * Math.cos(t), radius * Math.cos(p), radius * Math.sin(p) * Math.sin(t));
-}
 function release(root: T.Object3D) {
   root.traverse(o => { if (o instanceof T.Mesh || o instanceof T.Points) { o.geometry.dispose(); const materials = Array.isArray(o.material) ? o.material : [o.material]; materials.forEach(m => m.dispose()); } });
 }
@@ -31,10 +28,11 @@ export default function WorldScene(props: WorldProps) {
     renderer.domElement.setAttribute('aria-label', 'Mission worlds. Select a destination or site using the scene or the adjacent buttons.');
     renderer.domElement.setAttribute('role', 'img');
     const scene = new T.Scene(), camera = new T.PerspectiveCamera(42, 1, .000001, 300);
-    camera.position.set(0, 3, 14);
-    const controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.enablePan = false;
+    camera.position.set(0, 1.4, 10);
+    let controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.enablePan = false;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    scene.add(new T.AmbientLight(0xe1e5ef, 1.3));
+    const ambient = new T.AmbientLight(0xe1e5ef, 1.3); scene.add(ambient);
+    const haze = new T.FogExp2(0x7b8990, 0), sky = new T.Color(0x030405); scene.fog = haze;
     const sun = new T.DirectionalLight(0xffe3b3, 3); sun.position.set(-5, 5, 8); scene.add(sun, sun.target);
     const planets = new Map<string, T.Mesh>(), textures: T.Texture[] = []; let disposed = false;
     for (const body of ['Moon', 'Earth', 'Mars'] as const) {
@@ -42,7 +40,8 @@ export default function WorldScene(props: WorldProps) {
       const globe = new T.Mesh(new T.SphereGeometry(radii[body], 96, 64), mat); globe.position.copy(centres[body]); globe.userData.body = body;
       scene.add(globe); planets.set(body, globe);
       if (body !== 'Mars') new T.TextureLoader().load(`/textures/${body.toLowerCase()}.jpg`, texture => {
-        if (disposed) { texture.dispose(); return; } texture.colorSpace = T.SRGBColorSpace; textures.push(texture); mat.map = texture; mat.needsUpdate = true;
+        if (disposed) { texture.dispose(); return; } texture.colorSpace = T.SRGBColorSpace; texture.wrapS = T.RepeatWrapping; textures.push(texture); mat.map = texture; mat.needsUpdate = true;
+        if (body === 'Earth' && terrainMaterial) { terrainMaterial.map = texture; terrainMaterial.needsUpdate = true; }
       });
       else {
         const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 512; const ctx = canvas.getContext('2d')!;
@@ -56,10 +55,31 @@ export default function WorldScene(props: WorldProps) {
     for (let i=0;i<1200;i++) { const a=i*2.39996, z=1-2*(i+.5)/1200, r=Math.sqrt(1-z*z)*90; stars.set([Math.cos(a)*r,z*90,Math.sin(a)*r],i*3); }
     const starGeo = new T.BufferGeometry(); starGeo.setAttribute('position',new T.BufferAttribute(stars,3)); scene.add(new T.Points(starGeo,new T.PointsMaterial({color:0xc6c1b5,size:.065,sizeAttenuation:true})));
     const markers = new T.Group(); scene.add(markers);
-    let terrain: T.Group | null = null, terrainProfile: TerrainProfile | null = null;
+    let terrain: T.Group | null = null, terrainProfile: TerrainProfile | null = null, terrainMaterial: T.MeshStandardMaterial | null = null;
+    const departingPatches: T.Group[] = [];
+    let terrainRelief = 0, earthRoute: { from: CameraPose; to: CameraPose; elapsed: number } | null = null;
     let goalTarget = new T.Vector3(), goalOffset = camera.position.clone(), goalUp = new T.Vector3(0,1,0), moving = true, surface = false;
-    const fly = (target: T.Vector3, offset: T.Vector3, up = new T.Vector3(0,1,0)) => { goalTarget=target; goalOffset=offset; goalUp=up; moving=true; controls.enabled=false; };
-    const scale = 1.5 / 6371000; // The Earth patch uses metres on the same globe.
+    const fly = (target: T.Vector3, offset: T.Vector3, up = new T.Vector3(0,1,0), onEarth = false) => {
+      goalTarget=target; goalOffset=offset; goalUp=up; moving=true; controls.enabled=false;
+      earthRoute = onEarth ? {
+        from: { position: camera.position.clone(), target: controls.target.clone(), up: camera.up.clone().normalize() },
+        to: { position: target.clone().add(offset), target, up }, elapsed: 0,
+      } : null;
+    };
+    const finishFlight = () => {
+      moving = false;
+      camera.up.copy(goalUp);
+      // OrbitControls captures its up-axis in the constructor. Rebind to the local
+      // surface normal after flight, using public API, without moving the camera.
+      controls.dispose();
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.target.copy(goalTarget); controls.enableDamping = true; controls.enablePan = false;
+      controls.minDistance = surface ? Math.max(900, terrainRelief * 3) * METRE_SCALE : 2;
+      controls.maxDistance = surface ? .004 : 22;
+      controls.maxPolarAngle = surface ? Math.PI * .42 : Math.PI;
+      controls.enabled = !['worlds','title'].includes(live.current.stage);
+      departingPatches.splice(0).forEach(patch => { scene.remove(patch); release(patch); });
+    };
     update.current = () => {
       const p = live.current; surface = p.stage === 'earth' && p.surface && !!p.profile;
       release(markers); markers.clear();
@@ -69,37 +89,38 @@ export default function WorldScene(props: WorldProps) {
         const marker = new T.Mesh(new T.SphereGeometry(.034,12,10),new T.MeshBasicMaterial({color:point.id === (p.stage==='earth'?p.analogId:p.targetId) ? 0xe9c78a : 0xffffff}));
         marker.position.copy(globePoint(point.lat,point.lon,radii[body]+.018).add(centres[body])); marker.userData.id=point.id; markers.add(marker);
       }
-      if (p.profile !== terrainProfile) {
-        if (terrain) { scene.remove(terrain); release(terrain); } terrain=null; terrainProfile=p.profile;
+      if (p.profile && p.profile !== terrainProfile) {
+        // Keep the departing ground under the camera until the next site flight
+        // finishes. Replacing a pack must not reveal the coarse sphere beneath it.
+        if (terrain) departingPatches.push(terrain);
+        terrain=null; terrainMaterial=null; terrainProfile=p.profile;
         if (p.profile) {
           const site=p.analogs.find(a=>a.id===p.profile!.manifest.id);
           if (site) {
-            const {rows,columns,spacing_m:s}=p.profile.manifest.grid, values=new DataView(p.profile.buffer);
-            const pos=new Float32Array(rows*columns*3), colors=new Float32Array(rows*columns*3), indices:number[]=[];
-            let low=Infinity, high=-Infinity; for(let i=0;i<rows*columns;i++){const h=values.getFloat32(i*4,true);low=Math.min(low,h);high=Math.max(high,h);}
-            const cold=/haughton|barrow/.test(site.id), dark=new T.Color(cold?'#718086':'#695c42'), light=new T.Color(cold?'#dfe5df':'#c6af7d');
-            for(let r=0;r<rows;r++)for(let c=0;c<columns;c++) { const i=r*columns+c,h=values.getFloat32(i*4,true); pos.set([(c-(columns-1)/2)*s,(h-low),(r-(rows-1)/2)*s],i*3); const col=dark.clone().lerp(light,(h-low)/(high-low||1)); colors.set([col.r,col.g,col.b],i*3); if(r<rows-1&&c<columns-1)indices.push(i,i+columns,i+1,i+1,i+columns,i+columns+1); }
-            const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(pos,3));geo.setAttribute('color',new T.BufferAttribute(colors,3));geo.setIndex(indices);geo.computeVertexNormals();
-            terrain=new T.Group(); const mesh=new T.Mesh(geo,new T.MeshStandardMaterial({vertexColors:true,roughness:1,side:T.DoubleSide}));terrain.add(mesh);
-            // Local x east, y up, z south, aligned to the selected geographic point.
-            const normal=globePoint(site.lat,site.lon,1), east=globePoint(0,site.lon+90,1), south=new T.Vector3().crossVectors(east,normal);
-            terrain.quaternion.setFromRotationMatrix(new T.Matrix4().makeBasis(east,normal,south)); terrain.position.copy(normal.multiplyScalar(1.5).add(centres.Earth));terrain.scale.setScalar(scale);scene.add(terrain);
+            const patch = earthSurface(p.profile, site.lat, site.lon);
+            terrainRelief = patch.relief;
+            terrainMaterial = new T.MeshStandardMaterial({ color: '#e2dfd4', roughness: 1, vertexColors: true, map: (planets.get('Earth')!.material as T.MeshStandardMaterial).map });
+            terrain=new T.Group(); terrain.add(new T.Mesh(patch.geometry, terrainMaterial));
+            terrain.quaternion.copy(patch.frame); terrain.position.copy(globePoint(site.lat,site.lon,1.5).add(centres.Earth));terrain.scale.setScalar(METRE_SCALE);scene.add(terrain);
           }
         }
       }
-      if(terrain)terrain.visible=surface;
-      controls.minDistance=surface ? .0001 : 2;controls.maxDistance=surface ? .004 : 22;
+      if(terrain)terrain.visible=p.stage==='earth';
+      departingPatches.forEach(patch => { patch.visible = p.stage==='earth'; });
+      controls.minDistance=surface ? Math.max(900, terrainRelief * 3) * METRE_SCALE : 2;controls.maxDistance=surface ? .004 : 22;
+      controls.maxPolarAngle = surface ? Math.PI * .42 : Math.PI;
       sun.position.set(-5,5,8);sun.target.position.set(0,0,0);
       if(surface && terrain) {
-        sun.position.copy(terrain.position).add(new T.Vector3(-4000,6000,2000).applyQuaternion(terrain.quaternion).multiplyScalar(scale));sun.target.position.copy(terrain.position);
-        const offset=new T.Vector3(4200,3200,4900).applyQuaternion(terrain.quaternion).multiplyScalar(scale);
-        fly(terrain.position.clone(),offset,new T.Vector3(0,1,0).applyQuaternion(terrain.quaternion));
+        const offset=new T.Vector3(2000,1300 + terrainRelief*.5,3200).applyQuaternion(terrain.quaternion).multiplyScalar(METRE_SCALE);
+        fly(terrain.position.clone(),offset,new T.Vector3(0,1,0).applyQuaternion(terrain.quaternion),true);
+      } else if(p.stage==='title') {
+        fly(new T.Vector3(0,.1,0),new T.Vector3(0,1.4,10));
       } else if(p.stage==='worlds') {
         fly(p.hover?centres[p.hover].clone().multiplyScalar(.35):new T.Vector3(),new T.Vector3(0,2,p.hover?11:14));
       } else {
         const selected=p.stage==='earth'?p.analogs.find(a=>a.id===p.analogId):p.targets.find(t=>t.id===p.targetId);
         const offset=selected?globePoint(selected.lat*.8,selected.lon,p.stage==='earth'?5.5:3.8):new T.Vector3(0,1,4.5);
-        fly(centres[body].clone(),offset);
+        fly(centres[body].clone(),offset,new T.Vector3(0,1,0),p.stage==='earth');
       }
     }; update.current();
     const ray=new T.Raycaster(); let down={x:0,y:0};
@@ -111,8 +132,23 @@ export default function WorldScene(props: WorldProps) {
     const resize=new ResizeObserver(()=>{const w=host.clientWidth,h=host.clientHeight;if(w&&h){renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();}});resize.observe(host);
     let frame=0,last=performance.now();
     const render=()=>{const now=performance.now(),dt=Math.min((now-last)/1000,.05);last=now;
-      if(moving){const a=reduced.matches?1:1-Math.exp(-4*dt);controls.target.lerp(goalTarget,a);camera.up.lerp(goalUp,a).normalize();const off=camera.position.clone().sub(controls.target);const distance=Math.exp(T.MathUtils.lerp(Math.log(Math.max(off.length(),.000001)),Math.log(goalOffset.length()),a));off.normalize().lerp(goalOffset.clone().normalize(),a).normalize().multiplyScalar(distance);camera.position.copy(controls.target).add(off);camera.lookAt(controls.target);if(camera.position.distanceTo(goalTarget.clone().add(goalOffset))<goalOffset.length()*.002){camera.position.copy(goalTarget).add(goalOffset);controls.target.copy(goalTarget);moving=false;controls.enabled=live.current.stage!=='worlds';}}
-      for(const [body,mesh] of planets)mesh.visible=!(surface&&camera.position.distanceTo(goalTarget)<.025)&&(!surface||body==='Earth');
+      if (earthRoute) {
+        earthRoute.elapsed += dt;
+        const progress = reduced.matches ? 1 : Math.min(earthRoute.elapsed / 4.8, 1);
+        const pose = earthFlight(earthRoute.from, earthRoute.to, progress);
+        camera.position.copy(pose.position); camera.up.copy(pose.up); controls.target.copy(pose.target); camera.lookAt(pose.target);
+        if (progress === 1) { earthRoute = null; finishFlight(); }
+      } else if(moving){const a=reduced.matches?1:1-Math.exp(-4*dt);controls.target.lerp(goalTarget,a);camera.up.lerp(goalUp,a).normalize();const off=camera.position.clone().sub(controls.target);const distance=Math.exp(T.MathUtils.lerp(Math.log(Math.max(off.length(),.000001)),Math.log(goalOffset.length()),a));off.normalize().lerp(goalOffset.clone().normalize(),a).normalize().multiplyScalar(distance);camera.position.copy(controls.target).add(off);camera.lookAt(controls.target);if(camera.position.distanceTo(goalTarget.clone().add(goalOffset))<goalOffset.length()*.002){camera.position.copy(goalTarget).add(goalOffset);controls.target.copy(goalTarget);finishFlight();}}
+      // Earth and its horizon stay present at every altitude; no globe/terrain swap.
+      for(const [body,mesh] of planets)mesh.visible=!surface||body==='Earth';
+      const nearGround = terrain && live.current.stage === 'earth' ? 1 - T.MathUtils.smoothstep(camera.position.distanceTo(centres.Earth) - radii.Earth, .002, .025) : 0;
+      haze.density = nearGround * 160;
+      scene.background = nearGround > 0 ? sky.set(0x030405).lerp(haze.color, nearGround) : null;
+      ambient.intensity = T.MathUtils.lerp(1.3, .65, nearGround);
+      if (terrain) {
+        const localSun = new T.Vector3(-4000,5000,1500).applyQuaternion(terrain.quaternion).multiplyScalar(METRE_SCALE).add(terrain.position);
+        sun.position.set(-5,5,8).lerp(localSun, nearGround); sun.target.position.set(0,0,0).lerp(terrain.position, nearGround);
+      }
       if(!moving)controls.update();renderer.render(scene,camera);frame=requestAnimationFrame(render);};render();
     return()=>{disposed=true;cancelAnimationFrame(frame);resize.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',pointerDown);renderer.domElement.removeEventListener('pointerup',pointerUp);renderer.domElement.removeEventListener('pointermove',pointerMove);textures.forEach(t=>t.dispose());release(scene);renderer.dispose();renderer.domElement.remove();update.current=()=>{};};
   },[]);

@@ -11,6 +11,10 @@ packaging or distribution is not decided. Do not migrate engines as part of inte
 
 ## Intended player journey
 
+The title screen offers **Start Journey**. From that point the experience is a
+continuous viewport-sized game: no scrolling website shell and no framed cinematic
+player. Earth terrain remains attached to Earth as the camera approaches its location.
+
 1. Select a lunar or Martian region on the planetary globe.
 2. See similar Earth terrain candidates, based on the catalog's proposed pairings
    and terrain descriptors. Inspect evidence and choose the Earth test site.

@@ -5,9 +5,11 @@ brushed gold #dfc28d, quiet text #b6b3ab. Natural planetary colours stay in the 
 Typeface: the existing self-hosted IBM Plex Sans, light large titles and compact
 readable controls. No new decorative display typeface or external image service.
 
-Layout: the world is the main surface. A quiet top bar and left-aligned briefing
-frame it; selection lives in a right-hand instrument panel, equipment in three rails.
-On narrow screens, the scene precedes the controls in a vertically scrollable layout.
+Layout: a full-viewport title over the three worlds opens with Start Journey. The
+world remains the main surface. Compact HUD text and selection controls float over
+it; after site selection, collapse the list so the landscape fills the screen.
+On narrow screens, controls scroll inside compact overlays; the document never scrolls.
+Equipment uses three rails, then hands directly into full-viewport scenes and descent.
 
 Distinctive moment: three actual 3D worlds in one scene, followed by a continuous
 camera flight down to the selected terrain. Avoid the prior card-grid/page metaphor.
@@ -16,3 +18,8 @@ metres and a 1:1 height scale, not procedural relief or exaggerated gameplay ter
 
 Motion responds to selection. No idle ship spin or camera sway. Use reduced-motion
 preferences, keyboard equivalents and an optional fullscreen control.
+
+Review of the earlier design: the detached rectangular DEM and padded flight container
+still read as a website. Replaced them with geographically registered curved ground,
+an above-Earth camera path, and a renderer that fills the game viewport. The outer
+ground and atmosphere are illustrative context; only the DEM footprint is measured.
