@@ -6,5 +6,5 @@ export { autopilot, scanForLandingSite } from './controllers/autopilot.ts';
 export { createManualPilot, keysToPilotInput } from './controllers/manual.ts';
 export type { PilotInput } from './controllers/manual.ts';
 export { evaluateTouchdown } from './touchdown.ts';
-export { GridTerrain, syntheticTerrain, slopeDegAt, roughnessAt, normalAt } from './terrain.ts';
+export { GridTerrain, syntheticTerrain, slopeDegAt, roughnessAt, normalAt, gradientAt } from './terrain.ts';
 export { parseSite, parseSites } from './sites.ts';

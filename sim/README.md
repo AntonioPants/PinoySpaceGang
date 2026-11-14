@@ -11,6 +11,14 @@ npx tsx scripts/run.ts --site earth-native              # Earth gravity with a l
 npx tsx scripts/run.ts --site path/sites.json:<id>      # fly a real site
 ```
 
+## Browser viewer
+
+```bash
+npm run viewer        # opens http://localhost:5199
+```
+
+The viewer has a side view that follows the lander and zooms in as it descends, with dust, explosions and tip-over animations. A top-view hillshade marks unsafe ground in red and shows the hazard-scan ring, the divert point and the flight path. It also shows a live HUD, an event log and a result card with a telemetry JSON download. You can fly manually with <kbd>W</kbd>/<kbd>S</kbd> and the arrow keys, and load a real `sites.json`. URL shortcuts: `?site=moonRocks&speed=8&launch` and `&at=85` to jump to t = 85 s.
+
 ## What it models
 
 | | |

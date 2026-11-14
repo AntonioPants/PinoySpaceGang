@@ -52,3 +52,26 @@ describe('autopilot', () => {
     expect(sim.telemetry().samples.length).toBeGreaterThan(100);
   });
 });
+
+describe('observe()', () => {
+  it('reading the HUD does not change the flight', () => {
+    const input = { site: syntheticTerrain({ body: 'mars' }), strategy: 'autonomous' as const, interference: { dust: 1 }, seed: 5 };
+    const a = createSim(input);
+    const b = createSim(input);
+    while (!a.state.done) a.step();
+    while (!b.state.done) {
+      b.observe();
+      b.step();
+    }
+    expect(b.telemetry().summary).toEqual(a.telemetry().summary);
+  });
+});
+
+describe('terrain following', () => {
+  it('does not fly into rising ground while lining up on a slope', () => {
+    // 10° is under the 12° limit, so a clean landing is possible if guidance holds AGL
+    const tel = runSim({ site: syntheticTerrain({ hillsM: 1, baseSlopeDeg: 10 }), strategy: 'autonomous' });
+    expect(tel.summary!.horizontalSpeedMps).toBeLessThan(1.2);
+    expect(tel.summary!.outcome).toBe('success');
+  });
+});

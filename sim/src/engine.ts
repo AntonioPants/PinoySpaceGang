@@ -62,7 +62,7 @@ export interface Sim {
   step(controls?: Controls): SimState;
   /** Advance by a render frame's worth of time (fixed-step accumulator). */
   advance(frameDt: number, controls?: Controls): SimState;
-  /** Sensor reading for HUDs (what a pilot would see). */
+  /** Sensor reading for HUDs (what a pilot would see). Safe to call any time; does not affect the flight. */
   observe(): Observation;
   /** Subscribe to events as they happen. Returns an unsubscribe function. */
   on(listener: (e: SimEvent) => void): () => void;
@@ -124,6 +124,8 @@ export function createSim(input: SimInput, controllerOverride?: Controller): Sim
   const hazardView =
     sensors.hazard === 'none' ? null : noisyField(terrain, glareSigma, seed ^ 0x9e3779b9, 1.5);
   const observeSensors = createSensorModel(sensors, interference, rng);
+  // HUD readings use their own RNG so displaying them never changes the flight.
+  const observeForHud = createSensorModel(sensors, interference, createRng(seed ^ 0x5bd1e995));
 
   const startPos = input.start?.position ?? { x: target.x - 400, y: target.y, z: 1000 };
   const startVel = input.start?.velocity ?? { x: 25, y: 0, z: -20 };
@@ -364,7 +366,7 @@ export function createSim(input: SimInput, controllerOverride?: Controller): Sim
       }
       return state;
     },
-    observe: () => observeSensors(state),
+    observe: () => observeForHud(state),
     on(listener) {
       listeners.add(listener);
       return () => listeners.delete(listener);

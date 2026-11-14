@@ -81,7 +81,8 @@ export function autopilot(opts: AutopilotOptions = {}): Controller {
       if (h > termAlt) {
         vzDes = -(Math.min(40, Math.sqrt(2 * aVBrake * (h - termAlt))) + termRate);
       } else if (dist > 2 || Math.hypot(vhx, vhy) > 0.4 || vhErr > 0.4) {
-        vzDes = h > 4 ? 0 : -0.3; // hover & translate (P66); keep a slight sink near the ground
+        // hover & translate (P66): hold height above the *ground* so rising terrain can't catch us
+        vzDes = Math.max(-1.5, Math.min(2, 0.6 * (0.7 * termAlt - h)));
       } else {
         vzDes = -termRate;
       }
