@@ -17,11 +17,13 @@ const legacyIds: Record<string, string> = {
 };
 export const normalizeTargetId = (id: string) => legacyIds[id] ?? id;
 const targetOrder = ['shackleton-rim', 'marius-hills', 'jezero', 'arsia-flank', 'phoenix', 'bagnold'];
+// Targets added to the catalog later sort after the curated order instead of jumping to the front.
+const rank = (id: string) => { const i = targetOrder.indexOf(id); return i < 0 ? targetOrder.length : i; };
 export const targets: PlanetarySite[] = catalogJson.sites.filter(s => s.role === 'planetary_target').map(s => ({
   id: s.id, name: names[s.id] ?? s.name, body: s.body === 'moon' ? 'Moon' as const : 'Mars' as const,
   region: s.region, lat: s.latitude, lon: s.longitude, gravity: s.body === 'moon' ? 1.62 : 3.72,
   description: s.description, interests: [s.morphology.replaceAll('_', ' '), s.substrate.replaceAll('_', ' ')], source: s.evidence_url,
-})).sort((a, b) => targetOrder.indexOf(a.id) - targetOrder.indexOf(b.id));
+})).sort((a, b) => rank(a.id) - rank(b.id));
 
 export const analogs: AnalogSite[] = catalogJson.sites.filter(s => s.role === 'earth_analog').map(s => ({
   id: s.id, name: names[s.id] ?? s.name, region: s.region, lat: s.latitude, lon: s.longitude,
