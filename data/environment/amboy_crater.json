@@ -1,0 +1,5767 @@
+{
+  "schema_version": "1.0.0",
+  "site": {
+    "id": "amboy_crater",
+    "name": "Amboy Crater, California",
+    "latitude": 34.55,
+    "longitude": -115.78,
+    "coordinate_role": "representative sampling point, not a certified landing point or mapped footprint",
+    "surface_materials": {
+      "values": [
+        "basaltic lava",
+        "volcanic cinders"
+      ],
+      "evidence": "literature",
+      "source_url": "https://pds-geosciences.wustl.edu/missions/amboycrater/index.htm",
+      "spatial_support": "site context; not a point sample or complete surface-unit map"
+    }
+  },
+  "generated_at": "2026-11-14T14:18:39.223432+00:00",
+  "baseline": {
+    "start_year": 2015,
+    "end_year": 2024,
+    "description": "Ten-year seasonal baseline (default), not a 30-year climate normal",
+    "hourly_time_standard": "UTC",
+    "diurnal_time_standard": "approximate local mean solar time, floor(UTC hour + longitude/15)",
+    "radiation_aggregation": "equal-weight monthly means across selected months/years; not instantaneous or day-weighted seasonal energy"
+  },
+  "spatial_support": {
+    "meteorology": "Regional source grid (MERRA-2 nominal 0.5 latitude x 0.625 longitude degrees; inspect source headers for changes), not crater/pad wind",
+    "radiation": "CERES SYN1deg regional 1-degree product; not a local material albedo measurement",
+    "point": "representative request coordinate; no site-wide or landing-pad survey"
+  },
+  "evidence": {
+    "weather": "modelled",
+    "albedo": "satellite-derived regional product",
+    "air_density": "derived: ideal moist air with Tetens saturation over water; approximate in extreme cold",
+    "surface_materials": "literature context"
+  },
+  "months": {
+    "1": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 3.3220282258064517,
+          "min": 0.08,
+          "max": 13.25,
+          "p05": 1.13,
+          "p50": 3.1,
+          "p95": 6.48,
+          "stddev": 1.6337491801411579
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 283.5498427419355,
+          "min": 270.29999999999995,
+          "max": 299.46999999999997,
+          "p05": 275.66949999999997,
+          "p50": 283.03,
+          "p95": 293.06,
+          "stddev": 5.24153345108264
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 47.03727419354838,
+          "min": 5.72,
+          "max": 100.0,
+          "p05": 16.116500000000006,
+          "p50": 44.41,
+          "p95": 90.64299999999996,
+          "stddev": 21.79245904248454
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 95797.81317204301,
+          "min": 93670.0,
+          "max": 97270.0,
+          "p05": 94940.0,
+          "p50": 95840.0,
+          "p95": 96500.0,
+          "stddev": 481.30056225226537
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 0.025817204301075272,
+          "min": 0.0,
+          "max": 5.55,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.07,
+          "stddev": 0.17740711313257296
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 1.17474106680526,
+          "min": 1.1124008307797972,
+          "max": 1.2443781069001134,
+          "p05": 1.1356608326839657,
+          "p50": 1.1753504926789,
+          "p95": 1.2115342489503507,
+          "stddev": 0.022996374886916224
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": -0.25646256284602903,
+          "min": -7.799431944335932,
+          "max": 9.941102939293115,
+          "p05": -3.2332480034252313,
+          "p50": -0.47922053648020424,
+          "p95": 3.322757232688693,
+          "stddev": 2.0997512463622234
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": -1.6389113063768264,
+          "min": -10.615524830916861,
+          "max": 12.965244052598564,
+          "p05": -5.269298834098218,
+          "p50": -2.037714218905659,
+          "p95": 2.6944810451578625,
+          "stddev": 2.558173040229219
+        }
+      },
+      "vector_mean_wind_from_deg": 8.89371791176799,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2023-01-09T01:00:00Z",
+          "wind_speed_m_s": 2.99,
+          "wind_from_deg": 119.0,
+          "air_temperature_k": 283.67999999999995,
+          "relative_humidity_pct": 43.51,
+          "pressure_pa": 95880.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": -2.6151129243467937,
+          "wind_north_m_s": 1.4495807645365477,
+          "air_density_kg_m3": 1.1748785263614137
+        },
+        "high_wind": {
+          "timestamp_utc": "2019-01-17T17:00:00Z",
+          "wind_speed_m_s": 6.48,
+          "wind_from_deg": 159.5,
+          "air_temperature_k": 287.01,
+          "relative_humidity_pct": 73.43,
+          "pressure_pa": 96050.0,
+          "precipitation_mm_h": 0.48,
+          "wind_east_m_s": -2.26934383056135,
+          "wind_north_m_s": 6.069635786329616,
+          "air_density_kg_m3": 1.1605134770764771
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 310,
+          "air_temperature_k": 280.21587096774186,
+          "wind_speed_m_s": 3.089806451612903
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 310,
+          "air_temperature_k": 279.82864516129035,
+          "wind_speed_m_s": 3.1461612903225804
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 310,
+          "air_temperature_k": 279.4951290322581,
+          "wind_speed_m_s": 3.2100645161290324
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 310,
+          "air_temperature_k": 279.19490322580646,
+          "wind_speed_m_s": 3.271709677419355
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 310,
+          "air_temperature_k": 278.9254193548387,
+          "wind_speed_m_s": 3.3182580645161295
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 310,
+          "air_temperature_k": 278.68174193548384,
+          "wind_speed_m_s": 3.32216129032258
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 310,
+          "air_temperature_k": 278.496193548387,
+          "wind_speed_m_s": 3.3150322580645155
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 310,
+          "air_temperature_k": 280.26980645161285,
+          "wind_speed_m_s": 3.2904516129032255
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 310,
+          "air_temperature_k": 283.30999999999995,
+          "wind_speed_m_s": 4.047354838709677
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 310,
+          "air_temperature_k": 285.90541935483867,
+          "wind_speed_m_s": 4.275032258064516
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 310,
+          "air_temperature_k": 288.15151612903225,
+          "wind_speed_m_s": 4.246354838709678
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 310,
+          "air_temperature_k": 289.5531612903225,
+          "wind_speed_m_s": 4.069387096774194
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 310,
+          "air_temperature_k": 290.3857741935484,
+          "wind_speed_m_s": 3.9819032258064513
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 310,
+          "air_temperature_k": 290.7286129032258,
+          "wind_speed_m_s": 3.936193548387096
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 310,
+          "air_temperature_k": 290.54254838709676,
+          "wind_speed_m_s": 3.826096774193549
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 310,
+          "air_temperature_k": 289.3048064516129,
+          "wind_speed_m_s": 3.1179354838709674
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 310,
+          "air_temperature_k": 285.9898387096774,
+          "wind_speed_m_s": 2.580838709677419
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 310,
+          "air_temperature_k": 284.3261290322581,
+          "wind_speed_m_s": 2.6540645161290324
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 310,
+          "air_temperature_k": 283.46574193548383,
+          "wind_speed_m_s": 2.6689354838709676
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 310,
+          "air_temperature_k": 282.7713870967742,
+          "wind_speed_m_s": 2.7028387096774193
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 310,
+          "air_temperature_k": 282.19661290322586,
+          "wind_speed_m_s": 2.7877741935483873
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 310,
+          "air_temperature_k": 281.6528064516129,
+          "wind_speed_m_s": 2.874258064516129
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 310,
+          "air_temperature_k": 281.14154838709675,
+          "wind_speed_m_s": 2.9617741935483872
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 310,
+          "air_temperature_k": 280.6626129032258,
+          "wind_speed_m_s": 3.0342903225806457
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 0.22600000000000003,
+          "min": 0.21,
+          "max": 0.23,
+          "p05": 0.2145,
+          "p50": 0.23,
+          "p95": 0.23,
+          "stddev": 0.006633249580710806
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 134.63208333333333,
+          "min": 127.22916666666666,
+          "max": 146.7,
+          "p05": 128.03916666666666,
+          "p50": 132.7,
+          "p95": 145.215,
+          "stddev": 5.992775468220049
+        }
+      }
+    },
+    "2": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 6792,
+          "expected_count": 6792,
+          "coverage_fraction": 1.0,
+          "mean": 3.443989988221437,
+          "min": 0.05,
+          "max": 13.07,
+          "p05": 1.0155,
+          "p50": 3.12,
+          "p95": 7.34,
+          "stddev": 1.9378717118002529
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 6792,
+          "expected_count": 6792,
+          "coverage_fraction": 1.0,
+          "mean": 285.6341916961131,
+          "min": 271.15999999999997,
+          "max": 303.34999999999997,
+          "p05": 276.03099999999995,
+          "p50": 285.01,
+          "p95": 296.95,
+          "stddev": 6.216777249524222
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 6792,
+          "expected_count": 6792,
+          "coverage_fraction": 1.0,
+          "mean": 39.910497644287396,
+          "min": 4.33,
+          "max": 100.0,
+          "p05": 11.8055,
+          "p50": 36.3,
+          "p95": 84.9935,
+          "stddev": 21.638274725256714
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 6792,
+          "expected_count": 6792,
+          "coverage_fraction": 1.0,
+          "mean": 95620.9437573616,
+          "min": 93650.0,
+          "max": 97030.0,
+          "p05": 94760.0,
+          "p50": 95650.0,
+          "p95": 96440.0,
+          "stddev": 510.5706308037673
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 6792,
+          "expected_count": 6792,
+          "coverage_fraction": 1.0,
+          "mean": 0.017039163722025914,
+          "min": 0.0,
+          "max": 4.11,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.02,
+          "stddev": 0.1456821398220813
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 6792,
+          "expected_count": 6792,
+          "coverage_fraction": 1.0,
+          "mean": 1.1642849862370521,
+          "min": 1.093653485168273,
+          "max": 1.2359180759303263,
+          "p05": 1.1190171478894626,
+          "p50": 1.1655204094160578,
+          "p95": 1.2095820645509234,
+          "stddev": 0.026565150537732788
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 6792,
+          "expected_count": 6792,
+          "coverage_fraction": 1.0,
+          "mean": 0.3468048684664204,
+          "min": -7.739564613850409,
+          "max": 12.757796707691435,
+          "p05": -3.013735756718002,
+          "p50": 0.16043443088580855,
+          "p95": 4.241417539754288,
+          "stddev": 2.4045732928950945
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 6792,
+          "expected_count": 6792,
+          "coverage_fraction": 1.0,
+          "mean": -1.314469071644491,
+          "min": -12.778437352930476,
+          "max": 11.380026595960121,
+          "p05": -5.620408483083549,
+          "p50": -1.601764002735194,
+          "p95": 3.252232481970256,
+          "stddev": 2.8260110637360984
+        }
+      },
+      "vector_mean_wind_from_deg": 345.22008230490957,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2015-02-11T06:00:00Z",
+          "wind_speed_m_s": 3.22,
+          "wind_from_deg": 354.5,
+          "air_temperature_k": 284.77,
+          "relative_humidity_pct": 37.79,
+          "pressure_pa": 95620.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 0.30862332311512286,
+          "wind_north_m_s": -3.2051757587423158,
+          "air_density_kg_m3": 1.1673703698237847
+        },
+        "high_wind": {
+          "timestamp_utc": "2019-02-05T23:00:00Z",
+          "wind_speed_m_s": 7.34,
+          "wind_from_deg": 232.2,
+          "air_temperature_k": 287.09999999999997,
+          "relative_humidity_pct": 36.12,
+          "pressure_pa": 94710.0,
+          "precipitation_mm_h": 0.01,
+          "wind_east_m_s": 5.799737790837567,
+          "wind_north_m_s": 4.498737773812847,
+          "air_density_kg_m3": 1.1465853453819381
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 283,
+          "air_temperature_k": 281.7481625441696,
+          "wind_speed_m_s": 3.0745229681978796
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 283,
+          "air_temperature_k": 281.24865724381624,
+          "wind_speed_m_s": 3.1268904593639575
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 283,
+          "air_temperature_k": 280.8208127208481,
+          "wind_speed_m_s": 3.1825795053003536
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 283,
+          "air_temperature_k": 280.44155477031796,
+          "wind_speed_m_s": 3.2219081272084806
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 283,
+          "air_temperature_k": 280.0817314487632,
+          "wind_speed_m_s": 3.2557597173144877
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 283,
+          "air_temperature_k": 279.7237455830389,
+          "wind_speed_m_s": 3.2640989399293288
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 283,
+          "air_temperature_k": 279.8501060070671,
+          "wind_speed_m_s": 3.242791519434629
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 283,
+          "air_temperature_k": 282.90003533568904,
+          "wind_speed_m_s": 3.7073144876325093
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 283,
+          "air_temperature_k": 285.83625441696114,
+          "wind_speed_m_s": 4.396360424028268
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 283,
+          "air_temperature_k": 288.62243816254414,
+          "wind_speed_m_s": 4.444982332155477
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 283,
+          "air_temperature_k": 290.61823321554766,
+          "wind_speed_m_s": 4.29547703180212
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 283,
+          "air_temperature_k": 291.93424028268544,
+          "wind_speed_m_s": 4.1985865724381615
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 283,
+          "air_temperature_k": 292.7576678445229,
+          "wind_speed_m_s": 4.179293286219082
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 283,
+          "air_temperature_k": 293.14328621908123,
+          "wind_speed_m_s": 4.205689045936396
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 283,
+          "air_temperature_k": 293.0462544169611,
+          "wind_speed_m_s": 4.160212014134276
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 283,
+          "air_temperature_k": 292.31074204947,
+          "wind_speed_m_s": 3.923498233215548
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 283,
+          "air_temperature_k": 289.6102120141342,
+          "wind_speed_m_s": 2.944982332155477
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 283,
+          "air_temperature_k": 286.82674911660774,
+          "wind_speed_m_s": 2.7696819787985865
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 283,
+          "air_temperature_k": 285.74166077738516,
+          "wind_speed_m_s": 2.790530035335689
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 283,
+          "air_temperature_k": 284.91038869257943,
+          "wind_speed_m_s": 2.769151943462898
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 283,
+          "air_temperature_k": 284.22798586572435,
+          "wind_speed_m_s": 2.775017667844523
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 283,
+          "air_temperature_k": 283.57929328621907,
+          "wind_speed_m_s": 2.8195053003533572
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 283,
+          "air_temperature_k": 282.9319434628975,
+          "wind_speed_m_s": 2.9073498233215544
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 283,
+          "air_temperature_k": 282.308445229682,
+          "wind_speed_m_s": 2.999575971731449
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 0.233,
+          "min": 0.22,
+          "max": 0.25,
+          "p05": 0.2245,
+          "p50": 0.23,
+          "p95": 0.2455,
+          "stddev": 0.00781024967590665
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 186.01916666666665,
+          "min": 165.42916666666665,
+          "max": 201.84166666666664,
+          "p05": 166.85229166666664,
+          "p50": 190.3145833333333,
+          "p95": 200.54416666666665,
+          "stddev": 11.984865485037556
+        }
+      }
+    },
+    "3": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 3.5172446236559143,
+          "min": 0.04,
+          "max": 15.1,
+          "p05": 1.0595000000000006,
+          "p50": 3.19,
+          "p95": 7.330499999999993,
+          "stddev": 1.8851070858456564
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 288.89891801075265,
+          "min": 274.82,
+          "max": 307.14,
+          "p05": 279.1295,
+          "p50": 288.40999999999997,
+          "p95": 300.57,
+          "stddev": 6.548218143805928
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 38.914012096774194,
+          "min": 3.52,
+          "max": 99.6,
+          "p05": 9.94,
+          "p50": 33.735,
+          "p95": 82.56449999999994,
+          "stddev": 22.91338182617789
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 95466.42204301075,
+          "min": 94180.0,
+          "max": 96630.0,
+          "p05": 94770.0,
+          "p50": 95490.0,
+          "p95": 96070.0,
+          "stddev": 383.4687736626292
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 0.017204301075268817,
+          "min": 0.0,
+          "max": 4.5,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.04,
+          "stddev": 0.12968606089361687
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 1.148935524166387,
+          "min": 1.07738672361036,
+          "max": 1.2157448276454632,
+          "p05": 1.1033877945642556,
+          "p50": 1.150477734962737,
+          "p95": 1.1908074720412634,
+          "stddev": 0.02636612421311017
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 1.102631034068835,
+          "min": -7.01467101745731,
+          "max": 14.395277469363963,
+          "p05": -2.626222206162961,
+          "p50": 1.0530898405146778,
+          "p95": 5.308749391683459,
+          "stddev": 2.450099699961337
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": -0.7721483050499782,
+          "min": -10.5698551090553,
+          "max": 9.61310771468264,
+          "p05": -5.2475721356163305,
+          "p50": -1.037845294090017,
+          "p95": 4.054414929473708,
+          "stddev": 2.847743268925069
+        }
+      },
+      "vector_mean_wind_from_deg": 305.00271062287936,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2023-03-10T01:00:00Z",
+          "wind_speed_m_s": 3.25,
+          "wind_from_deg": 141.1,
+          "air_temperature_k": 288.02,
+          "relative_humidity_pct": 33.4,
+          "pressure_pa": 95440.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": -2.0408799373603483,
+          "wind_north_m_s": 2.529290232709568,
+          "air_density_kg_m3": 1.1518014959281204
+        },
+        "high_wind": {
+          "timestamp_utc": "2022-03-30T15:00:00Z",
+          "wind_speed_m_s": 7.33,
+          "wind_from_deg": 313.7,
+          "air_temperature_k": 288.83,
+          "relative_humidity_pct": 47.4,
+          "pressure_pa": 95500.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 5.2993491795171375,
+          "wind_north_m_s": -5.064168073193369,
+          "air_density_kg_m3": 1.148020485266343
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 310,
+          "air_temperature_k": 284.4492903225806,
+          "wind_speed_m_s": 2.9088387096774193
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 310,
+          "air_temperature_k": 283.877935483871,
+          "wind_speed_m_s": 2.915193548387097
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 310,
+          "air_temperature_k": 283.3771612903226,
+          "wind_speed_m_s": 2.960451612903226
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 310,
+          "air_temperature_k": 282.9286774193548,
+          "wind_speed_m_s": 3.022193548387097
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 310,
+          "air_temperature_k": 282.5280967741935,
+          "wind_speed_m_s": 3.043451612903226
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 310,
+          "air_temperature_k": 282.21609677419355,
+          "wind_speed_m_s": 3.048290322580645
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 310,
+          "air_temperature_k": 283.842,
+          "wind_speed_m_s": 3.229548387096774
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 310,
+          "air_temperature_k": 287.1332580645161,
+          "wind_speed_m_s": 4.145516129032258
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 310,
+          "air_temperature_k": 290.01790322580644,
+          "wind_speed_m_s": 4.361870967741936
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 310,
+          "air_temperature_k": 292.3876129032258,
+          "wind_speed_m_s": 4.232096774193549
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 310,
+          "air_temperature_k": 294.02677419354836,
+          "wind_speed_m_s": 4.154064516129033
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 310,
+          "air_temperature_k": 295.22970967741935,
+          "wind_speed_m_s": 4.172677419354839
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 310,
+          "air_temperature_k": 296.0056451612903,
+          "wind_speed_m_s": 4.2509999999999994
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 310,
+          "air_temperature_k": 296.40158064516123,
+          "wind_speed_m_s": 4.331548387096774
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 310,
+          "air_temperature_k": 296.36016129032254,
+          "wind_speed_m_s": 4.392483870967742
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 310,
+          "air_temperature_k": 295.8001935483871,
+          "wind_speed_m_s": 4.4081935483870955
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 310,
+          "air_temperature_k": 294.2501612903225,
+          "wind_speed_m_s": 3.892322580645161
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 310,
+          "air_temperature_k": 290.9398709677419,
+          "wind_speed_m_s": 2.992935483870968
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 310,
+          "air_temperature_k": 289.08393548387096,
+          "wind_speed_m_s": 2.972096774193548
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 310,
+          "air_temperature_k": 288.1172258064516,
+          "wind_speed_m_s": 3.0240645161290325
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 310,
+          "air_temperature_k": 287.2716129032258,
+          "wind_speed_m_s": 3.0237419354838715
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 310,
+          "air_temperature_k": 286.4778064516129,
+          "wind_speed_m_s": 3.0100322580645162
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 310,
+          "air_temperature_k": 285.7613225806451,
+          "wind_speed_m_s": 2.9845806451612904
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 310,
+          "air_temperature_k": 285.09,
+          "wind_speed_m_s": 2.936677419354839
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 0.23399999999999999,
+          "min": 0.22,
+          "max": 0.24,
+          "p05": 0.22,
+          "p50": 0.24,
+          "p95": 0.24,
+          "stddev": 0.009165151389911674
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 235.42041666666665,
+          "min": 217.22083333333333,
+          "max": 250.47083333333333,
+          "p05": 220.0558333333333,
+          "p50": 236.48541666666665,
+          "p95": 248.77395833333333,
+          "stddev": 10.647625819415225
+        }
+      }
+    },
+    "4": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 3.8366055555555554,
+          "min": 0.06,
+          "max": 12.88,
+          "p05": 1.27,
+          "p50": 3.41,
+          "p95": 7.79,
+          "stddev": 1.954628958814384
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 293.8850486111111,
+          "min": 275.65,
+          "max": 311.17999999999995,
+          "p05": 283.4995,
+          "p50": 293.21999999999997,
+          "p95": 305.79049999999995,
+          "stddev": 6.960111996055592
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 29.14221944444445,
+          "min": 3.16,
+          "max": 89.96,
+          "p05": 7.16,
+          "p50": 23.69,
+          "p95": 68.51,
+          "stddev": 19.438964113966215
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 95218.82083333333,
+          "min": 94200.0,
+          "max": 96490.0,
+          "p05": 94620.0,
+          "p50": 95200.0,
+          "p95": 95830.0,
+          "stddev": 369.2014071078504
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 0.008409722222222221,
+          "min": 0.0,
+          "max": 4.19,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.01,
+          "stddev": 0.09150993519182346
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 1.1265926236962045,
+          "min": 1.0558842786786578,
+          "max": 1.2082323333349758,
+          "p05": 1.0802405717287034,
+          "p50": 1.1282397439397158,
+          "p95": 1.1694092500502697,
+          "stddev": 0.02746628015172058
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 1.81602582384765,
+          "min": -6.770647628553213,
+          "max": 12.250263923886484,
+          "p05": -2.0719102324142042,
+          "p50": 1.7318259555448905,
+          "p95": 6.545926105669605,
+          "stddev": 2.5633095513502715
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": -0.9814726461161439,
+          "min": -10.348193843381518,
+          "max": 9.396493808437079,
+          "p05": -5.052730445098704,
+          "p50": -1.414864374805181,
+          "p95": 3.9981936119978214,
+          "stddev": 2.776386563783268
+        }
+      },
+      "vector_mean_wind_from_deg": 298.38904105150294,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2018-04-23T06:00:00Z",
+          "wind_speed_m_s": 3.55,
+          "wind_from_deg": 266.6,
+          "air_temperature_k": 293.37,
+          "relative_humidity_pct": 26.26,
+          "pressure_pa": 95190.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 3.543751389129367,
+          "wind_north_m_s": 0.21053762619466393,
+          "air_density_kg_m3": 1.1275695877197387
+        },
+        "high_wind": {
+          "timestamp_utc": "2016-04-22T18:00:00Z",
+          "wind_speed_m_s": 7.79,
+          "wind_from_deg": 168.6,
+          "air_temperature_k": 304.60999999999996,
+          "relative_humidity_pct": 10.11,
+          "pressure_pa": 95060.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": -1.5397506815533941,
+          "wind_north_m_s": 7.636312450303213,
+          "air_density_kg_m3": 1.0851512308280586
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 300,
+          "air_temperature_k": 288.4290333333333,
+          "wind_speed_m_s": 3.4515333333333333
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 300,
+          "air_temperature_k": 287.6891,
+          "wind_speed_m_s": 3.3798666666666666
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 300,
+          "air_temperature_k": 287.06353333333334,
+          "wind_speed_m_s": 3.339
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 300,
+          "air_temperature_k": 286.5273,
+          "wind_speed_m_s": 3.3244
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 300,
+          "air_temperature_k": 286.0505,
+          "wind_speed_m_s": 3.293433333333333
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 300,
+          "air_temperature_k": 286.2095333333333,
+          "wind_speed_m_s": 3.2982
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 300,
+          "air_temperature_k": 289.2400999999999,
+          "wind_speed_m_s": 4.011833333333334
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 300,
+          "air_temperature_k": 292.5198333333333,
+          "wind_speed_m_s": 4.410033333333334
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 300,
+          "air_temperature_k": 295.72113333333334,
+          "wind_speed_m_s": 4.211366666666666
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 300,
+          "air_temperature_k": 297.9137999999999,
+          "wind_speed_m_s": 3.979766666666667
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 300,
+          "air_temperature_k": 299.5004333333334,
+          "wind_speed_m_s": 3.9542666666666664
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 300,
+          "air_temperature_k": 300.70149999999995,
+          "wind_speed_m_s": 4.034266666666667
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 300,
+          "air_temperature_k": 301.5340333333333,
+          "wind_speed_m_s": 4.170733333333334
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 300,
+          "air_temperature_k": 301.9993,
+          "wind_speed_m_s": 4.3245
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 300,
+          "air_temperature_k": 302.01846666666665,
+          "wind_speed_m_s": 4.477033333333334
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 300,
+          "air_temperature_k": 301.57686666666666,
+          "wind_speed_m_s": 4.630066666666667
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 300,
+          "air_temperature_k": 300.3193333333333,
+          "wind_speed_m_s": 4.6606
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 300,
+          "air_temperature_k": 297.7487333333333,
+          "wind_speed_m_s": 3.724066666666667
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 300,
+          "air_temperature_k": 294.5037,
+          "wind_speed_m_s": 3.4050666666666665
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 300,
+          "air_temperature_k": 293.1732333333333,
+          "wind_speed_m_s": 3.513833333333334
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 300,
+          "air_temperature_k": 292.15233333333333,
+          "wind_speed_m_s": 3.6392666666666673
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 300,
+          "air_temperature_k": 291.1667333333333,
+          "wind_speed_m_s": 3.682133333333333
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 300,
+          "air_temperature_k": 290.19473333333326,
+          "wind_speed_m_s": 3.6279999999999997
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 300,
+          "air_temperature_k": 289.2879,
+          "wind_speed_m_s": 3.5352666666666663
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 0.23699999999999996,
+          "min": 0.22,
+          "max": 0.25,
+          "p05": 0.2245,
+          "p50": 0.24,
+          "p95": 0.2455,
+          "stddev": 0.007810249675906651
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 298.1629166666666,
+          "min": 276.9583333333333,
+          "max": 308.62916666666666,
+          "p05": 281.01395833333333,
+          "p50": 301.0645833333333,
+          "p95": 308.45854166666663,
+          "stddev": 10.159209261182683
+        }
+      }
+    },
+    "5": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 3.7704059139784944,
+          "min": 0.08,
+          "max": 10.74,
+          "p05": 1.41,
+          "p50": 3.41,
+          "p95": 7.24,
+          "stddev": 1.7565090613332088
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 297.6853440860215,
+          "min": 281.19,
+          "max": 315.40999999999997,
+          "p05": 286.63,
+          "p50": 297.32,
+          "p95": 309.3305,
+          "stddev": 7.106318150098686
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 27.80195564516129,
+          "min": 3.78,
+          "max": 84.72,
+          "p05": 7.64,
+          "p50": 22.65,
+          "p95": 63.601999999999975,
+          "stddev": 17.604105611698017
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 95014.81182795699,
+          "min": 94000.0,
+          "max": 96190.0,
+          "p05": 94530.0,
+          "p50": 95020.0,
+          "p95": 95460.0,
+          "stddev": 289.14671847755073
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 0.0038911290322580644,
+          "min": 0.0,
+          "max": 2.08,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.0,
+          "stddev": 0.038985542906499755
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 1.109305121779185,
+          "min": 1.0441488701530672,
+          "max": 1.1847858398814761,
+          "p05": 1.0665445525570498,
+          "p50": 1.1102433450231535,
+          "p95": 1.1523877628571317,
+          "stddev": 0.026766225172527122
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 1.7059113757324451,
+          "min": -6.094649263603036,
+          "max": 10.277556279406557,
+          "p05": -2.209689576536463,
+          "p50": 1.7448268999421848,
+          "p95": 5.995238407312538,
+          "stddev": 2.450093902120625
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 0.07483157406587368,
+          "min": -8.359482156544145,
+          "max": 10.686896821383572,
+          "p05": -3.7047326237007723,
+          "p50": -0.6180067130971428,
+          "p95": 5.457601855586034,
+          "stddev": 2.8952705094982862
+        }
+      },
+      "vector_mean_wind_from_deg": 267.488271352122,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2016-05-07T22:00:00Z",
+          "wind_speed_m_s": 3.53,
+          "wind_from_deg": 167.4,
+          "air_temperature_k": 297.83,
+          "relative_humidity_pct": 22.44,
+          "pressure_pa": 95020.0,
+          "precipitation_mm_h": 0.02,
+          "wind_east_m_s": -0.7700456421297943,
+          "wind_north_m_s": 3.4449861696437782,
+          "air_density_kg_m3": 1.1083643472593234
+        },
+        "high_wind": {
+          "timestamp_utc": "2016-05-20T02:00:00Z",
+          "wind_speed_m_s": 7.24,
+          "wind_from_deg": 240.9,
+          "air_temperature_k": 303.02,
+          "relative_humidity_pct": 17.92,
+          "pressure_pa": 94450.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 6.32611089477677,
+          "wind_north_m_s": 3.521068154266069,
+          "air_density_kg_m3": 1.0825787255522008
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 310,
+          "air_temperature_k": 291.94754838709673,
+          "wind_speed_m_s": 3.4293548387096777
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 310,
+          "air_temperature_k": 291.1125161290322,
+          "wind_speed_m_s": 3.2560967741935483
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 310,
+          "air_temperature_k": 290.3796129032258,
+          "wind_speed_m_s": 3.12816129032258
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 310,
+          "air_temperature_k": 289.73632258064515,
+          "wind_speed_m_s": 3.050516129032258
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 310,
+          "air_temperature_k": 289.20048387096773,
+          "wind_speed_m_s": 2.9899999999999998
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 310,
+          "air_temperature_k": 290.392064516129,
+          "wind_speed_m_s": 3.427129032258065
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 310,
+          "air_temperature_k": 293.2882903225806,
+          "wind_speed_m_s": 4.124806451612903
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 310,
+          "air_temperature_k": 296.6073870967742,
+          "wind_speed_m_s": 3.746387096774194
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 310,
+          "air_temperature_k": 299.42983870967737,
+          "wind_speed_m_s": 3.347322580645161
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 310,
+          "air_temperature_k": 301.4646129032258,
+          "wind_speed_m_s": 3.4063548387096776
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 310,
+          "air_temperature_k": 303.047129032258,
+          "wind_speed_m_s": 3.6514193548387093
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 310,
+          "air_temperature_k": 304.26761290322577,
+          "wind_speed_m_s": 3.912548387096774
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 310,
+          "air_temperature_k": 305.1128064516129,
+          "wind_speed_m_s": 4.135451612903226
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 310,
+          "air_temperature_k": 305.5896129032258,
+          "wind_speed_m_s": 4.339645161290322
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 310,
+          "air_temperature_k": 305.62399999999997,
+          "wind_speed_m_s": 4.526806451612903
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 310,
+          "air_temperature_k": 305.2188709677419,
+          "wind_speed_m_s": 4.673935483870968
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 310,
+          "air_temperature_k": 304.24767741935483,
+          "wind_speed_m_s": 4.742709677419355
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 310,
+          "air_temperature_k": 302.74135483870964,
+          "wind_speed_m_s": 4.542387096774194
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 310,
+          "air_temperature_k": 299.4772580645161,
+          "wind_speed_m_s": 3.5327096774193554
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 310,
+          "air_temperature_k": 297.4547096774193,
+          "wind_speed_m_s": 3.575677419354838
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 310,
+          "air_temperature_k": 296.2452258064516,
+          "wind_speed_m_s": 3.7544838709677424
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 310,
+          "air_temperature_k": 295.0641935483871,
+          "wind_speed_m_s": 3.8483548387096773
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 310,
+          "air_temperature_k": 293.914064516129,
+          "wind_speed_m_s": 3.758
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 310,
+          "air_temperature_k": 292.885064516129,
+          "wind_speed_m_s": 3.589483870967742
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 0.23699999999999996,
+          "min": 0.23,
+          "max": 0.24,
+          "p05": 0.23,
+          "p50": 0.24,
+          "p95": 0.24,
+          "stddev": 0.004582575694955832
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 333.15625000000006,
+          "min": 313.9708333333333,
+          "max": 347.05,
+          "p05": 316.8545833333333,
+          "p50": 333.6791666666667,
+          "p95": 345.27625,
+          "stddev": 9.923933480690351
+        }
+      }
+    },
+    "6": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 3.6871069444444444,
+          "min": 0.11,
+          "max": 11.15,
+          "p05": 1.38,
+          "p50": 3.38,
+          "p95": 6.98,
+          "stddev": 1.686147352433482
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 304.3998972222222,
+          "min": 286.44,
+          "max": 321.04999999999995,
+          "p05": 292.9595,
+          "p50": 304.29999999999995,
+          "p95": 315.41049999999996,
+          "stddev": 7.051878895844635
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 19.647772222222223,
+          "min": 2.31,
+          "max": 84.05,
+          "p05": 5.41,
+          "p50": 16.085,
+          "p95": 47.36099999999998,
+          "stddev": 13.082700945791208
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 94930.39444444445,
+          "min": 94000.0,
+          "max": 95980.0,
+          "p05": 94500.0,
+          "p50": 94930.0,
+          "p95": 95360.0,
+          "stddev": 264.94278202456013
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 0.0017625000000000002,
+          "min": 0.0,
+          "max": 2.93,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.0,
+          "stddev": 0.0415099283220961
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 1.083596819017193,
+          "min": 1.0188799197634817,
+          "max": 1.154815814614102,
+          "p05": 1.0437700319468113,
+          "p50": 1.0835506138728492,
+          "p95": 1.125705325897381,
+          "stddev": 0.02568054811964235
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 1.2666673742531045,
+          "min": -8.037532467467418,
+          "max": 10.377630563546788,
+          "p05": -2.3762223710289256,
+          "p50": 1.3999501049185625,
+          "p95": 5.035483161920978,
+          "stddev": 2.2939563544045725
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 0.6739231240158523,
+          "min": -10.447411794251247,
+          "max": 11.096785509797417,
+          "p05": -3.410512061941295,
+          "p50": 0.29176953755876744,
+          "p95": 5.868231864249684,
+          "stddev": 3.019436395073629
+        }
+      },
+      "vector_mean_wind_from_deg": 241.98504545992722,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2017-06-01T17:00:00Z",
+          "wind_speed_m_s": 3.32,
+          "wind_from_deg": 131.9,
+          "air_temperature_k": 303.37,
+          "relative_humidity_pct": 17.2,
+          "pressure_pa": 94940.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": -2.471114333487431,
+          "wind_north_m_s": 2.217204084163875,
+          "air_density_kg_m3": 1.0870244851763817
+        },
+        "high_wind": {
+          "timestamp_utc": "2018-06-28T22:00:00Z",
+          "wind_speed_m_s": 6.98,
+          "wind_from_deg": 190.6,
+          "air_temperature_k": 315.34,
+          "relative_humidity_pct": 3.74,
+          "pressure_pa": 94540.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 1.2839804272767863,
+          "wind_north_m_s": 6.860888737063889,
+          "air_density_kg_m3": 1.0431359310500963
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 300,
+          "air_temperature_k": 298.2208,
+          "wind_speed_m_s": 3.399966666666667
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 300,
+          "air_temperature_k": 297.34166666666664,
+          "wind_speed_m_s": 3.2198333333333333
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 300,
+          "air_temperature_k": 296.57809999999995,
+          "wind_speed_m_s": 3.081433333333333
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 300,
+          "air_temperature_k": 295.9189,
+          "wind_speed_m_s": 2.9650666666666665
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 300,
+          "air_temperature_k": 295.42926666666665,
+          "wind_speed_m_s": 2.8668000000000005
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 300,
+          "air_temperature_k": 297.2571,
+          "wind_speed_m_s": 3.3507000000000002
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 300,
+          "air_temperature_k": 300.10596666666663,
+          "wind_speed_m_s": 3.647266666666667
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 300,
+          "air_temperature_k": 303.5406,
+          "wind_speed_m_s": 3.1129666666666664
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 300,
+          "air_temperature_k": 306.35093333333333,
+          "wind_speed_m_s": 3.0212333333333334
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 300,
+          "air_temperature_k": 308.34839999999997,
+          "wind_speed_m_s": 3.3306666666666667
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 300,
+          "air_temperature_k": 309.9112,
+          "wind_speed_m_s": 3.6832000000000003
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 300,
+          "air_temperature_k": 311.0962,
+          "wind_speed_m_s": 4.0
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 300,
+          "air_temperature_k": 311.9236333333333,
+          "wind_speed_m_s": 4.2617666666666665
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 300,
+          "air_temperature_k": 312.4427666666666,
+          "wind_speed_m_s": 4.467866666666667
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 300,
+          "air_temperature_k": 312.5584666666666,
+          "wind_speed_m_s": 4.6182
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 300,
+          "air_temperature_k": 312.2434333333333,
+          "wind_speed_m_s": 4.72
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 300,
+          "air_temperature_k": 311.30583333333334,
+          "wind_speed_m_s": 4.814933333333333
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 300,
+          "air_temperature_k": 310.00829999999996,
+          "wind_speed_m_s": 4.6813666666666665
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 300,
+          "air_temperature_k": 306.78006666666664,
+          "wind_speed_m_s": 3.4786999999999995
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 300,
+          "air_temperature_k": 304.16433333333333,
+          "wind_speed_m_s": 3.4576
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 300,
+          "air_temperature_k": 302.87226666666663,
+          "wind_speed_m_s": 3.5813666666666664
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 300,
+          "air_temperature_k": 301.6006333333333,
+          "wind_speed_m_s": 3.6201333333333334
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 300,
+          "air_temperature_k": 300.37339999999995,
+          "wind_speed_m_s": 3.591133333333334
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 300,
+          "air_temperature_k": 299.22526666666664,
+          "wind_speed_m_s": 3.5183666666666666
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 0.236,
+          "min": 0.23,
+          "max": 0.24,
+          "p05": 0.23,
+          "p50": 0.24,
+          "p95": 0.24,
+          "stddev": 0.004898979485566347
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 347.09833333333324,
+          "min": 327.65,
+          "max": 362.4291666666666,
+          "p05": 332.30375,
+          "p50": 347.04583333333335,
+          "p95": 361.3585416666666,
+          "stddev": 9.699363560163215
+        }
+      }
+    },
+    "7": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 3.4377876344086022,
+          "min": 0.05,
+          "max": 12.48,
+          "p05": 1.15,
+          "p50": 3.18,
+          "p95": 6.3804999999999925,
+          "stddev": 1.6009151778010473
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 307.45187768817203,
+          "min": 292.09,
+          "max": 321.74,
+          "p05": 297.66949999999997,
+          "p50": 307.16999999999996,
+          "p95": 316.9505,
+          "stddev": 6.009793222659648
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 22.43820026881721,
+          "min": 1.34,
+          "max": 82.87,
+          "p05": 6.9995,
+          "p50": 19.0,
+          "p95": 50.570499999999996,
+          "stddev": 13.58596934480015
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 95099.29166666667,
+          "min": 94360.0,
+          "max": 95820.0,
+          "p05": 94730.0,
+          "p50": 95100.0,
+          "p95": 95470.0,
+          "stddev": 227.81458430712613
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 0.016788978494623654,
+          "min": 0.0,
+          "max": 4.58,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.04,
+          "stddev": 0.125399141612836
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 1.0731512021565524,
+          "min": 1.0218469025984878,
+          "max": 1.1290357154284303,
+          "p05": 1.0391697202517716,
+          "p50": 1.0737700387348814,
+          "p95": 1.1086869160167883,
+          "stddev": 0.021441600854578045
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 0.47188301919405606,
+          "min": -8.63221132998069,
+          "max": 8.878615085367416,
+          "p05": -3.0251264820811796,
+          "p50": 0.47166508370463156,
+          "p95": 3.7572229689122567,
+          "stddev": 2.138238093633946
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 1.3906818216740717,
+          "min": -5.648593451534272,
+          "max": 11.356316660539258,
+          "p05": -2.668810549640586,
+          "p50": 1.500433657202729,
+          "p95": 5.79360328489402,
+          "stddev": 2.76632998172682
+        }
+      },
+      "vector_mean_wind_from_deg": 198.74298618090606,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2016-07-03T02:00:00Z",
+          "wind_speed_m_s": 3.18,
+          "wind_from_deg": 173.7,
+          "air_temperature_k": 307.30999999999995,
+          "relative_humidity_pct": 20.07,
+          "pressure_pa": 95120.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": -0.34895510926952517,
+          "wind_north_m_s": 3.1607958383474712,
+          "air_density_kg_m3": 1.0736798925601276
+        },
+        "high_wind": {
+          "timestamp_utc": "2019-07-04T05:00:00Z",
+          "wind_speed_m_s": 6.38,
+          "wind_from_deg": 285.5,
+          "air_temperature_k": 301.15999999999997,
+          "relative_humidity_pct": 28.76,
+          "pressure_pa": 94840.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 6.147962291471015,
+          "wind_north_m_s": -1.704980839379278,
+          "air_density_kg_m3": 1.0923201268711065
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 310,
+          "air_temperature_k": 302.15809677419355,
+          "wind_speed_m_s": 2.9291612903225803
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 310,
+          "air_temperature_k": 301.3614516129032,
+          "wind_speed_m_s": 2.756193548387097
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 310,
+          "air_temperature_k": 300.6635483870968,
+          "wind_speed_m_s": 2.6026774193548383
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 310,
+          "air_temperature_k": 300.0557096774193,
+          "wind_speed_m_s": 2.5423870967741937
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 310,
+          "air_temperature_k": 299.5749354838709,
+          "wind_speed_m_s": 2.50458064516129
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 310,
+          "air_temperature_k": 301.0863870967742,
+          "wind_speed_m_s": 2.8900967741935486
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 310,
+          "air_temperature_k": 303.6611612903226,
+          "wind_speed_m_s": 3.278225806451613
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 310,
+          "air_temperature_k": 306.7176774193548,
+          "wind_speed_m_s": 2.8987741935483866
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 310,
+          "air_temperature_k": 309.06100000000004,
+          "wind_speed_m_s": 2.9863870967741937
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 310,
+          "air_temperature_k": 310.77461290322583,
+          "wind_speed_m_s": 3.3725161290322583
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 310,
+          "air_temperature_k": 312.18206451612906,
+          "wind_speed_m_s": 3.7348709677419354
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 310,
+          "air_temperature_k": 313.2609032258065,
+          "wind_speed_m_s": 4.04083870967742
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 310,
+          "air_temperature_k": 313.9893225806451,
+          "wind_speed_m_s": 4.24616129032258
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 310,
+          "air_temperature_k": 314.4273870967742,
+          "wind_speed_m_s": 4.381258064516129
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 310,
+          "air_temperature_k": 314.5030322580645,
+          "wind_speed_m_s": 4.457419354838708
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 310,
+          "air_temperature_k": 314.1882580645161,
+          "wind_speed_m_s": 4.496258064516129
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 310,
+          "air_temperature_k": 313.5002903225806,
+          "wind_speed_m_s": 4.515806451612903
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 310,
+          "air_temperature_k": 312.342,
+          "wind_speed_m_s": 4.425645161290322
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 310,
+          "air_temperature_k": 309.52551612903227,
+          "wind_speed_m_s": 3.319322580645162
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 310,
+          "air_temperature_k": 307.34735483870963,
+          "wind_speed_m_s": 3.255548387096774
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 310,
+          "air_temperature_k": 306.22670967741936,
+          "wind_speed_m_s": 3.322548387096774
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 310,
+          "air_temperature_k": 305.1202258064516,
+          "wind_speed_m_s": 3.301193548387096
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 310,
+          "air_temperature_k": 304.05245161290316,
+          "wind_speed_m_s": 3.1889999999999996
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 310,
+          "air_temperature_k": 303.06496774193545,
+          "wind_speed_m_s": 3.0600322580645165
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 0.23000000000000004,
+          "min": 0.23,
+          "max": 0.23,
+          "p05": 0.23,
+          "p50": 0.23,
+          "p95": 0.23,
+          "stddev": 2.7755575615628914e-17
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 322.1141666666667,
+          "min": 298.1583333333333,
+          "max": 350.6083333333333,
+          "p05": 300.7739583333333,
+          "p50": 320.76666666666665,
+          "p95": 345.3170833333333,
+          "stddev": 15.355132172266632
+        }
+      }
+    },
+    "8": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 3.17730376344086,
+          "min": 0.09,
+          "max": 14.3,
+          "p05": 1.1,
+          "p50": 2.97,
+          "p95": 5.95,
+          "stddev": 1.525230306666155
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 306.8042029569892,
+          "min": 291.53999999999996,
+          "max": 320.10999999999996,
+          "p05": 298.1395,
+          "p50": 306.44,
+          "p95": 315.65999999999997,
+          "stddev": 5.5796655085500495
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 24.04365860215054,
+          "min": 2.34,
+          "max": 84.52,
+          "p05": 7.82,
+          "p50": 21.06,
+          "p95": 48.59099999999999,
+          "stddev": 12.97209831235421
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 95089.3682795699,
+          "min": 94290.0,
+          "max": 95750.0,
+          "p05": 94710.0,
+          "p50": 95090.0,
+          "p95": 95470.0,
+          "stddev": 229.33401443442708
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 0.017706989247311827,
+          "min": 0.0,
+          "max": 2.65,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.04,
+          "stddev": 0.12038540329913136
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 1.074999707576199,
+          "min": 1.028373069211304,
+          "max": 1.1345763546723127,
+          "p05": 1.0436540241671535,
+          "p50": 1.0757690452435917,
+          "p95": 1.1072664034729747,
+          "stddev": 0.02017634650097943
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 0.2229401350275407,
+          "min": -10.089714275524221,
+          "max": 9.635928610393403,
+          "p05": -2.987193249044216,
+          "p50": 0.20167948348050818,
+          "p95": 3.2452187707849363,
+          "stddev": 2.0043566702373314
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 1.0840788769244398,
+          "min": -8.011883057342661,
+          "max": 12.886173800407406,
+          "p05": -2.8973871865256546,
+          "p50": 1.2405491066163847,
+          "p95": 5.367631514902164,
+          "stddev": 2.679405105023063
+        }
+      },
+      "vector_mean_wind_from_deg": 191.62082713627422,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2020-08-14T05:00:00Z",
+          "wind_speed_m_s": 2.84,
+          "wind_from_deg": 336.3,
+          "air_temperature_k": 306.0,
+          "relative_humidity_pct": 20.16,
+          "pressure_pa": 95080.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 1.1415316857029274,
+          "wind_north_m_s": -2.600481765084353,
+          "air_density_kg_m3": 1.0781288319156939
+        },
+        "high_wind": {
+          "timestamp_utc": "2015-08-21T20:00:00Z",
+          "wind_speed_m_s": 5.95,
+          "wind_from_deg": 160.7,
+          "air_temperature_k": 312.77,
+          "relative_humidity_pct": 15.86,
+          "pressure_pa": 94850.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": -1.9665606366436774,
+          "wind_north_m_s": 5.6156156619202156,
+          "air_density_kg_m3": 1.0516382940750386
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 310,
+          "air_temperature_k": 302.01570967741935,
+          "wind_speed_m_s": 2.7259677419354835
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 310,
+          "air_temperature_k": 301.2873870967742,
+          "wind_speed_m_s": 2.5982580645161293
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 310,
+          "air_temperature_k": 300.6211612903225,
+          "wind_speed_m_s": 2.485741935483871
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 310,
+          "air_temperature_k": 300.0388064516129,
+          "wind_speed_m_s": 2.4413548387096777
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 310,
+          "air_temperature_k": 299.5593548387097,
+          "wind_speed_m_s": 2.40558064516129
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 310,
+          "air_temperature_k": 300.068064516129,
+          "wind_speed_m_s": 2.48041935483871
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 310,
+          "air_temperature_k": 302.74954838709675,
+          "wind_speed_m_s": 3.1411612903225805
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 310,
+          "air_temperature_k": 305.70351612903227,
+          "wind_speed_m_s": 2.9410967741935483
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 310,
+          "air_temperature_k": 308.24532258064517,
+          "wind_speed_m_s": 2.849741935483871
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 310,
+          "air_temperature_k": 310.02612903225804,
+          "wind_speed_m_s": 3.1682258064516127
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 310,
+          "air_temperature_k": 311.4203225806451,
+          "wind_speed_m_s": 3.492967741935484
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 310,
+          "air_temperature_k": 312.49,
+          "wind_speed_m_s": 3.736129032258064
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 310,
+          "air_temperature_k": 313.2225161290322,
+          "wind_speed_m_s": 3.919483870967742
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 310,
+          "air_temperature_k": 313.65193548387094,
+          "wind_speed_m_s": 4.030129032258064
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 310,
+          "air_temperature_k": 313.70893548387096,
+          "wind_speed_m_s": 4.09016129032258
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 310,
+          "air_temperature_k": 313.35564516129034,
+          "wind_speed_m_s": 4.124258064516129
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 310,
+          "air_temperature_k": 312.57574193548385,
+          "wind_speed_m_s": 4.124354838709678
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 310,
+          "air_temperature_k": 311.0697419354838,
+          "wind_speed_m_s": 3.754064516129032
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 310,
+          "air_temperature_k": 308.08154838709675,
+          "wind_speed_m_s": 2.9590967741935486
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 310,
+          "air_temperature_k": 306.6717741935484,
+          "wind_speed_m_s": 3.0386129032258067
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 310,
+          "air_temperature_k": 305.63903225806456,
+          "wind_speed_m_s": 3.044483870967742
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 310,
+          "air_temperature_k": 304.6160967741935,
+          "wind_speed_m_s": 2.985935483870968
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 310,
+          "air_temperature_k": 303.67170967741936,
+          "wind_speed_m_s": 2.903290322580645
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 310,
+          "air_temperature_k": 302.81087096774195,
+          "wind_speed_m_s": 2.8147741935483874
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 0.23299999999999996,
+          "min": 0.23,
+          "max": 0.24,
+          "p05": 0.23,
+          "p50": 0.23,
+          "p95": 0.24,
+          "stddev": 0.004582575694955832
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 295.995,
+          "min": 267.2583333333333,
+          "max": 312.6791666666666,
+          "p05": 277.43395833333335,
+          "p50": 297.97499999999997,
+          "p95": 308.5616666666666,
+          "stddev": 11.275190285410797
+        }
+      }
+    },
+    "9": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 3.0975111111111113,
+          "min": 0.03,
+          "max": 11.31,
+          "p05": 1.06,
+          "p50": 2.88,
+          "p95": 5.930499999999992,
+          "stddev": 1.4904862647579475
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 302.7948930555556,
+          "min": 283.54999999999995,
+          "max": 319.45,
+          "p05": 292.52,
+          "p50": 302.67999999999995,
+          "p95": 313.02049999999997,
+          "stddev": 6.3053987639082925
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 26.146384722222223,
+          "min": 3.11,
+          "max": 93.84,
+          "p05": 7.96,
+          "p50": 21.97,
+          "p95": 58.842499999999966,
+          "stddev": 15.819893959445492
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 95108.34583333334,
+          "min": 94100.0,
+          "max": 96080.0,
+          "p05": 94650.0,
+          "p50": 95120.0,
+          "p95": 95540.0,
+          "stddev": 273.55377261229035
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 0.009681944444444444,
+          "min": 0.0,
+          "max": 1.93,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.02,
+          "stddev": 0.07312657562668858
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 1.090302092208908,
+          "min": 1.02835104973229,
+          "max": 1.1645622306831283,
+          "p05": 1.053239091660181,
+          "p50": 1.0901286860741772,
+          "p95": 1.1281866083456058,
+          "stddev": 0.023228249827622165
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 0.24383376267291137,
+          "min": -8.08640356163341,
+          "max": 10.559663799772503,
+          "p05": -3.1216306583938316,
+          "p50": 0.2900908029979269,
+          "p95": 3.4032885544631166,
+          "stddev": 2.039874283983584
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 0.3164089010062057,
+          "min": -11.205358075732027,
+          "max": 9.243261087011941,
+          "p05": -3.5395828398670024,
+          "p50": 0.20912839335257954,
+          "p95": 4.837696292647419,
+          "stddev": 2.7377851993858404
+        }
+      },
+      "vector_mean_wind_from_deg": 217.6188763111954,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2015-09-02T04:00:00Z",
+          "wind_speed_m_s": 2.82,
+          "wind_from_deg": 200.7,
+          "air_temperature_k": 302.04999999999995,
+          "relative_humidity_pct": 22.62,
+          "pressure_pa": 95080.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 0.996799059457504,
+          "wind_north_m_s": 2.6379521669402264,
+          "air_density_kg_m3": 1.0926843072909955
+        },
+        "high_wind": {
+          "timestamp_utc": "2019-09-28T20:00:00Z",
+          "wind_speed_m_s": 5.93,
+          "wind_from_deg": 188.9,
+          "air_temperature_k": 303.77,
+          "relative_humidity_pct": 27.74,
+          "pressure_pa": 94420.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 0.9174325907558456,
+          "wind_north_m_s": 5.858602004012477,
+          "air_density_kg_m3": 1.0775469539238345
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 300,
+          "air_temperature_k": 298.16569999999996,
+          "wind_speed_m_s": 2.7157666666666667
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 300,
+          "air_temperature_k": 297.5079333333333,
+          "wind_speed_m_s": 2.653033333333333
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 300,
+          "air_temperature_k": 296.9434,
+          "wind_speed_m_s": 2.6027666666666662
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 300,
+          "air_temperature_k": 296.4502333333333,
+          "wind_speed_m_s": 2.6073000000000004
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 300,
+          "air_temperature_k": 296.0299666666666,
+          "wind_speed_m_s": 2.627966666666667
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 300,
+          "air_temperature_k": 295.7959333333333,
+          "wind_speed_m_s": 2.6325333333333334
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 300,
+          "air_temperature_k": 297.9779333333332,
+          "wind_speed_m_s": 3.061233333333333
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 300,
+          "air_temperature_k": 301.0211333333333,
+          "wind_speed_m_s": 3.5466
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 300,
+          "air_temperature_k": 304.04726666666664,
+          "wind_speed_m_s": 3.3027666666666664
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 300,
+          "air_temperature_k": 306.1589,
+          "wind_speed_m_s": 3.2233
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 300,
+          "air_temperature_k": 307.6446333333333,
+          "wind_speed_m_s": 3.4342333333333332
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 300,
+          "air_temperature_k": 308.75449999999995,
+          "wind_speed_m_s": 3.624766666666666
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 300,
+          "air_temperature_k": 309.51779999999997,
+          "wind_speed_m_s": 3.7503000000000006
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 300,
+          "air_temperature_k": 309.93003333333326,
+          "wind_speed_m_s": 3.811266666666667
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 300,
+          "air_temperature_k": 309.9131,
+          "wind_speed_m_s": 3.829566666666666
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 300,
+          "air_temperature_k": 309.42633333333333,
+          "wind_speed_m_s": 3.8376000000000006
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 300,
+          "air_temperature_k": 308.6153333333333,
+          "wind_speed_m_s": 3.7623333333333333
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 300,
+          "air_temperature_k": 306.01206666666667,
+          "wind_speed_m_s": 2.8225333333333333
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 300,
+          "air_temperature_k": 303.6323999999999,
+          "wind_speed_m_s": 2.644233333333333
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 300,
+          "air_temperature_k": 302.5758333333333,
+          "wind_speed_m_s": 2.7101666666666664
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 300,
+          "air_temperature_k": 301.61069999999995,
+          "wind_speed_m_s": 2.7580333333333336
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 300,
+          "air_temperature_k": 300.65799999999996,
+          "wind_speed_m_s": 2.8038333333333334
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 300,
+          "air_temperature_k": 299.7585666666667,
+          "wind_speed_m_s": 2.8114333333333335
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 300,
+          "air_temperature_k": 298.9297333333333,
+          "wind_speed_m_s": 2.7667
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 0.23600000000000004,
+          "min": 0.23,
+          "max": 0.24,
+          "p05": 0.23,
+          "p50": 0.24,
+          "p95": 0.24,
+          "stddev": 0.004898979485566346
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 256.99875,
+          "min": 241.19166666666663,
+          "max": 269.02916666666664,
+          "p05": 243.70604166666664,
+          "p50": 257.63124999999997,
+          "p95": 268.49479166666663,
+          "stddev": 8.49291086117318
+        }
+      }
+    },
+    "10": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 3.1858481182795697,
+          "min": 0.07,
+          "max": 13.09,
+          "p05": 0.93,
+          "p50": 2.92,
+          "p95": 6.68,
+          "stddev": 1.753494523554677
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 296.4197567204301,
+          "min": 275.4,
+          "max": 316.08,
+          "p05": 286.10949999999997,
+          "p50": 296.15,
+          "p95": 307.55999999999995,
+          "stddev": 6.643061646985805
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 25.94762768817204,
+          "min": 2.46,
+          "max": 89.67,
+          "p05": 6.9295,
+          "p50": 21.06,
+          "p95": 61.36,
+          "stddev": 16.54043026294742
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 95308.40994623656,
+          "min": 93880.0,
+          "max": 96500.0,
+          "p05": 94669.5,
+          "p50": 95310.0,
+          "p95": 95920.0,
+          "stddev": 377.30771818523357
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 0.010225806451612904,
+          "min": 0.0,
+          "max": 8.04,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.01,
+          "stddev": 0.13920242312131015
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 1.117592230998849,
+          "min": 1.043660212877294,
+          "max": 1.2179409763267095,
+          "p05": 1.0750855153632675,
+          "p50": 1.1173041380119515,
+          "p95": 1.1619400902098995,
+          "stddev": 0.02658980249455888
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 0.25679301900881385,
+          "min": -5.842202511378334,
+          "max": 12.918963494984402,
+          "p05": -2.868521459953531,
+          "p50": 0.1490689257440465,
+          "p95": 3.823395201322056,
+          "stddev": 2.0942690797178587
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": -1.2971627840493711,
+          "min": -13.089681005933617,
+          "max": 8.04293878229581,
+          "p05": -5.262242982089964,
+          "p50": -1.6483792335326055,
+          "p95": 3.0524197932550243,
+          "stddev": 2.66267428644306
+        }
+      },
+      "vector_mean_wind_from_deg": 348.8022156788309,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2023-10-07T09:00:00Z",
+          "wind_speed_m_s": 2.87,
+          "wind_from_deg": 8.4,
+          "air_temperature_k": 295.84999999999997,
+          "relative_humidity_pct": 21.09,
+          "pressure_pa": 95250.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": -0.41925829197412134,
+          "wind_north_m_s": -2.8392115956037767,
+          "air_density_kg_m3": 1.1190048288276635
+        },
+        "high_wind": {
+          "timestamp_utc": "2018-10-02T03:00:00Z",
+          "wind_speed_m_s": 6.68,
+          "wind_from_deg": 164.4,
+          "air_temperature_k": 298.48999999999995,
+          "relative_humidity_pct": 63.05,
+          "pressure_pa": 95150.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": -1.7963844017099753,
+          "wind_north_m_s": 6.433925946208356,
+          "air_density_kg_m3": 1.1015166364787463
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 310,
+          "air_temperature_k": 292.22625806451606,
+          "wind_speed_m_s": 2.99858064516129
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 310,
+          "air_temperature_k": 291.62945161290315,
+          "wind_speed_m_s": 3.0253548387096774
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 310,
+          "air_temperature_k": 291.15354838709675,
+          "wind_speed_m_s": 3.05541935483871
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 310,
+          "air_temperature_k": 290.70651612903225,
+          "wind_speed_m_s": 3.093483870967742
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 310,
+          "air_temperature_k": 290.29335483870966,
+          "wind_speed_m_s": 3.1083225806451615
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 310,
+          "air_temperature_k": 289.9168387096774,
+          "wind_speed_m_s": 3.104258064516129
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 310,
+          "air_temperature_k": 290.52974193548386,
+          "wind_speed_m_s": 3.0980000000000003
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 310,
+          "air_temperature_k": 293.84238709677413,
+          "wind_speed_m_s": 3.851677419354839
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 310,
+          "air_temperature_k": 296.8138709677419,
+          "wind_speed_m_s": 4.052225806451613
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 310,
+          "air_temperature_k": 299.58893548387096,
+          "wind_speed_m_s": 3.7610967741935477
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 310,
+          "air_temperature_k": 301.394064516129,
+          "wind_speed_m_s": 3.570806451612903
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 310,
+          "air_temperature_k": 302.6255806451613,
+          "wind_speed_m_s": 3.522612903225806
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 310,
+          "air_temperature_k": 303.4079032258064,
+          "wind_speed_m_s": 3.49341935483871
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 310,
+          "air_temperature_k": 303.7983870967742,
+          "wind_speed_m_s": 3.506612903225806
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 310,
+          "air_temperature_k": 303.7191612903226,
+          "wind_speed_m_s": 3.5295161290322583
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 310,
+          "air_temperature_k": 303.0888064516129,
+          "wind_speed_m_s": 3.518032258064516
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 310,
+          "air_temperature_k": 301.5213225806451,
+          "wind_speed_m_s": 2.919935483870968
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 310,
+          "air_temperature_k": 298.3834838709677,
+          "wind_speed_m_s": 2.5121935483870965
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 310,
+          "air_temperature_k": 297.0376774193548,
+          "wind_speed_m_s": 2.603258064516129
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 310,
+          "air_temperature_k": 296.0853870967742,
+          "wind_speed_m_s": 2.6894516129032255
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 310,
+          "air_temperature_k": 295.2486129032258,
+          "wind_speed_m_s": 2.7639032258064513
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 310,
+          "air_temperature_k": 294.4491935483871,
+          "wind_speed_m_s": 2.825354838709677
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 310,
+          "air_temperature_k": 293.67890322580644,
+          "wind_speed_m_s": 2.898677419354839
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 310,
+          "air_temperature_k": 292.9347741935484,
+          "wind_speed_m_s": 2.9581612903225807
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 0.23699999999999996,
+          "min": 0.23,
+          "max": 0.25,
+          "p05": 0.23,
+          "p50": 0.24,
+          "p95": 0.2455,
+          "stddev": 0.006403124237432842
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 207.29874999999998,
+          "min": 191.64999999999998,
+          "max": 222.34166666666664,
+          "p05": 194.80937499999996,
+          "p50": 206.12916666666666,
+          "p95": 219.66791666666663,
+          "stddev": 9.126602418281891
+        }
+      }
+    },
+    "11": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 3.258061111111111,
+          "min": 0.05,
+          "max": 13.87,
+          "p05": 1.0,
+          "p50": 3.0,
+          "p95": 6.75,
+          "stddev": 1.7306747613571896
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 288.85514444444436,
+          "min": 274.29999999999995,
+          "max": 306.78,
+          "p05": 279.15,
+          "p50": 288.58,
+          "p95": 300.30049999999994,
+          "stddev": 6.2987363486851
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 29.09023888888889,
+          "min": 2.06,
+          "max": 100.0,
+          "p05": 8.8,
+          "p50": 24.295,
+          "p95": 72.52149999999997,
+          "stddev": 18.77423937869355
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 95604.44027777777,
+          "min": 93900.0,
+          "max": 97150.0,
+          "p05": 94850.0,
+          "p50": 95650.0,
+          "p95": 96180.0,
+          "stddev": 420.0749840999694
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 0.010513888888888887,
+          "min": 0.0,
+          "max": 7.35,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.0,
+          "stddev": 0.15310748703076718
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": 1.1513717218735608,
+          "min": 1.0719771458503593,
+          "max": 1.217752410804183,
+          "p05": 1.1057864322737478,
+          "p50": 1.1516212139341238,
+          "p95": 1.194552869668573,
+          "stddev": 0.026274811188778335
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": -0.05702390989228906,
+          "min": -6.8539786819423645,
+          "max": 13.153249097709985,
+          "p05": -2.830060854882797,
+          "p50": -0.3509325414800665,
+          "p95": 3.376245072983866,
+          "stddev": 2.071217007810191
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 7200,
+          "expected_count": 7200,
+          "coverage_fraction": 1.0,
+          "mean": -1.639785264701629,
+          "min": -10.473589957355651,
+          "max": 12.687193934193607,
+          "p05": -5.46710561808594,
+          "p50": -1.9287358783749655,
+          "p95": 2.5423972513652964,
+          "stddev": 2.574511604024953
+        }
+      },
+      "vector_mean_wind_from_deg": 1.9916713212408816,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2020-11-22T06:00:00Z",
+          "wind_speed_m_s": 2.81,
+          "wind_from_deg": 337.6,
+          "air_temperature_k": 288.62,
+          "relative_humidity_pct": 26.2,
+          "pressure_pa": 95680.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 1.07080775754427,
+          "wind_north_m_s": -2.5979743544505998,
+          "air_density_kg_m3": 1.1527799341906706
+        },
+        "high_wind": {
+          "timestamp_utc": "2016-11-17T07:00:00Z",
+          "wind_speed_m_s": 6.75,
+          "wind_from_deg": 300.4,
+          "air_temperature_k": 284.92999999999995,
+          "relative_humidity_pct": 40.1,
+          "pressure_pa": 94950.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 5.821967267148989,
+          "wind_north_m_s": -3.4157279078178537,
+          "air_density_kg_m3": 1.1583500789495393
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 300,
+          "air_temperature_k": 285.1692333333333,
+          "wind_speed_m_s": 2.9524333333333335
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 300,
+          "air_temperature_k": 284.6844,
+          "wind_speed_m_s": 3.0218666666666665
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 300,
+          "air_temperature_k": 284.27436666666665,
+          "wind_speed_m_s": 3.0873
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 300,
+          "air_temperature_k": 283.9003,
+          "wind_speed_m_s": 3.1466333333333334
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 300,
+          "air_temperature_k": 283.5455,
+          "wind_speed_m_s": 3.1828000000000003
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 300,
+          "air_temperature_k": 283.2330666666666,
+          "wind_speed_m_s": 3.1928666666666667
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 300,
+          "air_temperature_k": 283.0696,
+          "wind_speed_m_s": 3.1765666666666665
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 300,
+          "air_temperature_k": 285.38303333333334,
+          "wind_speed_m_s": 3.3077666666666663
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 300,
+          "air_temperature_k": 288.5056666666667,
+          "wind_speed_m_s": 4.164866666666667
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 300,
+          "air_temperature_k": 291.41599999999994,
+          "wind_speed_m_s": 4.200266666666667
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 300,
+          "air_temperature_k": 293.7756,
+          "wind_speed_m_s": 4.0098666666666665
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 300,
+          "air_temperature_k": 295.2255666666667,
+          "wind_speed_m_s": 3.8772333333333338
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 300,
+          "air_temperature_k": 296.0755,
+          "wind_speed_m_s": 3.8324333333333334
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 300,
+          "air_temperature_k": 296.4213,
+          "wind_speed_m_s": 3.8414999999999995
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 300,
+          "air_temperature_k": 296.24696666666665,
+          "wind_speed_m_s": 3.834233333333333
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 300,
+          "air_temperature_k": 295.24589999999995,
+          "wind_speed_m_s": 3.470866666666667
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 300,
+          "air_temperature_k": 292.35526666666664,
+          "wind_speed_m_s": 2.6916333333333333
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 300,
+          "air_temperature_k": 290.1407,
+          "wind_speed_m_s": 2.6633333333333336
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 300,
+          "air_temperature_k": 289.0933333333333,
+          "wind_speed_m_s": 2.674166666666667
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 300,
+          "air_temperature_k": 288.22506666666663,
+          "wind_speed_m_s": 2.6947
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 300,
+          "air_temperature_k": 287.54069999999996,
+          "wind_speed_m_s": 2.731933333333333
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 300,
+          "air_temperature_k": 286.9225333333333,
+          "wind_speed_m_s": 2.7659666666666665
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 300,
+          "air_temperature_k": 286.3290666666667,
+          "wind_speed_m_s": 2.8089666666666666
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 300,
+          "air_temperature_k": 285.7448,
+          "wind_speed_m_s": 2.8632666666666666
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 0.23499999999999996,
+          "min": 0.23,
+          "max": 0.24,
+          "p05": 0.23,
+          "p50": 0.235,
+          "p95": 0.24,
+          "stddev": 0.0049999999999999906
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 155.2458333333333,
+          "min": 141.15833333333333,
+          "max": 160.62916666666666,
+          "p05": 146.48333333333335,
+          "p50": 156.79999999999998,
+          "p95": 159.74791666666667,
+          "stddev": 5.206529687698788
+        }
+      }
+    },
+    "12": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 3.209561827956989,
+          "min": 0.04,
+          "max": 12.18,
+          "p05": 1.0895000000000006,
+          "p50": 2.99,
+          "p95": 6.25,
+          "stddev": 1.5964566768028772
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 284.11318682795695,
+          "min": 271.46999999999997,
+          "max": 300.63,
+          "p05": 276.15999999999997,
+          "p50": 283.53,
+          "p95": 293.81,
+          "stddev": 5.377845030251094
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 38.60642876344086,
+          "min": 2.95,
+          "max": 100.0,
+          "p05": 10.5295,
+          "p50": 33.24,
+          "p95": 86.67399999999995,
+          "stddev": 23.02372658327091
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 95750.02016129032,
+          "min": 94160.0,
+          "max": 97010.0,
+          "p05": 94940.0,
+          "p50": 95800.0,
+          "p95": 96430.0,
+          "stddev": 445.1493492547299
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 0.01699193548387097,
+          "min": 0.0,
+          "max": 5.02,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.01,
+          "stddev": 0.16070170369156694
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": 1.1722532346103636,
+          "min": 1.1050720690084588,
+          "max": 1.240756226122382,
+          "p05": 1.1314966592308835,
+          "p50": 1.1736544367084845,
+          "p95": 1.210027599837572,
+          "stddev": 0.023420570922357577
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": -0.2782890382919213,
+          "min": -7.462750163951788,
+          "max": 9.729791244136976,
+          "p05": -3.1007404715869424,
+          "p50": -0.5598648400730124,
+          "p95": 3.2254139242508786,
+          "stddev": 2.0182391978112495
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 7440,
+          "expected_count": 7440,
+          "coverage_fraction": 1.0,
+          "mean": -1.7408702436783388,
+          "min": -12.016448928372887,
+          "max": 11.71017041804515,
+          "p05": -5.175505285657239,
+          "p50": -1.9922891403687486,
+          "p95": 2.32090215193341,
+          "stddev": 2.3808816843025147
+        }
+      },
+      "vector_mean_wind_from_deg": 9.082247643328405,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2023-12-14T05:00:00Z",
+          "wind_speed_m_s": 2.84,
+          "wind_from_deg": 343.4,
+          "air_temperature_k": 282.79999999999995,
+          "relative_humidity_pct": 30.64,
+          "pressure_pa": 95810.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 0.8113549634301273,
+          "wind_north_m_s": -2.7216361114809775,
+          "air_density_kg_m3": 1.178538416898338
+        },
+        "high_wind": {
+          "timestamp_utc": "2015-12-15T16:00:00Z",
+          "wind_speed_m_s": 6.25,
+          "wind_from_deg": 322.4,
+          "air_temperature_k": 279.0,
+          "relative_humidity_pct": 30.51,
+          "pressure_pa": 95570.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 3.813407274382924,
+          "wind_north_m_s": -4.951810270969941,
+          "air_density_kg_m3": 1.1919953739695268
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 310,
+          "air_temperature_k": 280.8174193548387,
+          "wind_speed_m_s": 3.090161290322581
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 310,
+          "air_temperature_k": 280.4243225806452,
+          "wind_speed_m_s": 3.127967741935484
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 310,
+          "air_temperature_k": 280.10251612903227,
+          "wind_speed_m_s": 3.170774193548387
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 310,
+          "air_temperature_k": 279.84206451612897,
+          "wind_speed_m_s": 3.1994193548387093
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 310,
+          "air_temperature_k": 279.5845806451613,
+          "wind_speed_m_s": 3.215225806451613
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 310,
+          "air_temperature_k": 279.33574193548384,
+          "wind_speed_m_s": 3.2293870967741936
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 310,
+          "air_temperature_k": 279.10254838709676,
+          "wind_speed_m_s": 3.231967741935484
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 310,
+          "air_temperature_k": 280.3704516129032,
+          "wind_speed_m_s": 3.1771935483870966
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 310,
+          "air_temperature_k": 283.51619354838704,
+          "wind_speed_m_s": 3.931516129032258
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 310,
+          "air_temperature_k": 286.11309677419354,
+          "wind_speed_m_s": 4.082451612903226
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 310,
+          "air_temperature_k": 288.5814838709677,
+          "wind_speed_m_s": 3.9889677419354843
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 310,
+          "air_temperature_k": 290.13770967741937,
+          "wind_speed_m_s": 3.805806451612903
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 310,
+          "air_temperature_k": 291.0018387096774,
+          "wind_speed_m_s": 3.7016129032258065
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 310,
+          "air_temperature_k": 291.33896774193545,
+          "wind_speed_m_s": 3.6656451612903225
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 310,
+          "air_temperature_k": 291.1180967741935,
+          "wind_speed_m_s": 3.5602903225806455
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 310,
+          "air_temperature_k": 289.63896774193546,
+          "wind_speed_m_s": 2.8640322580645163
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 310,
+          "air_temperature_k": 286.62564516129027,
+          "wind_speed_m_s": 2.4821290322580647
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 310,
+          "air_temperature_k": 285.1379677419354,
+          "wind_speed_m_s": 2.575483870967742
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 310,
+          "air_temperature_k": 284.200129032258,
+          "wind_speed_m_s": 2.6444838709677416
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 310,
+          "air_temperature_k": 283.4414838709677,
+          "wind_speed_m_s": 2.713096774193548
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 310,
+          "air_temperature_k": 282.8691935483871,
+          "wind_speed_m_s": 2.773322580645161
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 310,
+          "air_temperature_k": 282.3163870967742,
+          "wind_speed_m_s": 2.839225806451613
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 310,
+          "air_temperature_k": 281.79719354838704,
+          "wind_speed_m_s": 2.930516129032258
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 310,
+          "air_temperature_k": 281.3024838709677,
+          "wind_speed_m_s": 3.0288064516129034
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 0.22600000000000003,
+          "min": 0.22,
+          "max": 0.23,
+          "p05": 0.22,
+          "p50": 0.23,
+          "p95": 0.23,
+          "stddev": 0.00489897948556636
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 10,
+          "expected_count": 10,
+          "coverage_fraction": 1.0,
+          "mean": 122.48666666666665,
+          "min": 110.79166666666666,
+          "max": 132.84166666666667,
+          "p05": 113.11666666666666,
+          "p50": 121.59375,
+          "p95": 131.49166666666667,
+          "stddev": 6.520260571224644
+        }
+      }
+    }
+  },
+  "seasons": {
+    "DJF": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 21672,
+          "expected_count": 21672,
+          "coverage_fraction": 1.0,
+          "mean": 3.321641288298265,
+          "min": 0.04,
+          "max": 13.25,
+          "p05": 1.07,
+          "p50": 3.07,
+          "p95": 6.71,
+          "stddev": 1.7254574951902883
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 21672,
+          "expected_count": 21672,
+          "coverage_fraction": 1.0,
+          "mean": 284.3964733296419,
+          "min": 270.29999999999995,
+          "max": 303.34999999999997,
+          "p05": 275.9355,
+          "p50": 283.81,
+          "p95": 294.65,
+          "stddev": 5.676837198761098
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 21672,
+          "expected_count": 21672,
+          "coverage_fraction": 1.0,
+          "mean": 41.9094338316722,
+          "min": 2.95,
+          "max": 100.0,
+          "p05": 12.2,
+          "p50": 38.62,
+          "p95": 87.72,
+          "stddev": 22.489570720738055
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 21672,
+          "expected_count": 21672,
+          "coverage_fraction": 1.0,
+          "mean": 95725.9749907715,
+          "min": 93650.0,
+          "max": 97270.0,
+          "p05": 94870.0,
+          "p50": 95770.0,
+          "p95": 96470.0,
+          "stddev": 484.4362106179237
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 21672,
+          "expected_count": 21672,
+          "coverage_fraction": 1.0,
+          "mean": 0.020036452565522334,
+          "min": 0.0,
+          "max": 5.55,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.03,
+          "stddev": 0.16229406282340025
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 21672,
+          "expected_count": 21672,
+          "coverage_fraction": 1.0,
+          "mean": 1.1706100604030223,
+          "min": 1.093653485168273,
+          "max": 1.2443781069001134,
+          "p05": 1.1279075652685988,
+          "p50": 1.1717304387050462,
+          "p95": 1.2106777365666823,
+          "stddev": 0.024705232532290233
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 21672,
+          "expected_count": 21672,
+          "coverage_fraction": 1.0,
+          "mean": -0.07489171492443814,
+          "min": -7.799431944335932,
+          "max": 12.757796707691435,
+          "p05": -3.1299487631227914,
+          "p50": -0.3319665929168105,
+          "p95": 3.5997721955332183,
+          "stddev": 2.1920940191428127
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 21672,
+          "expected_count": 21672,
+          "coverage_fraction": 1.0,
+          "mean": -1.5722336963372008,
+          "min": -12.778437352930476,
+          "max": 12.965244052598564,
+          "p05": -5.327731515195728,
+          "p50": -1.9015427644272864,
+          "p95": 2.7483363225977073,
+          "stddev": 2.5937811515646327
+        }
+      },
+      "vector_mean_wind_from_deg": 2.727163401185387,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2022-12-22T01:00:00Z",
+          "wind_speed_m_s": 2.97,
+          "wind_from_deg": 322.0,
+          "air_temperature_k": 283.81,
+          "relative_humidity_pct": 38.2,
+          "pressure_pa": 95800.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 1.8285145817172048,
+          "wind_north_m_s": -2.3403919382119645,
+          "air_density_kg_m3": 1.1736521954215378
+        },
+        "high_wind": {
+          "timestamp_utc": "2015-01-13T22:00:00Z",
+          "wind_speed_m_s": 6.71,
+          "wind_from_deg": 345.6,
+          "air_temperature_k": 291.0,
+          "relative_humidity_pct": 18.56,
+          "pressure_pa": 95740.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 1.6687091428761736,
+          "wind_north_m_s": -6.499193011173115,
+          "air_density_kg_m3": 1.1444366284777858
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 903,
+          "air_temperature_k": 280.9026024363234,
+          "wind_speed_m_s": 3.085138427464009
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 903,
+          "air_temperature_k": 280.478172757475,
+          "wind_speed_m_s": 3.133875968992248
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 903,
+          "air_temperature_k": 280.11911406423036,
+          "wind_speed_m_s": 3.187962347729789
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 903,
+          "air_temperature_k": 279.80777408637874,
+          "wind_speed_m_s": 3.231284606866003
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 903,
+          "air_temperature_k": 279.51409745293466,
+          "wind_speed_m_s": 3.2633001107419712
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 903,
+          "air_temperature_k": 279.2328239202658,
+          "wind_speed_m_s": 3.272115171650056
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 903,
+          "air_temperature_k": 279.1286710963455,
+          "wind_speed_m_s": 3.263875968992248
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 903,
+          "air_temperature_k": 281.1286710963455,
+          "wind_speed_m_s": 3.3822148394241416
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 903,
+          "air_temperature_k": 284.17251384274635,
+          "wind_speed_m_s": 4.116965669988926
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 903,
+          "air_temperature_k": 286.82822812846064,
+          "wind_speed_m_s": 4.2621816168327795
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 903,
+          "air_temperature_k": 289.0721926910299,
+          "wind_speed_m_s": 4.1733887043189375
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 903,
+          "air_temperature_k": 290.5000664451827,
+          "wind_speed_m_s": 4.019390919158361
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 903,
+          "air_temperature_k": 291.3406201550387,
+          "wind_speed_m_s": 3.947541528239203
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 903,
+          "air_temperature_k": 291.69490586932443,
+          "wind_speed_m_s": 3.9277740863787374
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 903,
+          "air_temperature_k": 291.5247951273533,
+          "wind_speed_m_s": 3.839557032115172
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 903,
+          "air_temperature_k": 290.3615836101883,
+          "wind_speed_m_s": 3.2832336655592473
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 903,
+          "air_temperature_k": 287.3427353266888,
+          "wind_speed_m_s": 2.6610741971207093
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 903,
+          "air_temperature_k": 285.38852713178295,
+          "wind_speed_m_s": 2.6633222591362125
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 903,
+          "air_temperature_k": 284.4311295681063,
+          "wind_speed_m_s": 2.698648947951274
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 903,
+          "air_temperature_k": 283.67179401993354,
+          "wind_speed_m_s": 2.727142857142857
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 903,
+          "air_temperature_k": 283.06414174972315,
+          "wind_speed_m_s": 2.778815060908084
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 903,
+          "air_temperature_k": 282.48437430786265,
+          "wind_speed_m_s": 2.8450719822812847
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 903,
+          "air_temperature_k": 281.92774086378734,
+          "wind_speed_m_s": 2.933986710963455
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 903,
+          "air_temperature_k": 281.3980841638981,
+          "wind_speed_m_s": 3.0215282392026577
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 30,
+          "expected_count": 30,
+          "coverage_fraction": 1.0,
+          "mean": 0.22833333333333342,
+          "min": 0.21,
+          "max": 0.25,
+          "p05": 0.22,
+          "p50": 0.23,
+          "p95": 0.24,
+          "stddev": 0.007340905181848415
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 30,
+          "expected_count": 30,
+          "coverage_fraction": 1.0,
+          "mean": 147.71263888888885,
+          "min": 110.79166666666666,
+          "max": 201.84166666666664,
+          "p05": 116.66145833333333,
+          "p50": 132.95625,
+          "p95": 196.5245833333333,
+          "stddev": 28.84963798161988
+        }
+      }
+    },
+    "MAM": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 3.706688405797102,
+          "min": 0.04,
+          "max": 15.1,
+          "p05": 1.21,
+          "p50": 3.33,
+          "p95": 7.46,
+          "stddev": 1.8713211355622013
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 293.485473731884,
+          "min": 274.82,
+          "max": 315.40999999999997,
+          "p05": 281.38,
+          "p50": 292.92999999999995,
+          "p95": 306.96,
+          "stddev": 7.768224422113282
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 31.983278079710146,
+          "min": 3.16,
+          "max": 99.6,
+          "p05": 7.92,
+          "p50": 26.55,
+          "p95": 73.28,
+          "stddev": 20.718658442572735
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 95233.50951086957,
+          "min": 94000.0,
+          "max": 96630.0,
+          "p05": 94610.0,
+          "p50": 95210.0,
+          "p95": 95890.0,
+          "stddev": 395.7714757923412
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 0.00985054347826087,
+          "min": 0.0,
+          "max": 4.5,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.01,
+          "stddev": 0.09455562228776442
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 1.128296073208683,
+          "min": 1.0441488701530672,
+          "max": 1.2157448276454632,
+          "p05": 1.0751198150173087,
+          "p50": 1.1293374761378607,
+          "p95": 1.1789157047664443,
+          "stddev": 0.03142703587153169
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 1.5385390154268388,
+          "min": -7.01467101745731,
+          "max": 14.395277469363963,
+          "p05": -2.32695046850012,
+          "p50": 1.5242862014887981,
+          "p95": 5.976778086970101,
+          "stddev": 2.507315296885976
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": -0.5550108483042561,
+          "min": -10.5698551090553,
+          "max": 10.686896821383572,
+          "p05": -4.64740902655631,
+          "p50": -1.038635710526778,
+          "p95": 4.530912443127545,
+          "stddev": 2.8774315610189687
+        }
+      },
+      "vector_mean_wind_from_deg": 289.8363453657786,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2021-05-28T13:00:00Z",
+          "wind_speed_m_s": 3.28,
+          "wind_from_deg": 317.6,
+          "air_temperature_k": 293.59,
+          "relative_humidity_pct": 25.48,
+          "pressure_pa": 95230.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 2.211711831274611,
+          "wind_north_m_s": -2.4221335172528997,
+          "air_density_kg_m3": 1.127245162827369
+        },
+        "high_wind": {
+          "timestamp_utc": "2015-03-13T22:00:00Z",
+          "wind_speed_m_s": 7.46,
+          "wind_from_deg": 34.0,
+          "air_temperature_k": 300.95,
+          "relative_humidity_pct": 14.98,
+          "pressure_pa": 95690.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": -4.171579059891772,
+          "wind_north_m_s": -6.18462029126061,
+          "air_density_kg_m3": 1.1052321448921825
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 920,
+          "air_temperature_k": 288.27361956521736,
+          "wind_speed_m_s": 3.261195652173913
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 920,
+          "air_temperature_k": 287.5584456521739,
+          "wind_speed_m_s": 3.1815869565217394
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 920,
+          "air_temperature_k": 286.9387608695651,
+          "wind_speed_m_s": 3.1404021739130434
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 920,
+          "air_temperature_k": 286.3960217391304,
+          "wind_speed_m_s": 3.1302826086956523
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 920,
+          "air_temperature_k": 285.92501086956526,
+          "wind_speed_m_s": 3.106956521739131
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 920,
+          "air_temperature_k": 286.27325,
+          "wind_speed_m_s": 3.257434782608696
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 920,
+          "air_temperature_k": 288.7852391304348,
+          "wind_speed_m_s": 3.7863043478260865
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 920,
+          "air_temperature_k": 292.08211956521734,
+          "wind_speed_m_s": 4.097282608695652
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 920,
+          "air_temperature_k": 295.04906521739133,
+          "wind_speed_m_s": 3.9709347826086954
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 920,
+          "air_temperature_k": 297.24818478260863,
+          "wind_speed_m_s": 3.871576086956522
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 920,
+          "air_temperature_k": 298.8511304347826,
+          "wind_speed_m_s": 3.9195434782608696
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 920,
+          "air_temperature_k": 300.05936956521737,
+          "wind_speed_m_s": 4.039891304347826
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 920,
+          "air_temperature_k": 300.8770978260869,
+          "wind_speed_m_s": 4.185891304347827
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 920,
+          "air_temperature_k": 301.3228913043478,
+          "wind_speed_m_s": 4.331978260869565
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 920,
+          "air_temperature_k": 301.32677173913044,
+          "wind_speed_m_s": 4.465315217391304
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 920,
+          "air_temperature_k": 300.8575760869565,
+          "wind_speed_m_s": 4.570086956521739
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 920,
+          "air_temperature_k": 299.5979673913043,
+          "wind_speed_m_s": 4.429391304347826
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 920,
+          "air_temperature_k": 297.13673913043476,
+          "wind_speed_m_s": 3.7534456521739132
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 920,
+          "air_temperature_k": 294.3533478260869,
+          "wind_speed_m_s": 3.302184782608696
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 920,
+          "air_temperature_k": 292.91225,
+          "wind_speed_m_s": 3.3696413043478257
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 920,
+          "air_temperature_k": 291.88686956521735,
+          "wind_speed_m_s": 3.470684782608696
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 920,
+          "air_temperature_k": 290.90004347826084,
+          "wind_speed_m_s": 3.511673913043478
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 920,
+          "air_temperature_k": 289.95411956521735,
+          "wind_speed_m_s": 3.455
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 920,
+          "air_temperature_k": 289.0854782608696,
+          "wind_speed_m_s": 3.351836956521739
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 30,
+          "expected_count": 30,
+          "coverage_fraction": 1.0,
+          "mean": 0.23600000000000004,
+          "min": 0.22,
+          "max": 0.25,
+          "p05": 0.22,
+          "p50": 0.24,
+          "p95": 0.24,
+          "stddev": 0.007571877794400359
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 30,
+          "expected_count": 30,
+          "coverage_fraction": 1.0,
+          "mean": 288.91319444444446,
+          "min": 217.22083333333333,
+          "max": 347.05,
+          "p05": 224.91958333333332,
+          "p50": 301.0645833333333,
+          "p95": 343.06895833333334,
+          "stddev": 41.71150330782029
+        }
+      }
+    },
+    "JJA": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 3.431315670289855,
+          "min": 0.05,
+          "max": 14.3,
+          "p05": 1.18,
+          "p50": 3.18,
+          "p95": 6.51,
+          "stddev": 1.6179163593969998
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 306.238428442029,
+          "min": 286.44,
+          "max": 321.74,
+          "p05": 295.8095,
+          "p50": 306.05999999999995,
+          "p95": 316.12,
+          "stddev": 6.3704513875905855
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 22.069247735507247,
+          "min": 1.34,
+          "max": 84.52,
+          "p05": 6.38,
+          "p50": 18.83,
+          "p95": 48.89,
+          "stddev": 13.34091296743102
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 95040.87273550725,
+          "min": 94000.0,
+          "max": 95980.0,
+          "p05": 94620.0,
+          "p50": 95050.0,
+          "p95": 95450.0,
+          "stddev": 253.02532546266593
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 0.012198369565217393,
+          "min": 0.0,
+          "max": 4.58,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.02,
+          "stddev": 0.10390729109292196
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 1.0771802475242511,
+          "min": 1.0188799197634817,
+          "max": 1.154815814614102,
+          "p05": 1.042026787619285,
+          "p50": 1.077419672736609,
+          "p95": 1.1150660253077362,
+          "stddev": 0.022970245025546017
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 0.6471689022658982,
+          "min": -10.089714275524221,
+          "max": 10.377630563546788,
+          "p05": -2.830171330023282,
+          "p50": 0.6401174456023171,
+          "p95": 4.060132381036332,
+          "stddev": 2.192345171287074
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 22080,
+          "expected_count": 22080,
+          "coverage_fraction": 1.0,
+          "mean": 1.0536442975764069,
+          "min": -10.447411794251247,
+          "max": 12.886173800407406,
+          "p05": -2.9990455116765116,
+          "p50": 1.0848135811935216,
+          "p95": 5.707028298889269,
+          "stddev": 2.838346231741308
+        }
+      },
+      "vector_mean_wind_from_deg": 211.55905846553634,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2020-08-30T16:00:00Z",
+          "wind_speed_m_s": 3.12,
+          "wind_from_deg": 99.4,
+          "air_temperature_k": 305.82,
+          "relative_humidity_pct": 18.61,
+          "pressure_pa": 95060.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": -3.0781051442137444,
+          "wind_north_m_s": 0.5095770021938619,
+          "air_density_kg_m3": 1.0789086690420546
+        },
+        "high_wind": {
+          "timestamp_utc": "2016-06-11T18:00:00Z",
+          "wind_speed_m_s": 6.51,
+          "wind_from_deg": 150.9,
+          "air_temperature_k": 305.90999999999997,
+          "relative_humidity_pct": 23.21,
+          "pressure_pa": 95170.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": -3.1660433265569234,
+          "wind_north_m_s": 5.6882571719608785,
+          "air_density_kg_m3": 1.078841245861125
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 920,
+          "air_temperature_k": 300.82621739130434,
+          "wind_speed_m_s": 3.0142173913043484
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 920,
+          "air_temperature_k": 300.0256956521739,
+          "wind_speed_m_s": 2.8541630434782608
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 920,
+          "air_temperature_k": 299.3170543478261,
+          "wind_speed_m_s": 2.7193913043478264
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 920,
+          "air_temperature_k": 298.7010543478261,
+          "wind_speed_m_s": 2.6461739130434783
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 920,
+          "air_temperature_k": 298.2178369565217,
+          "wind_speed_m_s": 2.5893369565217386
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 920,
+          "air_temperature_k": 299.49457608695656,
+          "wind_speed_m_s": 2.90225
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 920,
+          "air_temperature_k": 302.1946847826087,
+          "wind_speed_m_s": 3.3523804347826083
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 920,
+          "air_temperature_k": 305.3399456521739,
+          "wind_speed_m_s": 2.982880434782609
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 920,
+          "air_temperature_k": 307.9024347826086,
+          "wind_speed_m_s": 2.9517065217391303
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 920,
+          "air_temperature_k": 309.73125,
+          "wind_speed_m_s": 3.290032608695652
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 920,
+          "air_temperature_k": 311.1848913043478,
+          "wind_speed_m_s": 3.6365108695652175
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 920,
+          "air_temperature_k": 312.29526086956525,
+          "wind_speed_m_s": 3.924847826086957
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 920,
+          "air_temperature_k": 313.0573478260869,
+          "wind_speed_m_s": 4.141173913043478
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 920,
+          "air_temperature_k": 313.51893478260865,
+          "wind_speed_m_s": 4.291184782608696
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 920,
+          "air_temperature_k": 313.60135869565215,
+          "wind_speed_m_s": 4.3860978260869565
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 920,
+          "air_temperature_k": 313.2735217391304,
+          "wind_speed_m_s": 4.443869565217392
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 920,
+          "air_temperature_k": 312.4731739130434,
+          "wind_speed_m_s": 4.481445652173913
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 920,
+          "air_temperature_k": 311.15231521739133,
+          "wind_speed_m_s": 4.282739130434783
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 920,
+          "air_temperature_k": 308.1437065217391,
+          "wind_speed_m_s": 3.249913043478261
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 920,
+          "air_temperature_k": 306.08177173913043,
+          "wind_speed_m_s": 3.2483369565217393
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 920,
+          "air_temperature_k": 304.93484782608687,
+          "wind_speed_m_s": 3.3132499999999996
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 920,
+          "air_temperature_k": 303.8026630434783,
+          "wind_speed_m_s": 3.2989673913043482
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 920,
+          "air_temperature_k": 302.72446739130436,
+          "wind_speed_m_s": 3.2238586956521735
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 920,
+          "air_temperature_k": 301.7272717391304,
+          "wind_speed_m_s": 3.1268478260869563
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 30,
+          "expected_count": 30,
+          "coverage_fraction": 1.0,
+          "mean": 0.23300000000000007,
+          "min": 0.23,
+          "max": 0.24,
+          "p05": 0.23,
+          "p50": 0.23,
+          "p95": 0.24,
+          "stddev": 0.004582575694955831
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 30,
+          "expected_count": 30,
+          "coverage_fraction": 1.0,
+          "mean": 321.7358333333333,
+          "min": 267.2583333333333,
+          "max": 362.4291666666666,
+          "p05": 291.6802083333333,
+          "p50": 320.76666666666665,
+          "p95": 356.71624999999995,
+          "stddev": 24.241683773532024
+        }
+      }
+    },
+    "SON": {
+      "statistics": {
+        "wind_speed_m_s": {
+          "units": "m/s",
+          "valid_count": 21840,
+          "expected_count": 21840,
+          "coverage_fraction": 1.0,
+          "mean": 3.1805325091575094,
+          "min": 0.03,
+          "max": 13.87,
+          "p05": 1.0,
+          "p50": 2.93,
+          "p95": 6.44,
+          "stddev": 1.6647890023897782
+        },
+        "air_temperature_k": {
+          "units": "K",
+          "valid_count": 21840,
+          "expected_count": 21840,
+          "coverage_fraction": 1.0,
+          "mean": 296.0276217948718,
+          "min": 274.29999999999995,
+          "max": 319.45,
+          "p05": 281.66999999999996,
+          "p50": 295.98999999999995,
+          "p95": 310.39,
+          "stddev": 8.563262265944513
+        },
+        "relative_humidity_pct": {
+          "units": "%",
+          "valid_count": 21840,
+          "expected_count": 21840,
+          "coverage_fraction": 1.0,
+          "mean": 27.049177655677656,
+          "min": 2.06,
+          "max": 100.0,
+          "p05": 7.78,
+          "p50": 22.515,
+          "p95": 64.08249999999997,
+          "stddev": 17.14528701117437
+        },
+        "pressure_pa": {
+          "units": "Pa",
+          "valid_count": 21840,
+          "expected_count": 21840,
+          "coverage_fraction": 1.0,
+          "mean": 95340.04716117216,
+          "min": 93880.0,
+          "max": 97150.0,
+          "p05": 94690.0,
+          "p50": 95320.0,
+          "p95": 96020.0,
+          "stddev": 415.24174583341636
+        },
+        "precipitation_mm_h": {
+          "units": "mm/h",
+          "valid_count": 21840,
+          "expected_count": 21840,
+          "coverage_fraction": 1.0,
+          "mean": 0.010141483516483517,
+          "min": 0.0,
+          "max": 8.04,
+          "p05": 0.0,
+          "p50": 0.0,
+          "p95": 0.01,
+          "stddev": 0.1268550019544996
+        },
+        "air_density_kg_m3": {
+          "units": "kg/m3",
+          "valid_count": 21840,
+          "expected_count": 21840,
+          "coverage_fraction": 1.0,
+          "mean": 1.1197315778399823,
+          "min": 1.02835104973229,
+          "max": 1.2179409763267095,
+          "p05": 1.0633454976945587,
+          "p50": 1.1181038414500488,
+          "p95": 1.1818489878569611,
+          "stddev": 0.0355448556440554
+        },
+        "wind_east_m_s": {
+          "units": "m/s",
+          "valid_count": 21840,
+          "expected_count": 21840,
+          "coverage_fraction": 1.0,
+          "mean": 0.14906460629331758,
+          "min": -8.08640356163341,
+          "max": 13.153249097709985,
+          "p05": -2.934196741117117,
+          "p50": 0.012461625552348823,
+          "p95": 3.503226048221068,
+          "stddev": 2.0739065430487815
+        },
+        "wind_north_m_s": {
+          "units": "m/s",
+          "valid_count": 21840,
+          "expected_count": 21840,
+          "coverage_fraction": 1.0,
+          "mean": -0.8781685408394857,
+          "min": -13.089681005933617,
+          "max": 12.687193934193607,
+          "p05": -4.81610227041838,
+          "p50": -1.2431387541995924,
+          "p95": 3.845244135341188,
+          "stddev": 2.7915624427935755
+        }
+      },
+      "vector_mean_wind_from_deg": 350.3661624697921,
+      "scenarios": {
+        "typical": {
+          "timestamp_utc": "2022-09-23T13:00:00Z",
+          "wind_speed_m_s": 3.0,
+          "wind_from_deg": 1.9,
+          "air_temperature_k": 295.64,
+          "relative_humidity_pct": 23.05,
+          "pressure_pa": 95320.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": -0.09946553516557882,
+          "wind_north_m_s": -2.9983506478252715,
+          "air_density_kg_m3": 1.120419556369264
+        },
+        "high_wind": {
+          "timestamp_utc": "2016-10-03T13:00:00Z",
+          "wind_speed_m_s": 6.44,
+          "wind_from_deg": 302.5,
+          "air_temperature_k": 287.37,
+          "relative_humidity_pct": 46.97,
+          "pressure_pa": 95260.0,
+          "precipitation_mm_h": 0.0,
+          "wind_east_m_s": 5.431440911034985,
+          "wind_north_m_s": -3.460209477753546,
+          "air_density_kg_m3": 1.1513228041564116
+        }
+      },
+      "diurnal": [
+        {
+          "local_mean_solar_hour": 0,
+          "record_count": 910,
+          "air_temperature_k": 291.8578241758242,
+          "wind_speed_m_s": 2.890131868131868
+        },
+        {
+          "local_mean_solar_hour": 1,
+          "record_count": 910,
+          "air_temperature_k": 291.2778351648351,
+          "wind_speed_m_s": 2.9014615384615388
+        },
+        {
+          "local_mean_solar_hour": 2,
+          "record_count": 910,
+          "air_temperature_k": 290.79442857142857,
+          "wind_speed_m_s": 2.9167032967032966
+        },
+        {
+          "local_mean_solar_hour": 3,
+          "record_count": 910,
+          "air_temperature_k": 290.35624175824177,
+          "wind_speed_m_s": 2.9507252747252743
+        },
+        {
+          "local_mean_solar_hour": 4,
+          "record_count": 910,
+          "air_temperature_k": 289.959978021978,
+          "wind_speed_m_s": 2.9745164835164837
+        },
+        {
+          "local_mean_solar_hour": 5,
+          "record_count": 910,
+          "air_temperature_k": 289.6515604395604,
+          "wind_speed_m_s": 2.9779560439560435
+        },
+        {
+          "local_mean_solar_hour": 6,
+          "record_count": 910,
+          "air_temperature_k": 290.5258021978022,
+          "wind_speed_m_s": 3.1117802197802202
+        },
+        {
+          "local_mean_solar_hour": 7,
+          "record_count": 910,
+          "air_temperature_k": 293.4202087912087,
+          "wind_speed_m_s": 3.571791208791209
+        },
+        {
+          "local_mean_solar_hour": 8,
+          "record_count": 910,
+          "air_temperature_k": 296.45953846153844,
+          "wind_speed_m_s": 3.8422857142857145
+        },
+        {
+          "local_mean_solar_hour": 9,
+          "record_count": 910,
+          "air_temperature_k": 299.0604835164835,
+          "wind_speed_m_s": 3.728582417582418
+        },
+        {
+          "local_mean_solar_hour": 10,
+          "record_count": 910,
+          "air_temperature_k": 300.9431098901099,
+          "wind_speed_m_s": 3.670527472527473
+        },
+        {
+          "local_mean_solar_hour": 11,
+          "record_count": 910,
+          "air_temperature_k": 302.2065384615384,
+          "wind_speed_m_s": 3.6731978021978025
+        },
+        {
+          "local_mean_solar_hour": 12,
+          "record_count": 910,
+          "air_temperature_k": 303.00487912087914,
+          "wind_speed_m_s": 3.689868131868132
+        },
+        {
+          "local_mean_solar_hour": 13,
+          "record_count": 910,
+          "air_temperature_k": 303.38780219780216,
+          "wind_speed_m_s": 3.7174505494505494
+        },
+        {
+          "local_mean_solar_hour": 14,
+          "record_count": 910,
+          "air_temperature_k": 303.2977582417582,
+          "wind_speed_m_s": 3.7288901098901097
+        },
+        {
+          "local_mean_solar_hour": 15,
+          "record_count": 910,
+          "air_temperature_k": 302.5925274725274,
+          "wind_speed_m_s": 3.6078351648351648
+        },
+        {
+          "local_mean_solar_hour": 16,
+          "record_count": 910,
+          "air_temperature_k": 300.83823076923073,
+          "wind_speed_m_s": 3.122384615384615
+        },
+        {
+          "local_mean_solar_hour": 17,
+          "record_count": 910,
+          "air_temperature_k": 298.181,
+          "wind_speed_m_s": 2.6643296703296704
+        },
+        {
+          "local_mean_solar_hour": 18,
+          "record_count": 910,
+          "air_temperature_k": 296.5927472527472,
+          "wind_speed_m_s": 2.6401428571428567
+        },
+        {
+          "local_mean_solar_hour": 19,
+          "record_count": 910,
+          "air_temperature_k": 295.6337802197802,
+          "wind_speed_m_s": 2.698010989010989
+        },
+        {
+          "local_mean_solar_hour": 20,
+          "record_count": 910,
+          "air_temperature_k": 294.80493406593405,
+          "wind_speed_m_s": 2.751428571428572
+        },
+        {
+          "local_mean_solar_hour": 21,
+          "record_count": 910,
+          "air_temperature_k": 294.0147362637362,
+          "wind_speed_m_s": 2.798681318681319
+        },
+        {
+          "local_mean_solar_hour": 22,
+          "record_count": 910,
+          "air_temperature_k": 293.26016483516486,
+          "wind_speed_m_s": 2.8403406593406593
+        },
+        {
+          "local_mean_solar_hour": 23,
+          "record_count": 910,
+          "air_temperature_k": 292.5408131868132,
+          "wind_speed_m_s": 2.8637582417582417
+        }
+      ],
+      "radiation": {
+        "albedo": {
+          "units": "1",
+          "valid_count": 30,
+          "expected_count": 30,
+          "coverage_fraction": 1.0,
+          "mean": 0.23600000000000007,
+          "min": 0.23,
+          "max": 0.25,
+          "p05": 0.23,
+          "p50": 0.24,
+          "p95": 0.24,
+          "stddev": 0.005537749241945376
+        },
+        "solar_daily_mean_w_m2": {
+          "units": "W/m2",
+          "valid_count": 30,
+          "expected_count": 30,
+          "coverage_fraction": 1.0,
+          "mean": 206.5144444444444,
+          "min": 141.15833333333333,
+          "max": 269.02916666666664,
+          "p05": 153.04416666666665,
+          "p50": 206.12916666666666,
+          "p95": 265.78479166666665,
+          "stddev": 42.270096151139086
+        }
+      }
+    }
+  },
+  "soil": {
+    "status": "survey_available",
+    "survey": {
+      "status": "available",
+      "evidence": "survey map-unit estimates; not a local engineering measurement",
+      "source": {
+        "url": "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest",
+        "query": "SELECT mu.mukey, mu.muname, l.areasymbol, l.areaname, co.cokey, co.compname, co.compkind,\nco.comppct_r, co.taxorder, hz.hzname, hz.hzdept_r, hz.hzdepb_r,\nhz.sandtotal_r, hz.silttotal_r, hz.claytotal_r, hz.dbthirdbar_r\nFROM mapunit mu INNER JOIN legend l ON l.lkey = mu.lkey INNER JOIN component co ON co.mukey = mu.mukey\nLEFT JOIN chorizon hz ON hz.cokey = co.cokey AND hz.hzdept_r < 30\nWHERE mu.mukey IN (SELECT mukey FROM SDA_Get_Mukey_from_intersection_with_WktWgs84('POINT(-115.78 34.55)'))\nORDER BY co.comppct_r DESC, co.cokey, hz.hzdept_r",
+        "provider": "USDA NRCS SSURGO (supplementary source)",
+        "spatial_support": "map unit intersecting request point; component percentages apply to the map unit, not a mapped pad",
+        "depth_selection": "horizons with upper depth <30 cm; each reported value applies to its full horizon",
+        "property_units": {
+          "sand_pct": "%",
+          "silt_pct": "%",
+          "clay_pct": "%",
+          "bulk_density_kg_m3": "kg/m3, converted from dbthirdbar_r g/cm3",
+          "top_cm": "cm",
+          "bottom_cm": "cm"
+        },
+        "sha256": "acef0bb83b08a0426b52a0495137b8aadd5fb7a422d8c59d5019053fcda5373e"
+      },
+      "horizons": [
+        {
+          "survey_area_symbol": "CA695",
+          "survey_area_name": "Mojave Desert Area, California",
+          "map_unit_key": "3457453",
+          "map_unit_name": "Torriorthents, Torripsamments, and Haplargids; hyperthermic fan piedmonts",
+          "component_key": "28694730",
+          "component_name": "Torriorthents",
+          "component_kind": "Taxon above family",
+          "map_unit_component_pct": 45.0,
+          "taxonomic_order": "Entisols",
+          "horizon_name": "A",
+          "top_cm": 0.0,
+          "bottom_cm": 2.0,
+          "sand_pct": 98.0,
+          "silt_pct": 1.0,
+          "clay_pct": 1.0,
+          "bulk_density_kg_m3": 1530.0
+        },
+        {
+          "survey_area_symbol": "CA695",
+          "survey_area_name": "Mojave Desert Area, California",
+          "map_unit_key": "3457453",
+          "map_unit_name": "Torriorthents, Torripsamments, and Haplargids; hyperthermic fan piedmonts",
+          "component_key": "28694730",
+          "component_name": "Torriorthents",
+          "component_kind": "Taxon above family",
+          "map_unit_component_pct": 45.0,
+          "taxonomic_order": "Entisols",
+          "horizon_name": "C1",
+          "top_cm": 2.0,
+          "bottom_cm": 7.0,
+          "sand_pct": 85.0,
+          "silt_pct": 10.0,
+          "clay_pct": 5.0,
+          "bulk_density_kg_m3": 1530.0
+        },
+        {
+          "survey_area_symbol": "CA695",
+          "survey_area_name": "Mojave Desert Area, California",
+          "map_unit_key": "3457453",
+          "map_unit_name": "Torriorthents, Torripsamments, and Haplargids; hyperthermic fan piedmonts",
+          "component_key": "28694730",
+          "component_name": "Torriorthents",
+          "component_kind": "Taxon above family",
+          "map_unit_component_pct": 45.0,
+          "taxonomic_order": "Entisols",
+          "horizon_name": "C2",
+          "top_cm": 7.0,
+          "bottom_cm": 62.0,
+          "sand_pct": 92.0,
+          "silt_pct": 5.0,
+          "clay_pct": 3.0,
+          "bulk_density_kg_m3": 1530.0
+        },
+        {
+          "survey_area_symbol": "CA695",
+          "survey_area_name": "Mojave Desert Area, California",
+          "map_unit_key": "3457453",
+          "map_unit_name": "Torriorthents, Torripsamments, and Haplargids; hyperthermic fan piedmonts",
+          "component_key": "28694731",
+          "component_name": "Torripsamments",
+          "component_kind": "Taxon above family",
+          "map_unit_component_pct": 30.0,
+          "taxonomic_order": "Entisols",
+          "horizon_name": "A",
+          "top_cm": 0.0,
+          "bottom_cm": 4.0,
+          "sand_pct": 90.0,
+          "silt_pct": 7.0,
+          "clay_pct": 3.0,
+          "bulk_density_kg_m3": 1530.0
+        },
+        {
+          "survey_area_symbol": "CA695",
+          "survey_area_name": "Mojave Desert Area, California",
+          "map_unit_key": "3457453",
+          "map_unit_name": "Torriorthents, Torripsamments, and Haplargids; hyperthermic fan piedmonts",
+          "component_key": "28694731",
+          "component_name": "Torripsamments",
+          "component_kind": "Taxon above family",
+          "map_unit_component_pct": 30.0,
+          "taxonomic_order": "Entisols",
+          "horizon_name": "C1",
+          "top_cm": 4.0,
+          "bottom_cm": 31.0,
+          "sand_pct": 85.0,
+          "silt_pct": 11.0,
+          "clay_pct": 4.0,
+          "bulk_density_kg_m3": 1530.0
+        },
+        {
+          "survey_area_symbol": "CA695",
+          "survey_area_name": "Mojave Desert Area, California",
+          "map_unit_key": "3457453",
+          "map_unit_name": "Torriorthents, Torripsamments, and Haplargids; hyperthermic fan piedmonts",
+          "component_key": "28694732",
+          "component_name": "Haplargids",
+          "component_kind": "Taxon above family",
+          "map_unit_component_pct": 15.0,
+          "taxonomic_order": "Aridisols",
+          "horizon_name": "A",
+          "top_cm": 0.0,
+          "bottom_cm": 4.0,
+          "sand_pct": 80.0,
+          "silt_pct": 15.0,
+          "clay_pct": 5.0,
+          "bulk_density_kg_m3": 1660.0
+        },
+        {
+          "survey_area_symbol": "CA695",
+          "survey_area_name": "Mojave Desert Area, California",
+          "map_unit_key": "3457453",
+          "map_unit_name": "Torriorthents, Torripsamments, and Haplargids; hyperthermic fan piedmonts",
+          "component_key": "28694732",
+          "component_name": "Haplargids",
+          "component_kind": "Taxon above family",
+          "map_unit_component_pct": 15.0,
+          "taxonomic_order": "Aridisols",
+          "horizon_name": "Bw",
+          "top_cm": 4.0,
+          "bottom_cm": 27.0,
+          "sand_pct": 70.0,
+          "silt_pct": 21.0,
+          "clay_pct": 9.0,
+          "bulk_density_kg_m3": 1610.0
+        },
+        {
+          "survey_area_symbol": "CA695",
+          "survey_area_name": "Mojave Desert Area, California",
+          "map_unit_key": "3457453",
+          "map_unit_name": "Torriorthents, Torripsamments, and Haplargids; hyperthermic fan piedmonts",
+          "component_key": "28694732",
+          "component_name": "Haplargids",
+          "component_kind": "Taxon above family",
+          "map_unit_component_pct": 15.0,
+          "taxonomic_order": "Aridisols",
+          "horizon_name": "Btk1",
+          "top_cm": 27.0,
+          "bottom_cm": 54.0,
+          "sand_pct": 70.0,
+          "silt_pct": 16.0,
+          "clay_pct": 14.0,
+          "bulk_density_kg_m3": 1610.0
+        },
+        {
+          "survey_area_symbol": "CA695",
+          "survey_area_name": "Mojave Desert Area, California",
+          "map_unit_key": "3457453",
+          "map_unit_name": "Torriorthents, Torripsamments, and Haplargids; hyperthermic fan piedmonts",
+          "component_key": "28694733",
+          "component_name": "Haplocalcids",
+          "component_kind": "Taxon above family",
+          "map_unit_component_pct": 10.0,
+          "taxonomic_order": "Aridisols",
+          "horizon_name": "V",
+          "top_cm": 0.0,
+          "bottom_cm": 3.0,
+          "sand_pct": 30.0,
+          "silt_pct": 53.0,
+          "clay_pct": 17.0,
+          "bulk_density_kg_m3": 1520.0
+        },
+        {
+          "survey_area_symbol": "CA695",
+          "survey_area_name": "Mojave Desert Area, California",
+          "map_unit_key": "3457453",
+          "map_unit_name": "Torriorthents, Torripsamments, and Haplargids; hyperthermic fan piedmonts",
+          "component_key": "28694733",
+          "component_name": "Haplocalcids",
+          "component_kind": "Taxon above family",
+          "map_unit_component_pct": 10.0,
+          "taxonomic_order": "Aridisols",
+          "horizon_name": "Btk",
+          "top_cm": 3.0,
+          "bottom_cm": 9.0,
+          "sand_pct": 65.0,
+          "silt_pct": 22.0,
+          "clay_pct": 13.0,
+          "bulk_density_kg_m3": 1670.0
+        },
+        {
+          "survey_area_symbol": "CA695",
+          "survey_area_name": "Mojave Desert Area, California",
+          "map_unit_key": "3457453",
+          "map_unit_name": "Torriorthents, Torripsamments, and Haplargids; hyperthermic fan piedmonts",
+          "component_key": "28694733",
+          "component_name": "Haplocalcids",
+          "component_kind": "Taxon above family",
+          "map_unit_component_pct": 10.0,
+          "taxonomic_order": "Aridisols",
+          "horizon_name": "2Bkq1",
+          "top_cm": 9.0,
+          "bottom_cm": 25.0,
+          "sand_pct": 78.0,
+          "silt_pct": 16.0,
+          "clay_pct": 6.0,
+          "bulk_density_kg_m3": 1610.0
+        },
+        {
+          "survey_area_symbol": "CA695",
+          "survey_area_name": "Mojave Desert Area, California",
+          "map_unit_key": "3457453",
+          "map_unit_name": "Torriorthents, Torripsamments, and Haplargids; hyperthermic fan piedmonts",
+          "component_key": "28694733",
+          "component_name": "Haplocalcids",
+          "component_kind": "Taxon above family",
+          "map_unit_component_pct": 10.0,
+          "taxonomic_order": "Aridisols",
+          "horizon_name": "2Bkq2",
+          "top_cm": 25.0,
+          "bottom_cm": 48.0,
+          "sand_pct": 92.0,
+          "silt_pct": 6.0,
+          "clay_pct": 2.0,
+          "bulk_density_kg_m3": 1600.0
+        }
+      ]
+    },
+    "surface_materials": {
+      "values": [
+        "basaltic lava",
+        "volcanic cinders"
+      ],
+      "evidence": "literature",
+      "source_url": "https://pds-geosciences.wustl.edu/missions/amboycrater/index.htm",
+      "spatial_support": "site context; not a point sample or complete surface-unit map"
+    },
+    "texture_fractions": null,
+    "bulk_density_kg_m3": null,
+    "cohesion_pa": null,
+    "friction_angle_deg": null,
+    "bearing_capacity_pa": null,
+    "soil_moisture_m3_m3": null,
+    "snow_depth_m": null,
+    "active_layer_depth_m": null
+  },
+  "unavailable": [
+    "local_gusts",
+    "turbulence",
+    "pad_scale_obstacles",
+    "contact_friction",
+    "ground_bearing_strength",
+    "surface_temperature",
+    "thermal_conductivity",
+    "specific_heat",
+    "local_surface_albedo",
+    "dust_erosion_threshold"
+  ],
+  "limitations": [
+    "High-wind scenario is a real modelled hour near the 95th percentile of hourly speeds, NOT a gust or certified design extreme.",
+    "Each scenario preserves joint weather values from one hour; monthly radiation is separate context, never attached as instantaneous scenario flux.",
+    "Regional albedo can mix bright dunes/salt/snow with surrounding land; use site-resolved data for detailed heating.",
+    "Missing ground properties are null. Do not silently substitute soil type for measured contact physics.",
+    "No universal safe-landing threshold is supplied. Vehicle and equipment parameters are required."
+  ],
+  "sources": [
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=WS10M%2CWD10M%2CT2M%2CRH2M%2CPS%2CPRECTOTCORR&community=RE&longitude=-115.78&latitude=34.55&start=20150101&end=20151231&format=JSON&time-standard=UTC",
+      "sha256": "7a5d06a3aa688a8072d9cab41b9b9236d97ffd8828c9b00444b3fe9b6203af03",
+      "cache_file": "data/raw/environment/b70b3f8cac87b647f21c15ed296ba33984b315437cd007ab9d42fa4ca1c6b66b.json.gz",
+      "kind": "hourly_meteorology",
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Hourly Data",
+        "api": {
+          "version": "v2.10.4",
+          "name": "POWER Hourly API"
+        },
+        "sources": [
+          "MERRA2",
+          "POWER"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "UTC",
+        "start": "20150101",
+        "end": "20151231"
+      },
+      "units": {
+        "WS10M": {
+          "units": "m/s",
+          "longname": "Wind Speed at 10 Meters"
+        },
+        "WD10M": {
+          "units": "Degrees",
+          "longname": "Wind Direction at 10 Meters"
+        },
+        "T2M": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters"
+        },
+        "RH2M": {
+          "units": "%",
+          "longname": "Relative Humidity at 2 Meters"
+        },
+        "PS": {
+          "units": "kPa",
+          "longname": "Surface Pressure"
+        },
+        "PRECTOTCORR": {
+          "units": "mm/hour",
+          "longname": "Precipitation Corrected"
+        }
+      }
+    },
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=WS10M%2CWD10M%2CT2M%2CRH2M%2CPS%2CPRECTOTCORR&community=RE&longitude=-115.78&latitude=34.55&start=20160101&end=20161231&format=JSON&time-standard=UTC",
+      "sha256": "6efa5abfbe908b0eb75bcd27bf9113eab69c223cc93ef17b1a29e7a258e79ab5",
+      "cache_file": "data/raw/environment/24bc1162b14e88ae678833316a96af526dc8c91cda2511dc3ef6df49425d7637.json.gz",
+      "kind": "hourly_meteorology",
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Hourly Data",
+        "api": {
+          "version": "v2.10.4",
+          "name": "POWER Hourly API"
+        },
+        "sources": [
+          "MERRA2",
+          "POWER"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "UTC",
+        "start": "20160101",
+        "end": "20161231"
+      },
+      "units": {
+        "WS10M": {
+          "units": "m/s",
+          "longname": "Wind Speed at 10 Meters"
+        },
+        "WD10M": {
+          "units": "Degrees",
+          "longname": "Wind Direction at 10 Meters"
+        },
+        "T2M": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters"
+        },
+        "RH2M": {
+          "units": "%",
+          "longname": "Relative Humidity at 2 Meters"
+        },
+        "PS": {
+          "units": "kPa",
+          "longname": "Surface Pressure"
+        },
+        "PRECTOTCORR": {
+          "units": "mm/hour",
+          "longname": "Precipitation Corrected"
+        }
+      }
+    },
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=WS10M%2CWD10M%2CT2M%2CRH2M%2CPS%2CPRECTOTCORR&community=RE&longitude=-115.78&latitude=34.55&start=20170101&end=20171231&format=JSON&time-standard=UTC",
+      "sha256": "872ead38f7d60b0c5ec54757789cbdbc4004f500f4a1a9727695c0c1c6d776b0",
+      "cache_file": "data/raw/environment/251cfc06f4d30b37132da99f0a984bb7dc573d89ee7490ec25c1f931835ed8db.json.gz",
+      "kind": "hourly_meteorology",
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Hourly Data",
+        "api": {
+          "version": "v2.10.4",
+          "name": "POWER Hourly API"
+        },
+        "sources": [
+          "MERRA2",
+          "POWER"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "UTC",
+        "start": "20170101",
+        "end": "20171231"
+      },
+      "units": {
+        "WS10M": {
+          "units": "m/s",
+          "longname": "Wind Speed at 10 Meters"
+        },
+        "WD10M": {
+          "units": "Degrees",
+          "longname": "Wind Direction at 10 Meters"
+        },
+        "T2M": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters"
+        },
+        "RH2M": {
+          "units": "%",
+          "longname": "Relative Humidity at 2 Meters"
+        },
+        "PS": {
+          "units": "kPa",
+          "longname": "Surface Pressure"
+        },
+        "PRECTOTCORR": {
+          "units": "mm/hour",
+          "longname": "Precipitation Corrected"
+        }
+      }
+    },
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=WS10M%2CWD10M%2CT2M%2CRH2M%2CPS%2CPRECTOTCORR&community=RE&longitude=-115.78&latitude=34.55&start=20180101&end=20181231&format=JSON&time-standard=UTC",
+      "sha256": "3c01e5b71199a7e89c6c043305649aee422cd5af5e1825605de0652cf432a807",
+      "cache_file": "data/raw/environment/c2123382ee3a4986436786390fed90cb469a653371e1564fa70f3eaa3ee42818.json.gz",
+      "kind": "hourly_meteorology",
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Hourly Data",
+        "api": {
+          "version": "v2.10.4",
+          "name": "POWER Hourly API"
+        },
+        "sources": [
+          "MERRA2",
+          "POWER"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "UTC",
+        "start": "20180101",
+        "end": "20181231"
+      },
+      "units": {
+        "WS10M": {
+          "units": "m/s",
+          "longname": "Wind Speed at 10 Meters"
+        },
+        "WD10M": {
+          "units": "Degrees",
+          "longname": "Wind Direction at 10 Meters"
+        },
+        "T2M": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters"
+        },
+        "RH2M": {
+          "units": "%",
+          "longname": "Relative Humidity at 2 Meters"
+        },
+        "PS": {
+          "units": "kPa",
+          "longname": "Surface Pressure"
+        },
+        "PRECTOTCORR": {
+          "units": "mm/hour",
+          "longname": "Precipitation Corrected"
+        }
+      }
+    },
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=WS10M%2CWD10M%2CT2M%2CRH2M%2CPS%2CPRECTOTCORR&community=RE&longitude=-115.78&latitude=34.55&start=20190101&end=20191231&format=JSON&time-standard=UTC",
+      "sha256": "4af3458c6570977fd51411df0c8fc60e4ac285260a5f7d04cefe0464a2b954d0",
+      "cache_file": "data/raw/environment/38f31e055d432be35fedbbe8dbd9bb141a923d4c8f64d5d9eb04853ac8cb7fcd.json.gz",
+      "kind": "hourly_meteorology",
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Hourly Data",
+        "api": {
+          "version": "v2.10.4",
+          "name": "POWER Hourly API"
+        },
+        "sources": [
+          "MERRA2",
+          "POWER"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "UTC",
+        "start": "20190101",
+        "end": "20191231"
+      },
+      "units": {
+        "WS10M": {
+          "units": "m/s",
+          "longname": "Wind Speed at 10 Meters"
+        },
+        "WD10M": {
+          "units": "Degrees",
+          "longname": "Wind Direction at 10 Meters"
+        },
+        "T2M": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters"
+        },
+        "RH2M": {
+          "units": "%",
+          "longname": "Relative Humidity at 2 Meters"
+        },
+        "PS": {
+          "units": "kPa",
+          "longname": "Surface Pressure"
+        },
+        "PRECTOTCORR": {
+          "units": "mm/hour",
+          "longname": "Precipitation Corrected"
+        }
+      }
+    },
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=WS10M%2CWD10M%2CT2M%2CRH2M%2CPS%2CPRECTOTCORR&community=RE&longitude=-115.78&latitude=34.55&start=20200101&end=20201231&format=JSON&time-standard=UTC",
+      "sha256": "080e29227210fd10acf765a9b3610053d3d49d7f07728cb0506881596771a18b",
+      "cache_file": "data/raw/environment/5ce7c89490bc238314c27d88010d44fdcea945c98d7ff9807132d8b18173a515.json.gz",
+      "kind": "hourly_meteorology",
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Hourly Data",
+        "api": {
+          "version": "v2.10.4",
+          "name": "POWER Hourly API"
+        },
+        "sources": [
+          "MERRA2",
+          "POWER"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "UTC",
+        "start": "20200101",
+        "end": "20201231"
+      },
+      "units": {
+        "WS10M": {
+          "units": "m/s",
+          "longname": "Wind Speed at 10 Meters"
+        },
+        "WD10M": {
+          "units": "Degrees",
+          "longname": "Wind Direction at 10 Meters"
+        },
+        "T2M": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters"
+        },
+        "RH2M": {
+          "units": "%",
+          "longname": "Relative Humidity at 2 Meters"
+        },
+        "PS": {
+          "units": "kPa",
+          "longname": "Surface Pressure"
+        },
+        "PRECTOTCORR": {
+          "units": "mm/hour",
+          "longname": "Precipitation Corrected"
+        }
+      }
+    },
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=WS10M%2CWD10M%2CT2M%2CRH2M%2CPS%2CPRECTOTCORR&community=RE&longitude=-115.78&latitude=34.55&start=20210101&end=20211231&format=JSON&time-standard=UTC",
+      "sha256": "6afbb481438c8530bda756f8e92a454ed3b833d02e100fc3ecb3e83145fecfbc",
+      "cache_file": "data/raw/environment/1bfeb2cd2be5855fd5c9c06bf37e1b79d6aea96b3e06e57f5011552664673bad.json.gz",
+      "kind": "hourly_meteorology",
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Hourly Data",
+        "api": {
+          "version": "v2.10.4",
+          "name": "POWER Hourly API"
+        },
+        "sources": [
+          "MERRA2",
+          "POWER"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "UTC",
+        "start": "20210101",
+        "end": "20211231"
+      },
+      "units": {
+        "WS10M": {
+          "units": "m/s",
+          "longname": "Wind Speed at 10 Meters"
+        },
+        "WD10M": {
+          "units": "Degrees",
+          "longname": "Wind Direction at 10 Meters"
+        },
+        "T2M": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters"
+        },
+        "RH2M": {
+          "units": "%",
+          "longname": "Relative Humidity at 2 Meters"
+        },
+        "PS": {
+          "units": "kPa",
+          "longname": "Surface Pressure"
+        },
+        "PRECTOTCORR": {
+          "units": "mm/hour",
+          "longname": "Precipitation Corrected"
+        }
+      }
+    },
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=WS10M%2CWD10M%2CT2M%2CRH2M%2CPS%2CPRECTOTCORR&community=RE&longitude=-115.78&latitude=34.55&start=20220101&end=20221231&format=JSON&time-standard=UTC",
+      "sha256": "063906cf7f7c6a60e8c25f6d9b90a304d207613cf1734cbb668801cdfc1db330",
+      "cache_file": "data/raw/environment/fef7bfa6a5f3095b0a010fea84713b8459c4539bebaf6061267d989dd6f2aaf1.json.gz",
+      "kind": "hourly_meteorology",
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Hourly Data",
+        "api": {
+          "version": "v2.10.4",
+          "name": "POWER Hourly API"
+        },
+        "sources": [
+          "MERRA2",
+          "POWER"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "UTC",
+        "start": "20220101",
+        "end": "20221231"
+      },
+      "units": {
+        "WS10M": {
+          "units": "m/s",
+          "longname": "Wind Speed at 10 Meters"
+        },
+        "WD10M": {
+          "units": "Degrees",
+          "longname": "Wind Direction at 10 Meters"
+        },
+        "T2M": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters"
+        },
+        "RH2M": {
+          "units": "%",
+          "longname": "Relative Humidity at 2 Meters"
+        },
+        "PS": {
+          "units": "kPa",
+          "longname": "Surface Pressure"
+        },
+        "PRECTOTCORR": {
+          "units": "mm/hour",
+          "longname": "Precipitation Corrected"
+        }
+      }
+    },
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=WS10M%2CWD10M%2CT2M%2CRH2M%2CPS%2CPRECTOTCORR&community=RE&longitude=-115.78&latitude=34.55&start=20230101&end=20231231&format=JSON&time-standard=UTC",
+      "sha256": "4e9e15858662f259713b5f0692784193e8fdea1c5ad80d0c78ad31fabea62aad",
+      "cache_file": "data/raw/environment/a50bd71090611cedc50db5ba1f6d04c68ac816ac1a0717a65882962fdfbbb06e.json.gz",
+      "kind": "hourly_meteorology",
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Hourly Data",
+        "api": {
+          "version": "v2.10.4",
+          "name": "POWER Hourly API"
+        },
+        "sources": [
+          "MERRA2",
+          "POWER"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "UTC",
+        "start": "20230101",
+        "end": "20231231"
+      },
+      "units": {
+        "WS10M": {
+          "units": "m/s",
+          "longname": "Wind Speed at 10 Meters"
+        },
+        "WD10M": {
+          "units": "Degrees",
+          "longname": "Wind Direction at 10 Meters"
+        },
+        "T2M": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters"
+        },
+        "RH2M": {
+          "units": "%",
+          "longname": "Relative Humidity at 2 Meters"
+        },
+        "PS": {
+          "units": "kPa",
+          "longname": "Surface Pressure"
+        },
+        "PRECTOTCORR": {
+          "units": "mm/hour",
+          "longname": "Precipitation Corrected"
+        }
+      }
+    },
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=WS10M%2CWD10M%2CT2M%2CRH2M%2CPS%2CPRECTOTCORR&community=RE&longitude=-115.78&latitude=34.55&start=20240101&end=20241231&format=JSON&time-standard=UTC",
+      "sha256": "7a4b17da8ec7b122a184578c1cc96eadcb52772165ad1bfc81ccf0a0023fe044",
+      "cache_file": "data/raw/environment/11818613b1e738e49ea0c956cb106decc5e47c473545eb0c1b0b2abf043b5e11.json.gz",
+      "kind": "hourly_meteorology",
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Hourly Data",
+        "api": {
+          "version": "v2.10.4",
+          "name": "POWER Hourly API"
+        },
+        "sources": [
+          "MERRA2",
+          "POWER"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "UTC",
+        "start": "20240101",
+        "end": "20241231"
+      },
+      "units": {
+        "WS10M": {
+          "units": "m/s",
+          "longname": "Wind Speed at 10 Meters"
+        },
+        "WD10M": {
+          "units": "Degrees",
+          "longname": "Wind Direction at 10 Meters"
+        },
+        "T2M": {
+          "units": "C",
+          "longname": "Temperature at 2 Meters"
+        },
+        "RH2M": {
+          "units": "%",
+          "longname": "Relative Humidity at 2 Meters"
+        },
+        "PS": {
+          "units": "kPa",
+          "longname": "Surface Pressure"
+        },
+        "PRECTOTCORR": {
+          "units": "mm/hour",
+          "longname": "Precipitation Corrected"
+        }
+      }
+    },
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=ALLSKY_SRF_ALB%2CALLSKY_SFC_SW_DWN&community=RE&longitude=-115.78&latitude=34.55&start=2015&end=2024&format=JSON",
+      "sha256": "96571e251795fcacbc2a35c5fb4aa37c6f0b871c0df00cfadaa3e40602c13a29",
+      "cache_file": "data/raw/environment/c3c075f7ac53543adc72217bb0238b1dbb85bf43199103088dd3638c4ac98f5d.json.gz",
+      "kind": "monthly_radiation",
+      "header": {
+        "title": "NASA/POWER Source Native Resolution Monthly and Annual",
+        "api": {
+          "version": "v2.10.0",
+          "name": "POWER Monthly and Annual API"
+        },
+        "sources": [
+          "SYN1DEG",
+          "POWER"
+        ],
+        "fill_value": -999.0,
+        "time_standard": "LST",
+        "start": "20150101",
+        "end": "20241231"
+      },
+      "units": {
+        "ALLSKY_SFC_SW_DWN": {
+          "units": "kW-hr/m^2/day",
+          "longname": "All Sky Surface Shortwave Downward Irradiance"
+        },
+        "ALLSKY_SRF_ALB": {
+          "units": "dimensionless",
+          "longname": "All Sky Surface Albedo"
+        }
+      }
+    }
+  ]
+}
