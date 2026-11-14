@@ -7,9 +7,13 @@ The default app now opens the interactive three-world game sequence. See
 is still accessible with `?planner`.
 
 Read [the agreed game journey](docs/GAME_VISION.md) and [AI guidance](AGENTS.md).
-The planner is the current game shell: select Moon/Mars, match an Earth testbed,
-choose equipment, board the ship systems console, launch, run descent and debrief.
-The 3D interior and cinematics plug into `web/src/game/integrations.ts` when ready.
+The journey: title screen, choose Moon or Mars and a region, find an Earth test site, pick
+equipment, set up the mission on the ship's bridge, launch from the pilot seat, fly the 3D
+descent and read the debrief. Scenes plug into `web/src/game/integrations.ts`.
+
+**Play it:** https://analog.timhufnagel.org · **Run it locally:** `npm run setup && npm run dev`
+(Node 22+; details and troubleshooting in [docs/LOCAL_TESTING.md](docs/LOCAL_TESTING.md)).
+**Before pushing:** `npm run check`.
 
 The populated shared catalog is [`web/public/sites.json`](web/public/sites.json).
 See [integration, categories and rebuild commands](docs/SITE_CATALOG.md) and

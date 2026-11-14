@@ -44,8 +44,8 @@ export interface MissionSettings {
 }
 /** Proposed frontend handoff v1. Coordinate and unit conventions are explicit. */
 export interface MissionConfig {
-  /** Selected visual hardware; gear physics remains pending until equipment data is supplied. */
-  equipment?: { vehicleId: string; landingGearId: string; hazardSensor: MissionSettings['hazardSensor']; gearPhysics: 'pending' };
+  /** Selected hardware. 'footprint' = the gear's drawn foot circle is used by the physics and nothing else about it is. */
+  equipment?: { vehicleId: string; landingGearId: string; hazardSensor: MissionSettings['hazardSensor']; gearPhysics: 'pending' | 'footprint' };
   schemaVersion: '1.0.0'; createdAt: string;
   planetaryTarget: { id: string; name: string; body: Body; gravity: number };
   earthAnalog: {

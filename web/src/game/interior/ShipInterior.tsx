@@ -140,7 +140,8 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
       tp.setReducedMotion(motion.current);
       tp.update(dt);
       const seated = tp.mode.kind === 'seated';
-      astronaut.group.position.set(tp.pos.x, seated ? SEAT.seatHeightM - 0.2 : 0, tp.pos.z + (seated ? 0.02 : 0));
+      // seated: hips on the cushion and far enough forward that the backpack clears the seat back
+      astronaut.group.position.set(tp.pos.x, seated ? SEAT.seatHeightM - 0.34 : 0, tp.pos.z - (seated ? 0.17 : 0));
       astronaut.group.rotation.y = -tp.heading;
       astronaut.animate(dt, tp.speed, seated);
       if (!motion.current) space.drift(dt);
