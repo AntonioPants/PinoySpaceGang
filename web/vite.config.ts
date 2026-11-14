@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
-  resolve: { dedupe: ['react', 'react-dom'] },
+  resolve: { dedupe: ['react', 'react-dom', 'three'] },
   server: { fs: { allow: ['..'] } },
   build: { rollupOptions: { output: { manualChunks(id) {
     if (id.includes('/node_modules/three/') && !id.includes('/examples/')) return 'globe';

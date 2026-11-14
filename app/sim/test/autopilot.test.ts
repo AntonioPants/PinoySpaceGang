@@ -75,3 +75,17 @@ describe('terrain following', { timeout: 30_000 }, () => {
     expect(tel.summary!.outcome).toBe('success');
   });
 });
+
+describe('light, high-thrust vehicle', { timeout: 30_000 }, () => {
+  it('brakes sideways without climbing back above its start height', () => {
+    // thrust-to-weight of about 6 on the Moon: braking laterally must not launch it upwards
+    const tel = runSim({
+      site: syntheticTerrain({ body: 'moon', craters: 6 }), strategy: 'autonomous',
+      lander: { dryMassKg: 800, fuelKg: 350, maxThrustN: 12000 },
+    });
+    expect(Math.max(...tel.samples.map((s) => s.altitudeAGL))).toBeLessThan(1010);
+    expect(Math.max(...tel.samples.map((s) => s.vz))).toBeLessThan(3);
+    expect(tel.summary!.outcome).toBe('success');
+    expect(tel.summary!.distanceFromTargetM).toBeLessThan(3);
+  });
+});

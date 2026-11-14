@@ -122,8 +122,9 @@ export function autopilot(opts: AutopilotOptions = {}): Controller {
       const kz = 1.2;
       let az = g + kz * (vzDes - vz);
 
-      // limit tilt (tighter close to the ground so the lander touches down upright)
-      const tiltLim = h < 6 ? Math.min(maxTilt, 4 * DEG) : maxTilt;
+      // limit tilt: steep while braking high up (as real landers pitch over), moderate lower down,
+      // and tight close to the ground so the lander touches down upright
+      const tiltLim = h < 6 ? Math.min(maxTilt, 4 * DEG) : h > 150 ? Math.max(maxTilt, 45 * DEG) : maxTilt;
       const ah = Math.hypot(ahx, ahy);
 
       // engine off while falling well clear of the ground, below the profile, with no
@@ -131,9 +132,13 @@ export function autopilot(opts: AutopilotOptions = {}): Controller {
       if (az <= 0.05 * g && h > 60 && ah < 0.3) return { throttle: 0, tiltX: 0, tiltY: 0 };
       az = Math.max(az, 0.05 * g);
       // Sideways thrust only comes from tilting the main engine, so braking laterally needs
-      // enough vertical thrust to tilt against: burn harder rather than overshoot the target.
-      if (h > termAlt) az = Math.max(az, Math.min(ah / Math.tan(tiltLim), 0.8 * maxAcc));
-
+      // vertical thrust to tilt against: burn harder rather than overshoot the target. The extra
+      // burn may slow the descent to a gentle sink but never turn it into a climb, which a
+      // light, high-thrust vehicle would otherwise do.
+      if (h > termAlt) {
+        const holdSink = g + kz * (-2 - vz);            // thrust that settles at 2 m/s sink
+        az = Math.max(az, Math.min(ah / Math.tan(tiltLim), 0.8 * maxAcc, Math.max(holdSink, 0.05 * g)));
+      }
       const ahMax = az * Math.tan(tiltLim);
       if (ah > ahMax) {
         ahx *= ahMax / ah;

@@ -423,3 +423,5 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
 }
 .scene-frame { position: relative; }
 .scene-sound { position: absolute; top: 16px; left: 16px; background: #111c; z-index: 5; }
+.flight-stage-3d { height: min(70vh, 620px); background: #000; }
+.flight-3d { position: absolute; inset: 0; }
