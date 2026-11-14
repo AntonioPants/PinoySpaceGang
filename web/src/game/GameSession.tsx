@@ -1,10 +1,10 @@
 import { Component, lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
 import type { EnvironmentProfile } from '../../../app/lib/environment.mjs';
 import type { FlightTelemetry } from '../../../app/sim/src/types';
-import { targets } from '../data/sites';
+import type { CatalogSite } from '../../../app/sim/src/catalog';
 import { buildMission, validateSettings } from '../lib/mission';
 import { toSimInput } from '../lib/simulation';
-import type { MissionConfig, MissionSettings, TerrainProfile } from '../lib/types';
+import type { MissionConfig, MissionSettings, PlanetarySite, TerrainProfile } from '../lib/types';
 import { completePhase, nextPhase, type GamePhase } from './contracts';
 import { gameIntegrations } from './integrations';
 import SystemsConsole from './SystemsConsole';
@@ -15,8 +15,9 @@ class SceneBoundary extends Component<{ children: ReactNode; fallback: ReactNode
   static getDerivedStateFromError() { return { failed: true }; }
   render() { return this.state.failed ? this.props.fallback : this.props.children; }
 }
-export default function GameSession({ initialMission, settings: initialSettings, profile, weather, weatherAvailable, onReport, onExit }: {
+export default function GameSession({ initialMission, settings: initialSettings, target, entry, profile, weather, weatherAvailable, onReport, onExit }: {
   initialMission: MissionConfig; settings: MissionSettings; profile: TerrainProfile;
+  target: PlanetarySite; entry?: CatalogSite;
   weather: EnvironmentProfile | null; weatherAvailable: boolean;
   onReport: (flight: FlightTelemetry, mission: MissionConfig, settings: MissionSettings) => void;
   onExit: (settings: MissionSettings) => void;
@@ -43,9 +44,8 @@ export default function GameSession({ initialMission, settings: initialSettings,
     try {
       const errors = validateSettings(settings); if (errors.length) throw new Error(errors.join(' '));
       if (settings.environment === 'earth' && settings.realWeatherMonth > 0 && !weatherAvailable) throw new Error('This site has no weather profile. Select manual wind.');
-      const target = targets.find(t => t.id === mission.planetaryTarget.id)!;
-      const locked = buildMission(target, profile, settings, { terrainScore: mission.evidence.quantitativeSimilarityScore, weatherAvailable });
-      toSimInput(locked, profile, weather); // Validate the complete handoff before any departure scene.
+      const locked = buildMission(target, profile, settings, { terrainBase: mission.earthAnalog.terrainBaseUrl, analogName: mission.earthAnalog.name, terrainScore: mission.evidence.quantitativeSimilarityScore, weatherAvailable });
+      toSimInput(locked, profile, entry, weather); // Validate the complete handoff before any departure scene.
       setMission(locked); setError(''); complete('controlCenter');
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not prepare the mission.'); }
   }
@@ -59,7 +59,7 @@ export default function GameSession({ initialMission, settings: initialSettings,
     <Suspense fallback={<p role="status">Loading mission systems…</p>}>
       {phase === 'controlCenter' && <SceneBoundary fallback={<SystemsConsole {...consoleProps} />}><ControlCenter {...consoleProps} /></SceneBoundary>}
       {Cinematic && <SceneBoundary key={phase} fallback={fallback}><Cinematic {...sceneProps} /><button className="subtle-button scene-skip" onClick={sceneProps.onComplete}>Skip cinematic</button></SceneBoundary>}
-      {phase === 'descent' && <Descent mission={mission} profile={profile} weather={weather} autoStart onExit={exit} onReport={report => { setFlight(report); complete('descent'); }} />}
+      {phase === 'descent' && <Descent mission={mission} profile={profile} entry={entry} weather={weather} autoStart onExit={exit} onReport={report => { setFlight(report); complete('descent'); }} />}
       {phase === 'outcome' && flight && Outcome && <SceneBoundary key="outcome" fallback={fallback}><Outcome {...sceneProps} flight={flight} /><button className="subtle-button scene-skip" onClick={sceneProps.onComplete}>Skip cinematic</button></SceneBoundary>}
     </Suspense>
   </div>;

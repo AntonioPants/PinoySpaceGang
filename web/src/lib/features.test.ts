@@ -25,7 +25,7 @@ describe('sensor choice and interference source', () => {
   it('rejects a different location\'s weather instead of silently applying it', () => {
     const profile = profileOf('meteor-crater');
     const mission = buildMission(target('shackleton-rim'), profile, { ...defaultSettings, environment: 'earth', realWeatherMonth: 7 }, { weatherAvailable: true });
-    expect(() => toSimInput(mission, profile, weatherOf('kilbourne-hole-v1'))).toThrow('does not match');
+    expect(() => toSimInput(mission, profile, catalogSites.find(s => s.id === 'meteor-crater'), weatherOf('kilbourne-hole-v1'))).toThrow('does not match');
   });
   it('derives dust and glare from site data by default, and uses manual values on request', () => {
     const profile = profileOf('kilbourne-hole-v1');
@@ -105,7 +105,7 @@ describe('real weather for Earth field tests', () => {
     const profile = profileOf('kilbourne-hole-v1'), weather = weatherOf('kilbourne-hole-v1');
     const mission = buildMission(target('shackleton-rim'), profile, earth, { weatherAvailable: true });
     expect(mission.environment.realWeather).toEqual({ month: 7, scenario: 'high_wind' });
-    const input = toSimInput(mission, profile, weather);
+    const input = toSimInput(mission, profile, catalogSites.find(s => s.id === profile.manifest.id), weather);
     const hour = weather.months['7'].scenarios.high_wind!;
     expect(Math.hypot(input.site.wind!.x, input.site.wind!.y)).toBeCloseTo(hour.wind_speed_m_s, 2);
     expect(input.site.wind!.x).toBeCloseTo(hour.wind_east_m_s, 0); // rotated by only ~1° onto the UTM grid
@@ -121,6 +121,6 @@ describe('real weather for Earth field tests', () => {
   it('refuses to fly a real-weather mission when the profile is missing', () => {
     const profile = profileOf('kilbourne-hole-v1');
     const mission = buildMission(target('shackleton-rim'), profile, earth, { weatherAvailable: true });
-    expect(() => toSimInput(mission, profile, null)).toThrow('weather profile');
+    expect(() => toSimInput(mission, profile, undefined, null)).toThrow('weather profile');
   });
 });

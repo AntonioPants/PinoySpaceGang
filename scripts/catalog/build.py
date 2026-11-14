@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import math
+import shutil
 from pathlib import Path
 
 import numpy as np
@@ -15,8 +16,8 @@ from rasterio.windows import from_bounds, Window
 from scipy.ndimage import uniform_filter
 
 from .selection import records
-from .scoring import compare
-from .pairings import attach_handoff
+from .metadata import make_catalog, preserve_handoff
+from .publication import publication
 from .diviner import thermal_bins
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -28,7 +29,7 @@ MOON = 'https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LOLA_Global_LDEM_118m_Ma
 
 def dump(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, indent=2, allow_nan=False) + '\n', encoding='utf-8')
+    path.write_text(json.dumps(value, indent=2, allow_nan=False) + '\n', encoding='utf-8', newline='\n')
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -39,11 +40,11 @@ def property_record(value, unit, status='unknown', source=None, resolution=None,
                 time_coverage=coverage, method=method,
                 caveat='Not a site-specific accuracy estimate.', reason=reason)
 
-def terrain(site, offline):
+def terrain(site, offline, public=PUBLIC):
     sid, body = site['id'],site['body']
     lon, lat = site['longitude'],site['latitude']
     if sid == 'kilbourne-hole-v1':
-        path = PUBLIC / 'terrain' / sid
+        path = public / 'terrain' / sid
         m = json.loads((path/'manifest.json').read_text(encoding='utf-8'))
         with rasterio.open(path/'elevation-utm.tif') as src:
             z, crs, affine = src.read(1),src.crs,src.transform
@@ -65,8 +66,14 @@ def terrain(site, offline):
     east,north=Transformer.from_crs(geo,crs,always_xy=True).transform(lon,lat)
     half=(n-1)*step/2
     affine=from_origin(east-half-step/2,north+half+step/2,step,step)
-    path=PUBLIC/'terrain'/sid
+    path=public/'terrain'/sid
+    previous = json.loads((path/'manifest.json').read_text(encoding='utf-8')) if (path/'manifest.json').exists() else {}
     cached=CACHE/f'{sid}{"-west" if sid=="meteor-crater" else ""}-source.tif'
+    receipt_path = CACHE/f'{sid}-source.json'
+    retained = previous.get('source', {})
+    if not cached.exists() and retained.get('subset_file') and retained.get('receipt_file'):
+        cached = path/retained['subset_file']
+        receipt_path = path/retained['receipt_file']
     if not cached.exists():
         if offline: raise FileNotFoundError(f'Offline source missing: {cached}')
         with rasterio.Env(GDAL_HTTP_TIMEOUT='60', GDAL_HTTP_MAX_RETRY='2', GDAL_DISABLE_READDIR_ON_OPEN='EMPTY_DIR'):
@@ -84,7 +91,7 @@ def terrain(site, offline):
                     dst.write(raw,1)
                 dump(CACHE/f'{sid}-source.json',{'url':url,'sha256':sha(cached),'scale_applied':src.scales[0],'offset_applied':src.offsets[0],'window':list(win.flatten()),'source_crs':src.crs.to_wkt()})
     z=np.full((n,n),np.nan,dtype='float32')
-    receipt=json.loads((CACHE/f'{sid}-source.json').read_text(encoding='utf-8'))
+    receipt=json.loads(receipt_path.read_text(encoding='utf-8'))
     if sha(cached)!=receipt['sha256']:
         raise ValueError('Cached source checksum mismatch; reacquire explicitly')
     with rasterio.open(cached) as src:
@@ -100,6 +107,11 @@ def terrain(site, offline):
        'limitations':['Regional surface only; no caves, wheel-scale hazards, or landing safety certification.','Native sampling varies with latitude; output spacing is not source resolving power.']}
     m['attribution']='produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved' if body=='earth' else 'NASA MGS MOLA / LRO LOLA Science Teams; USGS Astrogeology mosaic distribution'
     m['license_url']='/terrain/kilbourne-hole-v1/COPERNICUS-LICENSE.pdf' if body=='earth' else 'https://astrogeology.usgs.gov/search/map/'+('mars_mgs_mola_dem_463m' if body=='mars' else 'moon_lro_lola_dem_118m')
+    if retained.get('subset_file') or sid in ('haughton', 'qaidam', 'lucus-planum'):
+        if cached.resolve() != (path/'source-window.tif').resolve():
+            shutil.copy2(cached, path/'source-window.tif')
+        dump(path/'source-receipt.json', receipt)
+        m['source'].update(subset_file='source-window.tif', receipt_file='source-receipt.json')
     dump(path/'manifest.json',m)
     dump(path/'checksums.json',{p.name:sha(p) for p in path.iterdir() if p.name!='checksums.json'})
     return z,crs,affine,url,native,m
@@ -156,8 +168,9 @@ def environment(site, offline):
         result[key]=p
     return result
 
-def main():
-    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument('--offline',action='store_true'); parser.add_argument('--site'); args=parser.parse_args()
+def build_records(args, public):
+    previous_catalog = json.loads((public/'sites.json').read_text(encoding='utf-8')) if (public/'sites.json').exists() else {'sites': []}
+    previous = {s['id']: s for s in previous_catalog['sites']}
     out=[]; failures=[]
     for s in records():
         if args.site and s['id']!=args.site: continue
@@ -167,12 +180,12 @@ def main():
         entry['classification']['atmosphere']='terrestrial' if s['body']=='earth' else 'thin_co2' if s['body']=='mars' else 'airless'
         entry['identifiers']={'kilbourne-hole-v1':['volcanic_maar','rim','basin_floor'],'meteor-crater':['impact_crater','ejecta','bowl'],'amboy':['cinder_cone','lava_flow'],'badwater':['playa','evaporite','closed_basin'],'white-sands':['aeolian_dunes','gypsum'],'barrow-observatory':['permafrost','ice_wedge_polygons']}.get(s['id'],[s['morphology']])
         try:
-            z,crs,affine,url,native,m=terrain(s,args.offline)
+            z,crs,affine,url,native,m=terrain(s,args.offline,public)
             geo=CRS.from_epsg(4326) if s['body']=='earth' else CRS.from_proj4('+proj=longlat +R='+str(3396190 if s['body']=='mars' else 1737400))
             bbox=transform_bounds(crs,geo,*rasterio.transform.array_bounds(*z.shape,affine),densify_pts=101)
             entry['bbox']=list(bbox)
             entry['footprint_method']='Raster outer bounds of square local metric study area centred on selected coordinates; includes surrounding context.'
-            manifest_path=PUBLIC/'terrain'/s['id']/'manifest.json'
+            manifest_path=public/'terrain'/s['id']/'manifest.json'
             entry['terrain']={'manifest_url':f"/terrain/{s['id']}/manifest.json",'manifest_sha256':sha(manifest_path),'elevation_sha256':sha(manifest_path.parent/'elevation.f32'),'rows':z.shape[0],'columns':z.shape[1],'row_order':'north_to_south','column_order':'west_to_east','spacing_m':abs(affine.a),'source_url':url,'native_resolution_m_approx':native}
             source={'product_id':'COP-DEM-GLO-30' if s['body']=='earth' else ('MGS-MOLA-MEGDR-USGS' if s['body']=='mars' else 'LRO-LOLA-LDEM-USGS'),'url':url}
             dy,dx=np.gradient(z.astype('float64'),abs(affine.a)); sl=np.degrees(np.arctan(np.hypot(dx,dy)))
@@ -183,6 +196,7 @@ def main():
             v=entry['conditions']['slope_p95']['value']; entry['classification']['slope_p95_class']='level' if v<5 else 'gentle' if v<15 else 'steep' if v<30 else 'very_steep'
             entry['comparison_features']=descriptors(z,affine,source,native)
         except Exception as exc:
+            entry['terrain']=None
             entry['bbox']=None; failures.append({'site':s['id'],'stage':'terrain','error':str(exc)})
         try: entry['conditions'].update(environment(s,args.offline))
         except Exception as exc:
@@ -205,24 +219,38 @@ def main():
         if s['id'] in ('phoenix','shackleton-rim','barrow-observatory'):
             entry['resource_indicators']=[{'resource':'water_ice','evidence_status':'confirmed_regionally' if s['id']!='shackleton-rim' else 'hypothesis','source_url':s['evidence_url'],'scope':'Regional evidence only; footprint abundance and accessibility unknown.'}]
         entry['completeness']={'terrain_available':entry['terrain'] is not None,'known_conditions':sum(p['value'] is not None for p in entry['conditions'].values()),'total_conditions':len(entry['conditions'])}
+        preserve_handoff(entry, previous.get(s['id']))
         out.append(entry)
+    if failures:
+        raise RuntimeError('Build failed; production preserved: ' + json.dumps(failures))
+    if not out:
+        raise ValueError('Unknown site ID')
     if args.site:
-        if not out:
-            parser.error('Unknown site ID')
-        dump(CACHE/f'{args.site}-record.json',out[0])
-        if failures:
-            print(json.dumps(failures, indent=2), flush=True)
-            raise SystemExit(1)
-        return
-    byid={s['id']:s for s in out}; pairs=[]
-    for s in out:
-        for target in s['matches']:
-            a,b=dict(s['comparison_features']),dict(byid[target]['comparison_features'])
-            pairs.append({'earth_id':s['id'],'planetary_id':target,**compare(a,b),
-                          'geology_comparison':{'same_substrate_label':s['substrate']==byid[target]['substrate'],'same_morphology_label':s['morphology']==byid[target]['morphology'],'score':None,'reason':'Categorical interpretations are not calibrated geological distances; not folded into terrain score.'}})
-    dump(PUBLIC/'sites.json',attach_handoff({'schema_version':'1.0.0','coordinate_convention':'east-positive longitude [-180,180], body-specific latitude; Earth WGS84, Moon/Mars planetocentric','sites':out,'pairings':pairs}))
-    dump(ROOT/'data/catalog-run-report.json',{'failures':failures,'sites':len(out),'terrain_available':sum(s['terrain'] is not None for s in out)})
-    print('Catalog written;',len(failures),'reported failures',flush=True)
-    if failures: raise SystemExit(1)
+        previous.update({s['id']: s for s in out})
+        out = list(previous.values())
+    catalog = make_catalog(out)
+    dump(public/'sites.json', catalog)
+    return catalog
 
-if __name__=='__main__': main()
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--offline', action='store_true')
+    parser.add_argument('--site', choices=[s['id'] for s in records()])
+    args = parser.parse_args(argv)
+    # Partial builds are reviewable snapshots; registration is the publication step.
+    destination = CACHE/'pending'/args.site if args.site else PUBLIC
+    from .validate import validate
+    try:
+        with publication(destination, seed=PUBLIC) as stage:
+            catalog = build_records(args, stage)
+            validate(stage)
+    except Exception as exc:
+        dump(ROOT/'data/catalog-run-report.json', {'operation': 'build', 'failures': [str(exc)], 'published': False})
+        raise
+    dump(ROOT/'data/catalog-run-report.json', {'operation': 'stage-site' if args.site else 'build',
+        'failures': [], 'published': not bool(args.site), 'sites': len(catalog['sites'])})
+    print('Staged site for registration' if args.site else 'Published validated catalog', flush=True)
+
+
+if __name__ == '__main__': main()

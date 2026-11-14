@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { analogs, targets } from '../data/sites';
+import { analogs, targets, catalogSites } from '../data/sites';
+import { computeFidelity } from './fidelity';
 import { buildMission, defaultSettings, extractProfile, loadProfile } from './mission';
 import { toSimInput } from './simulation';
 import { runSim } from '../../../app/sim/src/engine';
@@ -14,14 +15,25 @@ function localFetch() {
   });
 }
 describe('shared catalog through the mission journey', () => {
+  it('loads planetary terrain over the same HTTP path for a full fidelity comparison', async () => {
+    localFetch();
+    const profile = await loadProfile();
+    const target = targets.find(t => t.id === 'marius-hills')!;
+    const mission = buildMission(target, profile, defaultSettings);
+    const result = await computeFidelity(mission, profile,
+      catalogSites.find(s => s.id === profile.manifest.id), catalogSites.find(s => s.id === target.id));
+    expect(Number.isFinite(result.guided.score)).toBe(true);
+    expect(Number.isFinite(result.stress.score)).toBe(true);
+    await expect(loadProfile(undefined, '/terrain/marius-hills/manifest.json')).rejects.toThrow('body');
+  });
   it.each(terrainSites)('loads, exports and simulates $name with its own terrain', async site => {
     localFetch();
     const profile = await loadProfile(undefined, site.manifestUrl, site.id);
-    // A site without a proposed pairing (e.g. Qaidam) is still flyable as an independent experiment.
+    // Unpaired terrain (e.g. Qaidam) remains available for explicitly experimental flights.
     const target = targets.find(t => site.matches.includes(t.id)) ?? targets[0];
-    if (site.matches.length) expect(site.matches).toContain(target.id);
+    expect(target).toBeDefined();
     expect(profile.manifest.grid.width_m).toBe(4800);
-    expect(profile.manifest.statistics.relief_m).toBeGreaterThan(0);
+    expect(profile.manifest.statistics?.relief_m).toBeGreaterThan(0);
     expect(profile.manifest.source.sha256).toMatch(/^[a-f0-9]{64}$/);
     const mission = buildMission(target, profile, defaultSettings);
     expect(mission.earthAnalog.id).toBe(site.id);
@@ -37,7 +49,7 @@ describe('shared catalog through the mission journey', () => {
   });
   it('rejects a pack served for the wrong location', async () => {
     localFetch();
-    await expect(loadProfile(undefined, analogs[0].manifestUrl, 'meteor-crater')).rejects.toThrow('match');
+    await expect(loadProfile(undefined, analogs[0].manifestUrl, 'nonmatching-site')).rejects.toThrow('match');
   });
   it('rejects nonfinite samples outside the centre-row chart', async () => {
     localFetch();

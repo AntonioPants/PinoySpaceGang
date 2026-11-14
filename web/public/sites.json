@@ -1841,7 +1841,7 @@
         "crater_diameter": {
           "value": null,
           "status": "unknown",
-          "reason": "Requires feature delineation or dedicated field/high-resolution time-series data; regional DSM statistics are not a substitute."
+          "reason": "Irregular maar: published short and long dimensions are recorded separately; no single equivalent diameter or depth/diameter definition adopted."
         },
         "depth_diameter_ratio": {
           "value": null,
@@ -1852,6 +1852,36 @@
           "value": null,
           "status": "unknown",
           "reason": "Requires feature delineation or dedicated field/high-resolution time-series data; regional DSM statistics are not a substitute."
+        },
+        "crater_short_dimension": {
+          "value": 2414.016,
+          "unit": "m",
+          "status": "derived",
+          "source": {
+            "product_id": "NASA Kilbourne and Aden field report",
+            "url": "https://science.nasa.gov/blogs/notes-from-the-field/2018/01/24/kilbourne-and-aden-two-flavors-of-volcanism/"
+          },
+          "native_resolution_m": null,
+          "analysis_resolution_m": null,
+          "time_coverage": null,
+          "method": "Approximate 1.5 mile dimension converted with 1609.344 m/mile",
+          "caveat": "Approximate published landform dimension, not a measurement from the analysis grid. Survey date, uncertainty and exact boundary definition are unspecified.",
+          "reason": null
+        },
+        "crater_long_dimension": {
+          "value": 3218.688,
+          "unit": "m",
+          "status": "derived",
+          "source": {
+            "product_id": "NASA Kilbourne and Aden field report",
+            "url": "https://science.nasa.gov/blogs/notes-from-the-field/2018/01/24/kilbourne-and-aden-two-flavors-of-volcanism/"
+          },
+          "native_resolution_m": null,
+          "analysis_resolution_m": null,
+          "time_coverage": null,
+          "method": "Approximate 2 mile dimension converted with 1609.344 m/mile",
+          "caveat": "Approximate published landform dimension, not a measurement from the analysis grid. Survey date, uncertainty and exact boundary definition are unspecified.",
+          "reason": null
         }
       },
       "resources": {
@@ -3001,14 +3031,39 @@
       ],
       "feature_measurements": {
         "cone_height": {
-          "value": null,
-          "status": "unknown",
-          "reason": "Requires feature delineation or dedicated field/high-resolution time-series data; regional DSM statistics are not a substitute."
+          "value": 76.2,
+          "unit": "m",
+          "status": "derived",
+          "source": {
+            "product_id": "BLM Amboy Crater National Natural Landmark",
+            "url": "https://www.blm.gov/visit/amboy-crater-national-natural-landmark"
+          },
+          "native_resolution_m": null,
+          "analysis_resolution_m": null,
+          "time_coverage": null,
+          "method": "Approximate 250 ft height converted with 0.3048 m/ft",
+          "caveat": "Approximate published landform dimension, not a measurement from the analysis grid. Survey date, uncertainty and exact boundary definition are unspecified.",
+          "reason": null
         },
         "flow_morphology": {
           "value": null,
           "status": "unknown",
           "reason": "Requires feature delineation or dedicated field/high-resolution time-series data; regional DSM statistics are not a substitute."
+        },
+        "cone_diameter": {
+          "value": 457.20000000000005,
+          "unit": "m",
+          "status": "derived",
+          "source": {
+            "product_id": "BLM Amboy Crater National Natural Landmark",
+            "url": "https://www.blm.gov/visit/amboy-crater-national-natural-landmark"
+          },
+          "native_resolution_m": null,
+          "analysis_resolution_m": null,
+          "time_coverage": null,
+          "method": "Approximate 1500 ft diameter converted with 0.3048 m/ft",
+          "caveat": "Approximate published landform dimension, not a measurement from the analysis grid. Survey date, uncertainty and exact boundary definition are unspecified.",
+          "reason": null
         }
       },
       "resources": {
@@ -7183,6 +7238,12 @@
       "combined_score": null,
       "reason": "Environment lacks compatible observations; combined score withheld.",
       "interpretation": "Engineering terrain descriptor comparison; excludes geological equivalence and landing safety.",
+      "geology_comparison": {
+        "same_substrate_label": false,
+        "same_morphology_label": false,
+        "score": null,
+        "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
       "explanation": {
         "status": "proposed_unvalidated",
         "matches": [
@@ -7197,12 +7258,6 @@
           "https://science.nasa.gov/resource/shackleton-craters-illuminated-rim-shadowed-interior/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
-      },
-      "geology_comparison": {
-        "same_substrate_label": false,
-        "same_morphology_label": false,
-        "score": null,
-        "reason": "Categorical labels are not a validated geological similarity metric."
       }
     },
     {
@@ -7238,6 +7293,12 @@
       "combined_score": null,
       "reason": "Environment lacks compatible observations; combined score withheld.",
       "interpretation": "Engineering terrain descriptor comparison; excludes geological equivalence and landing safety.",
+      "geology_comparison": {
+        "same_substrate_label": false,
+        "same_morphology_label": true,
+        "score": null,
+        "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
       "explanation": {
         "status": "proposed_unvalidated",
         "matches": [
@@ -7253,12 +7314,6 @@
           "https://www.jpl.nasa.gov/images/pia24008-lucus-planum-yardangs/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
-      },
-      "geology_comparison": {
-        "same_substrate_label": false,
-        "same_morphology_label": true,
-        "score": null,
-        "reason": "Categorical labels are not a validated geological similarity metric."
       }
     }
   ]

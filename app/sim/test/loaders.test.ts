@@ -21,17 +21,20 @@ describe('terrain loaders', () => {
     expect(tel.summary).toBeDefined();
   });
 
-  it('converts a complete terrain_profile document without inventing samples', () => {
+  it('converts an asymmetric terrain_profile without flipping columns', () => {
     const profile = {
       site: { id: 'test_site', name: 'Test', type: 'earth_analog' as const, body: 'earth' as const },
       spatial: { width: 3, height: 2, resolution_m: { x: 10, y: 10 } },
-      terrain: { elevation_m: [[5, 5, 5], [1, 2, 3]] },
+      terrain: { elevation_m: [[4, 5, 6], [1, 2, 3]] },
     };
     const site = profileToSite(profile, { analogOf: 'mars' });
     expect(site.analogOf).toBe('mars');
     const h = Array.from(site.heightmap.heights);
-    expect(h.slice(0, 3)).toEqual([1, 2, 3]); // south row first
-    expect(h.slice(3)).toEqual([5, 5, 5]);
+    expect(h).toEqual([1, 2, 3, 4, 5, 6]);
+    for (const invalid of [null, NaN, Infinity]) {
+      expect(() => profileToSite({ ...profile, terrain: { elevation_m: [[4, 5, 6], [1, invalid, 3]] } }))
+        .toThrow(/missing or nonfinite/);
+    }
   });
 });
 
@@ -47,5 +50,22 @@ describe('terrain loaders', () => {
    it('rejects malformed rows and overflowing sample values', () => {
      expect(() => profileToSite({...profile,terrain:{elevation_m:[[1],[2]]}})).toThrow('columns');
      expect(() => profileToSite({...profile,terrain:{elevation_m:[[1,1e100],[3,4]]}})).toThrow('float32');
+     expect(() => profileToSite({...profile,terrain:{...profile.terrain,roughness_rms_m:[[0,1e100],[0,0]]}})).toThrow('float32');
+   });
+   it('rejects unequal spacing and inconsistent declared dimensions', () => {
+     expect(() => profileToSite({...profile,spatial:{...profile.spatial,resolution_m:{x:30,y:60}}})).toThrow('equal X/Y');
+     expect(() => profileToSite({...profile,spatial:{...profile.spatial,width:3}})).toThrow('dimensions');
+   });
+   it('rejects unsupported manifest versions, invalid spacing and ambiguous orientation', () => {
+     const manifest = JSON.parse(readFileSync(new URL('manifest.json', PACK), 'utf8'));
+     const buf = readFileSync(new URL('elevation.f32', PACK));
+     const data = buf.buffer.slice(buf.byteOffset,buf.byteOffset+buf.byteLength);
+     expect(() => terrainPackToSite({...manifest,schema_version:999},data)).toThrow('schema');
+     for (const spacing_m of [0,-30,NaN,Infinity]) {
+       expect(() => terrainPackToSite({...manifest,grid:{...manifest.grid,spacing_m}},data)).toThrow();
+     }
+     for (const order of [undefined,'south-first, west-first','north-first, east-first']) {
+       expect(() => terrainPackToSite({...manifest,grid:{...manifest.grid,order}},data)).toThrow('order');
+     }
    });
  });

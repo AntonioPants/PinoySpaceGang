@@ -1,18 +1,18 @@
 import { analogFidelity, stressFidelity, type FidelityResult, type StressFidelityResult } from '../../../app/sim/src/fidelity';
 import type { SiteTerrain } from '../../../app/sim/src/types';
-import { catalogSiteToSite } from '../../../app/sim/src/catalog';
+import { catalogSiteToSite, type CatalogSite } from '../../../app/sim/src/catalog';
 import { catalogSites, siteCatalog } from '../data/sites';
-import { extractProfile } from './mission';
+import { loadProfile } from './mission';
 import { analogSite, flightSetup } from './simulation';
-import type { MissionConfig, TerrainManifest, TerrainProfile } from './types';
+import type { MissionConfig, TerrainProfile } from './types';
 
 export interface FidelityReport { guided: FidelityResult; stress: StressFidelityResult }
 
-function sites(mission: MissionConfig, analogProfile: TerrainProfile, planetaryProfile: TerrainProfile): { planetary: SiteTerrain; analog: SiteTerrain } {
-  const entry = catalogSites.find(s => s.id === mission.planetaryTarget.id);
+function sites(mission: MissionConfig, analogProfile: TerrainProfile, planetaryProfile: TerrainProfile,
+  entry = catalogSites.find(s => s.id === mission.planetaryTarget.id), analogEntry?: CatalogSite): { planetary: SiteTerrain; analog: SiteTerrain } {
   if (!entry) throw new Error('the planetary target is not in the site catalog.');
   const planetary = catalogSiteToSite(entry, planetaryProfile.manifest, planetaryProfile.buffer, {}, siteCatalog);
-  const analog = analogSite(mission, analogProfile);
+  const analog = analogSite(mission, analogProfile, analogEntry);
   // Same scenario wind on both terrains, so the comparison is like for like.
   planetary.wind = analog.wind;
   return { planetary, analog };
@@ -23,34 +23,29 @@ const scenario = (mission: MissionConfig) => ({ ...flightSetup(mission), strateg
   gravity: mission.planetaryTarget.gravity, atmosphere: mission.planetaryTarget.body === 'Moon' ? 0 : 0.02 });
 
 /** Guided comparison: one hazard-avoiding landing at the centre of each terrain. Pure; used by tests. */
-export function fidelityFor(mission: MissionConfig, analogProfile: TerrainProfile, planetaryProfile: TerrainProfile): FidelityResult {
-  const { planetary, analog } = sites(mission, analogProfile, planetaryProfile);
+export function fidelityFor(mission: MissionConfig, analogProfile: TerrainProfile, planetaryProfile: TerrainProfile,
+  planetaryEntry?: CatalogSite, analogEntry?: CatalogSite): FidelityResult {
+  const { planetary, analog } = sites(mission, analogProfile, planetaryProfile, planetaryEntry, analogEntry);
   return analogFidelity(planetary, analog, { base: scenario(mission), seeds: [1, 2, 3], catalogTerrainScore: mission.evidence.quantitativeSimilarityScore });
 }
 
 /** Stress comparison: blind landings spread over each terrain. Uses terrain data only. */
-export function stressFor(mission: MissionConfig, analogProfile: TerrainProfile, planetaryProfile: TerrainProfile): StressFidelityResult {
-  const { planetary, analog } = sites(mission, analogProfile, planetaryProfile);
+export function stressFor(mission: MissionConfig, analogProfile: TerrainProfile, planetaryProfile: TerrainProfile,
+  planetaryEntry?: CatalogSite, analogEntry?: CatalogSite): StressFidelityResult {
+  const { planetary, analog } = sites(mission, analogProfile, planetaryProfile, planetaryEntry, analogEntry);
   const { start: _start, target: _target, ...base } = scenario(mission);
   return stressFidelity(planetary, analog, { base, catalogTerrainScore: mission.evidence.quantitativeSimilarityScore });
 }
 
 /** Loads the planetary target's own terrain pack, then runs the comparison flights. */
-export async function computeFidelity(mission: MissionConfig, analogProfile: TerrainProfile, signal?: AbortSignal): Promise<FidelityReport> {
-  const entry = catalogSites.find(s => s.id === mission.planetaryTarget.id);
+export async function computeFidelity(mission: MissionConfig, analogProfile: TerrainProfile,
+  analogEntry?: CatalogSite, entry = catalogSites.find(s => s.id === mission.planetaryTarget.id), signal?: AbortSignal): Promise<FidelityReport> {
   if (!entry) throw new Error('the planetary target is not in the site catalog.');
   if (!entry.terrain) throw new Error(`${entry.name} has no terrain pack to compare against.`);
-  const manifestUrl = entry.terrain.manifest_url;
-  const response = await fetch(manifestUrl, { signal });
-  if (!response.ok) throw new Error(`planetary terrain unavailable (${response.status}).`);
-  const manifest: TerrainManifest = await response.json();
-  if (manifest.id !== entry.id || !/^[\w.-]+$/.test(manifest.grid.sample_file)) throw new Error('planetary terrain pack does not match the catalog.');
-  const samples = await fetch(manifestUrl.slice(0, manifestUrl.lastIndexOf('/') + 1) + manifest.grid.sample_file, { signal });
-  if (!samples.ok) throw new Error(`planetary elevation samples unavailable (${samples.status}).`);
-  const planetaryProfile = extractProfile(manifest, await samples.arrayBuffer());
+  const planetaryProfile = await loadProfile(signal, entry.terrain.manifest_url, entry.id, entry.body);
   // Let the report paint before the comparison flights run.
   await new Promise(resolve => setTimeout(resolve, 30));
-  const guided = fidelityFor(mission, analogProfile, planetaryProfile);
+  const guided = fidelityFor(mission, analogProfile, planetaryProfile, entry, analogEntry);
   await new Promise(resolve => setTimeout(resolve, 0));
-  return { guided, stress: stressFor(mission, analogProfile, planetaryProfile) };
+  return { guided, stress: stressFor(mission, analogProfile, planetaryProfile, entry, analogEntry) };
 }

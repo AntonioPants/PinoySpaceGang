@@ -28,6 +28,9 @@ export function profileToSite(profile: TerrainProfile, opts: { analogOf?: Analog
   if (grid.some((r) => !Array.isArray(r) || r.length !== cols)) throw new Error('profile.terrain.elevation_m rows have different lengths');
   const { x, y } = profile.spatial.resolution_m;
   if (!(Number.isFinite(x) && Number.isFinite(y) && x > 0 && y > 0)) throw new Error('profile.spatial.resolution_m must be positive');
+  if (x !== y) throw new Error('profile requires equal X/Y spacing; resample to square cells before simulation');
+  if (profile.spatial.width !== cols || profile.spatial.height !== rows) throw new Error('profile dimensions do not match elevation grid');
+  if (!['earth', 'moon', 'mars'].includes(profile.site.body)) throw new Error('unknown profile body');
 
   if (grid.some(row => row.some(value => typeof value !== 'number' || !Number.isFinite(value)))) {
     throw new Error('profile contains missing or nonfinite elevations; no synthetic filling is permitted');
@@ -43,7 +46,7 @@ export function profileToSite(profile: TerrainProfile, opts: { analogOf?: Analog
     }
   }
   const body = profile.site.body;
-  const cellSize = (x + y) / 2;
+  const cellSize = x;
   // roughness_rms_m, same grid: modulates where generated boulders cluster (see surface.ts)
   let roughnessGrid: SiteTerrain['roughnessGrid'];
   const rough = profile.terrain.roughness_rms_m;
@@ -52,7 +55,10 @@ export function profileToSite(profile: TerrainProfile, opts: { analogOf?: Analog
       throw new Error('profile roughness grid contains missing, invalid or misaligned samples');
     }
     const rh = new Float32Array(rows * cols);
-    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) rh[r * cols + c] = rough[rows - 1 - r][c] as number;
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      rh[r * cols + c] = rough[rows - 1 - r][c] as number;
+      if (!Number.isFinite(rh[r * cols + c])) throw new Error('profile roughness exceeds float32 range');
+    }
     roughnessGrid = { cols, rows, cellSize, heights: rh };
   }
   return {
@@ -70,7 +76,7 @@ export interface TerrainPackManifest {
   id: string;
   name: string;
   body: string;
-  grid: { rows: number; columns: number; spacing_m: number; dtype: string; byte_order: string };
+  grid: { rows: number; columns: number; spacing_m: number; dtype: string; byte_order: string; order?: string };
 }
 
 export function terrainPackToSite(
@@ -79,6 +85,11 @@ export function terrainPackToSite(
   opts: { analogOf?: AnalogOf } = {},
 ): SiteTerrain {
   const { rows, columns: cols, spacing_m, dtype, byte_order } = manifest.grid;
+  if (manifest.schema_version !== 1) throw new Error('unsupported terrain schema version');
+  if (!Number.isInteger(rows) || rows < 2 || !Number.isInteger(cols) || cols < 2 ||
+      !Number.isFinite(spacing_m) || spacing_m <= 0) throw new Error('invalid terrain dimensions or spacing');
+  if (!['north-first, west-first', 'row-major; north to south, west to east'].includes(manifest.grid.order ?? ''))
+    throw new Error('unsupported or missing terrain row/column order');
   if (dtype !== 'float32' || byte_order !== 'little-endian') throw new Error(`unsupported grid ${dtype}/${byte_order}`);
   if (buffer.byteLength !== rows * cols * 4)
     throw new Error(`elevation file has ${buffer.byteLength} bytes, expected ${rows * cols * 4}`);

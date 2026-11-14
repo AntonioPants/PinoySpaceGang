@@ -30,14 +30,15 @@ export function extractProfile(manifest: TerrainManifest, buffer: ArrayBuffer): 
   };
   return { manifest: normalized, heightsM, sampleSpacingM: spacing_m, row, buffer };
 }
-export async function loadProfile(signal?: AbortSignal, manifestUrl = `${TERRAIN_BASE}manifest.json`, expectedId?: string): Promise<TerrainProfile> {
-  const base = manifestUrl.slice(0, manifestUrl.lastIndexOf('/') + 1);
-  const response = await fetch(manifestUrl, { signal });
+export async function loadProfile(signal?: AbortSignal, location = TERRAIN_BASE, expectedId?: string, expectedBody: 'earth' | 'moon' | 'mars' = 'earth'): Promise<TerrainProfile> {
+  if (!/^\/terrain\/[\w.-]+\/(manifest\.json)?$/.test(location)) throw new Error('Invalid terrain location.');
+  const base = location.replace(/manifest\.json$/, '');
+  const response = await fetch(`${base}manifest.json`, { signal });
   if (!response.ok) throw new Error(`Terrain manifest unavailable (${response.status}).`);
   const raw = await response.json();
-  if ((expectedId && raw.id !== expectedId) || raw.body?.toLowerCase() !== 'earth') throw new Error('Terrain pack does not match the selected Earth location.');
+  if ((expectedId && raw.id !== expectedId) || raw.body?.toLowerCase() !== expectedBody) throw new Error('Terrain pack does not match the selected location and body.');
   const manifest: TerrainManifest = { ...raw, source: { ...raw.source,
-    dataset: raw.source.dataset ?? 'Copernicus DEM GLO-30', catalog: raw.source.catalog ?? raw.source.url,
+    dataset: raw.source.dataset ?? (expectedBody === 'earth' ? 'Copernicus DEM GLO-30' : 'Planetary DEM'), catalog: raw.source.catalog ?? raw.source.url,
     sha256: raw.source.sha256 ?? raw.source.subset_sha256,
   } };
   if (!/^[\w.-]+$/.test(manifest.grid.sample_file)) throw new Error('Invalid terrain sample filename.');
@@ -59,12 +60,9 @@ export function validateSettings(s: MissionSettings): string[] {
   if (!['typical', 'high_wind'].includes(s.weatherScenario)) errors.push('Unknown weather scenario.');
   return errors;
 }
-export interface MissionContext {
-  /** The catalog's terrain score for this target and analog, when the pairing is proposed. */
-  terrainScore?: number | null;
+export interface MissionContext { terrainBase?: string; analogName?: string; terrainScore?: number | null;
   /** True when a real weather profile exists for the analog site. */
-  weatherAvailable?: boolean;
-}
+  weatherAvailable?: boolean }
 export function buildMission(site: PlanetarySite, profile: TerrainProfile, settings: MissionSettings, context: MissionContext = {}): MissionConfig {
   const errors = validateSettings(settings);
   if (errors.length) throw new Error(errors.join(' '));
@@ -72,9 +70,9 @@ export function buildMission(site: PlanetarySite, profile: TerrainProfile, setti
   return {
     schemaVersion: '1.0.0', createdAt: new Date().toISOString(),
     planetaryTarget: { id: site.id, name: site.name, body: site.body, gravity: site.gravity },
-    earthAnalog: { id: profile.manifest.id, name: profile.manifest.name, terrainBaseUrl: profile.terrainBaseUrl ?? `/terrain/${profile.manifest.id}/`,
+    earthAnalog: { id: profile.manifest.id, name: context.analogName ?? profile.manifest.name, terrainBaseUrl: context.terrainBase ?? profile.terrainBaseUrl ?? `/terrain/${profile.manifest.id}/`,
       elevationProfile: profile.heightsM, sampleSpacingM: profile.sampleSpacingM, profileRow: profile.row,
-      verticalOffsetM: profile.manifest.local_frame.vertical_offset_m, sourceSha256: profile.manifest.source.sha256 },
+      verticalOffsetM: profile.manifest.local_frame.vertical_offset_m, sourceSha256: profile.manifest.source.sha256 ?? profile.manifest.source.subset_sha256 ?? '' },
     strategy: { mode: settings.mode, hazardSensor: settings.hazardSensor, thrusterForceN: settings.thrusterForceN, fuelMassKg: settings.fuelMassKg, dryMassKg: settings.dryMassKg, maxSlopeToleranceDeg: settings.maxSlopeToleranceDeg },
     environment: { mode: settings.environment, gravityMs2: gravityFor(site, settings), windSpeedMs: lunarVacuum ? 0 : settings.windSpeedMs,
       atmosphereModel: lunarVacuum ? 'none' : settings.environment === 'earth' ? 'earth-standard' : 'mars-constant', dust: settings.dust, glare: settings.glare, interferenceSource: settings.siteConditions ? 'site' : 'manual',

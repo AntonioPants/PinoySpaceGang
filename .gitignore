@@ -36,3 +36,4 @@ vendor/Synthetic_Aperture_Radar_Tutorial/
 # Generated static environmental profiles (source is data/environment).
 app/public/environment/
 app/sim/viewer/public/environment/
+.test-tmp-refactor/

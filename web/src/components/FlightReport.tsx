@@ -1,20 +1,21 @@
 import { useEffect, useState } from 'react';
 import type { FlightTelemetry } from '../../../app/sim/src/types';
+import type { CatalogSite } from '../../../app/sim/src/catalog';
 import type { MissionConfig, TerrainProfile } from '../lib/types';
 import { downloadJson } from '../lib/importSettings';
 import { computeFidelity, type FidelityReport } from '../lib/fidelity';
 type FidelityState = { status: 'working' } | { status: 'done'; result: FidelityReport } | { status: 'unavailable'; reason: string };
-export default function FlightReport({flight,mission,profile,onRetry}:{flight:FlightTelemetry;mission:MissionConfig;profile:TerrainProfile;onRetry:()=>void}) {
+export default function FlightReport({flight,mission,profile,analogEntry,planetaryEntry,onRetry}:{flight:FlightTelemetry;mission:MissionConfig;profile:TerrainProfile;analogEntry?:CatalogSite;planetaryEntry?:CatalogSite;onRetry:()=>void}) {
   const result=flight.summary!;
   const env=flight.environment;
   const [fidelity,setFidelity]=useState<FidelityState>({status:'working'});
   useEffect(()=>{
     const abort=new AbortController(); setFidelity({status:'working'});
-    computeFidelity(mission,profile,abort.signal)
+    computeFidelity(mission,profile,analogEntry,planetaryEntry,abort.signal)
       .then(r=>{ if(!abort.signal.aborted) setFidelity({status:'done',result:r}); })
       .catch(e=>{ if(!abort.signal.aborted) setFidelity({status:'unavailable',reason:e instanceof Error?e.message:'Could not compute the score.'}); });
     return ()=>abort.abort();
-  },[mission,profile]);
+  },[mission,profile,analogEntry,planetaryEntry]);
   const sources=Object.entries(env.sources);
   return <section className="report-panel"><div className="section-heading"><div><span className="badge ready">Simulation result · {result.outcome}</span><h2>{result.outcome==='success'?'Touchdown complete.':'Flight ended.'}</h2></div><button className="primary-button" onClick={onRetry}>Configure another flight</button></div><p>{mission.planetaryTarget.name} scenario on {mission.earthAnalog.name}. This is a simulated outcome, not an engineering certification.</p>
     <div className="report-metrics">{[['Vertical contact speed',`${result.verticalSpeedMps.toFixed(2)} m/s`],['Lateral contact speed',`${result.horizontalSpeedMps.toFixed(2)} m/s`],['Ground slope',`${result.slopeDeg.toFixed(2)}°`],['Vehicle tilt',`${result.tiltDeg.toFixed(2)}°`],['Fuel remaining',`${result.fuelRemainingKg.toFixed(1)} kg`],['Distance from target',`${result.distanceFromTargetM.toFixed(1)} m`]].map(([name,value])=><div key={name}><span>{name}</span><strong>{result.outcome==='timeout' && /contact|slope/.test(name)?'No touchdown':value}</strong></div>)}</div>

@@ -3,18 +3,20 @@ import { validateSettings } from './mission';
 import type { MissionSettings } from './types';
 export interface SettingsProposal { settings: MissionSettings; targetId?: string; changed: string[] }
 const fields = ['mode', 'environment', 'fuelMassKg', 'dryMassKg', 'thrusterForceN', 'maxSlopeToleranceDeg', 'windSpeedMs', 'dust', 'glare', 'hazardSensor', 'siteConditions', 'realWeatherMonth', 'weatherScenario'] as const;
+/** Target IDs an import may name: the loaded catalog's, or the built-in fixtures. */
+export type KnownTargets = readonly { id: string }[];
 const obj = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
-function proposal(patch: Record<string, unknown>, current: MissionSettings, targetId?: unknown): SettingsProposal {
+function proposal(patch: Record<string, unknown>, current: MissionSettings, targetId?: unknown, known: KnownTargets = targets): SettingsProposal {
   if (typeof targetId === 'string') targetId = normalizeTargetId(targetId);
   if (!Object.keys(patch).length && !targetId) throw new Error('No supported mission settings found.');
   const unknown = Object.keys(patch).filter(k => !fields.includes(k as typeof fields[number]));
   if (unknown.length) throw new Error(`Unknown settings: ${unknown.join(', ')}. Use the downloadable template.`);
-  if (targetId !== undefined && !targets.some(t => t.id === targetId)) throw new Error('Unknown planetary target ID.');
+  if (targetId !== undefined && !known.some(t => t.id === targetId)) throw new Error('Unknown planetary target ID.');
   const settings = { ...current, ...patch } as MissionSettings;
   const errors = validateSettings(settings); if (errors.length) throw new Error(errors.join(' '));
   return { settings, targetId: targetId as string | undefined, changed: [...Object.keys(patch), ...(targetId ? ['targetId'] : [])] };
 }
-export function parseSettingsFile(text: string, current: MissionSettings): SettingsProposal {
+export function parseSettingsFile(text: string, current: MissionSettings, known: KnownTargets = targets): SettingsProposal {
   const data: unknown = JSON.parse(text);
   if (!obj(data)) throw new Error('Expected a JSON object.');
   if (data.schemaVersion !== undefined && data.schemaVersion !== '1.0.0') throw new Error('Unsupported schemaVersion. Expected 1.0.0.');
@@ -25,15 +27,15 @@ export function parseSettingsFile(text: string, current: MissionSettings): Setti
     if (data.environment.interferenceSource !== undefined) patch.siteConditions = data.environment.interferenceSource === 'site';
     if (obj(data.environment.realWeather)) { patch.realWeatherMonth = data.environment.realWeather.month; patch.weatherScenario = data.environment.realWeather.scenario; }
     else if (data.environment.realWeather === null) patch.realWeatherMonth = 0;
-    return proposal(patch, current, obj(data.planetaryTarget) ? data.planetaryTarget.id : undefined);
+    return proposal(patch, current, obj(data.planetaryTarget) ? data.planetaryTarget.id : undefined, known);
   }
   if (obj(data.settings)) {
     const extras = Object.keys(data).filter(k => !['schemaVersion','settings','targetId'].includes(k));
     if (extras.length) throw new Error(`Unknown fields: ${extras.join(', ')}.`);
-    return proposal(data.settings, current, data.targetId);
+    return proposal(data.settings, current, data.targetId, known);
   }
   const { schemaVersion: _version, targetId, ...patch } = data;
-  return proposal(patch, current, targetId);
+  return proposal(patch, current, targetId, known);
 }
 /** Deliberately narrow local parser: every comma-separated clause must be understood. No AI claims. */
 export function parseConditions(text: string, current: MissionSettings): SettingsProposal {
@@ -61,7 +63,6 @@ export function parseConditions(text: string, current: MissionSettings): Setting
       const match = clause.match(new RegExp(expression));
       if (match) { set(key, Number(match[1]) * factor); matched = true; break; }
     }
-    // An explicit dust or glare value means manual interference.
     if (matched && (('dust' in patch) || ('glare' in patch))) patch.siteConditions = false;
     if (!matched) throw new Error(`Could not interpret “${raw.trim()}”. Use explicit values and units like “wind 12 m/s”. Nothing has been applied.`);
   }

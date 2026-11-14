@@ -12,34 +12,43 @@ before any departure sequence. The report receives this final mission and real
 telemetry. New scenes use the game contracts; older props in `lib/types.ts` are
 legacy proposals. Weather is checked against terrain ID.
 
-## Update: fidelity score, sensor choice, site-derived interference, real weather
+## Update: catalog, fidelity, sensors, real weather
 
+The merged report retains both guided and stress-test fidelity from Tim's branch.
+It uses the runtime-selected catalog entries and the shared strict terrain loader;
+the mission catalog remains fetched from `/sites.json`. These simulation scores
+remain separate from the catalog's terrain-descriptor score and do not validate
+geological equivalence or landing safety.
+
+Data-team build, staging, recovery and validation commands are in
+[`docs/CATALOG_PUBLICATION.md`](../docs/CATALOG_PUBLICATION.md). Per-location
+environmental coverage and remaining scientific gaps are in
+[`docs/DATA_COVERAGE.md`](../docs/DATA_COVERAGE.md).
+
+- **Sites come from the catalog.** `src/lib/catalog.ts` reads `public/sites.json`: every
+  planetary target, every Earth analog with a terrain pack, and the proposed pairings (best
+  terrain score first). `src/data/sites.ts` uses that same parser for static consumers and legacy-ID support. Terrain loads from each
+  site's own pack, so the Kilbourne-only notes below describe the first version.
 - **Analog Fidelity Score.** The flight report flies the configured vehicle autonomously on the
-  planetary target's own terrain pack and on the Earth analog (`src/lib/fidelity.ts`, engine
-  `app/sim/src/fidelity.ts`). It shows the score, its four components and the catalog terrain
-  score for a proposed pairing. It compares simulated flights over two elevation grids only.
-- **Stress test score.** One guided landing succeeds on almost any terrain, so the guided score
-  barely separates analogs. The report therefore also flies 25 blind landings (no hazard
-  sensor) spread over each terrain and compares the landable share, touchdown slope and fuel
-  (`stressFor` / engine `stressFidelity`). It uses terrain data only. The planetary grids are
-  much coarser than the Earth grids, which the report states beside the score.
-- **Hazard sensor.** The configurator offers lidar, camera or no hazard sensor
-  (`MissionConfig.strategy.hazardSensor`).
-- **Sensor interference.** Dust and glare default to values the engine derives from the
-  analog's catalog surface data (`environment.interferenceSource: 'site'`); the manual sliders
-  remain (`'manual'`). The report lists the values used and their sources.
-- **Real weather.** In an Earth field test, six sites can use one real modelled hour (month,
-  typical or high-wind) from `data/environment` through `app/lib/environment-site.ts`
-  (`environment.realWeather`). The catalog and weather site IDs differ; the mapping is
-  `WEATHER_PROFILE_ID` in `src/lib/weather.ts`. Earth weather is never applied to a Moon or
-  Mars scenario.
-- `buildMission` takes an optional context (`terrainScore`, `weatherAvailable`);
-  `toSimInput` takes the loaded weather profile as an optional third argument.
+  planetary target's own terrain and on the Earth analog (`src/lib/fidelity.ts`, engine
+  `app/sim/src/fidelity.ts`) and shows the score, its four components and the catalog terrain
+  score. It compares simulated flights over two elevation grids, nothing more.
+- **Sensors and interference.** The configurator offers lidar, camera or no hazard sensor. Dust
+  and glare default to values derived from the analog's catalog surface data; manual sliders
+  remain. `MissionConfig` gained `strategy.hazardSensor`, `environment.interferenceSource`
+  and `environment.realWeather`.
+- **Real weather.** In an Earth field test, six sites can use a real modelled hour (month plus
+  typical or high-wind) from `data/environment` via `app/lib/environment-site.ts`. The catalog
+  and weather site IDs differ; the mapping is `WEATHER_PROFILE_ID` in `src/lib/weather.ts`.
+  Earth weather is never applied to a Moon or Mars scenario.
 
 
-Updated after merging main through e6a40e3. The UI uses the shared location catalog and
-Tim's catalog-aware physics adapter. The only physics-source cleanup is removing
-an unused type import that prevented the frontend's strict TypeScript build.
+Integrated with the expanded 18-site catalog: 11 Earth terrain packs (including Haughton
+and Qaidam) and seven planetary targets. Qaidam has a proposed yardang comparison with
+Lucus Planum. All pairings remain unvalidated. The Earth testbed page exposes the same complete
+catalog-details component as the physics viewer, including provenance and seasonal data.
+The alternate profile importer now rejects missing elevation values instead of filling
+them. Catalog JSON is written with LF bytes before hashing on all platforms.
 
 ## Tim: physics (connected)
 

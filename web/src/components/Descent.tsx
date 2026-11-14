@@ -4,12 +4,13 @@ import { SideView } from '../../../app/sim/viewer/components/SideView';
 import type { FlightTelemetry } from '../../../app/sim/src/types';
 import type { MissionConfig, TerrainProfile } from '../lib/types';
 import { toSimInput } from '../lib/simulation';
+import type { CatalogSite } from '../../../app/sim/src/catalog';
 import type { EnvironmentProfile } from '../../../app/lib/environment.mjs';
-export default function Descent({ mission, profile, weather, autoStart = false, onReport, onExit }: {mission:MissionConfig;profile:TerrainProfile;weather?:EnvironmentProfile|null;autoStart?:boolean;onReport:(flight:FlightTelemetry)=>void;onExit:()=>void}) {
+export default function Descent({ mission, profile, entry, weather, autoStart = false, onReport, onExit }: {mission:MissionConfig;profile:TerrainProfile;entry?:CatalogSite;weather?:EnvironmentProfile|null;autoStart?:boolean;onReport:(flight:FlightTelemetry)=>void;onExit:()=>void}) {
   const lander = useLanderSim({speed:1,keyboard:mission.strategy.mode==='MANUAL_CONTROL'});
   const [error,setError]=useState(''), [started,setStarted]=useState(false);
   const outside=useRef(false);
-  const launch = useCallback(() => { try { outside.current=false; setError(''); lander.launch(toSimInput(mission,profile,weather)); setStarted(true); } catch(e) {setError(e instanceof Error?e.message:'Could not launch.');} }, [lander.launch, mission, profile, weather]);
+  const launch = useCallback(() => { try { outside.current=false; setError(''); lander.launch(toSimInput(mission,profile,entry,weather)); setStarted(true); } catch(e) {setError(e instanceof Error?e.message:'Could not launch.');} }, [lander.launch, mission, profile, entry, weather]);
   const autoStarted = useRef(false);
   useEffect(() => { if (autoStart && !autoStarted.current) { autoStarted.current = true; launch(); } }, [autoStart, launch]);
   useEffect(()=>lander.onFrame(sim=>{

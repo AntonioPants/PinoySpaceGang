@@ -375,9 +375,24 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
-.weather-pickers { display: flex; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
+
+/* Shared catalog details and physics controls, using the mission UI's palette. */
+.mint-text { color: var(--accent); }
+.badge.mint { color: var(--accent); border-color: var(--accent-border); }
+.weather-pickers { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; }
+.weather-pickers select { background: var(--panel); color: var(--text); padding: 6px; }
+.catalog-details { overflow-wrap: anywhere; margin-block: 24px; font-size: 12px; }
+.catalog-details details { padding: 8px 0; border-bottom: 1px solid var(--line); }
+.catalog-details summary { cursor: pointer; text-transform: capitalize; }
+.catalog-details dt { color: var(--muted); margin-top: 6px; }
+.catalog-details dd { margin-left: 12px; }
+.catalog-details a { color: var(--accent); }
+.pairing-explanation { font-size: 12px; overflow-wrap: anywhere; margin-top: 14px; }
+.pairing-explanation summary { cursor: pointer; }
+.pairing-explanation h4 { margin: 12px 0 6px; }
+.pairing-explanation ul { padding-left: 20px; color: var(--muted); }
+.pairing-explanation a { color: var(--accent); }
 .weather-pickers label { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
-.weather-pickers select { background: #080808; color: inherit; border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; font: inherit; }
 .report-panel > ul { font-size: 12px; color: var(--muted); line-height: 1.7; }
 .report-panel p + h3, .report-panel ul + h3, .report-panel .note + h3 { margin-top: 30px; }
 .strategy-options + .segmented, .field-help + .segmented { margin-top: 12px; }

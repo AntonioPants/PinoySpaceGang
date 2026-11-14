@@ -7,6 +7,10 @@ The planner is the current game shell: select Moon/Mars, match an Earth testbed,
 choose equipment, board the ship systems console, launch, run descent and debrief.
 The 3D interior and cinematics plug into `web/src/game/integrations.ts` when ready.
 
+The populated shared catalog is [`web/public/sites.json`](web/public/sites.json).
+See [integration, categories and rebuild commands](docs/SITE_CATALOG.md) and
+[ingested providers and data gaps](docs/DATA_SOURCES_AND_GAPS.md).
+
 ## Mission-planner frontend
 
 The React/TypeScript application is in [`web/`](web/README.md), alongside the
@@ -15,10 +19,6 @@ evidence, mission configuration, and JSON export. See
 [`web/INTEGRATION.md`](web/INTEGRATION.md) for the proposed physics/cutscene handoff.
 Descent execution now connects to Tim's engine in `app/sim/`, with real flight
 reports. Local 3D terrain inspection and JSON/text condition import are available.
-
-The populated shared catalog is [`web/public/sites.json`](web/public/sites.json).
-See [integration, categories and rebuild commands](docs/SITE_CATALOG.md) and
-[ingested providers and data gaps](docs/DATA_SOURCES_AND_GAPS.md).
 
 This repository turns targeted Earth, Moon, and Mars elevation rasters into
 small JSON terrain grids for a browser-based simulator or physics engine. Raw
