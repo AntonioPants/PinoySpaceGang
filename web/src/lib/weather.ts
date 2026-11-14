@@ -51,6 +51,7 @@ export interface RealWeather { month: number; scenario: Scenario }
  * Only wind and air density change; gravity, vehicle and sensors stay as configured.
  */
 export function withRealWeather(input: SimInput, profile: EnvironmentProfile, weather: RealWeather, location: { latitude: number; longitude: number }): SimInput {
+  if (WEATHER_PROFILE_ID[input.site.id] !== profile.site.id) throw new Error('The weather profile does not match the selected Earth terrain.');
   // The adapter matches sites by the weather profile's ID.
   const { input: earth, environment } = createEarthLandingInput({ ...input.site, id: profile.site.id }, profile,
     { month: weather.month, scenario: weather.scenario },

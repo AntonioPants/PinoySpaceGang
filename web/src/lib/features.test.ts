@@ -22,6 +22,11 @@ const weatherOf = (id: string): EnvironmentProfile => JSON.parse(readFileSync(ne
 const target = (id: string) => targets.find(t => t.id === id)!;
 
 describe('sensor choice and interference source', () => {
+  it('rejects a different location\'s weather instead of silently applying it', () => {
+    const profile = profileOf('meteor-crater');
+    const mission = buildMission(target('shackleton-rim'), profile, { ...defaultSettings, environment: 'earth', realWeatherMonth: 7 }, { weatherAvailable: true });
+    expect(() => toSimInput(mission, profile, weatherOf('kilbourne-hole-v1'))).toThrow('does not match');
+  });
   it('derives dust and glare from site data by default, and uses manual values on request', () => {
     const profile = profileOf('kilbourne-hole-v1');
     const site = toSimInput(buildMission(target('shackleton-rim'), profile, defaultSettings), profile);

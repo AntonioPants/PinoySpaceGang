@@ -4,15 +4,17 @@ Guidance for Claude Code (claude.ai/code) when working in this repository.
 
 ## Project: Planetary Analog Landing Simulator (NASA Space Apps)
 
-Team PinoySpaceGang is building a web-based landing simulator.
+Read [AGENTS.md](AGENTS.md) and [docs/GAME_VISION.md](docs/GAME_VISION.md) first.
+They define the current game direction and supersede older website-only framing.
 
-**Core flow:**
+Team PinoySpaceGang is building a playable planetary analog game using React/Three.js.
+Select a Moon/Mars region, match an Earth testbed, choose equipment, enter the
+planetary ship environment, configure conditions on interactive ship screens,
+launch, transition to Earth descent, and debrief the actual physics outcome.
 
-1. Pick a Moon/Mars landing site on a 3D globe.
-2. Map it to a matching Earth analog terrain.
-3. Configure the landing strategy and test inputs.
-4. Watch the approach cutscene and run the descent simulation.
-5. View the explosion/success cutscene and the engineering report.
+The 2D planner/console is the current playable fallback. Tim's 3D interior and
+Furgan's scenes are pending. Register scenes with web/src/game/integrations.ts;
+see contracts.ts in that directory. Do not duplicate the simulation or mission state.
 
 ## Repo layout — read this first
 
@@ -39,7 +41,7 @@ terrain explorer, JSON/text condition import, and connects to Tim's engine throu
 consume actual telemetry. Run `cd web && pnpm install && pnpm dev`; `pnpm build`
 typechecks/builds and `pnpm test` includes frontend and physics tests. See
 `web/INTEGRATION.md` for coordinate conventions and cutscene interfaces.
-Furgan's cinematic cutscenes are not connected yet.
+Furgan has not pushed scenes yet; the game registry reserves arrival, liftoff, Earth approach and outcome slots.
 
 ## Team roles and ownership
 
@@ -58,7 +60,7 @@ Furgan's cinematic cutscenes are not connected yet.
 
 ### 🌐 Eyad: Frontend, 3D Globes & Mission UI Lead
 
-**Goal:** Build the main web app, the interactive globes and the mission control screens.
+**Goal:** Build the game shell, interactive globes, equipment setup, mission orchestration and reports.
 
 - **3D Moon/Mars Globe** with highlighted landing zones, plus camera transitions to the
   **Earth Analog Map** view.
@@ -85,7 +87,7 @@ Furgan's cinematic cutscenes are not connected yet.
 
 **Goal:** Bring the simulation to life with cinematic sequences, visual polish and feedback.
 
-- **Opening Cutscene**: the test lander enters the selected Earth analog environment before the
+- **Departure and Earth Approach Cutscenes**: leave the selected Moon/Mars region after ship-console launch, then enter the chosen Earth analog before the
   simulation begins.
 - **Ending Cutscenes**:
   - On failure: crash/explosion with fireballs, debris particles and camera shake.

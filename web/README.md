@@ -1,5 +1,9 @@
 # Analog Atlas — frontend
 
+The current shell for the planetary analog game. See `../docs/GAME_VISION.md`.
+Equipment setup now leads to a functional systems console and the live descent.
+Tim's 3D interior and Furgan's cinematics attach through `src/game/integrations.ts`.
+
 Eyad's first mission-planner slice: React, TypeScript, Vite and Three.js.
 The application lives in `web/` to serve the team's existing `public/terrain/`
 pack in place. No Python process, API keys, or backend server is needed.
@@ -28,8 +32,8 @@ Keep the pnpm lockfile as the team's dependency source of truth.
   are illustrative; no satellite imagery or global terrain tiles are included.
   Measurements and physics retain their original scale. Reduced-motion preferences
   disable the animated zoom/preset interpolation.
-- Shared catalog selection: nine Earth packs, six Moon/Mars targets, per-site transects and statistics.
-- “Why this analog?” evidence, limitations, sources and explicit unknown similarity scores.
+- Shared catalog selection: eleven Earth packs, seven Moon/Mars targets, per-site transects and statistics.
+- “Why this analog?” evidence, limitations, sources and model-derived terrain scores.
 - Manual/autonomous configuration, mass/thrust/slope inputs, Earth vs planetary environment.
 - Lunar vacuum disables wind; initial thrust-to-weight ratio reflects wet mass and scenario gravity.
 - Local draft persistence, mission review and downloadable JSON.
@@ -38,12 +42,15 @@ Keep the pnpm lockfile as the team's dependency source of truth.
 - Tim's real `useLanderSim` hook and side renderer, using the full terrain grid through
   `catalogSiteToSite`. Supports autonomous/manual descent, pause/restart, and playback speed.
 - Flight reports and downloadable telemetry, with unvalidated analog fidelity explicitly retained.
+- Guided-flight and blind-landing stress comparisons against the planetary terrain.
+- Equipment presets, ship systems console, sensor selection, site-derived interference,
+  and regional modelled weather at six Earth sites.
 - Keyboard-operable alternative site lists, native modal focus handling, reduced-motion camera transitions.
 - Loading/retry handling, unavailable-data gating, and a WebGL-unavailable fallback.
 
 Descent and report navigation unlock when a mission and a completed flight exist.
 There is no mock flight result. Furgan's cinematic cutscenes are still pending.
-See `INTEGRATION.md` for the live physics boundary and proposed cutscene props.
+See `INTEGRATION.md` and `src/game/contracts.ts` for the live integration boundary.
 
 ## Importing conditions
 
@@ -63,10 +70,10 @@ provider integration; never embed its credentials in the frontend.
 ## Data boundaries
 
 `src/data/sites.ts` derives navigation from `public/sites.json`. Proposed pairings
-sort first. Haughton and Qaidam have no local pack and cannot proceed to configuration.
+sort first, ranked by available terrain scores. Haughton and Qaidam now have local packs.
 Each available Earth site loads its own measured terrain and retains provenance
-through mission export and descent. Planetary DEMs and catalog terrain scores are
-not yet displayed in this UI; pairings remain scientifically unvalidated.
+through mission export and descent. Planetary DEMs feed report comparisons;
+terrain scores and flight fidelity remain scientifically unvalidated model outputs.
 
 Terrain remains under its supplied Copernicus licence and attribution. Globe
 images and typography are presentation assets, not scientific evidence; see
