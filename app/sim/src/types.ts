@@ -29,6 +29,8 @@ export interface Heightmap {
 }
 
 export interface SiteTerrain {
+  /** Full sourced catalog data; metadata is not automatically a physics override. */
+  catalog?: import('./catalog.ts').SiteCatalogData;
   id: string;
   name?: string;
   /** Where the terrain physically is. */

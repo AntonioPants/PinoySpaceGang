@@ -3,6 +3,7 @@ import { parseSites } from '../../src/index.ts';
 import type { SimInput, SiteTerrain } from '../../src/index.ts';
 import { PRESETS } from '../sites.ts';
 import type { UnavailableSite } from '../catalog.ts';
+import { CatalogDetails } from './CatalogDetails.tsx';
 
 export interface Setup {
   siteKey: string;
@@ -80,6 +81,7 @@ export function SetupPanel(p: Props) {
         ))}
       </select>
       <p className="hint">Pairings are proposed analog comparisons, not validated landing sites.</p>
+      <CatalogDetails site={setup.siteKey.startsWith('file:') ? p.fileSites.get(setup.siteKey.slice(5)) : undefined} />
 
       <label htmlFor="sitesFile">Load sites.json (synthetic format)</label>
       <input key={fileKey} type="file" id="sitesFile" accept=".json,application/json" onChange={(e) => loadFile(e.target.files?.[0])} />
