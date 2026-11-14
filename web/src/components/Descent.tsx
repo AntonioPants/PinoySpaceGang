@@ -1,32 +1,33 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useLanderSim } from '../../../app/sim/react/useLanderSim';
-import { SideView } from '../../../app/sim/viewer/components/SideView';
-import type { FlightTelemetry } from '../../../app/sim/src/types';
-import type { MissionConfig, TerrainProfile } from '../lib/types';
-import { toSimInput } from '../lib/simulation';
-import type { CatalogSite } from '../../../app/sim/src/catalog';
-import type { EnvironmentProfile } from '../../../app/lib/environment.mjs';
-export default function Descent({ mission, profile, entry, weather, autoStart = false, onReport, onExit }: {mission:MissionConfig;profile:TerrainProfile;entry?:CatalogSite;weather?:EnvironmentProfile|null;autoStart?:boolean;onReport:(flight:FlightTelemetry)=>void;onExit:()=>void}) {
-  const lander = useLanderSim({speed:1,keyboard:mission.strategy.mode==='MANUAL_CONTROL'});
-  const [error,setError]=useState(''), [started,setStarted]=useState(false);
-  const outside=useRef(false);
-  const launch = useCallback(() => { try { outside.current=false; setError(''); lander.launch(toSimInput(mission,profile,entry,weather)); setStarted(true); } catch(e) {setError(e instanceof Error?e.message:'Could not launch.');} }, [lander.launch, mission, profile, entry, weather]);
-  const autoStarted = useRef(false);
-  useEffect(() => { if (autoStart && !autoStarted.current) { autoStarted.current = true; launch(); } }, [autoStart, launch]);
-  useEffect(()=>lander.onFrame(sim=>{
-    const boundX=(profile.manifest.grid.columns-1)*profile.sampleSpacingM/2;
-    const boundY=(profile.manifest.grid.rows-1)*profile.sampleSpacingM/2;
-    if (!outside.current && (Math.abs(sim.state.position.x)>boundX || Math.abs(sim.state.position.y)>boundY)) {
-      outside.current=true; lander.setPaused(true); setError('Flight left the measured terrain patch. This run is stopped; restart or change the configuration.');
-    }
-  }),[lander.onFrame,lander.setPaused,profile]);
-  const state=lander.hud;
-  return <section className="flight-workspace"><div className="flight-toolbar"><div><strong>{mission.planetaryTarget.name} descent</strong><small>{mission.earthAnalog.name} · Measured Earth terrain</small></div><div><button className="subtle-button" onClick={onExit}>{started && !lander.summary ? 'End flight & configure' : 'Back to configuration'}</button><button className="primary-button" onClick={launch}>{started?'Restart flight':'Start descent'}</button>{started && !lander.summary && !error && <button className="subtle-button" onClick={lander.togglePause}>{lander.paused?'Resume':'Pause'}</button>}<label>Playback <select aria-label="Playback speed" value={lander.speed} onChange={e=>lander.setSpeed(Number(e.target.value))}><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></label></div></div>
-    <div className="flight-stage"><SideView onFrame={lander.onFrame} paused={lander.paused}/>{!started&&<div className="launch-overlay"><h2>Ready for descent</h2><p>Start 1,000 m above ground, 400 m west of the target.<br/>Initial velocity: 25 m/s east and 20 m/s down.</p><button className="primary-button" onClick={launch}>Start descent</button></div>}</div>
-    {error && <p role="alert" className="import-error">{error}</p>}
-    <div className="flight-hud">{[['Elapsed',`${(state?.t??0).toFixed(1)} s`],['Altitude AGL',`${(state?.altitudeAGL??1000).toFixed(1)} m`],['Vertical velocity',`${(state?.velocity.z??-20).toFixed(2)} m/s`],['Fuel',`${(state?.fuelKg??mission.strategy.fuelMassKg).toFixed(1)} kg`],['Throttle',`${((state?.throttle??0)*100).toFixed(0)}%`]].map(([label,value])=><div key={label}><span>{label}</span><strong>{value}</strong></div>)}</div>
-    <p className="flight-help">{mission.strategy.mode==='MANUAL_CONTROL'?'Keyboard: hold W/S to raise/lower throttle; arrow keys steer; X cuts the engine.':'Autonomous hazard-avoidance guidance is active after launch.'} Physics runs at a fixed 1/120 s timestep. Terrain does not resolve footpad-scale hazards.</p>
-    {lander.summary && !error && <div className="flight-result" role="status"><div><h2>{lander.summary.outcome==='success'?'Touchdown complete':`Flight ended: ${lander.summary.outcome}`}</h2><p>{lander.summary.failureReasons.join(' · ')||'Landing stayed within the configured model limits.'}</p></div><button className="primary-button" onClick={()=>{if(lander.sim)onReport(lander.sim.telemetry());}}>View flight report</button></div>}
-    <details className="model-assumptions"><summary>Model assumptions & recent events</summary><p>Selected modelled weather supplies wind and air density when enabled; otherwise the model uses Earth 1.225 kg/m³, Mars 0.02, or lunar vacuum. Engine defaults: 311 s Isp, drag coefficient 1.2, reference area 15 m², leg radius 2.5 m and a velocimeter. Hazard sensor: {mission.strategy.hazardSensor}. These are simulation assumptions, not measured site conditions. Camera view and vehicle appearance are illustrative.</p><ul>{lander.events.slice(-8).map((e,i)=><li key={i}>{e.t.toFixed(1)} s — {e.type}</li>)}</ul></details>
-  </section>;
+import { lazy, Suspense, useState } from 'react';
+import Descent2D, { type DescentProps } from './Descent2D';
+
+// The 3D view pulls in the 3D engine, so it loads only when the descent opens.
+const Descent3D = lazy(() => import('./Descent3D'));
+
+/**
+ * The descent screen. It flies in Furgan's live 3D view by default and keeps the 2D side view
+ * as an alternative: chosen by the player (the choice is remembered), or used automatically
+ * when 3D cannot start. Both views fly the same physics. With reduced motion the 3D view still
+ * opens, because the descent is the thing being watched, and the calmer 2D view is pointed out.
+ */
+const KEY = 'analog-atlas-descent-view';
+function savedMode(): '3d' | '2d' {
+  try { return localStorage.getItem(KEY) === '2d' ? '2d' : '3d'; } catch { return '3d'; }
+}
+export default function Descent(props: Omit<DescentProps, 'toolbarExtra'>) {
+  const [mode, setMode] = useState<'3d' | '2d'>(savedMode);
+  const [notice, setNotice] = useState(() => savedMode() === '3d' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ? 'Your system asks for reduced motion. The 2D view moves less; switch with the 2D view button.' : '');
+  const choose = (next: '3d' | '2d') => { setNotice(''); setMode(next); try { localStorage.setItem(KEY, next); } catch { /* the choice just is not remembered */ } };
+  const viewSwitch = <button className="subtle-button" onClick={() => choose(mode === '3d' ? '2d' : '3d')}>{mode === '3d' ? '2D view' : '3D view'}</button>;
+  if (mode === '2d') return <>
+    {notice && <p role="status" className="field-help">{notice}</p>}
+    <Descent2D {...props} toolbarExtra={viewSwitch} />
+  </>;
+  return <>
+    {notice && <p role="status" className="field-help">{notice}</p>}
+    <Suspense fallback={<div className="flight-workspace empty-data" role="status">Preparing the 3D view…</div>}>
+    <Descent3D {...props} toolbarExtra={viewSwitch} onUnavailable={reason => { setNotice(`3D view unavailable (${reason}). Showing the 2D view.`); setMode('2d'); }} />
+    </Suspense>
+  </>;
 }
