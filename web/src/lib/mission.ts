@@ -11,21 +11,38 @@ export function extractProfile(manifest: TerrainManifest, buffer: ArrayBuffer): 
       !Number.isFinite(manifest.local_frame.vertical_offset_m)) throw new Error('Unsupported terrain metadata.');
   if (buffer.byteLength !== rows * columns * 4) throw new Error('Terrain download has an unexpected size.');
   const row = Math.floor(rows / 2), view = new DataView(buffer);
+  let min = Infinity, max = -Infinity;
+  for (let i = 0; i < rows * columns; i++) {
+    const value = view.getFloat32(i * 4, true);
+    if (!Number.isFinite(value)) throw new Error('Terrain contains missing elevation data.');
+    min = Math.min(min, value); max = Math.max(max, value);
+  }
   const heightsM = Array.from({ length: columns }, (_, col) => {
     const height = view.getFloat32((row * columns + col) * 4, true);
     if (!Number.isFinite(height)) throw new Error('Terrain transect contains missing elevation data.');
     return height - manifest.local_frame.vertical_offset_m;
   });
-  return { manifest, heightsM, sampleSpacingM: spacing_m, row, buffer };
+  // Catalog packs may omit display metrics; derive them from the actual grid.
+  const normalized = { ...manifest,
+    grid: { ...manifest.grid, width_m: (columns - 1) * spacing_m, depth_m: (rows - 1) * spacing_m },
+    statistics: { ...manifest.statistics, relief_m: max - min },
+  };
+  return { manifest: normalized, heightsM, sampleSpacingM: spacing_m, row, buffer };
 }
-export async function loadProfile(signal?: AbortSignal): Promise<TerrainProfile> {
-  const response = await fetch(`${TERRAIN_BASE}manifest.json`, { signal });
+export async function loadProfile(signal?: AbortSignal, manifestUrl = `${TERRAIN_BASE}manifest.json`, expectedId?: string): Promise<TerrainProfile> {
+  const base = manifestUrl.slice(0, manifestUrl.lastIndexOf('/') + 1);
+  const response = await fetch(manifestUrl, { signal });
   if (!response.ok) throw new Error(`Terrain manifest unavailable (${response.status}).`);
-  const manifest: TerrainManifest = await response.json();
+  const raw = await response.json();
+  if ((expectedId && raw.id !== expectedId) || raw.body?.toLowerCase() !== 'earth') throw new Error('Terrain pack does not match the selected Earth location.');
+  const manifest: TerrainManifest = { ...raw, source: { ...raw.source,
+    dataset: raw.source.dataset ?? 'Copernicus DEM GLO-30', catalog: raw.source.catalog ?? raw.source.url,
+    sha256: raw.source.sha256 ?? raw.source.subset_sha256,
+  } };
   if (!/^[\w.-]+$/.test(manifest.grid.sample_file)) throw new Error('Invalid terrain sample filename.');
-  const samples = await fetch(`${TERRAIN_BASE}${manifest.grid.sample_file}`, { signal });
+  const samples = await fetch(`${base}${manifest.grid.sample_file}`, { signal });
   if (!samples.ok) throw new Error(`Elevation samples unavailable (${samples.status}).`);
-  return extractProfile(manifest, await samples.arrayBuffer());
+  return { ...extractProfile(manifest, await samples.arrayBuffer()), terrainBaseUrl: base };
 }
 export const gravityFor = (site: PlanetarySite, settings: MissionSettings) => settings.environment === 'earth' ? 9.81 : site.gravity;
 export function validateSettings(s: MissionSettings): string[] {
@@ -44,7 +61,7 @@ export function buildMission(site: PlanetarySite, profile: TerrainProfile, setti
   return {
     schemaVersion: '1.0.0', createdAt: new Date().toISOString(),
     planetaryTarget: { id: site.id, name: site.name, body: site.body, gravity: site.gravity },
-    earthAnalog: { id: profile.manifest.id, name: profile.manifest.name, terrainBaseUrl: TERRAIN_BASE,
+    earthAnalog: { id: profile.manifest.id, name: profile.manifest.name, terrainBaseUrl: profile.terrainBaseUrl ?? `/terrain/${profile.manifest.id}/`,
       elevationProfile: profile.heightsM, sampleSpacingM: profile.sampleSpacingM, profileRow: profile.row,
       verticalOffsetM: profile.manifest.local_frame.vertical_offset_m, sourceSha256: profile.manifest.source.sha256 },
     strategy: { mode: settings.mode, thrusterForceN: settings.thrusterForceN, fuelMassKg: settings.fuelMassKg, dryMassKg: settings.dryMassKg, maxSlopeToleranceDeg: settings.maxSlopeToleranceDeg },

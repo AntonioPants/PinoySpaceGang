@@ -7,6 +7,7 @@ export interface PlanetarySite {
 export interface AnalogSite {
   id: string; name: string; region: string; lat: number; lon: number;
   available: boolean; description: string;
+  manifestUrl?: string; source?: string; matches: string[];
 }
 export interface TerrainManifest {
   schema_version: number; id: string; name: string; body: string;
@@ -14,13 +15,14 @@ export interface TerrainManifest {
   local_frame: { vertical_offset_m: number };
   statistics: { relief_m: number; slope_p95_deg: number };
   source: { dataset: string; catalog: string; sha256: string; vertical_datum: string };
-  analog: { basis: string; sources: string[] };
+  analog?: { basis: string; sources: string[] };
   limitations: string[]; attribution: string;
 }
 export interface TerrainProfile {
   manifest: TerrainManifest;
   /** A west-to-east centre-row transect, relative to the pack's vertical offset. */
   heightsM: number[]; sampleSpacingM: number; row: number; buffer: ArrayBuffer;
+  terrainBaseUrl?: string;
 }
 export interface MissionSettings {
   mode: 'MANUAL_CONTROL' | 'AUTONOMOUS_HAZARD_AVOID';

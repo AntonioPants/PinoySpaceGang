@@ -3,7 +3,7 @@
 ## Mission-planner frontend
 
 The React/TypeScript application is in [`web/`](web/README.md), alongside the
-team's real Kilbourne terrain pack. It includes globe selection, Earth analog
+team's measured terrain packs. It includes globe selection, Earth analog
 evidence, mission configuration, and JSON export. See
 [`web/INTEGRATION.md`](web/INTEGRATION.md) for the proposed physics/cutscene handoff.
 Descent execution now connects to Tim's engine in `app/sim/`, with real flight

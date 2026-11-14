@@ -12,8 +12,8 @@ export default function TerrainExplorer({ profile }: { profile: TerrainProfile }
   useEffect(() => {
     const mount = host.current!; let renderer: THREE.WebGLRenderer;
     try { renderer = new THREE.WebGLRenderer({ antialias: true }); } catch { setError('3D is unavailable. The measured terrain profile remains available beside this view.'); return; }
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setClearColor(0x111f2d);
-    renderer.domElement.setAttribute('role', 'img'); renderer.domElement.setAttribute('aria-label', 'Kilbourne Hole measured 3D terrain. Drag to orbit, scroll to zoom, right-drag to pan, click to inspect elevation.');
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setClearColor(0x080808);
+    renderer.domElement.setAttribute('role', 'img'); renderer.domElement.setAttribute('aria-label', `${profile.manifest.name} measured 3D terrain. Drag to orbit, scroll to zoom, right-drag to pan, click to inspect elevation.`);
     mount.append(renderer.domElement);
     const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(45, 1, 2, 30000);
     const controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true;
@@ -34,8 +34,8 @@ export default function TerrainExplorer({ profile }: { profile: TerrainProfile }
     }
     const geometry = new THREE.BufferGeometry(); geometry.setAttribute('position', new THREE.BufferAttribute(positions,3)); geometry.setAttribute('color', new THREE.BufferAttribute(colors,3)); geometry.setIndex(indices); geometry.computeVertexNormals();
     const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({vertexColors:true, roughness:1, side:THREE.DoubleSide})); scene.add(mesh);
-    const grid = new THREE.GridHelper(6000,12,0x466071,0x283c4b); grid.position.y = -8; scene.add(grid);
-    scene.add(new THREE.HemisphereLight(0xddeeff,0x655342,2));
+    const grid = new THREE.GridHelper(Math.max(width, depth) * 1.25,12,0x49463e,0x252522); grid.position.y = -8; scene.add(grid);
+    scene.add(new THREE.HemisphereLight(0xf1eee4,0x655342,2));
     const sun = new THREE.DirectionalLight(0xfff1d2,3); sun.position.set(-3000,4000,-1000); scene.add(sun);
     const reset = () => { camera.position.set(5200,3400,5800); controls.target.set(0,45,0); controls.update(); };
     reset();
@@ -81,7 +81,7 @@ export default function TerrainExplorer({ profile }: { profile: TerrainProfile }
     return () => { cancelAnimationFrame(frame); resize.disconnect(); controls.dispose(); geometry.dispose(); mesh.material.dispose(); grid.geometry.dispose(); const materials=Array.isArray(grid.material)?grid.material:[grid.material]; materials.forEach(m=>m.dispose()); renderer.dispose(); renderer.domElement.remove(); commands.current=()=>{}; };
   },[profile]);
   return <div className="terrain-explorer"><div ref={host} className="terrain-canvas" />
-    <div className="terrain-toolbar"><span><Mountain size={14} /> Kilbourne Hole · 4.8 km patch</span><div><button aria-label="Zoom into terrain" onClick={()=>commands.current('in')}><Plus size={17}/></button><button aria-label="Zoom out of terrain" onClick={()=>commands.current('out')}><Minus size={17}/></button><button aria-label="Reset terrain camera" onClick={()=>commands.current('reset')}><RotateCcw size={15}/></button><button onClick={()=>commands.current('top')}>Top</button></div></div>
+    <div className="terrain-toolbar"><span><Mountain size={14} /> {(profile.manifest.grid.width_m / 1000).toFixed(1)} km measured patch</span><div><button aria-label="Zoom into terrain" onClick={()=>commands.current('in')}><Plus size={17}/></button><button aria-label="Zoom out of terrain" onClick={()=>commands.current('out')}><Minus size={17}/></button><button aria-label="Reset terrain camera" onClick={()=>commands.current('reset')}><RotateCcw size={15}/></button><button onClick={()=>commands.current('top')}>Top</button></div></div>
     {error && <p className="globe-error">{error}</p>}
     <div className="terrain-readout"><label htmlFor="height-scale">Zoom view <select id="height-scale" value={preset} onChange={e=>{setPreset(e.target.value);commands.current(e.target.value === 'auto' ? 'auto' : `preset:${e.target.value}`);}}><option value="auto">Zoom-linked</option><option value="1">1× · True scale</option><option value="3">3× · Exaggerated</option><option value="6">6× · Exaggerated</option></select></label><span aria-live="off">Height scale: {exaggeration.toFixed(2)}×</span><span>{sample === null ? 'Click terrain to inspect height' : `Elevation ≈ ${sample.toFixed(0)} m EGM2008`}</span></div>
     <div className="terrain-footnote">Drag to orbit · Scroll to zoom · Right-drag to pan<br/>Zoom smoothly adjusts displayed heights from 1× to 6×. Measured 30 m grid; elevation tint, not imagery. {exaggeration > 1 && <strong>Heights exaggerated {exaggeration.toFixed(2)}×; measurements stay at true scale.</strong>}</div>

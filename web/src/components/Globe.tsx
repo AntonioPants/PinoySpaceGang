@@ -44,7 +44,7 @@ export default function Globe({ body, points, selected, onSelect }: Props) {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true; controls.enablePan = false; controls.minDistance = 2.7; controls.maxDistance = 6;
     controls.enableZoom = true; controls.rotateSpeed = 0.6;
-    const material = new THREE.MeshStandardMaterial({ color: body === 'Earth' ? 0xc4d6e9 : 0xd4cebf, roughness: 1 });
+    const material = new THREE.MeshStandardMaterial({ color: body === 'Earth' ? 0xeee9df : 0xd4cebf, roughness: 1 });
     const globe = new THREE.Mesh(new THREE.SphereGeometry(1.25, 80, 64), material); scene.add(globe);
     let texture: THREE.Texture | undefined, disposed = false;
     if (body === 'Mars') { texture = marsTexture(); material.map = texture; }
@@ -52,15 +52,15 @@ export default function Globe({ body, points, selected, onSelect }: Props) {
       if (disposed) { tex.dispose(); return; }
       texture = tex; tex.colorSpace = THREE.SRGBColorSpace; material.map = tex; material.needsUpdate = true;
     });
-    scene.add(new THREE.AmbientLight(0xbacfe5, 1.3));
+    scene.add(new THREE.AmbientLight(0xe4e1d9, 1.1));
     const sun = new THREE.DirectionalLight(0xfff5e7, 2.4); sun.position.set(-3, 4, 5); scene.add(sun);
     const grid = new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.SphereGeometry(1.259, 24, 12)),
-      new THREE.LineBasicMaterial({ color: 0x8acccf, transparent: true, opacity: 0.055 })); scene.add(grid);
+      new THREE.LineBasicMaterial({ color: 0xd6b77c, transparent: true, opacity: 0.035 })); scene.add(grid);
     const pickTargets: THREE.Mesh[] = [];
     const markers = points.map(p => {
-      const marker = new THREE.Mesh(new THREE.SphereGeometry(0.026, 12, 12), new THREE.MeshBasicMaterial({ color: p.id === selected ? 0x9ff9e8 : 0xe8f0f7 }));
+      const marker = new THREE.Mesh(new THREE.SphereGeometry(0.026, 12, 12), new THREE.MeshBasicMaterial({ color: p.id === selected ? 0xd6b77c : 0xf2f1ed }));
       marker.position.copy(position(p.lat, p.lon, 1.285)); marker.userData.id = p.id; scene.add(marker);
-      const ring = new THREE.Mesh(new THREE.RingGeometry(0.046, 0.055, 32), new THREE.MeshBasicMaterial({ color: 0x8ee5d9, side: THREE.DoubleSide }));
+      const ring = new THREE.Mesh(new THREE.RingGeometry(0.046, 0.055, 32), new THREE.MeshBasicMaterial({ color: 0xd6b77c, side: THREE.DoubleSide }));
       ring.position.copy(position(p.lat, p.lon, 1.28)); ring.lookAt(position(p.lat, p.lon, 3)); scene.add(ring);
       // A forgiving click target, still occluded by the globe on its far side.
       const pickTarget = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 12), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }));
@@ -71,7 +71,7 @@ export default function Globe({ body, points, selected, onSelect }: Props) {
     focus.current = id => {
       const point = points.find(p => p.id === id); if (!point) return;
       destination = position(point.lat * 0.85, point.lon, camera.position.length());
-      markers.forEach(marker => { marker.material.color.set(marker.userData.id === id ? 0x9ff9e8 : 0xe8f0f7); marker.scale.setScalar(marker.userData.id === id ? 1.6 : 1); });
+      markers.forEach(marker => { marker.material.color.set(marker.userData.id === id ? 0xd6b77c : 0xf2f1ed); marker.scale.setScalar(marker.userData.id === id ? 1.6 : 1); });
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { camera.position.copy(destination); destination = null; }
     };
     const cancelFocus = () => { destination = null; }; controls.addEventListener('start', cancelFocus);

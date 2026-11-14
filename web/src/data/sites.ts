@@ -1,25 +1,33 @@
+import catalogJson from '../../public/sites.json';
+import type { CatalogSite } from '../../../app/sim/src/catalog';
 import type { AnalogSite, PlanetarySite } from '../lib/types';
-// Curated navigation fixtures, not measured terrain or validated analog pairings.
-// Coordinates are approximate visual locators; obtain precise study footprints from the data team.
-export const targets: PlanetarySite[] = [
-  { id: 'shackleton_rim', name: 'Shackleton rim', body: 'Moon', region: 'Lunar south pole', lat: -89.65, lon: 0, gravity: 1.62,
-    description: 'Explore a polar landing scenario. Investigate terrain, low-angle lighting, and the limits of testing a lunar mission on Earth.',
-    interests: ['Polar terrain', 'Lighting', 'Rim slopes'], source: 'https://pds-geosciences.wustl.edu/missions/lro/' },
-  { id: 'marius_hills', name: 'Marius Hills', body: 'Moon', region: 'Oceanus Procellarum', lat: 14.2, lon: -56.8, gravity: 1.62,
-    description: 'Explore a volcanic terrain scenario. Compare broad surface forms while keeping subsurface features outside the current terrain model.',
-    interests: ['Volcanic terrain', 'Surface access', 'Roughness'], source: 'https://pds-geosciences.wustl.edu/missions/lro/' },
-  { id: 'jezero_crater', name: 'Jezero crater', body: 'Mars', region: 'Isidis Planitia', lat: 18.38, lon: 77.58, gravity: 3.72,
-    description: 'Prepare a crater-terrain scenario. Use an Earth test surface to explore descent controls before a matched planetary DEM is available.',
-    interests: ['Crater terrain', 'Landing slopes', 'Navigation'], source: 'https://pds-geosciences.wustl.edu/missions/mgs/megdr.html' },
-  { id: 'arsia_mons', name: 'Arsia Mons', body: 'Mars', region: 'Tharsis volcanic province', lat: -9.0, lon: -120.0, gravity: 3.72,
-    description: 'Explore a volcanic setting on Mars. Start with broad terrain descriptors; caves and overhangs need different observations.',
-    interests: ['Volcanic terrain', 'Broad slopes', 'Surface access'], source: 'https://pds-geosciences.wustl.edu/missions/mgs/megdr.html' },
-];
-export const analogs: AnalogSite[] = [
-  { id: 'kilbourne-hole-v1', name: 'Kilbourne Hole', region: 'New Mexico, United States', lat: 31.972, lon: -106.969, available: true,
-    description: 'A volcanic maar and documented Apollo field-training location. A real, coarse terrain pack is ready for your landing experiment.' },
-  { id: 'haughton_crater', name: 'Haughton crater', region: 'Devon Island, Canada', lat: 75.38, lon: -89.68, available: false,
-    description: 'A candidate from the team brief. Elevation data, comparison evidence, and a validated planetary pairing have not been supplied.' },
-  { id: 'qaidam_basin', name: 'Qaidam Basin', region: 'Qinghai, China', lat: 37.5, lon: 93.5, available: false,
-    description: 'A candidate from the team brief. This regional locator is illustrative; a study footprint and processed dataset are still needed.' },
-];
+
+// The shared catalog owns IDs, coordinates, terrain paths and source evidence.
+export const catalogSites = catalogJson.sites as CatalogSite[];
+const names: Record<string, string> = {
+  'shackleton-rim': 'Shackleton rim', 'marius-hills': 'Marius Hills', jezero: 'Jezero delta',
+  'arsia-flank': 'Arsia Mons flank', phoenix: 'Phoenix plains', bagnold: 'Bagnold dunes',
+  'barrow-observatory': 'Barrow Observatory', 'capitol-reef': 'Capitol Reef',
+};
+const legacyIds: Record<string, string> = {
+  shackleton_rim: 'shackleton-rim', marius_hills: 'marius-hills', jezero_crater: 'jezero', arsia_mons: 'arsia-flank',
+};
+export const normalizeTargetId = (id: string) => legacyIds[id] ?? id;
+const targetOrder = ['shackleton-rim', 'marius-hills', 'jezero', 'arsia-flank', 'phoenix', 'bagnold'];
+export const targets: PlanetarySite[] = catalogJson.sites.filter(s => s.role === 'planetary_target').map(s => ({
+  id: s.id, name: names[s.id] ?? s.name, body: s.body === 'moon' ? 'Moon' as const : 'Mars' as const,
+  region: s.region, lat: s.latitude, lon: s.longitude, gravity: s.body === 'moon' ? 1.62 : 3.72,
+  description: s.description, interests: [s.morphology.replaceAll('_', ' '), s.substrate.replaceAll('_', ' ')], source: s.evidence_url,
+})).sort((a, b) => targetOrder.indexOf(a.id) - targetOrder.indexOf(b.id));
+
+export const analogs: AnalogSite[] = catalogJson.sites.filter(s => s.role === 'earth_analog').map(s => ({
+  id: s.id, name: names[s.id] ?? s.name, region: s.region, lat: s.latitude, lon: s.longitude,
+  available: !!s.terrain, description: s.description, manifestUrl: s.terrain?.manifest_url,
+  source: s.evidence_url, matches: s.matches,
+})).sort((a, b) => Number(b.id === 'kilbourne-hole-v1') - Number(a.id === 'kilbourne-hole-v1'));
+analogs.push(
+  { id: 'haughton_crater', name: 'Haughton crater', region: 'Devon Island, Canada', lat: 75.38, lon: -89.68,
+    available: false, description: 'Candidate location. A processed terrain pack and study footprint are still needed.', matches: [] },
+  { id: 'qaidam_basin', name: 'Qaidam Basin', region: 'Qinghai, China', lat: 37.5, lon: 93.5,
+    available: false, description: 'Candidate location. A processed terrain pack and study footprint are still needed.', matches: [] },
+);

@@ -1,9 +1,14 @@
 import { terrainPackToSite } from '../../../app/sim/src/loaders';
+import { catalogSiteToSite } from '../../../app/sim/src/catalog';
+import { catalogSites } from '../data/sites';
 import type { SimInput } from '../../../app/sim/src/types';
 import type { MissionConfig, TerrainProfile } from './types';
 export function toSimInput(mission: MissionConfig, profile: TerrainProfile): SimInput {
   const body = mission.planetaryTarget.body === 'Moon' ? 'moon' : 'mars';
-  const site = terrainPackToSite(profile.manifest, profile.buffer, { analogOf: body });
+  if (mission.earthAnalog.id !== profile.manifest.id) throw new Error('The loaded terrain does not match this mission. Return to configuration.');
+  const entry = catalogSites.find(s => s.id === profile.manifest.id);
+  const site = entry ? catalogSiteToSite(entry, profile.manifest, profile.buffer, { analogOf: body })
+    : terrainPackToSite(profile.manifest, profile.buffer, { analogOf: body });
   if (mission.environment.mode === 'earth') site.analogOf = undefined;
   site.wind = { x: mission.environment.windSpeedMs, y: 0 };
   return {
