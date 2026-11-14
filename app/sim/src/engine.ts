@@ -25,7 +25,9 @@ import {
   G0,
 } from './constants.ts';
 import { createRng } from './rng.ts';
-import { GridTerrain, noisyField, roughnessAt, slopeDegAt, type HeightField } from './terrain.ts';
+import { noisyField, roughnessAt, slopeDegAt, type HeightField } from './terrain.ts';
+import { Surface, type HazardField } from './surface.ts';
+import { siteInterference } from './environment.ts';
 import { evaluateTouchdown } from './touchdown.ts';
 import { createSensorModel } from './sensors.ts';
 import { autopilot } from './controllers/autopilot.ts';
@@ -41,7 +43,7 @@ export interface ControllerContext {
    * What the hazard sensor sees of the terrain (noisy under glare), or null without one.
    * Controllers must use this, never the true terrain.
    */
-  hazardView: HeightField | null;
+  hazardView: HazardField | null;
   emit(e: SimEvent): void;
   /** Retarget guidance (e.g. after a hazard divert). */
   setAim(p: Vec2): void;
@@ -54,7 +56,8 @@ export interface Controller {
 export interface Sim {
   readonly state: Readonly<SimState>;
   readonly events: readonly SimEvent[];
-  readonly terrain: GridTerrain;
+  /** Ground including generated boulders. */
+  readonly terrain: Surface;
   readonly lander: LanderConfig;
   readonly gravity: number;
   readonly airDensity: number;
@@ -105,15 +108,19 @@ export function createSim(input: SimInput, controllerOverride?: Controller): Sim
   const lander = resolveLander(input);
   const env = resolveEnvironment(input);
   const sensors = { ...DEFAULT_SENSORS, ...input.sensors };
-  const interference = { ...DEFAULT_INTERFERENCE, ...input.interference };
+  const interference = { ...DEFAULT_INTERFERENCE, ...siteInterference(input.site, input.interference) };
   const seed = input.seed ?? 1;
   const rng = createRng(seed);
   const dt = input.dt ?? 1 / 120;
   const maxTime = input.maxTimeS ?? 600;
   const sampleEvery = 1 / (input.sampleHz ?? 10);
-  const terrain = new GridTerrain(input.site.heightmap);
-  const wind = input.site.wind ?? { x: 0, y: 0 };
   const target: Vec2 = { ...(input.target ?? { x: 0, y: 0 }) };
+  const terrain = new Surface(input.site, { center: target, seed: seed ^ 0x1b873593, rockAbundance: input.rockAbundance });
+  const wind = input.site.wind ?? { x: 0, y: 0 };
+  const gustSigma = input.site.windGustMps ?? 0;
+  const gustRng = createRng(seed ^ 0x27d4eb2d);
+  const gust = { x: 0, y: 0 };
+  const GUST_TAU = 3; // s, correlation time of gusts
   let aim: Vec2 = { ...target };
 
   const controller =
@@ -131,7 +138,7 @@ export function createSim(input: SimInput, controllerOverride?: Controller): Sim
   const startVel = input.start?.velocity ?? { x: 25, y: 0, z: -20 };
   const state: SimState = {
     t: 0,
-    position: { x: startPos.x, y: startPos.y, z: terrain.heightAt(startPos.x, startPos.y) + startPos.z },
+    position: { x: startPos.x, y: startPos.y, z: terrain.baseHeightAt(startPos.x, startPos.y) + startPos.z },
     velocity: { ...startVel },
     tiltX: 0,
     tiltY: 0,
@@ -246,8 +253,14 @@ export function createSim(input: SimInput, controllerOverride?: Controller): Sim
     const dx = Math.tan(state.tiltX);
     const dy = Math.tan(state.tiltY);
     const dn = Math.hypot(dx, dy, 1);
-    const relX = state.velocity.x - wind.x;
-    const relY = state.velocity.y - wind.y;
+    if (gustSigma > 0) {
+      // Ornstein–Uhlenbeck gusts around the mean wind
+      const k = Math.sqrt((2 * dt) / GUST_TAU) * gustSigma;
+      gust.x += (-gust.x / GUST_TAU) * dt + k * gustRng.gaussian();
+      gust.y += (-gust.y / GUST_TAU) * dt + k * gustRng.gaussian();
+    }
+    const relX = state.velocity.x - wind.x - gust.x;
+    const relY = state.velocity.y - wind.y - gust.y;
     const relZ = state.velocity.z;
     const relSpeed = Math.hypot(relX, relY, relZ);
     const dragK = 0.5 * env.airDensity * relSpeed * lander.dragCoeff * lander.refAreaM2;
@@ -292,8 +305,12 @@ export function createSim(input: SimInput, controllerOverride?: Controller): Sim
     if (state.altitudeAGL <= 0) {
       const vVert = Math.max(0, -state.velocity.z);
       const vHoriz = Math.hypot(state.velocity.x, state.velocity.y);
-      const slope = slopeDegAt(terrain, state.position.x, state.position.y, lander.legRadiusM);
-      const rough = roughnessAt(terrain, state.position.x, state.position.y, lander.legRadiusM);
+      const slope = slopeDegAt(terrain.grid, state.position.x, state.position.y, lander.legRadiusM);
+      // geometric roughness of the ground plus any boulder under the footprint
+      const rough = Math.max(
+        roughnessAt(terrain.grid, state.position.x, state.position.y, lander.legRadiusM),
+        terrain.obstacleWithin(state.position.x, state.position.y, lander.legRadiusM + 0.3),
+      );
       const tilt = tiltDeg();
       const res = evaluateTouchdown(
         { verticalSpeedMps: vVert, horizontalSpeedMps: vHoriz, slopeDeg: slope, roughnessM: rough, tiltDeg: tilt },
@@ -374,7 +391,16 @@ export function createSim(input: SimInput, controllerOverride?: Controller): Sim
     telemetry: () => ({
       siteId: input.site.id,
       strategy: input.strategy,
-      environment: { gravity: env.gravity, airDensity: env.airDensity, simulatedBody: env.body },
+      environment: {
+        gravity: env.gravity,
+        airDensity: env.airDensity,
+        simulatedBody: env.body,
+        wind,
+        rockAbundance: input.rockAbundance ?? input.site.rockAbundance ?? 0,
+        rocksGenerated: terrain.rocks?.rocks.length ?? 0,
+        interference,
+        sources: input.site.sources ?? {},
+      },
       lander,
       samples,
       events,

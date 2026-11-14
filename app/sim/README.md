@@ -12,6 +12,23 @@ npx tsx scripts/run.ts --site pack:../../web/public/terrain/kilbourne-hole-v1   
 npx tsx scripts/run.ts --site profile:../../data/processed/earth_analogs/<id>.json --analog mars
 ```
 
+## Real site conditions
+
+- **Boulders below the DEM's resolution:** each site's *rock abundance* (Diviner on the Moon, TES/THEMIS on Mars) becomes a seeded boulder field using the Golombek & Rapp (1997) size–frequency model (`src/surface.ts`). If the site has a `roughness_rms_m` grid, rough patches get more rocks. Lidar and camera hazard scans see the rocks, and touchdown checks for a rock under the footprint.
+- **Dust and glare from data** (`src/environment.ts`): dust comes from the soil type, and glare from albedo, snow cover, sun elevation and shadow. The configurator can still override both.
+- **Wind and gusts:** a mean wind vector plus gusts.
+- **Site catalog:** `catalogSiteToSite()` (`src/catalog.ts`) turns an entry of the data team's `web/public/sites.json` plus its terrain pack into a site, copying substrate, albedo, wind speed and latitude with their sources. Nothing is inferred: a site flies as itself unless the caller sets `analogOf`, and the catalog's scalar wind speed is applied only when the caller chooses a direction (`windTowardDeg`). The viewer's catalog loader (`viewer/catalog.ts`, Antonio) lists each site natively plus one entry per proposed pairing. For real hourly wind vectors on the six US sites, use Yousef's `app/lib/environment-site.ts`.
+
+## Analog Fidelity Score
+
+`analogFidelity(planetarySite, analogSite)` (`src/fidelity.ts`) flies the same lander on both terrains under the planetary gravity and atmosphere and scores how well the analog flight predicts the planetary one: 40% outcome agreement, 25% touchdown speeds, 20% ground slope and roughness, 15% fuel used.
+
+```bash
+npx tsx scripts/fidelity.ts --seeds 3     # every catalog pairing → out/fidelity.json
+```
+
+With today's coarse planetary terrain (150–500 m per pixel) and no rock-abundance data, every pairing lands cleanly and scores 93–100, so the score does not yet separate good analogs from poor ones.
+
 ## Browser viewer (React)
 
 ```bash

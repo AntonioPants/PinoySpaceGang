@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .test-tmp/
+.test-tmp-catalog/
+data/cache/
 .venv/
 venv/
 
@@ -30,3 +32,7 @@ data/raw/**
 
 # Vendored tutorial contents are fetched separately.
 vendor/Synthetic_Aperture_Radar_Tutorial/
+
+# Generated static environmental profiles (source is data/environment).
+app/public/environment/
+app/sim/viewer/public/environment/

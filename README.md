@@ -9,10 +9,27 @@ evidence, mission configuration, and JSON export. See
 Descent execution now connects to Tim's engine in `app/sim/`, with real flight
 reports. Local 3D terrain inspection and JSON/text condition import are available.
 
+The populated shared catalog is [`web/public/sites.json`](web/public/sites.json).
+See [integration, categories and rebuild commands](docs/SITE_CATALOG.md) and
+[ingested providers and data gaps](docs/DATA_SOURCES_AND_GAPS.md).
+
 This repository turns targeted Earth, Moon, and Mars elevation rasters into
 small JSON terrain grids for a browser-based simulator or physics engine. Raw
 downloads stay outside Git; processed profiles retain source citations,
 projection details, physical cell sizes, and reproducibility metadata.
+
+## Seasonal simulation data for six USA sites
+
+Real 2015–2024 weather and regional radiation profiles, supplementary USDA soil
+survey records, and a dependency-free React/Node adapter are available in
+[`data/environment`](data/environment) and [`app/lib/environment.mjs`](app/lib/environment.mjs).
+See the [integration guide](docs/environment-integration.md) for SI units, loading,
+seasonal scenarios, and the distinction between regional data and local contact physics.
+
+```bash
+python scripts/environment/export_web.py
+node --test tests/environment.test.mjs
+```
 
 ## Data-source map
 

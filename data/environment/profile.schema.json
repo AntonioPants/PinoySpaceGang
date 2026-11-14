@@ -1,0 +1,586 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "site": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "enum": [
+            "kilbourne_hole",
+            "meteor_crater",
+            "amboy_crater",
+            "badwater_basin",
+            "white_sands",
+            "utqiagvik_beo"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "coordinate_role": {
+          "type": "string"
+        },
+        "surface_materials": {
+          "$ref": "#/$defs/materials"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "latitude",
+        "longitude",
+        "coordinate_role",
+        "surface_materials"
+      ],
+      "additionalProperties": false
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "baseline": {
+      "type": "object"
+    },
+    "spatial_support": {
+      "type": "object"
+    },
+    "evidence": {
+      "type": "object"
+    },
+    "months": {
+      "type": "object",
+      "properties": {
+        "1": {
+          "$ref": "#/$defs/period"
+        },
+        "2": {
+          "$ref": "#/$defs/period"
+        },
+        "3": {
+          "$ref": "#/$defs/period"
+        },
+        "4": {
+          "$ref": "#/$defs/period"
+        },
+        "5": {
+          "$ref": "#/$defs/period"
+        },
+        "6": {
+          "$ref": "#/$defs/period"
+        },
+        "7": {
+          "$ref": "#/$defs/period"
+        },
+        "8": {
+          "$ref": "#/$defs/period"
+        },
+        "9": {
+          "$ref": "#/$defs/period"
+        },
+        "10": {
+          "$ref": "#/$defs/period"
+        },
+        "11": {
+          "$ref": "#/$defs/period"
+        },
+        "12": {
+          "$ref": "#/$defs/period"
+        }
+      },
+      "required": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "additionalProperties": false
+    },
+    "seasons": {
+      "type": "object",
+      "properties": {
+        "DJF": {
+          "$ref": "#/$defs/period"
+        },
+        "MAM": {
+          "$ref": "#/$defs/period"
+        },
+        "JJA": {
+          "$ref": "#/$defs/period"
+        },
+        "SON": {
+          "$ref": "#/$defs/period"
+        }
+      },
+      "required": [
+        "DJF",
+        "MAM",
+        "JJA",
+        "SON"
+      ],
+      "additionalProperties": false
+    },
+    "soil": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "survey_available",
+            "literature_context_only"
+          ]
+        },
+        "survey": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "enum": [
+                "available",
+                "no_coverage",
+                "unavailable"
+              ]
+            },
+            "source": {
+              "type": "object"
+            },
+            "horizons": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "error": {
+              "type": "string"
+            },
+            "evidence": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "source",
+            "horizons"
+          ],
+          "additionalProperties": false
+        },
+        "surface_materials": {
+          "$ref": "#/$defs/materials"
+        },
+        "texture_fractions": {
+          "type": "null"
+        },
+        "bulk_density_kg_m3": {
+          "type": "null"
+        },
+        "cohesion_pa": {
+          "type": "null"
+        },
+        "friction_angle_deg": {
+          "type": "null"
+        },
+        "bearing_capacity_pa": {
+          "type": "null"
+        },
+        "soil_moisture_m3_m3": {
+          "type": "null"
+        },
+        "snow_depth_m": {
+          "type": "null"
+        },
+        "active_layer_depth_m": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "status",
+        "survey",
+        "surface_materials",
+        "texture_fractions",
+        "bulk_density_kg_m3",
+        "cohesion_pa",
+        "friction_angle_deg",
+        "bearing_capacity_pa",
+        "soil_moisture_m3_m3",
+        "snow_depth_m",
+        "active_layer_depth_m"
+      ],
+      "additionalProperties": false
+    },
+    "unavailable": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "url",
+          "sha256",
+          "kind",
+          "header",
+          "units"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "site",
+    "generated_at",
+    "baseline",
+    "spatial_support",
+    "evidence",
+    "months",
+    "seasons",
+    "soil",
+    "unavailable",
+    "limitations",
+    "sources"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Seasonal Earth simulation environment",
+  "description": "Version 1 profiles keep unknown local ground mechanics null. Survey estimates remain separately attributed.",
+  "$defs": {
+    "stats": {
+      "type": "object",
+      "properties": {
+        "units": {
+          "type": "string"
+        },
+        "valid_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expected_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "coverage_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "mean": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "min": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "max": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "p05": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "p50": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "p95": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "stddev": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "units",
+        "valid_count",
+        "expected_count",
+        "coverage_fraction",
+        "mean",
+        "min",
+        "max",
+        "p05",
+        "p50",
+        "p95",
+        "stddev"
+      ],
+      "additionalProperties": false
+    },
+    "weather": {
+      "type": "object",
+      "properties": {
+        "timestamp_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "wind_speed_m_s": {
+          "type": "number"
+        },
+        "wind_from_deg": {
+          "type": "number"
+        },
+        "air_temperature_k": {
+          "type": "number"
+        },
+        "relative_humidity_pct": {
+          "type": "number"
+        },
+        "pressure_pa": {
+          "type": "number"
+        },
+        "precipitation_mm_h": {
+          "type": "number"
+        },
+        "wind_east_m_s": {
+          "type": "number"
+        },
+        "wind_north_m_s": {
+          "type": "number"
+        },
+        "air_density_kg_m3": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "timestamp_utc",
+        "wind_speed_m_s",
+        "wind_from_deg",
+        "air_temperature_k",
+        "relative_humidity_pct",
+        "pressure_pa",
+        "precipitation_mm_h",
+        "wind_east_m_s",
+        "wind_north_m_s",
+        "air_density_kg_m3"
+      ],
+      "additionalProperties": false
+    },
+    "materials": {
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "evidence": {
+          "const": "literature"
+        },
+        "source_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "spatial_support": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "values",
+        "evidence",
+        "source_url",
+        "spatial_support"
+      ],
+      "additionalProperties": false
+    },
+    "period": {
+      "type": "object",
+      "properties": {
+        "statistics": {
+          "type": "object",
+          "properties": {
+            "wind_speed_m_s": {
+              "$ref": "#/$defs/stats"
+            },
+            "air_temperature_k": {
+              "$ref": "#/$defs/stats"
+            },
+            "relative_humidity_pct": {
+              "$ref": "#/$defs/stats"
+            },
+            "pressure_pa": {
+              "$ref": "#/$defs/stats"
+            },
+            "precipitation_mm_h": {
+              "$ref": "#/$defs/stats"
+            },
+            "wind_east_m_s": {
+              "$ref": "#/$defs/stats"
+            },
+            "wind_north_m_s": {
+              "$ref": "#/$defs/stats"
+            },
+            "air_density_kg_m3": {
+              "$ref": "#/$defs/stats"
+            }
+          },
+          "required": [
+            "wind_speed_m_s",
+            "air_temperature_k",
+            "relative_humidity_pct",
+            "pressure_pa",
+            "precipitation_mm_h",
+            "wind_east_m_s",
+            "wind_north_m_s",
+            "air_density_kg_m3"
+          ],
+          "additionalProperties": false
+        },
+        "vector_mean_wind_from_deg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 360
+        },
+        "scenarios": {
+          "type": "object",
+          "properties": {
+            "typical": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/weather"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "high_wind": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/weather"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "typical",
+            "high_wind"
+          ],
+          "additionalProperties": false
+        },
+        "diurnal": {
+          "type": "array",
+          "minItems": 24,
+          "maxItems": 24,
+          "items": {
+            "type": "object",
+            "properties": {
+              "local_mean_solar_hour": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 23
+              },
+              "record_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "air_temperature_k": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "wind_speed_m_s": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "local_mean_solar_hour",
+              "record_count",
+              "air_temperature_k",
+              "wind_speed_m_s"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "radiation": {
+          "type": "object",
+          "properties": {
+            "albedo": {
+              "$ref": "#/$defs/stats"
+            },
+            "solar_daily_mean_w_m2": {
+              "$ref": "#/$defs/stats"
+            }
+          },
+          "required": [
+            "albedo",
+            "solar_daily_mean_w_m2"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "statistics",
+        "vector_mean_wind_from_deg",
+        "scenarios",
+        "diurnal",
+        "radiation"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

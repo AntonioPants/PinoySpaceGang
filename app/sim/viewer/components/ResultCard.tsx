@@ -41,7 +41,31 @@ export function ResultCard({ summary, getTelemetry, fileName }: { summary: Fligh
           ))}
         </tbody>
       </table>
+      <SiteConditions env={getTelemetry().environment} />
       <div className="buttons"><button onClick={download}>Download telemetry JSON</button></div>
+    </div>
+  );
+}
+
+function SiteConditions({ env }: { env: FlightTelemetry['environment'] }) {
+  const wind = Math.hypot(env.wind.x, env.wind.y);
+  const sources = Object.entries(env.sources);
+  return (
+    <div className="conditions">
+      <h2>Site conditions</h2>
+      <table>
+        <tbody>
+          <tr><td>Gravity / air</td><td>{env.gravity} m/s² · {env.airDensity} kg/m³</td></tr>
+          <tr><td>Wind</td><td>{wind.toFixed(1)} m/s</td></tr>
+          <tr><td>Rock abundance</td><td>{(env.rockAbundance * 100).toFixed(1)}% · {env.rocksGenerated} boulders</td></tr>
+          <tr><td>Dust / glare</td><td>{env.interference.dust.toFixed(2)} / {env.interference.glare.toFixed(2)}</td></tr>
+        </tbody>
+      </table>
+      {sources.length > 0 && (
+        <ul className="sources">
+          {sources.map(([k, v]) => <li key={k}><b>{k}</b>: {v}</li>)}
+        </ul>
+      )}
     </div>
   );
 }

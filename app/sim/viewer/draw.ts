@@ -2,7 +2,7 @@
  * Canvas renderers for the viewer. Plain functions over the Sim so they can be driven from
  * the useLanderSim frame loop without going through React renders.
  */
-import { DEFAULT_LANDER, GridTerrain, gradientAt, roughnessAt, slopeDegAt } from '../src/index.ts';
+import { DEFAULT_LANDER, gradientAt, roughnessAt, slopeDegAt } from '../src/index.ts';
 import type { Sim, SimInput, SiteTerrain, Vec2 } from '../src/index.ts';
 
 const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
@@ -31,12 +31,12 @@ export interface TopImage {
 }
 
 /** Hillshade of the area around `center`, with unsafe ground (slope or rocks over the limits) in red. */
-export function renderTopImage(site: SiteTerrain, center: Vec2, size = 440, mPerPx = 2): TopImage {
+export function renderTopImage(sim: Sim, site: SiteTerrain, center: Vec2, size = 440, mPerPx = 2): TopImage {
   const c = document.createElement('canvas');
   c.width = c.height = size;
   const g = c.getContext('2d')!;
   const img = g.createImageData(size, size);
-  const terr = new GridTerrain(site.heightmap);
+  const terr = sim.terrain; // includes generated boulders
   const hs = new Float32Array(size * size);
   let lo = Infinity;
   let hi = -Infinity;
@@ -61,8 +61,9 @@ export function renderTopImage(site: SiteTerrain, center: Vec2, size = 440, mPer
       const elev = hi > lo ? (hs[i] - lo) / (hi - lo) : 0.5;
       const k = shade * (0.55 + 0.45 * elev);
       const unsafe =
-        slopeDegAt(terr, wx(px), wy(py), legRadiusM) > limits.maxSlopeDeg ||
-        roughnessAt(terr, wx(px), wy(py), legRadiusM) > limits.maxRoughnessM;
+        slopeDegAt(terr.grid, wx(px), wy(py), legRadiusM) > limits.maxSlopeDeg ||
+        roughnessAt(terr.grid, wx(px), wy(py), legRadiusM) > limits.maxRoughnessM ||
+        terr.obstacleWithin(wx(px), wy(py), 0.5) > limits.maxRoughnessM;
       img.data[i * 4] = unsafe ? 230 : tint[0] * k;
       img.data[i * 4 + 1] = unsafe ? 70 : tint[1] * k;
       img.data[i * 4 + 2] = unsafe ? 60 : tint[2] * k;
@@ -190,7 +191,7 @@ export function createSideRenderer() {
       }
     }
 
-    const ground = sim.terrain.heightAt(s.position.x, s.position.y);
+    const ground = sim.terrain.baseHeightAt(s.position.x, s.position.y);
     const wantH = Math.min(1600, Math.max(45, s.altitudeAGL * 2.6 + 25));
     const wantBottom = ground - wantH * 0.18;
     if (!cam.init) Object.assign(cam, { x: s.position.x, zBottom: wantBottom, viewH: wantH, init: true });
@@ -261,7 +262,7 @@ export function createSideRenderer() {
       ctx.fill();
     }
     if (s.throttle > 0 && s.altitudeAGL < 30 && !s.done && !paused) {
-      const n = Math.ceil((1 - s.altitudeAGL / 30) * 6 * s.throttle * (1 + (input.interference?.dust ?? 0)));
+      const n = Math.ceil((1 - s.altitudeAGL / 30) * 6 * s.throttle * (1 + sim.telemetry().environment.interference.dust));
       for (let i = 0; i < n; i++) {
         const dir = Math.random() < 0.5 ? -1 : 1;
         particles.push({ x: s.position.x, z: ground + 0.2, vx: dir * (6 + Math.random() * 14), vz: Math.random() * 3, life: 0, max: 1.5 + Math.random() * 1.5, kind: 'dust' });
