@@ -4,6 +4,15 @@ The populated shared catalog is [`web/public/sites.json`](web/public/sites.json)
 See [integration, categories and rebuild commands](docs/SITE_CATALOG.md) and
 [ingested providers and data gaps](docs/DATA_SOURCES_AND_GAPS.md).
 
+## Mission-planner frontend
+
+The React/TypeScript application is in [`web/`](web/README.md), alongside the
+team's real Kilbourne terrain pack. It includes globe selection, Earth analog
+evidence, mission configuration, and JSON export. See
+[`web/INTEGRATION.md`](web/INTEGRATION.md) for the proposed physics/cutscene handoff.
+Descent execution now connects to Tim's engine in `app/sim/`, with real flight
+reports. Local 3D terrain inspection and JSON/text condition import are available.
+
 This repository turns targeted Earth, Moon, and Mars elevation rasters into
 small JSON terrain grids for a browser-based simulator or physics engine. Raw
 downloads stay outside Git; processed profiles retain source citations,
