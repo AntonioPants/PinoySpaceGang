@@ -36,6 +36,8 @@ export default function MoonGlobe({ points, selected, onSelect }: Props) {
     let viewer: Cesium.Viewer | undefined;
     let handler: Cesium.ScreenSpaceEventHandler | undefined;
     let disposed = false;
+    let firstTile = false;
+    const timeout = window.setTimeout(() => { if (!disposed && !firstTile) { setRenderStatus('Cesium did not load within 30 seconds'); setFailed(true); } }, 30000);
     const start = async () => {
       try {
         viewer = new Cesium.Viewer(host.current!, { globe: false, skyAtmosphere: false, skyBox: false, baseLayer: false, baseLayerPicker: false, geocoder: false, animation: false, timeline: false, sceneModePicker: false, homeButton: false, navigationHelpButton: false, selectionIndicator: false, infoBox: false });
@@ -44,7 +46,7 @@ export default function MoonGlobe({ points, selected, onSelect }: Props) {
         const tileset = await Cesium.Cesium3DTileset.fromIonAssetId(2684829, { enableCollision: true });
         if (disposed) { tileset.destroy(); return; }
         tileset.tileFailed.addEventListener(() => { if (!disposed) setRenderStatus('Some Cesium tiles failed to load'); });
-        tileset.initialTilesLoaded.addEventListener(() => { if (!disposed) setRenderStatus('Cesium Moon loaded'); });
+        tileset.tileVisible.addEventListener(() => { if (!disposed && !firstTile) { firstTile = true; window.clearTimeout(timeout); setRenderStatus('Detailed Cesium Moon · live terrain'); } });
         viewer.scene.primitives.add(tileset);
         for (const point of points) viewer.entities.add({ id: point.id, name: point.name, position: Cesium.Cartesian3.fromDegrees(point.lon, point.lat, 5000, Cesium.Ellipsoid.MOON), point: { pixelSize: 10, color: Cesium.Color.GOLD, outlineColor: Cesium.Color.BLACK, outlineWidth: 2, disableDepthTestDistance: 0 } });
         const point = points.find(p => p.id === selectedRef.current) ?? points[0];
@@ -57,7 +59,7 @@ export default function MoonGlobe({ points, selected, onSelect }: Props) {
       } catch (error) { if (!disposed) { setRenderStatus(`Cesium unavailable: ${error instanceof Error ? error.message : 'connection or graphics error'}`); setFailed(true); } }
     };
     void start();
-    return () => { disposed = true; handler?.destroy(); if (viewer && !viewer.isDestroyed()) viewer.destroy(); viewerRef.current = null; };
+    return () => { disposed = true; window.clearTimeout(timeout); handler?.destroy(); if (viewer && !viewer.isDestroyed()) viewer.destroy(); viewerRef.current = null; };
   }, [online, failed, points]);
   useEffect(() => {
     const viewer = viewerRef.current, point = points.find(p => p.id === selected);
@@ -65,6 +67,6 @@ export default function MoonGlobe({ points, selected, onSelect }: Props) {
     viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(point.lon, point.lat, 4500000, Cesium.Ellipsoid.MOON), duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1.2 });
     for (const entity of viewer.entities.values) if (entity.point) entity.point.color = new Cesium.ConstantProperty(entity.id === selected ? Cesium.Color.GOLD : Cesium.Color.WHITE);
   }, [selected, points]);
-  if (!online || failed) return <div className="moon-fallback"><Globe body="Moon" points={points} selected={selected} onSelect={onSelect} /><span className="moon-status" role="status">{!online ? 'Offline · reference Moon' : `${renderStatus} · reference Moon`}</span></div>;
+  if (!online || failed) return <div className="moon-fallback"><Globe body="Moon" points={points} selected={selected} onSelect={onSelect} /><span className="moon-status" role="status">Using old offline Moon model · {!online ? 'No network connection' : renderStatus}<button onClick={() => { setOnline(navigator.onLine); setFailed(false); }}>Retry Cesium</button></span></div>;
   return <div className="globe-view"><div ref={host} className="globe-canvas" aria-label="Cesium Moon. Drag to orbit; use the destination list to select a site." /><span className="globe-disclaimer">Cesium Moon · approximate site locators</span><span className="moon-status" role="status">{renderStatus}</span></div>;
 }
