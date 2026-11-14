@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FlightView, type CamMode, type FlightSetup } from '../../../app/flightlab/view';
 import { createManualPilot, createSim, keysToPilotInput } from '../../../app/sim/src/index';
 import type { FlightSummary, Sim, SimEvent, SimState } from '../../../app/sim/src/index';
-import { loadTerrainPack, peekTerrainPack, simToPack, type TerrainPack } from './cutscene';
+import { loadTerrainPack, peekTerrainPack, setSoundOn, simToPack, soundOn, type TerrainPack } from './cutscene';
 import { sceneEnv } from '../game/scenes/sceneEnv';
 import { toSimInput } from '../lib/simulation';
 import type { DescentProps } from './Descent2D';
@@ -24,7 +24,7 @@ export default function Descent3D({ mission, profile, entry, weather, autoStart 
     return p && p.manifest.id === mission.earthAnalog.id ? p : null;
   });
   const [started, setStarted] = useState(false), [paused, setPaused] = useState(false);
-  const [speed, setSpeed] = useState(1), [camera, setCamera] = useState<CamMode>('auto'), [muted, setMuted] = useState(true);
+  const [speed, setSpeed] = useState(1), [camera, setCamera] = useState<CamMode>('auto'), [muted, setMuted] = useState(() => !soundOn());
   const [hud, setHud] = useState<SimState | null>(null), [summary, setSummary] = useState<FlightSummary | null>(null);
   const [events, setEvents] = useState<SimEvent[]>([]), [error, setError] = useState('');
   const manual = mission.strategy.mode === 'MANUAL_CONTROL';
@@ -76,7 +76,8 @@ export default function Descent3D({ mission, profile, entry, weather, autoStart 
   }, [pack, mission, profile, entry, weather, manual]);
 
   const autoStarted = useRef(false);
-  useEffect(() => { if (autoStart && pack && !autoStarted.current) { autoStarted.current = true; launch(); } }, [autoStart, pack, launch]);
+  // before the first paint, so the descent opens on the dissolve from the cutscene, not on the launch card
+  useLayoutEffect(() => { if (autoStart && pack && !autoStarted.current) { autoStarted.current = true; launch(); } }, [autoStart, pack, launch]);
   // Unmounting drops the view, so a remount (React StrictMode mounts twice in development) must start
   // the flight again; with the terrain already cached, the first mount launches before that happens.
   useEffect(() => () => { view.current?.dispose(); view.current = null; autoStarted.current = false; }, []);
@@ -121,7 +122,7 @@ export default function Descent3D({ mission, profile, entry, weather, autoStart 
       {started && !summary && !error && <button className="subtle-button" onClick={() => setPaused(p => !p)}>{paused ? 'Resume' : 'Pause'}</button>}
       <label>Playback <select aria-label="Playback speed" value={speed} onChange={e => setSpeed(Number(e.target.value))}><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></label>
       <label>Camera <select aria-label="Camera" value={camera} onChange={e => setCamera(e.target.value as CamMode)}><option value="auto">Auto</option><option value="chase">Chase</option><option value="orbit">Orbit</option><option value="ground">Ground</option><option value="top">Top</option></select></label>
-      <button className="subtle-button" aria-pressed={!muted} onClick={() => setMuted(m => !m)}>{muted ? 'Sound on' : 'Sound off'}</button>
+      <button className="subtle-button" aria-pressed={!muted} onClick={() => setMuted(m => { setSoundOn(m); return !m; })}>{muted ? 'Sound on' : 'Sound off'}</button>
       {toolbarExtra}
     </div></div>
     <div className="flight-stage flight-stage-3d"><div ref={box} className="flight-3d" />

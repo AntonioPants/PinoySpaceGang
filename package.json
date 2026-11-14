@@ -7,6 +7,7 @@
     "dev": "npx -y pnpm@10 --dir web dev",
     "check": "npx -y pnpm@10 --dir web build && npx -y pnpm@10 --dir web test && npm --prefix app/sim test && npm --prefix app/sim run typecheck && node scripts/catalog/check-consumers.mjs",
     "preview": "npx -y pnpm@10 --dir web build && npx -y pnpm@10 --dir web preview",
-    "preview:docker": "docker compose up --build"
+    "preview:docker": "docker compose up --build",
+    "check:data": "python -m pytest -q"
   }
 }

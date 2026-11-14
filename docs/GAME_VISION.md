@@ -58,10 +58,11 @@ an Earth field test. Never silently switch physics because a scene changes locat
   (the choice is remembered), and the automatic choice when 3D cannot start. With reduced
   motion the 3D view still opens and a note points to the calmer 2D view.
 - Furgan's opening cutscene is registered as `earthApproach` (adapter in
-  `web/src/game/scenes/`) and hands over at the simulation's start state. Sound starts off. With reduced motion a
+  `web/src/game/scenes/`) and hands over at the simulation's start state. Sound starts on. With reduced motion a
   still card is shown first, with the option to play the cinematic anyway.
-  `liftoff` is a short departure shot (`scenes/DepartureScene.tsx`, the bridge-window space
-  seen from outside; illustrative). `planetaryArrival` remains null and is skipped. The standalone test bench is
+  `liftoff` is Furgan's blast-off cutscene (`scenes/LiftoffScene.tsx`: ignition, dust blast and
+  climb from Earth, since the test flight takes off and lands on Earth; illustrative). Scenes
+  dissolve into each other from the previous scene's last frame. `planetaryArrival` remains null and is skipped. The standalone test bench is
   still available with `?cutscene-demo`.
 - All earlier planner controls remain available as initial setup/debug controls.
   When the 3D interior is ready, preserve the console as an accessibility fallback.
@@ -122,8 +123,13 @@ the gravity the descent will fly (caution below 1; it is a valid experiment that
 probably crash), weather profile present when modelled weather is selected (hold if not).
 It only reports. The parent still validates and locks the mission at launch.
 
+**Phones.** Below 760 px the same bridge runs in a compact mode: the 3D monitors are dark glass
+and the station's page opens as a sheet over the view (a page on the 3D screen would be too
+small to use). Stations and the pilot seat are reached by tapping the toolbar; dragging looks
+around.
+
 **Fallback.** "Use flat console" switches to `SystemsConsole`, and it is used automatically
-when WebGL cannot start or the window is narrower than 760 px. Settings carry over both ways.
+when WebGL cannot start. Settings carry over both ways.
 
 **Look.** The bridge should read as an engineered crew cabin (Orion, Dragon, ISS, Shuttle
 flight deck), not neon sci-fi. Keep to these rules when adding to it:

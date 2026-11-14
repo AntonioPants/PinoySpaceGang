@@ -29,8 +29,14 @@ Most "it works for them but not for me" cases have been one of these:
 ## Before you push
 
 Run `npm run check`. CI runs the same on every push and pull request and shows a red cross on
-the commit if it fails. The Python data pipeline is tested separately (`pip install -r
-requirements-dev.txt && python -m pytest`) and also runs in CI.
+the commit if it fails.
+
+The Python data pipeline is tested separately and also runs in CI. Use Python 3.12 (3.14 has to
+compile several dependencies and takes very long):
+
+    python3.12 -m venv .venv
+    .venv/bin/pip install -r requirements-dev.txt     # Windows: .venv\\Scripts\\pip
+    .venv/bin/python -m pytest -q
 
 Useful addresses while developing: `/?planner` (engineering planner), `/?cutscene-demo`
 (cutscene bench), `/?moon` (Moon explorer).

@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { LanderSpec } from "./lander";
 import { CutsceneEngine, type CutsceneKind } from "./engine";
 import type { FlightLike, StartState } from "./flight";
 import type { CutsceneEnv, EndingParams } from "./presets";
-import { loadTerrainPack, simToPack, type TerrainPack } from "./terrainPack";
+import { loadTerrainPack, peekTerrainPack, simToPack, type TerrainPack } from "./terrainPack";
 
 interface Props {
   /** Game scenes render to the entire host viewport without forced aspect ratio. */
@@ -39,7 +39,8 @@ export default function Cutscene({ kind, env, flight, start, target, params, ter
   const engine = useRef<CutsceneEngine | null>(null);
   const done = useRef(onDone); done.current = onDone;
   const play = useRef<EndingParams>({}); play.current = { ...params, flight, start, target };
-  const [loaded, setLoaded] = useState<TerrainPack | null>(null);
+  // a pack loaded by an earlier scene is used at once, with no loading frame
+  const [loaded, setLoaded] = useState<TerrainPack | null>(() => (terrainUrl ? peekTerrainPack(terrainUrl) : null));
   const [failed, setFailed] = useState(false);
   const pack = terrain ?? loaded;
   const wrongPack = !!(pack && requiredTerrainId && pack.manifest.id !== requiredTerrainId);
@@ -52,12 +53,14 @@ export default function Cutscene({ kind, env, flight, start, target, params, ter
   useEffect(() => {
     if (terrain || !terrainUrl) return;
     const ctl = new AbortController();
-    setFailed(false); setLoaded(null);
+    setFailed(false); setLoaded(peekTerrainPack(terrainUrl));
     loadTerrainPack(terrainUrl, ctl.signal).then(p => { if (!ctl.signal.aborted) setLoaded(p); }).catch(() => { if (!ctl.signal.aborted) setFailed(true); });
     return () => ctl.abort();
   }, [terrain, terrainUrl]);
 
-  useEffect(() => {
+  // Before the first paint: the screen keeps the previous scene until this one can draw (its first
+  // frame is the previous scene's last, dissolving), so an empty black box is never shown.
+  useLayoutEffect(() => {
     if (!box.current || waiting || (requiredTerrainId && (!pack || wrongPack))) return;
     const e = new CutsceneEngine(box.current, JSON.parse(envKey) as CutsceneEnv,
       { muted, showSkip, letterbox: !fullscreen, equipment: JSON.parse(equipKey) ?? undefined, terrain: pack ?? undefined, landing: JSON.parse(landKey) ?? undefined });

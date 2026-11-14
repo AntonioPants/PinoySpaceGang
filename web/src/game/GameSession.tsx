@@ -1,12 +1,12 @@
-import { Component, lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Component, lazy, startTransition, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
 import type { EnvironmentProfile } from '../../../app/lib/environment.mjs';
 import type { FlightTelemetry } from '../../../app/sim/src/types';
 import type { CatalogSite } from '../../../app/sim/src/catalog';
 import { buildMission, validateSettings } from '../lib/mission';
-import { toSimInput } from '../lib/simulation';
+import { flightSetup, toSimInput } from '../lib/simulation';
 import type { MissionConfig, MissionSettings, PlanetarySite, TerrainProfile } from '../lib/types';
 import { completePhase, nextPhase, type GamePhase } from './contracts';
-import { gameIntegrations } from './integrations';
+import { gameIntegrations, preloadScenes } from './integrations';
 import { loadoutFor } from './equipment';
 import SystemsConsole from './SystemsConsole';
 
@@ -40,7 +40,21 @@ export default function GameSession({ initialMission, settings: initialSettings,
   }, []);
   useEffect(() => { if (phase === 'report' && flight && !reported.current) { reported.current = true; onReport(flight, mission, settings); } }, [phase, flight, mission, settings, onReport]);
   const exit = () => onExit(settings);
-  const complete = (expected: GamePhase) => setPhase(current => completePhase(current, expected, gameIntegrations));
+  useEffect(preloadScenes, []);
+  // The Earth site's terrain is loaded and painted in the background from the bridge on, so the
+  // Earth approach and the descent start without a freeze.
+  useEffect(() => {
+    const ctl = new AbortController(), url = mission.earthAnalog.terrainBaseUrl;
+    if (url) void import('../components/cutscene').then(async c => {
+      const pack = await c.loadTerrainPack(url, ctl.signal);
+      const { prepareTerrain } = await import('../components/cutscene/terrain');
+      await prepareTerrain(pack, c.simToPack(pack, flightSetup(mission).target ?? { x: 0, y: 0 }), 7, ctl.signal);
+    }).catch(() => { /* the scenes paint it themselves */ });
+    return () => ctl.abort();
+  }, [mission]);
+  // As a transition: the current scene stays on screen until the next one is ready to draw, so a
+  // scene change never passes through a loading message or an empty screen.
+  const complete = (expected: GamePhase) => startTransition(() => setPhase(current => completePhase(current, expected, gameIntegrations)));
   const sceneProps = { mission, reducedMotion, immersive, onExit: exit, onComplete: () => complete(phase) };
   function launch() {
     try {
@@ -59,7 +73,7 @@ export default function GameSession({ initialMission, settings: initialSettings,
   const Outcome = gameIntegrations.outcome;
   const fallback = <section className="systems-console"><h2>Scene unavailable</h2><p>The cinematic could not be displayed. Your mission is preserved.</p><button className="primary-button" onClick={sceneProps.onComplete}>Continue mission</button><button className="text-button" onClick={exit}>Return to equipment</button></section>;
   return <div className={`game-session${immersive ? ' immersive-game-session' : ''}`} data-phase={phase}>
-    <Suspense fallback={<p role="status">Loading mission systems…</p>}>
+    <Suspense fallback={<p role="status" className="late-status">Loading mission systems…</p>}>
       {phase === 'controlCenter' && <SceneBoundary fallback={<SystemsConsole {...consoleProps} />}><ControlCenter {...consoleProps} /></SceneBoundary>}
       {Cinematic && <SceneBoundary key={phase} fallback={fallback}><Cinematic {...sceneProps} /><button className="subtle-button scene-skip" onClick={sceneProps.onComplete}>Skip cinematic</button></SceneBoundary>}
       {phase === 'descent' && <Descent mission={mission} profile={profile} entry={entry} weather={weather} autoStart onExit={exit} onReport={report => { setFlight(report); complete('descent'); }} />}

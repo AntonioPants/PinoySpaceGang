@@ -9,13 +9,10 @@ from .accuracy import site_samples, audit_pair
 from .scoring import FEATURES
 from . import analog_score, terrain_features
 
-VERSION = '2.0.0'
+VERSION = '2.1.0'
 TOP_K = 10
-# Exploratory candidates must reach this analog score (landform family + terrain) to be listed.
-# A site from an unrelated landform family can reach at most 50. At 70 a same-family site
-# needs a terrain match of at least 40 and a related-family site at least 90.
-# Literature-informed proposals are always kept.
-MIN_EXPLORATORY_SCORE_PERCENT = 70.0
+# No minimum score cutoff: rank eligible terrain and retain ten per target.
+MIN_EXPLORATORY_SCORE_PERCENT = 0.0
 ENVIRONMENT = {
     'wind_speed_10m': ('m/s', 10.0),
     'air_temperature_2m': ('K', 100.0),
@@ -203,9 +200,6 @@ def attach_matching(catalog, public, *, exhaustive=False, sample_cache=None):
             upper=round(score['analog_score_percent'],4)
             screen['central_upper_bound_percent']=upper
             proposed=(site['id'],target['id']) in proposals
-            if not proposed and upper < MIN_EXPLORATORY_SCORE_PERCENT:
-                screen.update(status='filtered',reason=f'Exploratory analog score below the {MIN_EXPLORATORY_SCORE_PERCENT:g}% cutoff.')
-                continue
             candidates.append(((not proposed,-upper,site['id']),site,screen,score))
         for optimistic,site,screen,score in sorted(candidates,key=lambda c:c[0]):
             # The analog score is the rank score, so skip the detailed audit only
@@ -235,8 +229,8 @@ def attach_matching(catalog, public, *, exhaustive=False, sample_cache=None):
         'weights':{'terrain':0.5,'environment':0.5},
         'environment_weights':{key:0.25 for key in ENVIRONMENT},
         'weight_status':'engineering_assumption_not_calibrated',
-        'ranking_method':'Literature-informed proposals first; then descending analog score (landform family + central-window terrain); stable site ID breaks ties. Exploratory candidates below the score cutoff are not listed. Ranking is not a total-environment ranking.',
-        'selection':{'top_k':TOP_K,'min_exploratory_score_percent':MIN_EXPLORATORY_SCORE_PERCENT,'algorithm':'Data/scale eligibility filter, analog score with exploratory cutoff, top-k ranking with window-sensitivity audit.',
+        'ranking_method':'Literature-informed proposals first; then descending analog score (landform family + central-window terrain); stable site ID breaks ties. No minimum score cutoff is applied. Ranking is not a total-environment ranking.',
+        'selection':{'top_k':TOP_K,'min_exploratory_score_percent':MIN_EXPLORATORY_SCORE_PERCENT,'algorithm':'Data/scale eligibility filter, analog score without a minimum cutoff, top-k ranking with window-sensitivity audit.',
             'potential_pairs':len(earth)*len(targets), 'detailed_pairs':detailed,
             'reused_proposal_audits':reused,'pruned_pairs':sum(s['status']=='pruned' for s in screening),
             'filtered_pairs':sum(s['status']=='filtered' for s in screening),

@@ -8,7 +8,8 @@ import { buildTerrain, type Boulder, type Terrain } from "./terrain";
 import type { TerrainPack } from "./terrainPack";
 
 /** "ending" replays `params.flight`; "success" and "crash" are stand-ins for when there is no flight yet. */
-export type CutsceneKind = "opening" | "ending" | "success" | "crash";
+/** "liftoff" is the departure: ignition, dust blast, climb, in the gravity and air of the env's preset. */
+export type CutsceneKind = "opening" | "liftoff" | "ending" | "success" | "crash";
 export interface EngineOptions {
   muted?: boolean; showSkip?: boolean;
   letterbox?: boolean;                   // cinema bars top and bottom (default true)
@@ -19,7 +20,23 @@ export interface EngineOptions {
 }
 
 const DURATION_OPENING = 9.6;
+const DURATION_LIFTOFF = 8.5;
 const TAIL: Record<FlightOutcome, number> = { success: 6.5, "hard-landing": 6.5, "tip-over": 6, crash: 7, timeout: 3 };
+// Scene changes dissolve instead of cutting: a scene that ends leaves its last frame here, and the
+// next scene (cutscene, departure shot or live descent) starts under that still and fades it out.
+let handoff: { url: string; at: number } | null = null;
+/** Keeps `canvas`'s current frame for the next scene. Call it right after rendering that frame. */
+export function leaveHandoff(canvas: HTMLCanvasElement) {
+  try { handoff = { url: canvas.toDataURL("image/jpeg", 0.9), at: performance.now() }; } catch { handoff = null; }
+}
+/** The previous scene's last frame, if it ended moments ago. */
+export function peekHandoff(): string | null {
+  return handoff && performance.now() - handoff.at < 15000 ? handoff.url : null;
+}
+/** The still has been dissolved: the next scene change starts fresh. */
+export function clearHandoff() { handoff = null; }
+const DISSOLVE = 0.9;
+
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
@@ -102,7 +119,8 @@ export class CutsceneEngine {
   protected t = 0; protected last = 0; protected raf = 0;
   protected finish: (() => void) | null = null;
   protected ro: ResizeObserver;
-  protected ui: { root: HTMLDivElement; title: HTMLDivElement; sub: HTMLDivElement; cap: HTMLDivElement; flash: HTMLDivElement; fade: HTMLDivElement; skip: HTMLButtonElement };
+  protected ui: { root: HTMLDivElement; title: HTMLDivElement; sub: HTMLDivElement; cap: HTMLDivElement; flash: HTMLDivElement; fade: HTMLDivElement; skip: HTMLButtonElement; cover: HTMLDivElement };
+  protected coverAge = -1;                // < 0: the cover (previous scene's still, or black) has gone
   protected disposed = false;
 
   constructor(protected container: HTMLElement, protected env: CutsceneEnv, opts: EngineOptions = {}) {
@@ -160,6 +178,10 @@ export class CutsceneEngine {
     // fireball does not stall on shader compilation (a visible freeze on integrated GPUs).
     const hidden = [this.lander.group, this.lander.flame, this.fireball, this.scorch, this.targetRing].filter((o) => !o.visible);
     hidden.forEach((o) => { o.visible = true; }); this.renderer.compile(this.scene, this.camera); hidden.forEach((o) => { o.visible = false; });
+    // Until it runs, the scene sits under a cover: the last frame of the scene before it, or black.
+    const still = peekHandoff();
+    if (still) this.ui.cover.style.backgroundImage = `url("${still}")`;
+    this.coverAge = 0;
   }
 
   /** Plays a cutscene. Resolves when it ends or is skipped. Endings keep animating until the next play()/dispose(). */
@@ -171,7 +193,7 @@ export class CutsceneEngine {
     cancelAnimationFrame(this.raf);
     this.raf = requestAnimationFrame(this.tick);
     return new Promise<void>((resolve) => {
-      this.finish = () => { this.finish = null; this.ui.skip.style.display = "none"; if (kind === "opening") this.audio.setThrust(0); resolve(); };
+      this.finish = () => { this.finish = null; this.ui.skip.style.display = "none"; if (kind === "opening" || kind === "liftoff") this.audio.setThrust(0); resolve(); };
     });
   }
 
@@ -179,8 +201,20 @@ export class CutsceneEngine {
 
   protected begin(kind: CutsceneKind, params: EndingParams) {
     this.resetScene(); this.kind = kind; this.params = params; this.t = 0; this.prevPos.set(0, 0, 0);
-    this.track = null; this.duration = DURATION_OPENING;
+    this.track = null; this.duration = DURATION_OPENING; this.dustLevel = 1;
     if (kind === "opening") return;
+    if (kind === "liftoff") {
+      // the site's own gravity and air: a vacuum plume and a ballistic dust sheet on the Moon
+      this.duration = DURATION_LIFTOFF;
+      this.gravity = this.env.preset === "lunar" ? 1.62 : this.env.preset === "mars" ? 3.71 : 9.81;
+      this.air = this.env.preset === "lunar" ? 0 : this.env.preset === "mars" ? 0.02 : 1.2;
+      this.dustLevel = 0.75;
+      // no rock between the camera and the pad
+      const path: THREE.Vector3[] = [];
+      for (let i = 0; i <= 24; i++) path.push(this.liftoffCam(i / 24 * DURATION_LIFTOFF));
+      this.clearRocks(path, 7);
+      return;
+    }
     const flight = kind === "ending" && params.flight?.summary && params.flight.samples.length > 1
       ? params.flight : standInFlight(kind === "crash" ? "crash" : "success", params);
     this.track = this.buildTrack(flight);
@@ -255,17 +289,25 @@ export class CutsceneEngine {
     this.step(dt);
     this.render();
     if (this.kind && this.kind !== "live" && this.t >= this.duration && this.finish) {
-      const ending = this.kind !== "opening";
+      const ending = this.kind !== "opening" && this.kind !== "liftoff";
+      if (!ending) leaveHandoff(this.renderer.domElement);     // the next scene dissolves from this frame
       this.finish();
-      if (!ending) { this.kind = null; return; }      // opening stops on black; endings keep smouldering
+      if (!ending) { this.kind = null; return; }      // opening and liftoff hold their last frame; endings keep smouldering
     }
     this.raf = requestAnimationFrame(this.tick);
   };
 
   protected step(dt: number) {
     this.t += dt; this.frameDt = dt;
+    if (this.coverAge >= 0) {                     // dissolve from the previous scene
+      this.coverAge += dt;
+      const u = this.coverAge / DISSOLVE;
+      this.ui.cover.style.opacity = String(1 - easeInOut(u));
+      if (u >= 1) { this.coverAge = -1; this.ui.cover.style.display = "none"; clearHandoff(); }
+    }
     if (this.kind === "live") this.live(dt);
     else if (this.kind === "opening") this.opening(this.t, dt);
+    else if (this.kind === "liftoff") this.liftoff(this.t, dt);
     else if (this.kind) this.ending(this.t, dt);
     this.updateDebris(dt); this.updateRings(dt);
     this.fire.update(dt); this.smoke.update(dt);
@@ -360,32 +402,37 @@ export class CutsceneEngine {
     const S = V(sx, this.terrain.heightAt(sx, sz) + sp.z, sz), vel = V(sv.x, sv.z, -sv.y);
     const dir = vel.lengthSq() > 1 ? vel.clone().normalize() : V(0, -1, 0);
     const back = V(-vel.x, 0, -vel.z); if (back.lengthSq() < 1) back.set(-1, 0, 0); back.normalize();
-    const P = S.clone().addScaledVector(vel, t - END);          // straight line at the hand-over velocity
-    const camGround = V(46, this.terrain.heightAt(46, 96) + 2.4, 96);
-    if (t < 3.2) {                                              // A: entry streak seen from the landing site
-      const u = t / 3.2;
-      L.visible = false;
-      const p = S.clone().addScaledVector(dir, -lerp(3000, 1100, u));
-      const d = p.distanceTo(camGround) / 900;                  // keep the streak readable at any range
-      this.fireball.visible = true; this.fireball.position.copy(p); this.fireball.scale.setScalar(d * lerp(1.6, 1, u) * (0.9 + Math.random() * 0.2));
-      this.acc.trail += dt * 260;
+    // The lander arrives along its hand-over line. Before 3.2 s it is still braking out of the entry
+    // (extra distance that shrinks to nothing with zero slope), so speed and position are seamless.
+    const ENTRY = 3.2, ue = clamp01(t / ENTRY), extra = 1400 * Math.pow(1 - ue, 3);
+    const P = S.clone().addScaledVector(vel, t - END).addScaledVector(dir, -extra);
+    const behind = Math.atan2(back.z, back.x);
+    if (t < ENTRY) {                                            // A: entry, glowing, seen from the side and below
+      const u = easeInOut(ue);
+      L.visible = true; L.position.copy(P); this.orient(V(-back.x, 0, -back.z), 0.2);
+      this.thrust(0, dt);
+      const glow = Math.pow(1 - ue, 1.4);
+      this.fireball.visible = glow > 0.04; this.fireball.position.copy(P).add(V(0, 2, 0));
+      this.fireball.scale.setScalar(glow * 1.7 * (0.92 + Math.random() * 0.16));
+      const cam = P.clone().add(V(Math.cos(behind + lerp(1.5, -0.9, u)) * lerp(320, 27, u), lerp(-140, 11, u), Math.sin(behind + lerp(1.5, -0.9, u)) * lerp(320, 27, u)));
+      const d = Math.max(0.3, P.distanceTo(cam) / 300);       // plasma trail sized to stay readable at range
+      this.acc.trail += dt * 260 * glow;
       while (this.acc.trail >= 1) {
         this.acc.trail--;
-        this.fire.emit({ pos: p.clone().add(V(rnd(-3, 3), rnd(-3, 3), rnd(-3, 3)).multiplyScalar(d)), vel: V(rnd(-6, 6), rnd(2, 14), rnd(-6, 6)).multiplyScalar(d),
-          life: rnd(0.6, 1.6), size: [rnd(10, 18) * d, 3 * d], color: [1, 0.55, 0.16, 0.5], colorEnd: [0.8, 0.12, 0.0, 0] });
-        if (Math.random() < 0.3) this.smoke.emit({ pos: p.clone(), vel: V(rnd(-3, 3), rnd(0, 5), rnd(-3, 3)).multiplyScalar(d), life: rnd(2, 3.5), size: [8 * d, 26 * d], color: [0.85, 0.85, 0.85, 0.28] });
+        this.fire.emit({ pos: P.clone().add(V(rnd(-3, 3), rnd(-1, 4), rnd(-3, 3)).multiplyScalar(d)), vel: back.clone().multiplyScalar(rnd(10, 40)).add(V(rnd(-4, 4), rnd(2, 14), rnd(-4, 4))).multiplyScalar(d),
+          life: rnd(0.5, 1.3), size: [rnd(8, 14) * d, 3 * d], color: [1, 0.55, 0.16, 0.5], colorEnd: [0.8, 0.12, 0.0, 0] });
+        if (Math.random() < 0.3) this.smoke.emit({ pos: P.clone(), vel: V(rnd(-3, 3), rnd(0, 5), rnd(-3, 3)).multiplyScalar(d), life: rnd(2, 3.5), size: [6 * d, 20 * d], color: [0.85, 0.85, 0.85, 0.22] });
       }
-      const from = V(0, h0 + 250, 0).lerp(p, 0.25);
-      this.setCam(camGround, from.lerp(p, easeInOut(u)));
-      this.audio.setThrust(0.25 + u * 0.3);
+      this.setCam(cam, P.clone().add(V(0, 2, 0)));
+      this.audio.setThrust(0.12 + 0.45 * glow);
+      this.trauma = Math.max(this.trauma, 0.1 + 0.2 * glow);
       if (t > 0.5) this.caption(this.env.name, this.env.subtitle ?? "Earth analog test flight");
-      this.ui.fade.style.opacity = String(clamp01((t - 3.0) / 0.2));              // quick dip to black into the next shot
+      if (!this.flags.whoosh) { this.flags.whoosh = true; this.audio.whoosh(2.6, 0.6); }
     } else {
       // B: one continuous shot. It swings from beside the lander round behind it, rises, and settles
       // on exactly the chase framing the live descent view opens with (app/flightlab/view.ts:
       // behind the direction of travel, 34 m out, 0.32 rad up), so the hand-over has no jump.
       const s1 = easeInOut((t - 3.2) / 3.4), s2 = easeInOut((t - 5.8) / (END - 0.35 - 5.8));
-      this.ui.fade.style.opacity = String(clamp01(1 - (t - 3.2) / 0.22));       // in from the dip at the scene change
       this.fireball.visible = false; L.visible = true;
       L.position.copy(P); this.orient(V(-back.x, 0, -back.z), lerp(0.2, 0.06, s1));
       const lit = t > 7.5;
@@ -394,7 +441,6 @@ export class CutsceneEngine {
       if (!lit) this.audio.setThrust(0.12);
       this.targetRing.visible = t > 6.6; this.targetRing.position.set(0, h0 + 1.5, 0);
       this.targetRing.scale.setScalar(Math.max(18, P.distanceTo(V(0, h0, 0)) * 0.05) * (1 + 0.12 * Math.sin(t * 5)));
-      const behind = Math.atan2(back.z, back.x);
       const EL = 0.32, DIST = 34;
       const az = lerp(behind + lerp(-0.9, 0.5, s1), behind, s2);
       const r = lerp(lerp(27, 17, s1), DIST * Math.cos(EL), s2), y = lerp(lerp(11, 2, s1), DIST * Math.sin(EL), s2);
@@ -403,9 +449,59 @@ export class CutsceneEngine {
       this.trauma = Math.max(this.trauma, lit ? 0.16 : lerp(0.1, 0.06, s2));
       if (t > 4.2 && t < 7.6) this.caption("", "");
       if (t > 7.6) this.caption("Descent simulation", `Altitude ${Math.round(sp.z)} m · you have control`);
-      // a short dip to black: the descent view fades in from black on the same framing
-      if (t > 3.6) this.ui.fade.style.opacity = String(clamp01((t - (END - 0.4)) / 0.35));
+      // no fade out: the live descent dissolves from this last frame on the same framing
     }
+  }
+
+  /** Liftoff: the lander on its pad lights up, blasts the dust away and climbs out. */
+  protected liftoff(t: number, dt: number) {
+    const L = this.lander.group, h0 = this.terrain.heightAt(0, 0), END = DURATION_LIFTOFF;
+    const IGNITE = 1.4, RISE = 1.9, A = 7;                      // s, s, m/s^2 climb
+    const up = t > RISE ? 0.5 * A * (t - RISE) ** 2 : 0, pitch = easeInOut((t - 4.8) / 3);
+    const east = t > 4.8 ? 0.5 * 2.2 * (t - 4.8) ** 2 : 0;    // pitches over towards the transfer burn
+    L.visible = true; L.position.set(east, h0 + up, 0);
+    this.orient(V(1, 0, 0), 0.32 * pitch);
+    const throttle = t < IGNITE ? 0 : Math.min(1, (t - IGNITE) / 0.5);
+    if (t >= IGNITE && !this.flags.lit) {
+      this.flags.lit = true; this.audio.thud(); this.trauma = 0.7;
+      this.flashLight.position.set(0, h0 + 1, 0); this.flashLight.intensity = 700;
+      this.dustPuff(V(0, h0, 0), 140, 28);
+    }
+    if (t < RISE && throttle > 0) this.trauma = Math.max(this.trauma, 0.45);        // straining on the pad
+    this.thrust(throttle, dt);
+    if (throttle > 0) this.trauma = Math.max(this.trauma, 0.12 + 0.25 * clamp01(1 - up / 60));
+    const u = easeInOut((t - 3) / (END - 3));
+    this.setCam(this.liftoffCam(t), L.position.clone().add(V(0, lerp(2.4, 1.2, u), 0)));
+    if (t > 0.3 && t < 3.6) this.caption(this.env.name, this.env.subtitle ?? "Departure");
+    else if (t > 5.2) this.caption("Liftoff", "Leaving the surface");
+    else this.caption("", "");
+  }
+
+  /**
+   * Liftoff camera: low beside the pad, then up out of the dust sheet as the engine lights, and
+   * back and up after the climbing lander. The sun is behind it, so the lander is lit, not a silhouette.
+   */
+  protected liftoffCam(t: number) {
+    const h0 = this.terrain.heightAt(0, 0), sunSide = Math.atan2(this.sunDir.z, this.sunDir.x);
+    const u = easeInOut((t - 3) / (DURATION_LIFTOFF - 3)), a = sunSide + 0.55 - 0.25 * u, r = lerp(19, 40, u);
+    const cx = Math.cos(a) * r, cz = Math.sin(a) * r;
+    const y = h0 + 1.8 + 6 * easeInOut((t - 1.3) / 1.8) + 10 * u;
+    return V(cx, Math.max(y, this.terrain.heightAt(cx, cz) + 1.6), cz);
+  }
+
+  /** Hides the scattered rocks within `radius` metres (horizontally) of any of `points`. */
+  protected clearRocks(points: THREE.Vector3[], radius: number) {
+    const m = new THREE.Matrix4(), zero = new THREE.Matrix4().makeScale(0, 0, 0);
+    this.terrain.group.traverse((o) => {
+      const im = o as THREE.InstancedMesh;
+      if (!im.isInstancedMesh) return;
+      for (let i = 0; i < im.count; i++) {
+        im.getMatrixAt(i, m);
+        const x = m.elements[12], z = m.elements[14];
+        if (points.some((p) => Math.hypot(p.x - x, p.z - z) < radius)) im.setMatrixAt(i, zero);
+      }
+      im.instanceMatrix.needsUpdate = true;
+    });
   }
 
   /** Ending: replays the last seconds of the flight, then plays what the outcome calls for. */
@@ -660,6 +756,7 @@ export class CutsceneEngine {
     };
     const root = el("div", "position:absolute;inset:0;pointer-events:none;overflow:hidden;font-family:ui-sans-serif,system-ui,sans-serif;color:#fff", this.container);
     const bar = "position:absolute;left:0;right:0;height:9%;background:#000";
+    const cover = el("div", "position:absolute;inset:0;background:#000 center/cover no-repeat", root);
     const flash = el("div", "position:absolute;inset:0;background:#fff;opacity:0", root);
     if (letterbox) { el("div", bar + ";top:0", root); el("div", bar + ";bottom:0", root); }
     const fade = el("div", "position:absolute;inset:0;background:#000;opacity:0", root);
@@ -669,7 +766,7 @@ export class CutsceneEngine {
     const skip = el("button", "position:absolute;right:3%;bottom:11%;pointer-events:auto;display:none;background:rgba(0,0,0,.45);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:6px 14px;font:inherit;font-size:13px;letter-spacing:.1em;cursor:pointer", root);
     skip.textContent = "SKIP ▸"; skip.onclick = () => this.skip();
     if (!showSkip) skip.style.visibility = "hidden";
-    return { root, title, sub, cap, flash, fade, skip };
+    return { root, title, sub, cap, flash, fade, skip, cover };
   }
 
   protected caption(title: string, sub: string) {

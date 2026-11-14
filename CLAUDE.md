@@ -17,7 +17,7 @@ planetary ship environment, configure conditions on interactive ship screens,
 launch, transition to Earth descent, and debrief the actual physics outcome.
 
 The game opens on a title screen and runs full-screen: worlds, region, Earth test site,
-equipment bay, Tim's third-person ship bridge (`web/src/game/interior/`), a departure shot,
+equipment bay, Tim's third-person ship bridge (`web/src/game/interior/`), Furgan's liftoff,
 Furgan's Earth-approach cutscene, the live 3D descent and the debrief. The old planner is at
 `?planner`; the flat console is the bridge's fallback. Register scenes with
 web/src/game/integrations.ts; see contracts.ts in that directory. Do not duplicate the
@@ -58,8 +58,8 @@ open the web app with `?cutscene-demo`. His opening cutscene plays as `earthAppr
 view flies the descent and its ending (`web/src/components/Descent3D.tsx`). His Flight
 Lab (live 3D descent with sliders) is in `app/flightlab/`: `npm install && npm run build` writes
 `dist/flight-lab.html`. Prebuilt previews are in `docs/previews/`.
-The game registry has arrival, liftoff, Earth approach and outcome slots: liftoff is a short
-departure shot (`web/src/game/scenes/DepartureScene.tsx`), Earth approach is Furgan's cutscene,
+The game registry has arrival, liftoff, Earth approach and outcome slots: liftoff is Furgan's
+blast-off from Earth (`web/src/game/scenes/LiftoffScene.tsx`), Earth approach is Furgan's cutscene,
 arrival is still empty, and outcome is null because the 3D descent plays the ending.
 
 ## Team roles and ownership

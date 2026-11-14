@@ -31,7 +31,7 @@ describe('game scene handoffs', () => {
 });
 
 describe('registered scenes', () => {
-  it('plays the departure and the Earth approach before the descent, whose 3D view carries the ending', async () => {
+  it('lifts off, plays the Earth approach, then the descent, whose 3D view carries the ending', async () => {
     const { gameIntegrations } = await import('./integrations');
     const phases: GamePhase[] = [];
     let phase = nextPhase(null, gameIntegrations);

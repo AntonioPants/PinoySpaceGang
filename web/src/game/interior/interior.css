@@ -104,3 +104,19 @@
 .launch-start:hover { background: #fff; }
 .launch-stand { font: inherit; font-size: 15px; padding: 10px; color: var(--ink); background: transparent; border: 1px solid #3d444d; border-radius: 4px; cursor: pointer; }
 .launch-stand:hover { border-color: #8a939c; }
+
+/* ---- phones: same bridge, but a monitor's page opens as a sheet (a page on the 3D screen would be unreadable) */
+button.cabin-prompt { font: inherit; font-size: 14px; cursor: pointer; }
+button.cabin-prompt:hover { border-color: #8a939c; }
+.ship-interior.compact .cabin-toolbar { padding: 10px 12px; gap: 8px; }
+.ship-interior.compact .cabin-toolbar small, .ship-interior.compact kbd { display: none; }
+.ship-interior.compact .cabin-toolbar .subtle-button { padding: 8px 9px; font-size: 12px; }
+.ship-interior.compact .cabin-hint { font-size: 11px; padding: 8px 12px; }
+.cabin-sheet { left: 0; right: 0; bottom: 0; max-height: 64%; overflow: auto; padding: 16px 16px 20px; font-size: 15px; border-top: 1px solid #4a525b; box-shadow: 0 -12px 30px #000a; }
+.cabin-sheet header { margin-bottom: 12px; padding-bottom: 10px; }
+.cabin-sheet h2 { font-size: 22px; }
+.cabin-sheet .mon-columns { grid-template-columns: 1fr; }
+.cabin-sheet .mon-facts dd { font-size: 17px; }
+.cabin-sheet .launch-stand { width: 100%; margin-top: 12px; }
+.ship-interior.compact .launch-menu { left: 12px; right: 12px; top: auto; bottom: 12px; transform: none; width: auto; }
+.ship-interior.compact .cabin-prompt { bottom: 118px; }
