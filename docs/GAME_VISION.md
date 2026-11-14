@@ -60,7 +60,8 @@ an Earth field test. Never silently switch physics because a scene changes locat
 - Furgan's opening cutscene is registered as `earthApproach` (adapter in
   `web/src/game/scenes/`) and hands over at the simulation's start state. Sound starts off. With reduced motion a
   still card is shown first, with the option to play the cinematic anyway.
-  `liftoff` and `planetaryArrival` remain null and are skipped. The standalone test bench is
+  `liftoff` is a short departure shot (`scenes/DepartureScene.tsx`, the bridge-window space
+  seen from outside; illustrative). `planetaryArrival` remains null and is skipped. The standalone test bench is
   still available with `?cutscene-demo`.
 - All earlier planner controls remain available as initial setup/debug controls.
   When the 3D interior is ready, preserve the console as an accessibility fallback.
