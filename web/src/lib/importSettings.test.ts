@@ -12,7 +12,7 @@ describe('condition import',()=>{
   });
   it('imports partial settings and retains explicit existing values',()=>{
     const p=parseSettingsFile('{"schemaVersion":"1.0.0","targetId":"jezero_crater","settings":{"fuelMassKg":600}}',defaultSettings);
-    expect(p.targetId).toBe('jezero_crater'); expect(p.settings.fuelMassKg).toBe(600); expect(p.settings.thrusterForceN).toBe(defaultSettings.thrusterForceN);
+    expect(p.targetId).toBe('jezero'); expect(p.settings.fuelMassKg).toBe(600); expect(p.settings.thrusterForceN).toBe(defaultSettings.thrusterForceN);
   });
   it('rejects bad types, schema versions, unknown keys and unknown targets',()=>{
     for(const value of [[],null,{fuelMassKg:'500'},{fuelMassKg:-1},{schemaVersion:'2.0.0',fuelMassKg:500},{targetId:'unknown',fuelMassKg:500},{wind:12},{dust:2}]) expect(()=>parseSettingsFile(JSON.stringify(value),defaultSettings)).toThrow();

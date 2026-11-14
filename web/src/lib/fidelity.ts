@@ -26,7 +26,7 @@ export async function computeFidelity(mission: MissionConfig, analogProfile: Ter
   planetaryEntry: CatalogSite | undefined, signal?: AbortSignal): Promise<FidelityResult> {
   if (!planetaryEntry) throw new Error('the planetary target is not in the site catalog.');
   if (!planetaryEntry.terrain) throw new Error(`${planetaryEntry.name} has no terrain pack to compare against.`);
-  const planetaryProfile = await loadProfile(signal, planetaryEntry.terrain.manifest_url.replace(/[^/]*$/, ''));
+  const planetaryProfile = await loadProfile(signal, planetaryEntry.terrain.manifest_url, planetaryEntry.id, planetaryEntry.body);
   // Let the report paint before the comparison flights run.
   await new Promise(resolve => setTimeout(resolve, 30));
   return fidelityFor(mission, analogProfile, planetaryProfile, planetaryEntry, analogEntry);

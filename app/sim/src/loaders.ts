@@ -28,16 +28,15 @@ export function profileToSite(profile: TerrainProfile, opts: { analogOf?: Analog
   const { x, y } = profile.spatial.resolution_m;
   if (!(x > 0 && y > 0)) throw new Error('profile.spatial.resolution_m must be positive');
 
-  const valid = grid.flat().filter((v): v is number => typeof v === 'number' && Number.isFinite(v));
-  if (!valid.length) throw new Error('profile has no valid elevation cells');
-  const fill = valid.reduce((s, v) => s + v, 0) / valid.length; // nodata → mean elevation
+  if (grid.some(row => row.some(v => typeof v !== 'number' || !Number.isFinite(v))))
+    throw new Error('profile contains missing or nonfinite elevation cells; process nodata before simulation');
 
   const heights = new Float32Array(rows * cols);
   for (let r = 0; r < rows; r++) {
     const src = grid[rows - 1 - r];
     for (let c = 0; c < cols; c++) {
       const v = src[c];
-      heights[r * cols + c] = typeof v === 'number' && Number.isFinite(v) ? v : fill;
+      heights[r * cols + c] = v!;
     }
   }
   const body = profile.site.body;

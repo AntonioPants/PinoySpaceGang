@@ -1,4 +1,4 @@
-import { targets } from '../data/sites';
+import { normalizeTargetId, targets } from '../data/sites';
 import { validateSettings } from './mission';
 import type { MissionSettings } from './types';
 export interface SettingsProposal { settings: MissionSettings; targetId?: string; changed: string[] }
@@ -7,6 +7,7 @@ const fields = ['mode', 'environment', 'fuelMassKg', 'dryMassKg', 'thrusterForce
 export type KnownTargets = readonly { id: string }[];
 const obj = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
 function proposal(patch: Record<string, unknown>, current: MissionSettings, targetId?: unknown, known: KnownTargets = targets): SettingsProposal {
+  if (typeof targetId === 'string') targetId = normalizeTargetId(targetId);
   if (!Object.keys(patch).length && !targetId) throw new Error('No supported mission settings found.');
   const unknown = Object.keys(patch).filter(k => !fields.includes(k as typeof fields[number]));
   if (unknown.length) throw new Error(`Unknown settings: ${unknown.join(', ')}. Use the downloadable template.`);

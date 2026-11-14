@@ -12,7 +12,7 @@ export default function TerrainExplorer({ profile }: { profile: TerrainProfile }
   useEffect(() => {
     const mount = host.current!; let renderer: THREE.WebGLRenderer;
     try { renderer = new THREE.WebGLRenderer({ antialias: true }); } catch { setError('3D is unavailable. The measured terrain profile remains available beside this view.'); return; }
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setClearColor(0x111f2d);
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setClearColor(0x080808);
     renderer.domElement.setAttribute('role', 'img'); renderer.domElement.setAttribute('aria-label', `${profile.manifest.name} measured 3D terrain. Drag to orbit, scroll to zoom, right-drag to pan, click to inspect elevation.`);
     mount.append(renderer.domElement);
     const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(45, 1, 2, 30000);
@@ -34,8 +34,8 @@ export default function TerrainExplorer({ profile }: { profile: TerrainProfile }
     }
     const geometry = new THREE.BufferGeometry(); geometry.setAttribute('position', new THREE.BufferAttribute(positions,3)); geometry.setAttribute('color', new THREE.BufferAttribute(colors,3)); geometry.setIndex(indices); geometry.computeVertexNormals();
     const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({vertexColors:true, roughness:1, side:THREE.DoubleSide})); scene.add(mesh);
-    const grid = new THREE.GridHelper(6000,12,0x466071,0x283c4b); grid.position.y = -8; scene.add(grid);
-    scene.add(new THREE.HemisphereLight(0xddeeff,0x655342,2));
+    const grid = new THREE.GridHelper(Math.max(width, depth) * 1.25,12,0x49463e,0x252522); grid.position.y = -8; scene.add(grid);
+    scene.add(new THREE.HemisphereLight(0xf1eee4,0x655342,2));
     const sun = new THREE.DirectionalLight(0xfff1d2,3); sun.position.set(-3000,4000,-1000); scene.add(sun);
     const reset = () => { camera.position.set(5200,3400,5800); controls.target.set(0,45,0); controls.update(); };
     reset();

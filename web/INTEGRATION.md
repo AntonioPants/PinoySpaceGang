@@ -4,7 +4,7 @@
 
 - **Sites come from the catalog.** `src/lib/catalog.ts` reads `public/sites.json`: every
   planetary target, every Earth analog with a terrain pack, and the proposed pairings (best
-  terrain score first). `src/data/sites.ts` is now only a test fixture. Terrain loads from each
+  terrain score first). `src/data/sites.ts` uses that same parser for static consumers and legacy-ID support. Terrain loads from each
   site's own pack, so the Kilbourne-only notes below describe the first version.
 - **Analog Fidelity Score.** The flight report flies the configured vehicle autonomously on the
   planetary target's own terrain and on the Earth analog (`src/lib/fidelity.ts`, engine
@@ -20,7 +20,12 @@
   Earth weather is never applied to a Moon or Mars scenario.
 
 
-Updated after integrating Tim's engine from main at 5491f1e. The physics module remains unchanged; frontend adapters handle the contract differences.
+Integrated with the expanded 17-site catalog: 11 Earth terrain packs (including Haughton
+and Qaidam) and six planetary targets. Qaidam has no proposed pairing; it is available
+for explicitly experimental flights. The Earth testbed page exposes the same complete
+catalog-details component as the physics viewer, including provenance and seasonal data.
+The alternate profile importer now rejects missing elevation values instead of filling
+them. Catalog JSON is written with LF bytes before hashing on all platforms.
 
 ## Tim: physics (connected)
 
@@ -29,11 +34,11 @@ Updated after integrating Tim's engine from main at 5491f1e. The physics module 
 `FlightReport.tsx` consumes the actual `FlightTelemetry`, including its summary.
 Vite deduplicates React across the two directories; no second physics install is needed.
 
-- The full binary grid goes through `terrainPackToSite`, which flips north-to-south
+- The full binary grid goes through `catalogSiteToSite` / `terrainPackToSite`, which flips north-to-south
   input rows into physics south-to-north rows. Physics coordinates are x east,
   y north, z up, centred on the patch. Elevations remain absolute EGM2008 metres.
 - The frontend's exported centre-row transect remains relative to the pack's
-  1194 m vertical offset. It is a separate 2D convenience field and is not fed
+  per-pack vertical offset. It is a separate 2D convenience field and is not fed
   to the full-grid engine. Do not confuse these frames or subtract twice.
 - Scenario gravity is passed explicitly. Native Earth: 9.81 m/s2, 1.225 kg/m3;
   lunar vacuum: 1.62 m/s2, zero density/wind; Mars: UI gravity 3.72 m/s2,
@@ -41,7 +46,10 @@ Vite deduplicates React across the two directories; no second physics install is
 - The frontend overrides dry mass, fuel, maximum thrust, and slope limit.
   Other lander settings use the engine defaults (311 s Isp, drag coefficient 1.2,
   reference area 15 m2, 2.5 m leg radius). Lidar and velocimeter are enabled.
-  Dust/glare come from the UI. Seed is 1. Time limit is 300 simulated seconds.
+  UI dust/glare are scenario interference inputs; the new engine also derives site
+  interference from catalog substrate, albedo and latitude with provenance.
+  Wind is the explicit UI speed toward east, never an inferred catalog vector.
+  Seed is 1. Time limit is 300 simulated seconds.
 - Start: x=-400 m, y=0, altitude 1000 m AGL; velocity=(25,0,-20) m/s.
   Target is (0,0). These are shown in the preflight screen.
 - The view stops flights leaving the measured patch instead of showing an outcome
@@ -53,8 +61,9 @@ Vite deduplicates React across the two directories; no second physics install is
 ## Conditions import
 
 `importSettings.ts` validates flat/partial settings, a template envelope, or a
-frontend mission export. The UI limits files to 128 KB and previews all resulting
-settings before Apply. Imported target IDs must be in the known UI catalog.
+frontend mission export. The UI limits files to 128 KB and previews changed
+settings before Apply. Legacy target IDs are migrated to shared catalog IDs.
+Only imported fields are applied. Changing controls invalidates an open preview.
 
 The optional text parser is intentionally local and constrained: comma-separated
 clauses with explicit units. It rejects ambiguous or unrecognized clauses and
@@ -80,17 +89,20 @@ muted until explicit user interaction. Call `onComplete` once per playback.
 
 ## Data team
 
-Kilbourne's binary-grid manifest is distinct from the Python pipeline's generic
-`data/terrain_profile.schema.json`. `extractProfile` currently supports the
-Kilbourne format only; it validates dimensions, bytes, finite samples, spacing,
-and offset. Add a separately tested adapter when generic JSON grids arrive.
-
-For validated analog ranking, supply planetary footprints, comparable-resolution
-descriptors, component scores, weighting rules, uncertainty, and citations.
-`sites.ts` is a temporary UI catalog; don't mistake it for completed science.
+`src/data/sites.ts` projects `public/sites.json` into navigation labels; it does
+not own separate scientific records. Nine Earth packs and six planetary regions
+are available. Haughton and Qaidam remain unavailable candidates. Proposed
+pairings sort first; other Earth sites remain usable as independent experiments.
+`loadProfile` supports both Kilbourne's original manifest and the new compact
+catalog manifests, deriving width and relief from actual samples. It validates
+every sample and the selected site ID. Exports retain the selected pack path.
+A stale profile cannot be passed to another site's mission. Planetary DEMs and
+catalog terrain scores are not yet visualized in this UI; scientific-equivalence
+and fidelity claims remain explicitly unvalidated.
 
 ## Ownership
 
-Frontend additions are confined to `web/` plus root ignore/readme updates.
-The committed terrain pack, Python scripts, and existing Python tests are unchanged.
-No teammate's engine or graphics implementation has been replaced.
+Frontend work is in `web/`. Shared data and physics changes arrive through merges
+from main; no teammate's engine or graphics implementation has been replaced.
+Theme tokens and component styles are in `src/styles.css`; see `DESIGN.md`.
+The renderer, hook and simulation engine still have a single owner in `app/sim/`.

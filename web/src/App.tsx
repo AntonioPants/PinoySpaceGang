@@ -1,28 +1,33 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, Check, ChevronRight, CircleHelp, Download, ExternalLink, Globe2, Layers3, MapPin, Orbit, Radio, Rocket, Settings2, ShieldCheck, SlidersHorizontal } from 'lucide-react';
 import Globe from './components/Globe';
 import TerrainChart from './components/TerrainChart';
 import Dialog from './components/Dialog';
 import TerrainExplorer from './components/TerrainExplorer';
 import ConditionsImport from './components/ConditionsImport';
-import Descent from './components/Descent';
 import FlightReport from './components/FlightReport';
+import { CatalogDetails } from '../../app/sim/viewer/components/CatalogDetails';
+import { catalogSiteToSite } from '../../app/sim/src/catalog';
 import type { FlightTelemetry } from '../../app/sim/src/types';
 import { analogsFor, loadCatalog, pairingOf, type Catalog } from './lib/catalog';
+import { normalizeTargetId } from './data/sites';
 import { hasWeatherProfile, loadWeatherProfile } from './lib/weather';
 import type { EnvironmentProfile } from '../../app/lib/environment.mjs';
 import { buildMission, defaultSettings, gravityFor, loadProfile, validateSettings } from './lib/mission';
-import type { Body, MissionConfig, MissionSettings, PlanetarySite, TerrainProfile } from './lib/types';
+import type { Body, MissionConfig, MissionSettings, TerrainProfile } from './lib/types';
 
 const STORAGE_KEY = 'analog-atlas-draft-v1';
-function restoreDraft(targets: PlanetarySite[]) {
+const Descent = lazy(() => import('./components/Descent'));
+function restoreDraft(catalog: Catalog) {
+  const { targets, analogs } = catalog;
   try {
     const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null');
+    if (typeof raw?.targetId === 'string') raw.targetId = normalizeTargetId(raw.targetId);
     if (raw && targets.some(t => t.id === raw.targetId) && raw.settings && validateSettings({ ...defaultSettings, ...raw.settings }).length === 0) {
-      return { targetId: raw.targetId as string, settings: { ...defaultSettings, ...raw.settings } as MissionSettings };
+      return { targetId: raw.targetId as string, analogId: analogs.find(a => a.id === raw.analogId)?.id ?? analogs[0].id, settings: { ...defaultSettings, ...raw.settings } as MissionSettings };
     }
   } catch { /* Browser storage can be disabled; the mission remains usable in memory. */ }
-  return { targetId: targets[0].id, settings: defaultSettings };
+  return { targetId: targets[0].id, analogId: analogs[0].id, settings: defaultSettings };
 }
 const coord = (value: number, lat = false) => `${Math.abs(value).toFixed(2)}° ${lat ? value < 0 ? 'S' : 'N' : value < 0 ? 'W' : 'E'}`;
 
@@ -43,12 +48,12 @@ export default function App() {
 
 function Mission({ catalog }: { catalog: Catalog }) {
   const targets = catalog.targets;
-  const [draft] = useState(() => restoreDraft(targets));
+  const [draft] = useState(() => restoreDraft(catalog));
   const [targetId, setTargetId] = useState(draft.targetId);
   const [settings, setSettings] = useState<MissionSettings>(draft.settings);
   const target = targets.find(t => t.id === targetId)!;
   const analogs = useMemo(() => analogsFor(catalog, targetId), [catalog, targetId]);
-  const [step, setStep] = useState(0), [analogId, setAnalogId] = useState(analogs[0].id);
+  const [step, setStep] = useState(0), [analogId, setAnalogId] = useState(draft.analogId);
   const analog = analogs.find(a => a.id === analogId) ?? analogs[0];
   const pairing = pairingOf(catalog, targetId, analog.id);
   const available = analogs.filter(a => a.available);
@@ -62,7 +67,12 @@ function Mission({ catalog }: { catalog: Catalog }) {
   }, [analog.id, weatherAvailable]);
   const realWeather = settings.environment === 'earth' && settings.realWeatherMonth > 0 && weatherAvailable;
   const weatherHour = realWeather && weather ? weather.months[String(settings.realWeatherMonth)]?.scenarios[settings.weatherScenario] : null;
-  const [profile, setProfile] = useState<TerrainProfile | null>(null);
+  const [loadedProfile, setProfile] = useState<TerrainProfile | null>(null);
+  const profile = loadedProfile?.manifest.id === analog.id ? loadedProfile : null;
+  const selectedSite = useMemo(() => {
+    const entry = catalog.entries.get(analog.id);
+    return profile && entry ? catalogSiteToSite(entry, profile.manifest, profile.buffer, {}, catalog.source) : undefined;
+  }, [profile, analog.id, catalog]);
   const [loadError, setLoadError] = useState(''), [retry, setRetry] = useState(0);
   const [dialog, setDialog] = useState<'sources' | 'mission' | null>(null);
   const [mission, setMission] = useState<MissionConfig | null>(null);
@@ -77,15 +87,17 @@ function Mission({ catalog }: { catalog: Catalog }) {
   useEffect(() => {
     const abort = new AbortController(); setLoadError(''); setProfile(null);
     if (!analog.terrainBase) return;
-    loadProfile(abort.signal, analog.terrainBase).then(setProfile).catch(error => { if (!abort.signal.aborted) setLoadError(error instanceof Error ? error.message : 'Could not load terrain.'); });
+    loadProfile(abort.signal, analog.terrainBase, analog.id).then(result => { if (!abort.signal.aborted) setProfile(result); }).catch(error => { if (!abort.signal.aborted) setLoadError(error instanceof Error ? error.message : 'Could not load terrain.'); });
     return () => abort.abort();
-  }, [retry, analog.terrainBase]);
-  // A new destination starts on its best proposed analog.
-  useEffect(() => { setAnalogId(analogsFor(catalog, targetId)[0].id); setTerrainView(false); }, [catalog, targetId]);
+  }, [retry, analog.terrainBase, analog.id]);
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ targetId, settings })); setStorageAvailable(true); }
+    window.scrollTo(0, 0);
+    document.getElementById('mission-title')?.focus({ preventScroll: true });
+  }, [step]);
+  useEffect(() => {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ targetId, analogId, settings })); setStorageAvailable(true); }
     catch { setStorageAvailable(false); }
-    setSaved(false); setFlight(null);
+    setSaved(false); setFlight(null); setMission(null);
   }, [targetId, settings, analogId]);
   const changeBody = (body: Body) => setTargetId(targets.find(t => t.body === body)!.id);
   const selectAnalog = (id: string) => {
@@ -115,22 +127,22 @@ function Mission({ catalog }: { catalog: Catalog }) {
       <div className="header-right"><span className="team-name">Pinoy Space Gang <span>/</span> Mission 001</span><button className="subtle-button" onClick={() => setDialog('sources')}><Layers3 size={16} /> Data & sources</button></div>
     </header>
     <nav className="stepper" aria-label="Mission stages">
-      {['Destination', 'Earth analog', 'Configure', 'Descent', 'Report'].map((label, i) => <button key={label} aria-current={step === i ? 'step' : undefined} disabled={(i === 3 && (!mission || step !== 3)) || (i === 4 && !flight) || (i === 2 && (!profile || !analog.available))} onClick={() => setStep(i)}>
+      {['Destination', 'Earth analog', 'Configure', 'Descent', 'Report'].map((label, i) => <button key={label} aria-current={step === i ? 'step' : undefined} disabled={(step === 3 && i !== 3) || (i === 3 && (!mission || step !== 3)) || (i === 4 && !flight) || (i === 2 && (!profile || !analog.available))} onClick={() => setStep(i)}>
         <span className="step-number">{step > i ? <Check size={14} /> : String(i + 1).padStart(2, '0')}</span><span>{label}</span>{i < 4 && <ChevronRight className="step-chevron" size={14} />}
       </button>)}
     </nav>
     <main id="mission-main">
       <section className="workspace-heading">
         <div><div className="breadcrumb">Mission workspace <span>/</span> {['Select a destination', 'Explore a testbed', 'Prepare your experiment', 'Fly the descent', 'Review the outcome'][step]}</div>
-          <h1>{['A world away. A place to begin.', 'Other worlds. Earth underfoot.', 'Give your mission a starting point.', 'From plan to touchdown.', 'Every descent tells a story.'][step]}</h1>
-          <p>{['Choose a planetary target. Find an Earth testbed. Put your landing strategy to the test.', 'Inspect the evidence behind your Earth testbed before you configure a landing.', 'Set the vehicle and environment, then launch your landing experiment.', 'Fly over real terrain with the team’s physics engine.', 'Inspect telemetry, understand the outcome, and refine your next mission.'][step]}</p></div>
-        <div className="prototype-label"><Radio size={14} /><span>Mission planner<small>Prototype v0.1</small></span></div>
+          <h1 id="mission-title" tabIndex={-1}>{['Select a destination.', 'Find your Earth testbed.', 'Configure the mission.', 'Descent control.', 'Flight report.'][step]}</h1>
+          <p>{['Explore the Moon and Mars. Choose a region to test your landing strategy on Earth.', 'Inspect a measured landscape and the evidence behind its proposed pairing.', 'Set the vehicle, controls and environment before launch.', 'Follow the trajectory, manage thrust and monitor the landing.', 'Review the touchdown, inspect telemetry and prepare the next run.'][step]}</p></div>
+        <div className="prototype-label"><Radio size={14} /><span>Mission workspace<small>{step === 0 ? 'Moon / Mars / Earth' : `${target.body} → Earth`}</small></span></div>
       </section>
       {step === 0 && <section className="workspace destination-workspace" aria-label="Planetary destination">
         <div className="planet-panel">
           <div className="planet-top"><div className="segmented" aria-label="Planet selection">{(['Moon', 'Mars'] as Body[]).map(body => <button key={body} aria-pressed={target.body === body} onClick={() => changeBody(body)}>{body === 'Moon' ? '◐' : '◉'} {body}</button>)}</div><span className="small-label">{bodyPoints.length} target regions</span></div>
           <Globe body={target.body} points={bodyPoints} selected={targetId} onSelect={setTargetId} />
-          <div className="planet-label"><span>{target.body === 'Moon' ? 'Our nearest frontier' : 'The next horizon'}</span><strong>{target.body === 'Moon' ? 'Luna' : 'Mars'}</strong><p>{target.body === 'Moon' ? 'Earth’s natural satellite' : 'The red planet'}</p></div>
+          <div className="planet-label"><span>Selected planetary body</span><strong>{target.body === 'Moon' ? 'Luna' : 'Mars'}</strong><p>{target.body === 'Moon' ? 'Earth’s natural satellite' : 'Fourth planet from the Sun'}</p></div>
           <div className="planet-scale"><span>Scenario gravity</span><strong>{target.gravity.toFixed(2)} <small>m/s²</small></strong><span>{target.body === 'Moon' ? 'Vacuum environment' : 'Thin atmosphere'}</span></div>
         </div>
         <aside className="selection-panel">
@@ -166,6 +178,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
               <button className="text-button" onClick={() => setDialog('sources')}>Inspect evidence & sources <ExternalLink size={13} /></button>
             </section>
           </> : <div className="empty-data"><Layers3 size={26} /><h3>Terrain handoff pending</h3><p>This candidate is listed in the project brief. Choose {available[0].name} to configure a mission with real elevation data.</p><button className="subtle-button" onClick={() => selectAnalog(available[0].id)}>Use {available[0].name}</button></div>}
+          <CatalogDetails site={selectedSite} />
           <div className="panel-actions"><button className="subtle-button" onClick={() => setStep(0)}><ArrowLeft size={16} /> Destination</button><button className="primary-button" disabled={!analog.available || !profile} onClick={() => setStep(2)}>Configure mission <ArrowRight size={17} /></button></div>
         </div>
       </section>}
@@ -203,7 +216,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
           <div className="config-footer"><span><span className="status-dot" />{storageAvailable ? 'Draft saved on this device' : 'Draft held in this session'}</span><button className="primary-button" disabled={!profile || validateSettings(settings).length > 0 || (realWeather && !weatherHour)} onClick={reviewMission}>Review mission <ArrowRight size={17} /></button></div>
         </div>
       </section>}
-      {step === 3 && mission && profile && <Descent mission={mission} profile={profile} entry={catalog.entries.get(analog.id)} weather={weather} onExit={()=>setStep(2)} onReport={report=>{setFlight(report);setStep(4);}} />}
+      {step === 3 && mission && profile && <Suspense fallback={<p role="status">Loading descent viewer…</p>}><Descent mission={mission} profile={profile} entry={catalog.entries.get(analog.id)} weather={weather} onExit={()=>setStep(2)} onReport={report=>{setFlight(report);setStep(4);}} /></Suspense>}
       {step === 4 && flight && mission && profile && <FlightReport flight={flight} mission={mission} profile={profile} analogEntry={catalog.entries.get(analog.id)} planetaryEntry={catalog.entries.get(targetId)} onRetry={()=>setStep(2)} />}
       <footer className="workspace-footer"><span><span className="status-dot" /> {step === 0 ? 'Explore first. Validate with evidence.' : 'Real terrain. Explicit assumptions.'}</span><span>Earth data: Copernicus DEM <span className="footer-separator">/</span> <button className="text-button" onClick={() => setDialog('sources')}>Credits & limitations</button></span></footer>
     </main>

@@ -3,6 +3,16 @@ from scripts.catalog.scoring import compare
 from scripts.catalog.build import descriptors
 from rasterio.transform import from_origin
 
+
+def test_catalog_json_writer_uses_canonical_bytes(tmp_path):
+    from scripts.catalog.build import dump, sha
+    import hashlib
+    path = tmp_path / 'manifest.json'
+    dump(path, {'id': 'test'})
+    expected = b'{\n  "id": "test"\n}\n'
+    assert path.read_bytes() == expected
+    assert sha(path) == hashlib.sha256(expected).hexdigest()
+
 def test_missing_is_not_zero():
     assert compare({}, {})['terrain_score'] is None
     assert compare({}, {})['coverage']==0

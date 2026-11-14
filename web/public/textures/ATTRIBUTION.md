@@ -11,5 +11,6 @@ Three.js repository licence: https://github.com/mrdoob/three.js/blob/dev/LICENSE
 Mars is a deterministic procedural illustration generated in `Globe.tsx`.
 It contains no measured surface information.
 
-Typography: DM Sans and Manrope via Google Fonts, with system sans-serif fallbacks.
-Their open font licences are available from https://fonts.google.com/.
+Typography: IBM Plex Sans, self-hosted through `@fontsource/ibm-plex-sans`.
+Copyright IBM Corp., SIL Open Font License 1.1. The package includes the licence;
+the upstream typeface is at https://github.com/IBM/plex.

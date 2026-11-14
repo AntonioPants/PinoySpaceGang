@@ -1,5 +1,6 @@
 import { terrainPackToSite } from '../../../app/sim/src/loaders';
 import { catalogSiteToSite } from '../../../app/sim/src/catalog';
+import { siteCatalog, catalogSites } from '../data/sites';
 import type { CatalogSite } from '../../../app/sim/src/catalog';
 import type { SimInput, SiteTerrain } from '../../../app/sim/src/types';
 import type { EnvironmentProfile } from '../../../app/lib/environment.mjs';
@@ -8,8 +9,10 @@ import type { MissionConfig, TerrainProfile } from './types';
 
 /** The Earth analog as the physics flies it: terrain plus, when a catalog entry is given, its surface data. */
 export function analogSite(mission: MissionConfig, profile: TerrainProfile, entry?: CatalogSite): SiteTerrain {
+  if (mission.earthAnalog.id !== profile.manifest.id) throw new Error('The loaded terrain does not match this mission. Return to configuration.');
+  entry ??= catalogSites.find(s => s.id === profile.manifest.id);
   const body = mission.planetaryTarget.body === 'Moon' ? 'moon' : 'mars';
-  const site = entry ? catalogSiteToSite(entry, profile.manifest, profile.buffer, { analogOf: body })
+  const site = entry ? catalogSiteToSite(entry, profile.manifest, profile.buffer, { analogOf: body }, siteCatalog)
     : terrainPackToSite(profile.manifest, profile.buffer, { analogOf: body });
   if (mission.environment.mode === 'earth') site.analogOf = undefined;
   // Wind is the user's scenario setting (speed along +x); the catalog has no wind direction.

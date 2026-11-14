@@ -9,13 +9,14 @@ export interface AnalogSite {
   available: boolean; description: string;
   /** Folder of the site's terrain pack, e.g. /terrain/amboy/ (absent when no pack exists). */
   terrainBase?: string; morphology?: string; substrate?: string; evidenceUrl?: string; reliefM?: number;
+  manifestUrl?: string; matches: string[];
 }
 export interface TerrainManifest {
   schema_version: number; id: string; name: string; body: string;
   grid: { rows: number; columns: number; spacing_m: number; width_m: number; depth_m: number; dtype: string; byte_order: string; sample_file: string };
   local_frame: { vertical_offset_m: number };
   /** Kilbourne v1 packs carry statistics and analog evidence; catalog packs carry only a source. */
-  statistics?: { relief_m: number; slope_p95_deg: number };
+  statistics?: { relief_m: number; slope_p95_deg?: number };
   source: { dataset?: string; catalog?: string; sha256?: string; subset_sha256?: string; url?: string; vertical_datum: string };
   analog?: { basis: string; sources: string[] };
   license_url?: string;
@@ -25,6 +26,7 @@ export interface TerrainProfile {
   manifest: TerrainManifest;
   /** A west-to-east centre-row transect, relative to the pack's vertical offset. */
   heightsM: number[]; sampleSpacingM: number; row: number; buffer: ArrayBuffer;
+  terrainBaseUrl?: string;
 }
 export interface MissionSettings {
   mode: 'MANUAL_CONTROL' | 'AUTONOMOUS_HAZARD_AVOID';

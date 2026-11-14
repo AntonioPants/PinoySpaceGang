@@ -26,7 +26,7 @@ MOON = 'https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LOLA_Global_LDEM_118m_Ma
 
 def dump(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, indent=2, allow_nan=False) + '\n', encoding='utf-8')
+    path.write_text(json.dumps(value, indent=2, allow_nan=False) + '\n', encoding='utf-8', newline='\n')
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()

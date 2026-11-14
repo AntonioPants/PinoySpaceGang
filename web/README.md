@@ -21,14 +21,14 @@ Keep the pnpm lockfile as the team's dependency source of truth.
 ## Implemented
 
 - Responsive mission workspace with Moon/Mars target selection and orbitable globes.
-- Click a Kilbourne globe marker or location card to open its 3D terrain directly.
+- Click an available globe marker or location row to open its 3D terrain directly.
   Other candidates still show their missing-data state. Terrain supports orbit/pan/zoom,
   top view and elevation inspection. Zoom smoothly links displayed height exaggeration
   from 1x through 3x to 6x, with preset views and a live scale readout. Elevation colours
   are illustrative; no satellite imagery or global terrain tiles are included.
   Measurements and physics retain their original scale. Reduced-motion preferences
   disable the animated zoom/preset interpolation.
-- Earth candidate selection, real Kilbourne centre-row elevation transect and pack statistics.
+- Shared catalog selection: nine Earth packs, six Moon/Mars targets, per-site transects and statistics.
 - “Why this analog?” evidence, limitations, sources and explicit unknown similarity scores.
 - Manual/autonomous configuration, mass/thrust/slope inputs, Earth vs planetary environment.
 - Lunar vacuum disables wind; initial thrust-to-weight ratio reflects wet mass and scenario gravity.
@@ -36,7 +36,7 @@ Keep the pnpm lockfile as the team's dependency source of truth.
 - JSON settings import (128 KB maximum), including exported mission files, plus a local
   rule-based condition parser. Both require a preview/apply step and validate units/ranges.
 - Tim's real `useLanderSim` hook and side renderer, using the full terrain grid through
-  `terrainPackToSite`. Supports autonomous/manual descent, pause/restart, and playback speed.
+  `catalogSiteToSite`. Supports autonomous/manual descent, pause/restart, and playback speed.
 - Flight reports and downloadable telemetry, with unvalidated analog fidelity explicitly retained.
 - Keyboard-operable alternative site lists, native modal focus handling, reduced-motion camera transitions.
 - Loading/retry handling, unavailable-data gating, and a WebGL-unavailable fallback.
@@ -62,13 +62,14 @@ provider integration; never embed its credentials in the frontend.
 
 ## Data boundaries
 
-`src/data/sites.ts` is a curated navigation fixture, not a planetary data catalog.
-Its coordinates are approximate locators. Haughton and Qaidam have no local pack
-and cannot proceed to configuration. Kilbourne's terrain is real, but no selected
-planetary pairing has been validated. Never replace null similarity/fidelity
-scores with invented percentages.
+`src/data/sites.ts` derives navigation from `public/sites.json`. Proposed pairings
+sort first. Haughton and Qaidam have no local pack and cannot proceed to configuration.
+Each available Earth site loads its own measured terrain and retains provenance
+through mission export and descent. Planetary DEMs and catalog terrain scores are
+not yet displayed in this UI; pairings remain scientifically unvalidated.
 
 Terrain remains under its supplied Copernicus licence and attribution. Globe
 images and typography are presentation assets, not scientific evidence; see
-`public/textures/ATTRIBUTION.md`. Fonts currently load from Google Fonts with
-system fallbacks; all terrain and globe textures are served locally.
+`public/textures/ATTRIBUTION.md`. IBM Plex Sans is self-hosted via Fontsource under
+the SIL Open Font License; all terrain and globe textures are served locally.
+See `DESIGN.md` for the black, warm-white and gold interface system.

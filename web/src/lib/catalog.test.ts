@@ -21,15 +21,15 @@ describe('site catalog in the mission planner', () => {
   it('lists every planetary target and Earth analog from the catalog', () => {
     expect(catalog.targets.map(t => t.id).sort()).toEqual(['arsia-flank', 'bagnold', 'jezero', 'marius-hills', 'phoenix', 'shackleton-rim']);
     expect(catalog.targets.find(t => t.id === 'jezero')).toMatchObject({ body: 'Mars', gravity: 3.72 });
-    expect(catalog.analogs.filter(a => a.available)).toHaveLength(9);
-    expect(catalog.analogs.filter(a => !a.available).map(a => a.id)).toEqual(['haughton', 'qaidam']);
+    expect(catalog.analogs.filter(a => a.available)).toHaveLength(11);
+    expect(catalog.analogs.filter(a => !a.available)).toEqual([]);
   });
   it('orders analogs for a target by proposed pairing score', () => {
     const list = analogsFor(catalog, 'arsia-flank');
     expect(list[0].id).toBe('amboy');
     expect(pairingOf(catalog, 'arsia-flank', list[0].id)!.terrain_score).toBeGreaterThan(0.99);
     expect(pairingOf(catalog, 'arsia-flank', 'white-sands')).toBeUndefined();
-    expect(list.at(-1)!.available).toBe(false);
+    expect(list.at(-1)!.id).toBe('qaidam');
   });
   it('every available analog pack loads and flies with its catalog surface data', () => {
     const target = catalog.targets.find(t => t.id === 'marius-hills')!;

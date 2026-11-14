@@ -21,16 +21,19 @@ describe('terrain loaders', () => {
     expect(tel.summary).toBeDefined();
   });
 
-  it('converts a terrain_profile document, filling nodata', () => {
+  it('converts an asymmetric terrain_profile without flipping columns', () => {
     const profile = {
       site: { id: 'test_site', name: 'Test', type: 'earth_analog' as const, body: 'earth' as const },
       spatial: { width: 3, height: 2, resolution_m: { x: 10, y: 10 } },
-      terrain: { elevation_m: [[5, 5, 5], [1, null, 3]] },
+      terrain: { elevation_m: [[4, 5, 6], [1, 2, 3]] },
     };
     const site = profileToSite(profile, { analogOf: 'mars' });
     expect(site.analogOf).toBe('mars');
     const h = Array.from(site.heightmap.heights);
-    expect(h.slice(0, 3)).toEqual([1, expect.closeTo(3.8, 5), 3]); // south row first; null → mean of valid cells
-    expect(h.slice(3)).toEqual([5, 5, 5]);
+    expect(h).toEqual([1, 2, 3, 4, 5, 6]);
+    for (const invalid of [null, NaN, Infinity]) {
+      expect(() => profileToSite({ ...profile, terrain: { elevation_m: [[4, 5, 6], [1, invalid, 3]] } }))
+        .toThrow(/missing or nonfinite/);
+    }
   });
 });

@@ -3,7 +3,7 @@
  * targets, Earth analogs and the proposed pairings between them. Nothing here is inferred:
  * names, descriptions, scores and limitations are copied from the catalog.
  */
-import type { CatalogSite as PhysicsCatalogSite } from '../../../app/sim/src/catalog';
+import type { CatalogSite as PhysicsCatalogSite, SiteCatalog } from '../../../app/sim/src/catalog';
 import type { AnalogSite, PlanetarySite } from './types';
 
 export interface CatalogEntry extends PhysicsCatalogSite {
@@ -15,6 +15,7 @@ export interface Pairing {
   geology_comparison?: { same_substrate_label: boolean; same_morphology_label: boolean };
 }
 export interface Catalog {
+  source: SiteCatalog;
   entries: Map<string, CatalogEntry>;
   targets: PlanetarySite[];
   analogs: AnalogSite[];
@@ -28,9 +29,9 @@ const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 // Candidates from the team brief with no terrain pack and no study footprint.
 const candidates: AnalogSite[] = [
   { id: 'haughton', name: 'Haughton crater', region: 'Devon Island, Canada', lat: 75.38, lon: -89.68, available: false,
-    description: 'A candidate from the team brief. Elevation data, comparison evidence, and a planetary pairing have not been supplied.' },
+    description: 'Site missing from the deployed catalog.', matches: [] },
   { id: 'qaidam', name: 'Qaidam Basin', region: 'Qinghai, China', lat: 37.5, lon: 93.5, available: false,
-    description: 'A candidate from the team brief. A study footprint and processed dataset are still needed.' },
+    description: 'Site missing from the deployed catalog.', matches: [] },
 ];
 
 export function parseCatalog(raw: unknown): Catalog {
@@ -51,11 +52,13 @@ export function parseCatalog(raw: unknown): Catalog {
       id: s.id, name: s.name, region: s.region, lat: s.latitude, lon: s.longitude, available: s.terrain !== null,
       description: s.description, morphology: label(s.morphology), substrate: label(s.substrate), evidenceUrl: s.evidence_url,
       terrainBase: s.terrain ? s.terrain.manifest_url.replace(/[^/]*$/, '') : undefined,
+      manifestUrl: s.terrain?.manifest_url,
+      matches: data.pairings!.filter(p => p.earth_id === s.id).map(p => p.planetary_id),
       reliefM: typeof min === 'number' && typeof max === 'number' ? max - min : undefined,
     };
   });
   if (!targets.length || !analogs.some(a => a.available)) throw new Error('The site catalog has no usable target or analog.');
-  return { entries, targets, analogs: [...analogs, ...candidates.filter(c => !entries.has(c.id))], pairings: data.pairings };
+  return { source: raw as SiteCatalog, entries, targets, analogs: [...analogs, ...candidates.filter(c => !entries.has(c.id))], pairings: data.pairings };
 }
 
 export async function loadCatalog(signal?: AbortSignal): Promise<Catalog> {
