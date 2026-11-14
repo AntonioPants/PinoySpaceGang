@@ -54,7 +54,7 @@ from one laptop. Coordinate shared rendering changes with Eyad and Tim.
 
 Register planetary arrival, liftoff and Earth approach in `game/integrations.ts` using
 `SceneProps`; outcome takes `OutcomeSceneProps` and actual telemetry. The existing
-Earth opening/ending are now attached through `CinematicBridge.tsx`. No Earth scene
+Earth opening/ending are attached through Tim's adapters in `game/scenes/`. No Earth scene
 is mislabeled as a planetary departure. Planetary arrival and liftoff remain empty.
 Use selected equipment IDs for the future animated model; the current cutscene lander
 is generic and does not yet depict all selected gear. Keep Skip available, honor reduced
