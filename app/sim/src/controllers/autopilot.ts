@@ -1,7 +1,8 @@
 import type { Controls, Observation, Vec2 } from '../types.ts';
 import type { Controller, ControllerContext } from '../engine.ts';
 import { DEG } from '../constants.ts';
-import { roughnessAt, slopeDegAt, type HeightField } from '../terrain.ts';
+import { roughnessAt, slopeDegAt } from '../terrain.ts';
+import type { HazardField } from '../surface.ts';
 
 export interface AutopilotOptions {
   /** Scan for and divert around hazards (needs a hazard sensor). */
@@ -33,10 +34,25 @@ export function autopilot(opts: AutopilotOptions = {}): Controller {
   const termRate = opts.terminalRateMps ?? 1.0;
   const maxTilt = (opts.maxGuidanceTiltDeg ?? 25) * DEG;
   let scanned = false;
+  // Navigation filter state (alpha-beta filter): guidance flies on these, not on raw readings,
+  // so plume dust (noisy readings, dropouts) doesn't make it chase noise into the ground.
+  let est: { h: number; vx: number; vy: number; vz: number } | null = null;
 
   return {
-    update(obs: Observation, ctx: ControllerContext): Controls {
-      const { gravity: g, lander } = ctx;
+    update(raw: Observation, ctx: ControllerContext): Controls {
+      const { gravity: g, lander, dt } = ctx;
+      if (!est) est = { h: raw.altitudeAGL, vx: raw.velocity.x, vy: raw.velocity.y, vz: raw.velocity.z };
+      else {
+        if (raw.velocimeterValid) {
+          const b = 0.08;
+          est.vx += b * (raw.velocity.x - est.vx);
+          est.vy += b * (raw.velocity.y - est.vy);
+          est.vz += b * (raw.velocity.z - est.vz);
+        }
+        est.h += est.vz * dt; // dead-reckon between altimeter fixes
+        if (raw.altimeterValid) est.h += 0.04 * (raw.altitudeAGL - est.h);
+      }
+      const obs: Observation = { ...raw, altitudeAGL: Math.max(0, est.h), velocity: { x: est.vx, y: est.vy, z: est.vz } };
       const maxAcc = lander.maxThrustN / obs.massKg;
       const h = obs.altitudeAGL;
 
@@ -120,7 +136,7 @@ export interface ScanResult {
 
 /** Scores candidate spots on a grid around the aim point; lower is better. */
 export function scanForLandingSite(
-  view: HeightField,
+  view: HazardField,
   aim: Vec2,
   radiusM: number,
   legR: number,
@@ -135,6 +151,8 @@ export function scanForLandingSite(
       slope = Math.max(slope, slopeDegAt(view, x + dx, y + dy, legR));
       rough = Math.max(rough, roughnessAt(view, x + dx, y + dy, legR));
     }
+    // lidar/camera point clouds resolve individual boulders the DEM can't
+    if (view.obstacleWithin) rough = Math.max(rough, view.obstacleWithin(x, y, legR + 3));
     return { slope, rough };
   };
   const safe = (a: { slope: number; rough: number }) =>

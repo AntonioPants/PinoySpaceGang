@@ -12,6 +12,13 @@ npx tsx scripts/run.ts --site pack:../../web/public/terrain/kilbourne-hole-v1   
 npx tsx scripts/run.ts --site profile:../../data/processed/earth_analogs/<id>.json --analog mars
 ```
 
+## Real site conditions
+
+- **Boulders below the DEM's resolution:** each site's *rock abundance* (Diviner on the Moon, TES/THEMIS on Mars) becomes a seeded boulder field using the Golombek & Rapp (1997) size–frequency model (`src/surface.ts`). If the site has a `roughness_rms_m` grid, rough patches get more rocks. Lidar and camera hazard scans see the rocks, and touchdown checks for a rock under the footprint.
+- **Dust and glare from data** (`src/environment.ts`): dust comes from the soil type, and glare from albedo, snow cover, sun elevation and shadow. The configurator can still override both.
+- **Wind and gusts:** a mean wind vector plus gusts.
+- **Fetched data:** `npx tsx scripts/fetch-environment.ts` pulls NASA POWER (wind, gusts, albedo, temperature) and ISRIC SoilGrids (soil texture) for the Earth analog sites into `data/site-environment.json`, with a citation for every value. The Moon/Mars entries list the datasets still to pull. `applyEnvironment(site, entry)` merges an entry into a site.
+
 ## Browser viewer (React)
 
 ```bash

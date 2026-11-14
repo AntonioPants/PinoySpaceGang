@@ -8,8 +8,12 @@ export interface Setup {
   strategy: SimInput['strategy'];
   hazard: 'lidar' | 'camera' | 'none';
   velocimeter: boolean;
+  /** Derive dust & glare from the site's soil, albedo, snow and sun data. */
+  siteConditions: boolean;
   dust: number;
   glare: number;
+  /** null = use the site's rock abundance. */
+  rocks: number | null;
   env: 'target' | 'native';
   fuelKg: number;
   thrustKN: number;
@@ -21,8 +25,10 @@ export const DEFAULT_SETUP: Setup = {
   strategy: 'autonomous',
   hazard: 'lidar',
   velocimeter: true,
+  siteConditions: true,
   dust: 0,
   glare: 0,
+  rocks: null,
   env: 'target',
   fuelKg: 1500,
   thrustKN: 45,
@@ -97,10 +103,25 @@ export function SetupPanel(p: Props) {
         <span>Doppler velocimeter</span>
       </label>
 
-      <label htmlFor="dust">Dust interference {setup.dust}</label>
-      <input type="range" id="dust" min={0} max={1} step={0.05} value={setup.dust} onChange={(e) => set('dust', Number(e.target.value))} />
-      <label htmlFor="glare">Glare interference {setup.glare}</label>
-      <input type="range" id="glare" min={0} max={1} step={0.05} value={setup.glare} onChange={(e) => set('glare', Number(e.target.value))} />
+      <label className="check">
+        <input type="checkbox" checked={setup.siteConditions} onChange={(e) => set('siteConditions', e.target.checked)} />
+        <span>Dust &amp; glare from site data</span>
+      </label>
+      <fieldset disabled={setup.siteConditions}>
+        <label htmlFor="dust">Dust interference {setup.dust}</label>
+        <input type="range" id="dust" min={0} max={1} step={0.05} value={setup.dust} onChange={(e) => set('dust', Number(e.target.value))} />
+        <label htmlFor="glare">Glare interference {setup.glare}</label>
+        <input type="range" id="glare" min={0} max={1} step={0.05} value={setup.glare} onChange={(e) => set('glare', Number(e.target.value))} />
+      </fieldset>
+
+      <label className="check">
+        <input type="checkbox" checked={setup.rocks === null} onChange={(e) => set('rocks', e.target.checked ? null : 0.05)} />
+        <span>Rock abundance from site data</span>
+      </label>
+      <fieldset disabled={setup.rocks === null}>
+        <label htmlFor="rocks">Rock abundance {((setup.rocks ?? 0) * 100).toFixed(0)}%</label>
+        <input type="range" id="rocks" min={0} max={0.25} step={0.01} value={setup.rocks ?? 0} onChange={(e) => set('rocks', Number(e.target.value))} />
+      </fieldset>
 
       <label htmlFor="env">Gravity &amp; atmosphere</label>
       <select id="env" value={setup.env} onChange={(e) => set('env', e.target.value as Setup['env'])}>
