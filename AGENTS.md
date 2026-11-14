@@ -7,7 +7,7 @@ The current browser planner and 2D console are playable prototype stages.
 - Current ownership is in `docs/TEAM_HANDOFF.md`: Eyad owns the opening; Yousef owns
   equipment/gear data; Furgan owns all cinematics and optimization; Tim owns the
   character/ship controls/physics; Antonio owns terrain matching and character debrief.
-  Tim's first-person lander cabin lives in `web/src/game/interior/` and is now the
+  Tim's third-person ship bridge lives in `web/src/game/interior/` and is now the
   control center. Planetary arrival and liftoff remain open cinematic slots.
 - Preserve the journey: planetary target → ranked Earth analog → equipment →
   planetary arrival → ship control center → liftoff → Earth approach → descent →

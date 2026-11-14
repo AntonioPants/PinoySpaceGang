@@ -107,8 +107,10 @@ export class CutsceneEngine {
   constructor(protected container: HTMLElement, protected env: CutsceneEnv, opts: EngineOptions = {}) {
     this.look = { ...PRESETS[env.preset ?? "desert"], ...env.look };
     this.audio.muted = !!opts.muted;
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-    this.renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    // On dense screens multisampling is the largest single cost on integrated GPUs and adds little.
+    const dense = (window.devicePixelRatio || 1) >= 1.5;
+    this.renderer = new THREE.WebGLRenderer({ antialias: !dense, powerPreference: "high-performance" });
+    this.renderer.setPixelRatio(Math.min(1.5, window.devicePixelRatio || 1));
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.domElement.style.cssText = "display:block;width:100%;height:100%";
     if (getComputedStyle(container).position === "static") container.style.position = "relative";
