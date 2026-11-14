@@ -37,3 +37,18 @@ describe('terrain loaders', () => {
     }
   });
 });
+
+ describe('strict missing-data handling', () => {
+   const profile = { site: { id:'test', name:'Test', type:'earth_analog' as const, body:'earth' as const }, spatial:{width:2,height:2,resolution_m:{x:30,y:30}}, terrain:{elevation_m:[[1,2],[3,4]] as (number|null)[][]} };
+   it.each([null,NaN,Infinity,-Infinity])('rejects missing/nonfinite elevation %s', value => {
+     const p = structuredClone(profile); p.terrain.elevation_m[1][0] = value;
+     expect(() => profileToSite(p)).toThrow('no synthetic filling');
+   });
+   it('rejects a malformed optional roughness layer instead of replacing unknowns with zero', () => {
+     expect(() => profileToSite({...profile,terrain:{...profile.terrain,roughness_rms_m:[[0,null],[0,0]]}})).toThrow('roughness');
+   });
+   it('rejects malformed rows and overflowing sample values', () => {
+     expect(() => profileToSite({...profile,terrain:{elevation_m:[[1],[2]]}})).toThrow('columns');
+     expect(() => profileToSite({...profile,terrain:{elevation_m:[[1,1e100],[3,4]]}})).toThrow('float32');
+   });
+ });

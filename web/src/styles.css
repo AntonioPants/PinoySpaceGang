@@ -387,3 +387,8 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
 .catalog-details dt { color: var(--muted); margin-top: 6px; }
 .catalog-details dd { margin-left: 12px; }
 .catalog-details a { color: var(--accent); }
+.pairing-explanation { font-size: 12px; overflow-wrap: anywhere; margin-top: 14px; }
+.pairing-explanation summary { cursor: pointer; }
+.pairing-explanation h4 { margin: 12px 0 6px; }
+.pairing-explanation ul { padding-left: 20px; color: var(--muted); }
+.pairing-explanation a { color: var(--accent); }

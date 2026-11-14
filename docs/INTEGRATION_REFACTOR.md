@@ -1,13 +1,13 @@
 # Catalog and mission integration refactor
 
-Integrated main `450d4fb`, Tim's `tim/web-catalog-fidelity`, and Eyad's
+Integrated main `26b1feb`, Tim's `tim/web-catalog-fidelity`, and Eyad's
 `eyad/mission-ui` on `refactor/catalog-integration`. The unrelated Field Shift
 application is not part of this simulator integration.
 
 - Both static and runtime mission consumers now use `web/src/lib/catalog.ts`.
   Removed the duplicate hardcoded unavailable Haughton/Qaidam entries from the
-  static catalog projection. All eleven Earth packs are selectable; Qaidam has
-  no proposed planetary pairing and remains an experimental terrain choice.
+  static catalog projection. All eleven Earth packs are selectable; Qaidam now has
+  a proposed yardang comparison with the new Lucus Planum study area on Mars.
 - Preserved Eyad's responsive interface, draft restoration, lazy descent view,
   and terrain identity checks alongside Tim's sensors, site-derived interference,
   seasonal weather and simulated-flight comparison.
@@ -24,6 +24,10 @@ application is not part of this simulator integration.
   data or scientific values were changed.
 - The alternate `profileToSite` importer rejects missing/nonfinite elevations.
   It no longer creates a mean-elevation surface for missing cells.
+  Teammate updates also reject malformed roughness layers and overflowing elevation
+  samples. The asymmetric-grid orientation regression test is retained.
+- All 14 pairings carry explicit matches, differences, sources and unvalidated
+  status. The mission UI exposes these in the selected pairing's evidence panel.
 
 ## Verification
 
@@ -43,13 +47,13 @@ npm run typecheck
 npm test
 ```
 
-Validated 17 sites and 13 reproducible descriptor comparisons; 85 combined web/physics
-tests, 16 Python tests and four environment tests pass. Production web build passes.
+Validated 18 sites and 14 reproducible descriptor comparisons; 92 combined web/physics
+tests and 18 Python tests pass. Production web build passes.
 The web build retains a bundle-size advisory; no interactive browser inspection was
 performed. Tests exercise all eleven Earth packs through loading, export and physics,
 including stale-pack rejection and the HTTP path used for planetary comparisons.
 
-Scientific gaps are not refactoring tasks: pair-specific explanations remain partial
-outside the newly documented Haughton pairing; unknown mechanics and unvalidated
-analogy claims remain explicitly labelled. The six seasonal profiles do not cover
-all eleven Earth sites. No new measurements or validated safety claims were added.
+Unknown mechanics and unvalidated analogy claims remain explicitly labelled. The six
+seasonal profiles do not cover all eleven Earth sites. No validated safety claims were
+added. Separate follow-up work remains for unequal-spacing imports, stricter binary
+manifest metadata validation, and transactional publication of failed full builds.

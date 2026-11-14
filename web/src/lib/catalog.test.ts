@@ -19,10 +19,18 @@ function profileOf(id: string) {
 
 describe('site catalog in the mission planner', () => {
   it('lists every planetary target and Earth analog from the catalog', () => {
-    expect(catalog.targets.map(t => t.id).sort()).toEqual(['arsia-flank', 'bagnold', 'jezero', 'marius-hills', 'phoenix', 'shackleton-rim']);
+    expect(catalog.targets.map(t => t.id).sort()).toEqual(['arsia-flank', 'bagnold', 'jezero', 'lucus-planum', 'marius-hills', 'phoenix', 'shackleton-rim']);
     expect(catalog.targets.find(t => t.id === 'jezero')).toMatchObject({ body: 'Mars', gravity: 3.72 });
     expect(catalog.analogs.filter(a => a.available)).toHaveLength(11);
     expect(catalog.analogs.filter(a => !a.available)).toEqual([]);
+  });
+  it('exposes the new Qaidam yardang pairing with its sourced limitations', () => {
+    const pairing = pairingOf(catalog, 'lucus-planum', 'qaidam');
+    expect(analogsFor(catalog, 'lucus-planum')[0].id).toBe('qaidam');
+    expect(pairing?.explanation?.status).toBe('proposed_unvalidated');
+    expect(pairing?.explanation?.matches.length).toBeGreaterThan(0);
+    expect(pairing?.explanation?.differences.length).toBeGreaterThan(0);
+    expect(pairing?.explanation?.sources).toHaveLength(2);
   });
   it('orders analogs for a target by proposed pairing score', () => {
     const list = analogsFor(catalog, 'arsia-flank');

@@ -62,5 +62,45 @@ def test_new_real_terrain_windows_reproduce_from_native_samples():
             np.testing.assert_allclose(values, reprojection, rtol=0, atol=0.001)
         assert site['completeness']['terrain_available'] is True
         assert manifest['source']['vertical_datum'] == 'EGM2008'
-    assert next(s for s in catalog['sites'] if s['id'] == 'qaidam')['matches'] == []
-    assert not any(p['earth_id'] == 'qaidam' for p in catalog['pairings'])
+    assert next(s for s in catalog['sites'] if s['id'] == 'qaidam')['matches'] == ['lucus-planum']
+    assert any(p['earth_id'] == 'qaidam' and p['planetary_id'] == 'lucus-planum' for p in catalog['pairings'])
+
+
+def test_every_enabled_earth_site_has_a_sourced_unvalidated_pairing():
+    import json
+    from pathlib import Path
+    from scripts.catalog.pairings import attach_handoff
+    catalog = json.loads((Path(__file__).resolve().parents[1] / 'web/public/sites.json').read_text())
+    for site in catalog['sites']:
+        if site['body'] != 'earth': continue
+        related = [p for p in catalog['pairings'] if p['earth_id'] == site['id']]
+        assert related and set(site['matches']) == {p['planetary_id'] for p in related}
+        for pair in related:
+            explanation = pair['explanation']
+            assert explanation['matches'] and explanation['differences'] and len(explanation['sources']) >= 2
+            assert explanation['status'] == 'proposed_unvalidated'
+            assert site['pairing_notes'][pair['planetary_id']] == explanation
+            assert pair['combined_score'] is None
+    assert attach_handoff(catalog) == catalog
+
+
+def test_lucus_dem_reproduces_from_actual_source_and_uses_signed_longitude():
+    import json
+    from pathlib import Path
+    import rasterio
+    from rasterio.warp import reproject, Resampling
+    root = Path(__file__).resolve().parents[1]
+    catalog = json.loads((root / 'web/public/sites.json').read_text())
+    site = next(s for s in catalog['sites'] if s['id'] == 'lucus-planum')
+    assert site['longitude'] == 187.227 - 360
+    assert site['latitude'] == -1.61604
+    folder = root / 'web/public/terrain/lucus-planum'
+    manifest = json.loads((folder / 'manifest.json').read_text())
+    with rasterio.open(folder / 'elevation.tif') as dst:
+        expected = dst.read(1)
+        actual = np.full_like(expected, np.nan)
+        with rasterio.open(folder / manifest['source']['subset_file']) as src:
+            reproject(rasterio.band(src,1),actual,src_transform=src.transform,src_crs=src.crs,dst_transform=dst.transform,dst_crs=dst.crs,dst_nodata=np.nan,resampling=Resampling.bilinear)
+        assert np.isfinite(actual).all() and np.ptp(actual) > 1
+        np.testing.assert_allclose(actual,expected,rtol=0,atol=0.001)
+        np.testing.assert_array_equal(expected.ravel(),np.fromfile(folder / 'elevation.f32',dtype='<f4'))

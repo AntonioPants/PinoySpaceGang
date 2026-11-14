@@ -12,6 +12,7 @@ export interface CatalogEntry extends PhysicsCatalogSite {
 export interface Pairing {
   earth_id: string; planetary_id: string; terrain_score: number | null; combined_score: number | null;
   reason?: string; interpretation?: string;
+  explanation?: { status: 'proposed_unvalidated'; matches: string[]; differences: string[]; sources: string[]; scope: string };
   geology_comparison?: { same_substrate_label: boolean; same_morphology_label: boolean };
 }
 export interface Catalog {

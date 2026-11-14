@@ -1,10 +1,10 @@
 {
   "operation": "register-site-records",
   "registered_sites": [
-    "haughton",
+    "lucus-planum",
     "qaidam"
   ],
   "failures": [],
-  "sites": 17,
-  "terrain_available": 17
+  "sites": 18,
+  "terrain_available": 18
 }

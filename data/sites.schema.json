@@ -1,49 +1,349 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
-  "required": ["schema_version", "coordinate_convention", "sites", "pairings"],
+  "required": [
+    "schema_version",
+    "coordinate_convention",
+    "sites",
+    "pairings"
+  ],
   "properties": {
-    "schema_version": {"const": "1.0.0"},
-    "sites": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/site"}},
-    "pairings": {"type": "array"}
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sites": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/site"
+      }
+    },
+    "pairings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/pairing"
+      }
+    }
   },
   "$defs": {
     "quantity": {
       "type": "object",
-      "required": ["value", "unit", "status", "source", "native_resolution_m", "analysis_resolution_m", "time_coverage", "method", "caveat", "reason"],
+      "required": [
+        "value",
+        "unit",
+        "status",
+        "source",
+        "native_resolution_m",
+        "analysis_resolution_m",
+        "time_coverage",
+        "method",
+        "caveat",
+        "reason"
+      ],
       "properties": {
-        "value": {"type": ["number", "null"]},
-        "unit": {"enum": ["m", "deg", "m/s", "degC", "K", "1", "Pa", "kg/m3"]},
-        "status": {"enum": ["measured", "derived", "modeled", "assumed", "unknown", "not_applicable"]},
-        "reason": {"type": ["string", "null"]}
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "m",
+            "deg",
+            "m/s",
+            "degC",
+            "K",
+            "1",
+            "Pa",
+            "kg/m3"
+          ]
+        },
+        "status": {
+          "enum": [
+            "measured",
+            "derived",
+            "modeled",
+            "assumed",
+            "unknown",
+            "not_applicable"
+          ]
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
       },
       "allOf": [
-        {"if": {"properties": {"value": {"type": "null"}}}, "then": {"properties": {"reason": {"type": "string", "minLength": 1}}}},
-        {"if": {"properties": {"status": {"enum": ["unknown", "not_applicable"]}}}, "then": {"properties": {"value": {"type": "null"}}}},
-        {"if": {"properties": {"value": {"type": "number"}}}, "then": {"properties": {"source": {"type": "object", "required": ["product_id", "url"]}, "method": {"type": "string", "minLength": 1}}}}
+        {
+          "if": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "unknown",
+                  "not_applicable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "source": {
+                "type": "object",
+                "required": [
+                  "product_id",
+                  "url"
+                ]
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
       ]
     },
     "site": {
       "type": "object",
-      "required": ["id", "name", "body", "role", "longitude", "latitude", "region", "description", "bbox", "terrain", "conditions", "comparison_features", "classification", "completeness", "limitations", "simulation_defaults"],
+      "required": [
+        "id",
+        "name",
+        "body",
+        "role",
+        "longitude",
+        "latitude",
+        "region",
+        "description",
+        "bbox",
+        "terrain",
+        "conditions",
+        "comparison_features",
+        "classification",
+        "completeness",
+        "limitations",
+        "simulation_defaults"
+      ],
       "properties": {
-        "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
-        "body": {"enum": ["earth", "moon", "mars"]},
-        "role": {"enum": ["earth_analog", "planetary_target"]},
-        "longitude": {"type": "number", "minimum": -180, "maximum": 180},
-        "latitude": {"type": "number", "minimum": -90, "maximum": 90},
-        "bbox": {"type": ["array", "null"], "minItems": 4, "maxItems": 4, "items": {"type": "number"}},
-        "terrain": {"type": ["object", "null"], "required": ["manifest_url", "manifest_sha256", "elevation_sha256", "rows", "columns", "row_order", "column_order", "spacing_m", "source_url"], "properties": {
-          "row_order": {"const": "north_to_south"}, "column_order": {"const": "west_to_east"},
-          "rows": {"type": "integer", "minimum": 2}, "columns": {"type": "integer", "minimum": 2},
-          "spacing_m": {"type": "number", "exclusiveMinimum": 0},
-          "manifest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
-          "elevation_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
-        }},
-        "conditions": {"type": "object", "additionalProperties": {"$ref": "#/$defs/quantity"}},
-        "comparison_features": {"type": "object", "additionalProperties": {"$ref": "#/$defs/quantity"}},
-        "morphology": {"enum": ["crater", "impact_crater", "volcanic_plain", "lava_field", "dune_field", "canyon", "rocky_desert", "delta", "playa", "polygonal_ground"]},
-        "substrate": {"enum": ["basalt", "basaltic_sand", "gypsum_sand", "sedimentary_rock", "evaporite", "permafrost", "icy_regolith", "lunar_regolith", "unknown"]}
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "body": {
+          "enum": [
+            "earth",
+            "moon",
+            "mars"
+          ]
+        },
+        "role": {
+          "enum": [
+            "earth_analog",
+            "planetary_target"
+          ]
+        },
+        "longitude": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "bbox": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "number"
+          }
+        },
+        "terrain": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "manifest_url",
+            "manifest_sha256",
+            "elevation_sha256",
+            "rows",
+            "columns",
+            "row_order",
+            "column_order",
+            "spacing_m",
+            "source_url"
+          ],
+          "properties": {
+            "row_order": {
+              "const": "north_to_south"
+            },
+            "column_order": {
+              "const": "west_to_east"
+            },
+            "rows": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "columns": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "spacing_m": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "manifest_sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "elevation_sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        },
+        "conditions": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/quantity"
+          }
+        },
+        "comparison_features": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/quantity"
+          }
+        },
+        "morphology": {
+          "enum": [
+            "crater",
+            "impact_crater",
+            "volcanic_plain",
+            "lava_field",
+            "dune_field",
+            "canyon",
+            "rocky_desert",
+            "delta",
+            "playa",
+            "polygonal_ground"
+          ]
+        },
+        "substrate": {
+          "enum": [
+            "basalt",
+            "basaltic_sand",
+            "gypsum_sand",
+            "sedimentary_rock",
+            "evaporite",
+            "permafrost",
+            "icy_regolith",
+            "lunar_regolith",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "pairing": {
+      "type": "object",
+      "required": [
+        "earth_id",
+        "planetary_id",
+        "terrain_score",
+        "environment_score",
+        "combined_score",
+        "explanation"
+      ],
+      "properties": {
+        "earth_id": {
+          "type": "string"
+        },
+        "planetary_id": {
+          "type": "string"
+        },
+        "explanation": {
+          "type": "object",
+          "required": [
+            "status",
+            "matches",
+            "differences",
+            "sources",
+            "scope"
+          ],
+          "properties": {
+            "status": {
+              "const": "proposed_unvalidated"
+            },
+            "matches": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "differences": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "sources": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
       }
     }
   }

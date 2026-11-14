@@ -23,20 +23,23 @@ export function profileToSite(profile: TerrainProfile, opts: { analogOf?: Analog
   const grid = profile?.terrain?.elevation_m;
   if (!Array.isArray(grid) || grid.length < 2) throw new Error('profile.terrain.elevation_m must be a 2D grid');
   const rows = grid.length;
+  if (!Array.isArray(grid[0]) || grid[0].length < 2) throw new Error('profile elevation grid must have at least two columns');
   const cols = grid[0].length;
-  if (grid.some((r) => r.length !== cols)) throw new Error('profile.terrain.elevation_m rows have different lengths');
+  if (grid.some((r) => !Array.isArray(r) || r.length !== cols)) throw new Error('profile.terrain.elevation_m rows have different lengths');
   const { x, y } = profile.spatial.resolution_m;
-  if (!(x > 0 && y > 0)) throw new Error('profile.spatial.resolution_m must be positive');
+  if (!(Number.isFinite(x) && Number.isFinite(y) && x > 0 && y > 0)) throw new Error('profile.spatial.resolution_m must be positive');
 
-  if (grid.some(row => row.some(v => typeof v !== 'number' || !Number.isFinite(v))))
-    throw new Error('profile contains missing or nonfinite elevation cells; process nodata before simulation');
+  if (grid.some(row => row.some(value => typeof value !== 'number' || !Number.isFinite(value)))) {
+    throw new Error('profile contains missing or nonfinite elevations; no synthetic filling is permitted');
+  }
 
   const heights = new Float32Array(rows * cols);
   for (let r = 0; r < rows; r++) {
     const src = grid[rows - 1 - r];
     for (let c = 0; c < cols; c++) {
       const v = src[c];
-      heights[r * cols + c] = v!;
+      heights[r * cols + c] = v as number;
+      if (!Number.isFinite(heights[r * cols + c])) throw new Error('profile elevation exceeds float32 range');
     }
   }
   const body = profile.site.body;
@@ -44,9 +47,12 @@ export function profileToSite(profile: TerrainProfile, opts: { analogOf?: Analog
   // roughness_rms_m, same grid: modulates where generated boulders cluster (see surface.ts)
   let roughnessGrid: SiteTerrain['roughnessGrid'];
   const rough = profile.terrain.roughness_rms_m;
-  if (Array.isArray(rough) && rough.length === rows && rough.every((r) => r.length === cols)) {
+  if (rough !== undefined) {
+    if (!Array.isArray(rough) || rough.length !== rows || rough.some(row => !Array.isArray(row) || row.length !== cols || row.some(v => typeof v !== 'number' || !Number.isFinite(v) || v < 0))) {
+      throw new Error('profile roughness grid contains missing, invalid or misaligned samples');
+    }
     const rh = new Float32Array(rows * cols);
-    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) rh[r * cols + c] = rough[rows - 1 - r][c] ?? 0;
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) rh[r * cols + c] = rough[rows - 1 - r][c] as number;
     roughnessGrid = { cols, rows, cellSize, heights: rh };
   }
   return {

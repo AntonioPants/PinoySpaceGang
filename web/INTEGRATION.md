@@ -20,9 +20,9 @@
   Earth weather is never applied to a Moon or Mars scenario.
 
 
-Integrated with the expanded 17-site catalog: 11 Earth terrain packs (including Haughton
-and Qaidam) and six planetary targets. Qaidam has no proposed pairing; it is available
-for explicitly experimental flights. The Earth testbed page exposes the same complete
+Integrated with the expanded 18-site catalog: 11 Earth terrain packs (including Haughton
+and Qaidam) and seven planetary targets. Qaidam has a proposed yardang comparison with
+Lucus Planum. All pairings remain unvalidated. The Earth testbed page exposes the same complete
 catalog-details component as the physics viewer, including provenance and seasonal data.
 The alternate profile importer now rejects missing elevation values instead of filling
 them. Catalog JSON is written with LF bytes before hashing on all platforms.
@@ -90,15 +90,16 @@ muted until explicit user interaction. Call `onComplete` once per playback.
 ## Data team
 
 `src/data/sites.ts` projects `public/sites.json` into navigation labels; it does
-not own separate scientific records. Nine Earth packs and six planetary regions
-are available. Haughton and Qaidam remain unavailable candidates. Proposed
+not own separate scientific records. Eleven Earth packs and seven planetary regions
+are available, including Haughton, Qaidam and Lucus Planum. Proposed
 pairings sort first; other Earth sites remain usable as independent experiments.
 `loadProfile` supports both Kilbourne's original manifest and the new compact
 catalog manifests, deriving width and relief from actual samples. It validates
 every sample and the selected site ID. Exports retain the selected pack path.
-A stale profile cannot be passed to another site's mission. Planetary DEMs and
-catalog terrain scores are not yet visualized in this UI; scientific-equivalence
-and fidelity claims remain explicitly unvalidated.
+A stale profile cannot be passed to another site's mission. Catalog terrain scores
+and pair-specific explanations appear in the evidence panel; planetary DEMs feed
+the flight-report comparison. Scientific-equivalence and fidelity claims remain
+explicitly unvalidated.
 
 ## Ownership
 

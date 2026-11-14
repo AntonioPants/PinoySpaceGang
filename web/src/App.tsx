@@ -175,6 +175,13 @@ function Mission({ catalog }: { catalog: Catalog }) {
               <div className="evidence-row"><span className="evidence-mark amber">!</span><div><strong>Know where the analogy ends</strong><p>{pairing ? <>{pairing.geology_comparison ? `Catalog labels: ${pairing.geology_comparison.same_morphology_label ? 'same' : 'different'} landform, ${pairing.geology_comparison.same_substrate_label ? 'same' : 'different'} surface material. ` : ''}{pairing.interpretation} </> : 'The data team has not proposed this site as an analog for the selected target. '}The {profile?.sampleSpacingM ?? 30} m grid cannot resolve landing-scale boulders.</p></div></div>
               <div className="score-line"><span>Terrain similarity (slope, roughness, relief)</span><strong>{typeof pairing?.terrain_score === 'number' ? `${pairing.terrain_score.toFixed(2)} of 1` : 'Not calculated'}</strong></div>
               {pairing && pairing.combined_score === null && <p className="field-help">Combined score withheld: {pairing.reason}</p>}
+              {pairing?.explanation && <details className="pairing-explanation">
+                <summary>Pair-specific evidence and limitations (proposed, unvalidated)</summary>
+                <h4>What matches</h4><ul>{pairing.explanation.matches.map(text => <li key={text}>{text}</li>)}</ul>
+                <h4>What differs</h4><ul>{pairing.explanation.differences.map(text => <li key={text}>{text}</li>)}</ul>
+                <p>{pairing.explanation.scope}</p>
+                <ul>{pairing.explanation.sources.map(url => <li key={url}><a href={url} target="_blank" rel="noreferrer">{url}</a></li>)}</ul>
+              </details>}
               <button className="text-button" onClick={() => setDialog('sources')}>Inspect evidence & sources <ExternalLink size={13} /></button>
             </section>
           </> : <div className="empty-data"><Layers3 size={26} /><h3>Terrain handoff pending</h3><p>This candidate is listed in the project brief. Choose {available[0].name} to configure a mission with real elevation data.</p><button className="subtle-button" onClick={() => selectAnalog(available[0].id)}>Use {available[0].name}</button></div>}
