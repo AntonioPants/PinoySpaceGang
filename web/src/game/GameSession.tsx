@@ -7,6 +7,7 @@ import { toSimInput } from '../lib/simulation';
 import type { MissionConfig, MissionSettings, PlanetarySite, TerrainProfile } from '../lib/types';
 import { completePhase, nextPhase, type GamePhase } from './contracts';
 import { gameIntegrations } from './integrations';
+import { loadoutFor } from './equipment';
 import SystemsConsole from './SystemsConsole';
 
 const Descent = lazy(() => import('../components/Descent'));
@@ -46,7 +47,7 @@ export default function GameSession({ initialMission, settings: initialSettings,
       const errors = validateSettings(settings); if (errors.length) throw new Error(errors.join(' '));
       if (settings.environment === 'earth' && settings.realWeatherMonth > 0 && !weatherAvailable) throw new Error('This site has no weather profile. Select manual wind.');
       const locked = buildMission(target, profile, settings, { terrainBase: mission.earthAnalog.terrainBaseUrl, analogName: mission.earthAnalog.name, terrainScore: mission.evidence.quantitativeSimilarityScore, weatherAvailable });
-      if (mission.equipment) locked.equipment = { ...mission.equipment, hazardSensor: settings.hazardSensor };
+      if (mission.equipment) locked.equipment = { ...mission.equipment, vehicleId: loadoutFor(settings) ?? mission.equipment.vehicleId, hazardSensor: settings.hazardSensor };
       toSimInput(locked, profile, entry, weather); // Validate the complete handoff before any departure scene.
       setMission(locked); setError(''); complete('controlCenter');
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not prepare the mission.'); }
