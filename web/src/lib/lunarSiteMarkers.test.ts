@@ -3,6 +3,13 @@ import { Cartesian3, Color, Ellipsoid, JulianDate } from 'cesium';
 import { createLunarSiteMarkers } from './lunarSiteMarkers';
 
 describe('lunar site locators', () => {
+  it('places Mars markers on the Mars ellipsoid', () => {
+    const [marker] = createLunarSiteMarkers([{ id: 'mars', name: 'Mars site', lat: 0, lon: 0 }],
+      () => Cartesian3.fromDegrees(0, 0, 8000000, Ellipsoid.MARS), () => 'mars', Ellipsoid.MARS);
+    const time = JulianDate.now();
+    expect(marker.position!.getValue(time)!.x).toBeCloseTo(Ellipsoid.MARS.maximumRadius + 5000);
+    expect(marker.point!.show!.getValue(time)).toBe(true);
+  });
   it('shows near-side dots above relief and hides far-side dots, including after orbiting', () => {
     let camera = Cartesian3.fromDegrees(0, 0, 4500000, Ellipsoid.MOON);
     const markers = createLunarSiteMarkers([

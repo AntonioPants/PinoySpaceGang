@@ -10,10 +10,11 @@ export function createLunarSiteMarkers(
   sites: LunarSiteMarker[],
   getCameraPosition: () => Cartesian3,
   getSelected: () => string,
+  ellipsoid: Ellipsoid = Ellipsoid.MOON,
 ): Entity[] {
-  const occluder = new EllipsoidalOccluder(Ellipsoid.MOON, getCameraPosition());
+  const occluder = new EllipsoidalOccluder(ellipsoid, getCameraPosition());
   return sites.map(site => {
-    const surface = Cartesian3.fromDegrees(site.lon, site.lat, 0, Ellipsoid.MOON);
+    const surface = Cartesian3.fromDegrees(site.lon, site.lat, 0, ellipsoid);
     const visible = new CallbackProperty(() => {
       occluder.cameraPosition = getCameraPosition();
       return occluder.isPointVisible(surface);
@@ -21,7 +22,7 @@ export function createLunarSiteMarkers(
     return new Entity({
       id: site.id,
       name: site.name,
-      position: Cartesian3.fromDegrees(site.lon, site.lat, 5000, Ellipsoid.MOON),
+      position: Cartesian3.fromDegrees(site.lon, site.lat, 5000, ellipsoid),
       point: {
         show: visible,
         pixelSize: new CallbackProperty(() => getSelected() === site.id ? 18 : 12, false),

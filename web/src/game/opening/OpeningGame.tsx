@@ -19,7 +19,6 @@ type Stage='title'|'worlds'|'destination'|'earth'|'equipment'|'journey'|'report'
 export default function OpeningGame({catalog}:{catalog:Catalog}) {
   const [online,setOnline]=useState(navigator.onLine);
   useEffect(()=>{const update=()=>setOnline(navigator.onLine);window.addEventListener('online',update);window.addEventListener('offline',update);return()=>{window.removeEventListener('online',update);window.removeEventListener('offline',update);};},[]);
-  const moonTargets=useMemo(()=>catalog.targets.filter(t=>t.body==='Moon'),[catalog]);
   const [stage,setStage]=useState<Stage>('title'),[body,setBody]=useState<Body>('Moon'),[hover,setHover]=useState<Body|null>(null);
   const [siteMenu,setSiteMenu]=useState(false);
   const [targetId,setTargetId]=useState(catalog.targets[0].id),[analogId,setAnalogId]=useState(''),[surface,setSurface]=useState(false);
@@ -27,6 +26,7 @@ export default function OpeningGame({catalog}:{catalog:Catalog}) {
   const [loaded,setLoaded]=useState<TerrainProfile|null>(null),[error,setError]=useState(''),[retry,setRetry]=useState(0);
   const [weatherState,setWeather]=useState<{id:string;data:EnvironmentProfile}|null>(null);
   const [mission,setMission]=useState<MissionConfig|null>(null),[flight,setFlight]=useState<FlightTelemetry|null>(null),[credits,setCredits]=useState(false),[allSites,setAllSites]=useState(false);
+  const moonTargets=useMemo(()=>catalog.targets.filter(t=>t.body===body),[catalog,body]);
   const target=catalog.targets.find(t=>t.id===targetId)!;
   const ranked=useMemo(()=>analogsFor(catalog,targetId).filter(a=>a.available),[catalog,targetId]);
   const candidates=useMemo(()=>{const paired=ranked.filter(a=>!!pairingOf(catalog,targetId,a.id));return allSites||!paired.length?ranked:paired;},[ranked,catalog,targetId,allSites]);
@@ -50,8 +50,8 @@ export default function OpeningGame({catalog}:{catalog:Catalog}) {
   const fullscreen=()=>{if(document.fullscreenElement)void document.exitFullscreen();else void document.documentElement.requestFullscreen?.().catch(()=>{});};
   const startJourney=()=>{setStage('worlds');if(!document.fullscreenElement)void document.documentElement.requestFullscreen?.().catch(()=>{});};
   return <div className={`opening-game opening-${stage}${stage==='earth'&&surface?' on-surface':''}`}>
-    <div className="game-network-status" role="status" title="Network connection reported by your browser; Cesium loading is reported separately.">{online?'● Online':'○ Offline'}{(stage==='title'||stage==='worlds')&&' · Reference world preview; select Moon for streamed terrain'}</div>
-    {stage==='destination'&&body==='Moon'?<div className="opening-world-scene lunar-destination"><Suspense fallback={<p role="status">Loading Cesium Moon viewer…</p>}><MoonGlobe points={moonTargets} selected={targetId} onSelect={setTargetId}/></Suspense></div>:(stage==='title'||inOpening&&stage!=='equipment')&&<WorldScene stage={stage as 'title'|'worlds'|'destination'|'earth'} body={body} hover={hover} targets={catalog.targets} analogs={candidates} targetId={targetId} analogId={analog.id} selectedAnalog={analog} profile={profile} surface={surface} onBody={chooseBody} onHover={setHover} onTarget={setTargetId} onAnalog={selectAnalog}/>}
+    <div className="game-network-status" role="status" title="Network connection reported by your browser; Cesium loading is reported separately.">{online?'● Online':'○ Offline'}{(stage==='title'||stage==='worlds')&&' · Reference world preview; select a planet for streamed terrain'}</div>
+    {stage==='destination'?<div className="opening-world-scene lunar-destination"><Suspense fallback={<p role="status">Loading Cesium Moon viewer…</p>}><MoonGlobe key={body} body={body} points={moonTargets} selected={targetId} onSelect={setTargetId}/></Suspense></div>:(stage==='title'||inOpening&&stage!=='equipment')&&<WorldScene stage={stage as 'title'|'worlds'|'destination'|'earth'} body={body} hover={hover} targets={catalog.targets} analogs={candidates} targetId={targetId} analogId={analog.id} selectedAnalog={analog} profile={profile} surface={surface} onBody={chooseBody} onHover={setHover} onTarget={setTargetId} onAnalog={selectAnalog}/>}
     {stage!=='journey'&&<header className="game-topbar"><button className="game-wordmark" onClick={()=>setStage('title')} aria-label="Return to title screen"><Orbit size={24}/><span>analog atlas</span></button><span className="game-chapter">{stage==='title'?'':stage==='worlds'?'Choose your destination':stage==='destination'?'Destination / 01':stage==='earth'?'Earth reconnaissance / 02':stage==='equipment'?'Equipment bay / 03':'Mission debrief'}</span><div className="game-tools"><button aria-label="Toggle fullscreen" onClick={fullscreen}><Maximize size={17}/></button><button onClick={()=>setCredits(true)}>Credits</button></div></header>}
     {stage==='title'&&<main className="title-screen"><span className="title-eyebrow">A planetary field expedition</span><h1 id="mission-title" tabIndex={-1}>ANALOG <span>ATLAS</span></h1><p>Other worlds. Earth underfoot.</p><button className="title-start" onClick={startJourney}>Start Journey <ArrowRight size={20}/></button><small>Moon / Mars / Earth</small></main>}
     {inOpening&&<>

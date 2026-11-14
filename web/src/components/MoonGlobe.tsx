@@ -5,9 +5,11 @@ import { createLunarSiteMarkers } from '../lib/lunarSiteMarkers';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 type Point = { id: string; name: string; lat: number; lon: number };
-type Props = { points: Point[]; selected: string; onSelect: (id: string) => void };
+type Props = { body?: 'Moon' | 'Mars'; points: Point[]; selected: string; onSelect: (id: string) => void };
 
-export default function MoonGlobe({ points, selected, onSelect }: Props) {
+export default function MoonGlobe({ points, selected, onSelect, body = 'Moon' }: Props) {
+  const ellipsoid = body === 'Mars' ? Cesium.Ellipsoid.MARS : Cesium.Ellipsoid.MOON;
+  const cameraHeight = ellipsoid.maximumRadius * 2.6;
   const host = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<Cesium.Viewer | null>(null);
   const selectedRef = useRef(selected);
@@ -32,7 +34,7 @@ export default function MoonGlobe({ points, selected, onSelect }: Props) {
     if (!online || failed || !host.current) return;
     if (!token || token === 'YOUR_CESIUM_ION_TOKEN') { setRenderStatus('Cesium token missing'); setFailed(true); return; }
     setRenderStatus('Connecting to Cesium…');
-    Cesium.Ellipsoid.default = Cesium.Ellipsoid.MOON;
+    Cesium.Ellipsoid.default = ellipsoid;
     Cesium.Ion.defaultAccessToken = token;
     let viewer: Cesium.Viewer | undefined;
     let handler: Cesium.ScreenSpaceEventHandler | undefined;
@@ -44,14 +46,14 @@ export default function MoonGlobe({ points, selected, onSelect }: Props) {
         viewer = new Cesium.Viewer(host.current!, { globe: false, skyAtmosphere: false, skyBox: false, baseLayer: false, baseLayerPicker: false, geocoder: false, animation: false, timeline: false, sceneModePicker: false, homeButton: false, navigationHelpButton: false, selectionIndicator: false, infoBox: false });
         viewerRef.current = viewer;
         viewer.scene.backgroundColor = Cesium.Color.BLACK; viewer.scene.fog.enabled = false; viewer.scene.light = new Cesium.SunLight();
-        const tileset = await Cesium.Cesium3DTileset.fromIonAssetId(2684829, { enableCollision: true });
+        const tileset = await Cesium.Cesium3DTileset.fromIonAssetId(body === 'Mars' ? 3644333 : 2684829, { enableCollision: true });
         if (disposed) { tileset.destroy(); return; }
         tileset.tileFailed.addEventListener(() => { if (!disposed) setRenderStatus('Some Cesium tiles failed to load'); });
-        tileset.tileVisible.addEventListener(() => { if (!disposed && !firstTile) { firstTile = true; window.clearTimeout(timeout); setRenderStatus('Detailed Cesium Moon · live terrain'); } });
+        tileset.tileVisible.addEventListener(() => { if (!disposed && !firstTile) { firstTile = true; window.clearTimeout(timeout); setRenderStatus(`Detailed Cesium ${body} · live terrain`); } });
         viewer.scene.primitives.add(tileset);
-        for (const marker of createLunarSiteMarkers(points, () => viewer!.camera.positionWC, () => selectedRef.current)) viewer.entities.add(marker);
+        for (const marker of createLunarSiteMarkers(points, () => viewer!.camera.positionWC, () => selectedRef.current, ellipsoid)) viewer.entities.add(marker);
         const point = points.find(p => p.id === selectedRef.current) ?? points[0];
-        if (point) viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(point.lon, point.lat, 4500000, Cesium.Ellipsoid.MOON) });
+        if (point) viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(point.lon, point.lat, cameraHeight, ellipsoid) });
         handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
         handler.setInputAction((event: { position: Cesium.Cartesian2 }) => {
           const hit = viewer?.scene.pick(event.position);
@@ -61,12 +63,12 @@ export default function MoonGlobe({ points, selected, onSelect }: Props) {
     };
     void start();
     return () => { disposed = true; window.clearTimeout(timeout); handler?.destroy(); if (viewer && !viewer.isDestroyed()) viewer.destroy(); viewerRef.current = null; };
-  }, [online, failed, points]);
+  }, [online, failed, points, body, ellipsoid, cameraHeight]);
   useEffect(() => {
     const viewer = viewerRef.current, point = points.find(p => p.id === selected);
     if (!viewer || viewer.isDestroyed() || !point) return;
-    viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(point.lon, point.lat, 4500000, Cesium.Ellipsoid.MOON), duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1.2 });
-  }, [selected, points]);
-  if (!online || failed) return <div className="moon-fallback"><Globe body="Moon" points={points} selected={selected} onSelect={onSelect} /><span className="moon-status" role="status">Using old offline Moon model · {!online ? 'No network connection' : renderStatus}<button onClick={() => { setOnline(navigator.onLine); setFailed(false); }}>Retry Cesium</button></span></div>;
-  return <div className="globe-view"><div ref={host} className="globe-canvas" aria-label="Cesium Moon. Click a site dot to select it, or use the destination list. Drag to orbit." /><span className="globe-disclaimer">Cesium Moon · Click a site dot to select · Approximate study-area locators</span><span className="moon-status" role="status">{renderStatus}</span></div>;
+    viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(point.lon, point.lat, cameraHeight, ellipsoid), duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1.2 });
+  }, [selected, points, ellipsoid, cameraHeight]);
+  if (!online || failed) return <div className="moon-fallback"><Globe body={body} points={points} selected={selected} onSelect={onSelect} /><span className="moon-status" role="status">Using old offline {body} model · {!online ? 'No network connection' : renderStatus}<button onClick={() => { setOnline(navigator.onLine); setFailed(false); }}>Retry Cesium</button></span></div>;
+  return <div className="globe-view"><div ref={host} className="globe-canvas" aria-label="Cesium Moon. Click a site dot to select it, or use the destination list. Drag to orbit." /><span className="globe-disclaimer">Cesium {body} · Sites v2 · Click a site dot to select · Approximate study-area locators</span><span className="moon-status" role="status">{renderStatus}</span></div>;
 }
