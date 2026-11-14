@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Analog Landing Sim — Mission Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --space: #05070f;
+    --navy: #0b1a3a;
+    --blue: #0b3d91;      /* agency blue */
+    --blue-2: #1f5fd1;
+    --red: #fc3d21;       /* agency red */
+    --white: #f4f6fb;
+    --dim: #93a1bd;
+    --line: rgba(255,255,255,0.12);
+    --gold: #f2b134;
+    --mars: #d9643a;
+    --moon: #c9cdd6;
+    --ok: #3ddc97;
+    --sans: Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--space); color: var(--white); font-family: var(--sans); line-height: 1.55; overflow-x: hidden; }
+  a { color: inherit; }
+  #stars { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .wrap { position: relative; z-index: 1; max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 110px 0; position: relative; z-index: 1; }
+
+  /* ---------- top bar ---------- */
+  .bar { position: fixed; top: 0; left: 0; right: 0; z-index: 10; display: flex; align-items: center; gap: 18px; padding: 12px 24px;
+         background: linear-gradient(to bottom, rgba(5,7,15,0.92), rgba(5,7,15,0)); font-family: var(--mono); font-size: 12px; letter-spacing: .08em; }
+  .bar .tag { background: var(--red); color: #fff; padding: 3px 8px; font-weight: 600; }
+  .bar nav { margin-left: auto; display: flex; gap: 18px; }
+  .bar nav a { text-decoration: none; color: var(--dim); transition: color .2s; }
+  .bar nav a:hover { color: #fff; }
+  .met { color: var(--ok); }
+
+  /* ---------- hero ---------- */
+  .hero { min-height: 100vh; display: grid; grid-template-columns: 1.15fr 0.85fr; align-items: center; gap: 40px; padding-top: 80px; }
+  .kicker { font-family: var(--mono); font-size: 13px; letter-spacing: .25em; color: var(--red); text-transform: uppercase; }
+  h1 { font-size: clamp(42px, 6.4vw, 84px); line-height: .95; margin: 18px 0 22px; font-weight: 900; letter-spacing: -0.03em; text-transform: uppercase; }
+  h1 span { display: block; background: linear-gradient(90deg, #fff, #9fc0ff 60%, #fff); -webkit-background-clip: text; background-clip: text; color: transparent;
+            background-size: 200% 100%; animation: sheen 8s linear infinite; }
+  @keyframes sheen { to { background-position: -200% 0; } }
+  .lede { font-size: 19px; color: #c9d3e8; max-width: 560px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+  .chip { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line); padding: 6px 10px; border-radius: 999px; color: var(--dim); }
+  .chip b { color: #fff; font-weight: 600; }
+
+  .patch { width: 100%; max-width: 440px; justify-self: center; filter: drop-shadow(0 30px 60px rgba(11,61,145,.45)); }
+  .patch .spin { transform-origin: 200px 200px; animation: spin 40s linear infinite; }
+  .patch .orbit { transform-origin: 200px 200px; animation: spin 9s linear infinite; }
+  .patch .flame { animation: flicker .12s steps(2) infinite; transform-origin: 200px 236px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes flicker { 50% { transform: scaleY(.7); opacity: .8; } }
+  .scroll { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); font-family: var(--mono); font-size: 11px; letter-spacing: .3em; color: var(--dim); text-align: center; }
+  .scroll i { display: block; width: 1px; height: 42px; margin: 10px auto 0; background: linear-gradient(var(--red), transparent); animation: drip 2s ease-in-out infinite; }
+  @keyframes drip { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+  /* ---------- section heads ---------- */
+  .head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 44px; border-bottom: 1px solid var(--line); padding-bottom: 18px; }
+  .head .num { font-family: var(--mono); color: var(--red); font-size: 14px; }
+  .head h2 { margin: 0; font-size: clamp(28px, 4vw, 44px); font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; }
+  .head p { margin: 0 0 0 auto; color: var(--dim); max-width: 380px; font-size: 15px; text-align: right; }
+
+  /* ---------- trajectory ---------- */
+  .traj { width: 100%; height: auto; overflow: visible; }
+  .traj .path { fill: none; stroke: rgba(255,255,255,.18); stroke-width: 2; stroke-dasharray: 2 8; stroke-linecap: round; }
+  .traj .path-glow { fill: none; stroke: url(#trajGrad); stroke-width: 3; stroke-dasharray: 1400; stroke-dashoffset: 1400; }
+  .in .traj .path-glow { animation: draw 3.2s cubic-bezier(.6,.1,.2,1) forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .traj .wp circle.ring { fill: var(--space); stroke: #fff; stroke-width: 2; }
+  .traj .wp circle.pulse { fill: none; stroke: var(--red); stroke-width: 2; opacity: 0; animation: ping 3s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes ping { 0% { opacity: .9; transform: scale(.6); } 100% { opacity: 0; transform: scale(2.6); } }
+  .traj text { fill: #fff; font-family: var(--mono); font-size: 13px; }
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 26px; }
+  .step { border-top: 3px solid var(--blue-2); padding: 14px 4px 0; }
+  .step .n { font-family: var(--mono); color: var(--red); font-size: 13px; }
+  .step h3 { margin: 6px 0 6px; font-size: 18px; }
+  .step p { margin: 0; color: var(--dim); font-size: 14px; }
+
+  /* ---------- crew ---------- */
+  .crew { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+  .card { position: relative; background: linear-gradient(160deg, rgba(31,95,209,.14), rgba(11,26,58,.55)); border: 1px solid var(--line); border-radius: 14px; padding: 28px; overflow: hidden;
+          transition: transform .35s cubic-bezier(.2,.8,.2,1), border-color .35s; }
+  .card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,.35); }
+  .card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent, var(--red)); }
+  .card .sweep { position: absolute; inset: -40%; background: conic-gradient(from 0deg, transparent 0 80%, rgba(255,255,255,.08) 90%, transparent 100%); animation: spin 7s linear infinite; pointer-events: none; }
+  .card header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; position: relative; }
+  .card .icon { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.06); border: 1px solid var(--line); flex: none; }
+  .card .who { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; color: var(--accent); text-transform: uppercase; }
+  .card h3 { margin: 2px 0 0; font-size: 22px; line-height: 1.15; }
+  .card .goal { position: relative; color: #dfe6f5; font-size: 15px; margin: 0 0 14px; }
+  .card ul { position: relative; margin: 0; padding: 0; list-style: none; }
+  .card li { position: relative; padding: 7px 0 7px 22px; color: var(--dim); font-size: 14.5px; border-top: 1px dashed var(--line); }
+  .card li::before { content: ""; position: absolute; left: 2px; top: 15px; width: 8px; height: 8px; border: 2px solid var(--accent); transform: rotate(45deg); }
+  .card li b { color: #fff; font-weight: 600; }
+  code { font-family: var(--mono); font-size: .9em; background: rgba(255,255,255,.08); padding: 1px 6px; border-radius: 4px; color: #cfe0ff; }
+
+  /* ---------- telemetry strip ---------- */
+  .limits { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-top: 22px; }
+  .limits div { background: rgba(5,7,15,.85); padding: 18px; }
+  .limits span { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; color: var(--dim); text-transform: uppercase; }
+  .limits b { font-family: var(--mono); font-size: 30px; font-weight: 600; }
+  .limits small { color: var(--dim); font-size: 14px; }
+
+  /* ---------- data flow ---------- */
+  .flow { width: 100%; height: auto; }
+  .flow .node rect { fill: rgba(11,26,58,.9); stroke: rgba(255,255,255,.25); stroke-width: 1.2; rx: 12; }
+  .flow .node .t { fill: #fff; font: 700 15px var(--sans); }
+  .flow .node .s { fill: var(--dim); font: 12px var(--mono); }
+  .flow .link { fill: none; stroke: rgba(255,255,255,.18); stroke-width: 2; }
+  .flow .lbl { fill: #cfe0ff; font: 12px var(--mono); }
+  .contracts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 30px; }
+  .contract { border: 1px solid var(--line); border-radius: 12px; padding: 18px; background: rgba(11,26,58,.45); }
+  .contract .dir { font-family: var(--mono); font-size: 11px; color: var(--gold); letter-spacing: .1em; text-transform: uppercase; }
+  .contract h4 { margin: 6px 0 8px; font-size: 17px; }
+  .contract p { margin: 0; color: var(--dim); font-size: 14px; }
+
+  /* ---------- handoff rules ---------- */
+  .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .rule { position: relative; padding: 30px; border-radius: 14px; border: 1px solid var(--line); background: rgba(5,7,15,.6); overflow: hidden; }
+  .rule .big { font-family: var(--mono); font-weight: 600; font-size: 56px; color: var(--red); line-height: 1; }
+  .rule h3 { margin: 12px 0 8px; font-size: 22px; }
+  .rule p { margin: 0; color: var(--dim); }
+  .clock { position: absolute; right: 22px; top: 22px; width: 74px; height: 74px; }
+  .clock .hand { transform-origin: 37px 37px; animation: spin 6s linear infinite; }
+
+  /* ---------- repo ---------- */
+  .term { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #070b16; font-family: var(--mono); font-size: 14px; }
+  .term .tb { display: flex; gap: 7px; padding: 10px 14px; background: rgba(255,255,255,.04); border-bottom: 1px solid var(--line); align-items: center; }
+  .term .tb i { width: 11px; height: 11px; border-radius: 50%; background: #39425a; }
+  .term .tb i:first-child { background: var(--red); }
+  .term .tb span { margin-left: 10px; color: var(--dim); font-size: 12px; }
+  .term pre { margin: 0; padding: 22px; color: #cfd8ea; overflow-x: auto; line-height: 1.7; min-height: 360px; }
+  .term .c { color: #6f7f9e; }
+  .term .k { color: var(--gold); }
+  .term .g { color: var(--ok); }
+  .cursor { display: inline-block; width: 9px; height: 17px; background: var(--ok); vertical-align: -3px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ---------- conventions ---------- */
+  .conv { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .conv div { border-left: 3px solid var(--blue-2); padding: 6px 0 6px 18px; }
+  .conv b { display: block; font-size: 18px; margin-bottom: 6px; }
+  .conv p { margin: 0; color: var(--dim); }
+
+  footer { padding: 60px 0 80px; color: var(--dim); font-family: var(--mono); font-size: 12px; border-top: 1px solid var(--line); position: relative; z-index: 1; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+
+  /* ---------- reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal.d1 { transition-delay: .1s; } .reveal.d2 { transition-delay: .2s; } .reveal.d3 { transition-delay: .3s; }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding-top: 110px; }
+    .patch { max-width: 300px; }
+    .steps, .contracts, .limits { grid-template-columns: 1fr 1fr; }
+    .crew, .rules, .conv { grid-template-columns: 1fr; }
+    .head { flex-wrap: wrap; } .head p { margin: 0; text-align: left; }
+    .bar nav { display: none; }
+    section { padding: 80px 0; }
+  }
+  @media (max-width: 520px) { .steps, .contracts, .limits { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+    .traj .path-glow { stroke-dashoffset: 0; }
+  }
+</style>
+</head>
+<body>
+<canvas id="stars" aria-hidden="true"></canvas>
+
+<div class="bar">
+  <span class="tag">MISSION PLAN</span>
+  <span>PINOYSPACEGANG · SPACE APPS 2026</span>
+  <span class="met" id="met">MET 00:00:00</span>
+  <nav>
+    <a href="#profile">Profile</a><a href="#crew">Crew</a><a href="#flow">Data flow</a><a href="#rules">Handoffs</a><a href="#repo">Repo</a>
+  </nav>
+</div>
+
+<!-- =============================== HERO =============================== -->
+<header class="wrap hero">
+  <div class="reveal">
+    <div class="kicker">NASA Space Apps Challenge · Team PinoySpaceGang</div>
+    <h1>Planetary<span>Analog</span>Landing Sim</h1>
+    <p class="lede">Pick a landing site on the Moon or Mars, find its twin on Earth, configure a lander and fly the descent over real terrain. Then see whether it touches down or explodes, and read the engineering report.</p>
+    <div class="chips">
+      <span class="chip"><b>4–6</b> Moon/Mars target sites</span>
+      <span class="chip"><b>Earth</b> analog terrain</span>
+      <span class="chip"><b>Real</b> open elevation data</span>
+      <span class="chip"><b>React</b> web app</span>
+    </div>
+  </div>
+
+  <!-- original mission patch -->
+  <svg class="patch reveal d2" viewBox="0 0 400 400" role="img" aria-label="Mission patch: a lander descending over a crater with Moon and Mars in orbit">
+    <defs>
+      <radialGradient id="pBg" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#1f5fd1"/><stop offset="1" stop-color="#071a45"/></radialGradient>
+      <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8d6e5a"/><stop offset="1" stop-color="#3c2b22"/></linearGradient>
+      <clipPath id="disc"><circle cx="200" cy="200" r="150"/></clipPath>
+      <path id="ringText" d="M 200 200 m -168 0 a 168 168 0 1 1 336 0 a 168 168 0 1 1 -336 0"/>
+    </defs>
+    <circle cx="200" cy="200" r="190" fill="#05070f" stroke="#fff" stroke-width="3"/>
+    <g class="spin">
+      <text font-family="IBM Plex Mono, monospace" font-size="15" letter-spacing="6" fill="#fff">
+        <textPath href="#ringText">PLANETARY ANALOG LANDING · PINOYSPACEGANG · 2026 ·</textPath>
+      </text>
+    </g>
+    <circle cx="200" cy="200" r="150" fill="url(#pBg)" stroke="#fc3d21" stroke-width="4"/>
+    <g clip-path="url(#disc)">
+      <g fill="#fff" opacity=".8">
+        <circle cx="120" cy="110" r="1.4"/><circle cx="260" cy="90" r="1.2"/><circle cx="300" cy="150" r="1.6"/><circle cx="90" cy="180" r="1"/><circle cx="170" cy="80" r="1"/><circle cx="320" cy="210" r="1.1"/>
+      </g>
+      <path d="M50 300 Q110 262 160 282 T260 276 T360 292 V360 H50 Z" fill="url(#ground)"/>
+      <ellipse cx="205" cy="300" rx="52" ry="10" fill="#2b1f19" opacity=".8"/>
+      <!-- lander -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 -24; 0 4; 0 -24" dur="6s" repeatCount="indefinite"/>
+        <path class="flame" d="M192 236 L208 236 L200 268 Z" fill="#ffd27a"/>
+        <rect x="183" y="214" width="34" height="20" fill="#d4a017"/>
+        <rect x="188" y="194" width="24" height="20" fill="#e6e9ef"/>
+        <rect x="194" y="199" width="12" height="7" fill="#0b1a3a"/>
+        <path d="M186 234 L174 254 M214 234 L226 254 M168 254 h12 M220 254 h12" stroke="#e6e9ef" stroke-width="3" fill="none"/>
+      </g>
+    </g>
+    <!-- orbiting bodies -->
+    <g class="orbit">
+      <circle cx="200" cy="200" r="122" fill="none" stroke="rgba(255,255,255,.25)" stroke-dasharray="3 6"/>
+      <circle cx="322" cy="200" r="12" fill="#c9cdd6"/>
+      <circle cx="78" cy="200" r="9" fill="#d9643a"/>
+    </g>
+    <path d="M140 352 L200 372 L260 352" fill="none" stroke="#fc3d21" stroke-width="4"/>
+  </svg>
+  <div class="scroll">SCROLL<i></i></div>
+</header>
+
+<!-- =============================== PROFILE =============================== -->
+<section id="profile">
+  <div class="wrap">
+    <div class="head reveal"><span class="num">01</span><h2>Mission profile</h2><p>The core flow, from site selection to the post-flight report.</p></div>
+    <div class="reveal" id="trajBox">
+      <svg class="traj" viewBox="0 0 1100 260" role="img" aria-label="Trajectory with five stages">
+        <defs>
+          <linearGradient id="trajGrad" x1="0" x2="1"><stop offset="0" stop-color="#1f5fd1"/><stop offset=".6" stop-color="#9fc0ff"/><stop offset="1" stop-color="#fc3d21"/></linearGradient>
+        </defs>
+        <path id="trajPath" class="path" d="M60 200 C 200 20, 330 40, 330 120 S 520 230, 560 130 S 760 30, 790 120 S 960 230, 1040 200"/>
+        <path class="path-glow" d="M60 200 C 200 20, 330 40, 330 120 S 520 230, 560 130 S 760 30, 790 120 S 960 230, 1040 200"/>
+        <g class="wp"><circle class="pulse" cx="60" cy="200" r="10"/><circle class="ring" cx="60" cy="200" r="9"/><text x="40" y="238">01</text></g>
+        <g class="wp"><circle class="pulse" cx="330" cy="120" r="10" style="animation-delay:.6s"/><circle class="ring" cx="330" cy="120" r="9"/><text x="350" y="124">02</text></g>
+        <g class="wp"><circle class="pulse" cx="560" cy="130" r="10" style="animation-delay:1.2s"/><circle class="ring" cx="560" cy="130" r="9"/><text x="580" y="134">03</text></g>
+        <g class="wp"><circle class="pulse" cx="790" cy="120" r="10" style="animation-delay:1.8s"/><circle class="ring" cx="790" cy="120" r="9"/><text x="810" y="124">04</text></g>
+        <g class="wp"><circle class="pulse" cx="1040" cy="200" r="10" style="animation-delay:2.4s"/><circle class="ring" cx="1040" cy="200" r="9"/><text x="1022" y="238">05</text></g>
+        <!-- craft riding the trajectory -->
+        <g>
+          <circle r="5" fill="#fc3d21"/>
+          <circle r="12" fill="none" stroke="#fc3d21" stroke-opacity=".5"/>
+          <animateMotion dur="9s" repeatCount="indefinite" rotate="auto"><mpath href="#trajPath"/></animateMotion>
+        </g>
+      </svg>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="n">01 · SELECT</div><h3>Pick a site</h3><p>Choose a Moon or Mars landing zone on an interactive 3D globe.</p></div>
+      <div class="step reveal d1"><div class="n">02 · MATCH</div><h3>Find the analog</h3><p>Fly the camera to the matching Earth analog terrain.</p></div>
+      <div class="step reveal d2"><div class="n">03 · CONFIGURE</div><h3>Set the strategy</h3><p>Landing method, fuel, thrust, sensors, gravity and atmosphere.</p></div>
+      <div class="step reveal d3"><div class="n">04 · DESCEND</div><h3>Fly it</h3><p>Approach cutscene, then the live descent simulation over real terrain.</p></div>
+      <div class="step reveal d3"><div class="n">05 · REPORT</div><h3>Debrief</h3><p>Crash or touchdown cutscene, then the engineering report.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== CREW =============================== -->
+<section id="crew">
+  <div class="wrap">
+    <div class="head reveal"><span class="num">02</span><h2>Crew assignments</h2><p>Four workstreams, each with a clear owner and goal.</p></div>
+    <div class="crew">
+      <article class="card reveal" style="--accent: var(--gold)">
+        <div class="sweep"></div>
+        <header>
+          <div class="icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f2b134" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg></div>
+          <div><div class="who">Yousef &amp; Antonio</div><h3>Geospatial &amp; Planetary Data</h3></div>
+        </header>
+        <p class="goal">Supply the real space and Earth terrain data behind the map and the physics.</p>
+        <ul>
+          <li>Pull open datasets from <b>NASA Earthdata, LRO/Diviner, PDS, CSA RADARSAT</b> and <b>ESA Copernicus</b>.</li>
+          <li>Select <b>4–6 Moon/Mars landing sites</b> by topography, geology, environment and resources.</li>
+          <li>Characterize matching <b>Earth analogs</b>, both known sites and new under-characterized ones.</li>
+          <li>Score <b>planet ↔ Earth similarity</b>; export elevation slices plus slope, wind, albedo and soil.</li>
+        </ul>
+      </article>
+
+      <article class="card reveal d1" style="--accent: #6fa8ff">
+        <div class="sweep"></div>
+        <header>
+          <div class="icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6fa8ff" stroke-width="1.8"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4M7 13l3-3 2 2 4-4"/></svg></div>
+          <div><div class="who">Eyad</div><h3>Frontend, 3D Globes &amp; Mission UI</h3></div>
+        </header>
+        <p class="goal">Build the web app, the interactive globes and the mission control screens.</p>
+        <ul>
+          <li><b>3D Moon/Mars globe</b> with landing zones and camera transitions to the <b>Earth Analog Map</b>.</li>
+          <li><b>Strategy &amp; Analog Configurator</b> for method, fuel, thrust, sensors, and gravity &amp; atmosphere.</li>
+          <li><b>Post-Flight Engineering Report</b>: telemetry, survivability and an <b>Analog Fidelity Score</b>.</li>
+          <li>Wire every screen into one smooth end-to-end flow.</li>
+        </ul>
+      </article>
+
+      <article class="card reveal" style="--accent: var(--red)">
+        <div class="sweep"></div>
+        <header>
+          <div class="icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fc3d21" stroke-width="1.8"><path d="M12 2v6M12 22v-4M5 12H2M22 12h-3"/><circle cx="12" cy="12" r="4"/><path d="M9 21l3-3 3 3"/></svg></div>
+          <div><div class="who">Tim</div><h3>Descent Simulation &amp; Physics</h3></div>
+        </header>
+        <p class="goal">Build the core landing mechanics, the physics engine and the pass/fail logic.</p>
+        <ul>
+          <li>Physics over real elevation profiles: <b>gravity, thrust, fuel burn, wind drag, terrain collision</b>.</li>
+          <li>Strategies: <b>autonomous hazard avoidance</b> vs. <b>manual thruster/gimbal</b> control.</li>
+          <li>Sensor interference from <b>dust</b> and <b>snow glare</b>.</li>
+          <li>Touchdown thresholds decide <b>success or crash</b>; the telemetry goes to the report.</li>
+        </ul>
+      </article>
+
+      <article class="card reveal d1" style="--accent: var(--mars)">
+        <div class="sweep"></div>
+        <header>
+          <div class="icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d9643a" stroke-width="1.8"><rect x="3" y="6" width="14" height="12" rx="2"/><path d="M17 10l4-2v8l-4-2"/></svg></div>
+          <div><div class="who">Furgan</div><h3>Cutscenes, VFX &amp; Game Visuals</h3></div>
+        </header>
+        <p class="goal">Bring the simulation to life with cinematic sequences, polish and feedback.</p>
+        <ul>
+          <li><b>Opening cutscene</b>: the test lander enters the chosen Earth analog environment.</li>
+          <li><b>Failure ending</b>: fireballs, debris particles and camera shake.</li>
+          <li><b>Success ending</b>: clean touchdown, dust settling and beacon deployment.</li>
+          <li>Lander, exhaust, dust plumes, textures and sound, all driven by <b>physics events</b>.</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="limits reveal">
+      <div><span>Max sink rate</span><b data-count="3.0" data-dec="1">0</b> <small>m/s</small></div>
+      <div><span>Max lateral speed</span><b data-count="1.2" data-dec="1">0</b> <small>m/s</small></div>
+      <div><span>Max ground slope</span><b data-count="12" data-dec="0">0</b> <small>°</small></div>
+      <div><span>Lunar gravity</span><b data-count="1.62" data-dec="2">0</b> <small>m/s²</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== DATA FLOW =============================== -->
+<section id="flow">
+  <div class="wrap">
+    <div class="head reveal"><span class="num">03</span><h2>Data flow</h2><p>These integration contracts stay stable. When one changes, update every consumer in the same change.</p></div>
+    <div class="reveal">
+      <svg class="flow" viewBox="0 0 1100 360" role="img" aria-label="Data flows from the data team to the UI and physics, physics events go to VFX, telemetry goes back to the UI">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="rgba(255,255,255,.4)"/></marker>
+        </defs>
+        <!-- links -->
+        <path id="l1" class="link" marker-end="url(#arr)" d="M230 90 C 320 90, 340 70, 430 70"/>
+        <path id="l2" class="link" marker-end="url(#arr)" d="M230 110 C 360 140, 360 270, 430 280"/>
+        <path id="l3" class="link" marker-end="url(#arr)" d="M640 90 C 700 120, 700 240, 650 262"/>
+        <path id="l4" class="link" marker-end="url(#arr)" d="M650 280 C 750 280, 780 280, 860 280"/>
+        <path id="l5" class="link" marker-end="url(#arr)" d="M540 248 C 520 190, 520 160, 545 112"/>
+        <!-- labels -->
+        <text class="lbl" x="268" y="62">terrain data</text>
+        <text class="lbl" x="250" y="210">elevation + stats</text>
+        <text class="lbl" x="700" y="180">site + strategy</text>
+        <text class="lbl" x="700" y="268">physics events</text>
+        <text class="lbl" x="402" y="185">flight telemetry</text>
+        <!-- nodes -->
+        <g class="node"><rect x="30" y="60" width="200" height="74"/><text class="t" x="48" y="92">Terrain data</text><text class="s" x="48" y="114">Yousef &amp; Antonio</text></g>
+        <g class="node"><rect x="430" y="40" width="210" height="74"/><text class="t" x="448" y="72">Mission UI</text><text class="s" x="448" y="94">Eyad</text></g>
+        <g class="node"><rect x="430" y="248" width="220" height="74"/><text class="t" x="448" y="280">Descent physics</text><text class="s" x="448" y="302">Tim</text></g>
+        <g class="node"><rect x="860" y="248" width="210" height="74"/><text class="t" x="878" y="280">Cutscenes &amp; VFX</text><text class="s" x="878" y="302">Furgan</text></g>
+        <!-- moving packets -->
+        <g fill="#f2b134"><circle r="5"><animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#l1"/></animateMotion></circle></g>
+        <g fill="#f2b134"><circle r="5"><animateMotion dur="3.2s" begin=".8s" repeatCount="indefinite"><mpath href="#l2"/></animateMotion></circle></g>
+        <g fill="#6fa8ff"><circle r="5"><animateMotion dur="2.8s" begin=".3s" repeatCount="indefinite"><mpath href="#l3"/></animateMotion></circle></g>
+        <g fill="#fc3d21"><circle r="5"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#l4"/></animateMotion></circle><circle r="5"><animateMotion dur="1.6s" begin=".8s" repeatCount="indefinite"><mpath href="#l4"/></animateMotion></circle></g>
+        <g fill="#3ddc97"><circle r="5"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#l5"/></animateMotion></circle></g>
+      </svg>
+    </div>
+    <div class="contracts">
+      <div class="contract reveal"><div class="dir">Data → UI · Physics</div><h4>Terrain data</h4><p>Planetary sites, Earth analogs, similarity scores, elevation slices, and slope, wind, albedo and soil. Lives in <code>data/</code> profiles and <code>web/public/terrain/</code> packs.</p></div>
+      <div class="contract reveal d1"><div class="dir">Eyad → Tim · Furgan</div><h4>Simulation input</h4><p>Chosen site plus strategy: method, fuel, thrust, sensors, and gravity &amp; atmosphere adjustments.</p></div>
+      <div class="contract reveal d2"><div class="dir">Tim → Furgan</div><h4>Physics events</h4><p>Thruster firing, dust kick-up, touchdown and crash, which trigger VFX, cutscenes and sound.</p></div>
+      <div class="contract reveal d3"><div class="dir">Tim → Eyad</div><h4>Flight telemetry</h4><p>Touchdown velocities, fuel left, slope tilt, outcome and survivability, which feed the report.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== HANDOFFS =============================== -->
+<section id="rules">
+  <div class="wrap">
+    <div class="head reveal"><span class="num">04</span><h2>Handoff rules</h2><p>Build against the contracts with sample data first. Never block on final data.</p></div>
+    <div class="rules">
+      <div class="rule reveal">
+        <svg class="clock" viewBox="0 0 74 74" aria-hidden="true"><circle cx="37" cy="37" r="33" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2"/><circle cx="37" cy="37" r="33" fill="none" stroke="#fc3d21" stroke-width="3" stroke-dasharray="52 207" transform="rotate(-90 37 37)"/><line class="hand" x1="37" y1="37" x2="37" y2="12" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <div class="big">T+6h</div>
+        <h3>Hour 6 checkpoint</h3>
+        <p>Yousef &amp; Antonio lock in the terrain data structure, even with sample numbers, so Eyad and Tim can build against real keys right away.</p>
+      </div>
+      <div class="rule reveal d1">
+        <div class="big">⇄</div>
+        <h3>Simulation bridge</h3>
+        <p>Eyad passes the chosen site and strategy into Tim &amp; Furgan's simulation canvas. Tim returns the final flight telemetry to Eyad's report view.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== REPO =============================== -->
+<section id="repo">
+  <div class="wrap">
+    <div class="head reveal"><span class="num">05</span><h2>Repository layout</h2><p>Where everything lives on <code>main</code>.</p></div>
+    <div class="term reveal">
+      <div class="tb"><i></i><i></i><i></i><span>PinoySpaceGang — zsh</span></div>
+      <pre id="typed" aria-label="Repository layout"></pre>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== CONVENTIONS =============================== -->
+<section id="conventions">
+  <div class="wrap">
+    <div class="head reveal"><span class="num">06</span><h2>Flight rules</h2><p>Working conventions for the whole crew.</p></div>
+    <div class="conv">
+      <div class="reveal"><b>Cite the data</b><p>Use real open data from NASA, CSA and ESA, and cite the source dataset for every number shown to users.</p></div>
+      <div class="reveal d1"><b>Contracts first</b><p>Build against the agreed contracts with sample data. Don't wait for final data.</p></div>
+      <div class="reveal d2"><b>Stay in your lane</b><p>Keep changes inside your own area, or coordinate through the shared contracts.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Team PinoySpaceGang · NASA Space Apps Challenge 2026 entry</span>
+    <span>Independent team project, not affiliated with or endorsed by NASA</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- starfield with parallax drift ----
+  const c = document.getElementById('stars');
+  const g = c.getContext('2d');
+  let stars = [], W = 0, H = 0, dpr = 1;
+  function resize() {
+    dpr = Math.min(2, devicePixelRatio || 1);
+    W = c.width = innerWidth * dpr; H = c.height = innerHeight * dpr;
+    stars = Array.from({ length: Math.round((innerWidth * innerHeight) / 4200) }, () => ({
+      x: Math.random() * W, y: Math.random() * H, z: Math.random() * 0.9 + 0.1, t: Math.random() * 6.28,
+    }));
+  }
+  let shooting = null;
+  function frame(now) {
+    g.clearRect(0, 0, W, H);
+    const sy = scrollY * dpr;
+    for (const s of stars) {
+      const y = (s.y - sy * s.z * 0.25) % H; const yy = y < 0 ? y + H : y;
+      const a = 0.35 + 0.65 * Math.abs(Math.sin(s.t + now / 1400 * s.z));
+      g.fillStyle = `rgba(255,255,255,${a * s.z})`;
+      g.fillRect(s.x, yy, s.z * 2 * dpr, s.z * 2 * dpr);
+    }
+    if (!shooting && Math.random() < 0.004) shooting = { x: Math.random() * W, y: Math.random() * H * 0.5, life: 0 };
+    if (shooting) {
+      shooting.life += 0.02;
+      const len = 120 * dpr, x = shooting.x + shooting.life * 600 * dpr, y = shooting.y + shooting.life * 260 * dpr;
+      const grd = g.createLinearGradient(x, y, x - len, y - len * 0.43);
+      grd.addColorStop(0, `rgba(255,255,255,${1 - shooting.life})`); grd.addColorStop(1, 'rgba(255,255,255,0)');
+      g.strokeStyle = grd; g.lineWidth = 1.5 * dpr; g.beginPath(); g.moveTo(x, y); g.lineTo(x - len, y - len * 0.43); g.stroke();
+      if (shooting.life >= 1) shooting = null;
+    }
+    if (!reduce) requestAnimationFrame(frame);
+  }
+  addEventListener('resize', resize); resize(); requestAnimationFrame(frame);
+
+  // ---- mission elapsed time ----
+  const met = document.getElementById('met'); const t0 = Date.now();
+  const pad = (n) => String(n).padStart(2, '0');
+  setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); met.textContent = `MET ${pad(s / 3600 | 0)}:${pad((s / 60 | 0) % 60)}:${pad(s % 60)}`; }, 1000);
+
+  // ---- reveal on scroll + number count-up + terminal typing ----
+  const typed = document.getElementById('typed');
+  // each line is a list of [class, text] segments
+  const repo = [
+    [['c', '# planetary analog landing sim, main branch']],
+    [],
+    [['k', 'data/               '], ['c', 'terrain pipeline output, schemas, source catalog · Yousef & Antonio']],
+    [['k', 'scripts/            '], ['c', 'fetch_earthdata.py · fetch_copernicus.py · extract_profile.py']],
+    [['k', 'web/public/terrain/ '], ['c', 'browser terrain packs (e.g. kilbourne-hole-v1)']],
+    [['k', 'app/                '], ['c', 'real-time frontend + physics engine']],
+    [['k', '└─ sim/             '], ['c', 'descent physics · React hook useLanderSim · dev viewer · Tim']],
+    [],
+    [['g', '$ cd app/sim && npm install && npm test']],
+    [['', '  ✓ 20 tests passed']],
+    [['g', '$ npm run viewer']],
+    [['', '  ➜ http://localhost:5199']],
+  ];
+  let typedStarted = false;
+  async function typeRepo() {
+    if (typedStarted) return; typedStarted = true;
+    if (reduce) { typed.innerHTML = repo.map((line) => line.map(([k, t]) => `<span class="${k}">${esc(t)}</span>`).join('')).join('\n'); return; }
+    for (const line of repo) {
+      for (const [k, text] of line) {
+        const span = document.createElement('span'); span.className = k; typed.appendChild(span);
+        for (const ch of text) { span.textContent += ch; await sleep(k === 'c' ? 5 : 14); }
+      }
+      typed.appendChild(document.createTextNode('\n'));
+    }
+    const cur = document.createElement('span'); cur.className = 'cursor'; typed.appendChild(cur);
+  }
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const esc = (s) => s.replace(/[&<>]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+
+  function countUp(el) {
+    const target = parseFloat(el.dataset.count), dec = +el.dataset.dec;
+    if (reduce) { el.textContent = target.toFixed(dec); return; }
+    const t0 = performance.now();
+    const tick = (now) => { const p = Math.min(1, (now - t0) / 1400); const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = (target * e).toFixed(dec); if (p < 1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      e.target.classList.add('in');
+      e.target.querySelectorAll('[data-count]').forEach(countUp);
+      if (e.target.contains(typed)) typeRepo();
+      io.unobserve(e.target);
+    }
+  }, { threshold: 0.18 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+})();
+</script>
+</body>
+</html>

@@ -91,9 +91,9 @@ The frontend is React. The globe, UI and cutscene layout is not decided yet; rec
 These are the integration contracts. Keep them stable, and when one changes, update every
 consumer in the same change.
 
-- **Terrain data** (owned by Yousef & Antonio, formerly called `sites.json`): `data/terrain_profile.schema.json`
-  profiles and `web/public/terrain/<id>/` packs.: planetary sites, their Earth analogs,
-  similarity scores, elevation slices and environmental stats (slope, wind, albedo, soil type).
+- **Terrain data** (owned by Yousef & Antonio, formerly called `sites.json`): planetary sites, their
+  Earth analogs, similarity scores, elevation slices and environmental stats (slope, wind, albedo,
+  soil type). Delivered as `data/terrain_profile.schema.json` profiles and `web/public/terrain/<id>/` packs.
   - **Hour 6 checkpoint:** lock the key structure early, even with sample numbers, so Eyad and
     Tim can build against real keys immediately.
 - **Simulation input** (from Eyad to Tim & Furgan): the chosen site plus strategy inputs
