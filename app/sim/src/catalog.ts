@@ -7,9 +7,10 @@
  *   substrate           → soilType  → plume dust (environment.ts)
  *   conditions.albedo   → albedo    → glare
  *   latitude            → equinox-noon sun elevation → glare / long shadows at the poles
- *   conditions.wind_speed_10m → wind speed. The catalog has no wind *direction* (NASA POWER
- *                         scalar), so the direction is a scenario choice: opts.windTowardDeg,
- *                         default blowing east (+x, a tailwind on the default approach).
+ *   conditions.wind_speed_10m → wind, ONLY when the caller passes opts.windTowardDeg. The
+ *                         catalog has a scalar speed (NASA POWER) and no direction, and the
+ *                         data team's rule is that a scalar is not a wind vector. For real
+ *                         hourly wind vectors use app/lib/environment-site.ts.
  *   conditions.rock_abundance (not in catalog 1.0; read if the data team adds it) → boulders
  */
 import type { Body, SiteTerrain } from './types.ts';
@@ -72,9 +73,12 @@ export interface SiteCatalogData {
 }
 
 export interface CatalogSiteOptions {
-  /** For Earth analogs: the body to simulate. Defaults to the body of the best-scoring pairing. */
+  /** For Earth analogs: the body to simulate. Never inferred; omit to fly the site as itself. */
   analogOf?: Exclude<Body, 'earth'>;
-  /** Compass direction the wind blows towards, degrees (0 = north, 90 = east). Default 90. */
+  /**
+   * Compass direction the wind blows towards, degrees (0 = north, 90 = east). A scenario
+   * assumption: without it the catalog's scalar wind speed is not applied at all.
+   */
   windTowardDeg?: number;
 }
 
@@ -89,16 +93,10 @@ export function catalogSiteToSite(
   entry: CatalogSite,
   manifest: TerrainPackManifest,
   buffer: ArrayBufferLike,
-  catalog?: SiteCatalog,
   opts: CatalogSiteOptions = {},
+  catalog?: SiteCatalog,
 ): SiteTerrain {
-  let analogOf = opts.analogOf;
-  if (!analogOf && entry.body === 'earth' && catalog) {
-    const best = pairingsFor(catalog, entry.id)[0];
-    const partner = best && catalog.sites.find((s) => s.id === best.planetary_id);
-    if (partner && partner.body !== 'earth') analogOf = partner.body;
-  }
-  const site = terrainPackToSite(manifest, buffer, { analogOf });
+  const site = terrainPackToSite(manifest, buffer, { analogOf: opts.analogOf });
   const sources: Record<string, string> = {};
   const q = (key: string) => {
     const c = entry.conditions[key];
@@ -116,11 +114,13 @@ export function catalogSiteToSite(
     sources.soilType = 'site catalog substrate label (interpreted)';
   }
   out.albedo = q('albedo');
-  const speed = q('wind_speed_10m');
-  if (speed !== undefined) {
-    const toward = ((opts.windTowardDeg ?? 90) * Math.PI) / 180;
-    out.wind = { x: speed * Math.sin(toward), y: speed * Math.cos(toward) };
-    sources.wind_speed_10m += `; direction assumed (${opts.windTowardDeg ?? 90}° toward), not in catalog`;
+  if (opts.windTowardDeg !== undefined) {
+    const speed = q('wind_speed_10m');
+    if (speed !== undefined) {
+      const toward = (opts.windTowardDeg * Math.PI) / 180;
+      out.wind = { x: speed * Math.sin(toward), y: speed * Math.cos(toward) };
+      sources.wind_speed_10m += `; direction is a scenario assumption (${opts.windTowardDeg}° toward)`;
+    }
   }
   out.rockAbundance = q('rock_abundance');
   out.sunElevationDeg = Math.max(0, 90 - Math.abs(entry.latitude));

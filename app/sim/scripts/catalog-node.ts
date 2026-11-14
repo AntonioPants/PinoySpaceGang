@@ -16,5 +16,5 @@ export function loadCatalogSite(catalog: SiteCatalog, id: string, opts?: Catalog
   const manifestUrl = new URL(entry.terrain.manifest_url.replace(/^\//, ''), PUBLIC);
   const manifest = JSON.parse(readFileSync(manifestUrl, 'utf8'));
   const buf = readFileSync(new URL(manifest.grid.sample_file, manifestUrl));
-  return catalogSiteToSite(entry, manifest, buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength), catalog, opts);
+  return catalogSiteToSite(entry, manifest, buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength), opts, catalog);
 }

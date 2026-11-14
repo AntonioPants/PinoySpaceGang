@@ -37,9 +37,9 @@ Select a real site in the viewer to inspect **Site categories and conditions**.
 Expand any section for values, units, status, provenance and missing-data reasons,
 or download the complete site record. These properties remain metadata unless
 the physics adapter explicitly uses them; temperatures are not a thermal model.
-Tim's adapter maps albedo, substrate and scalar wind to its existing simulation
-inputs. Wind direction defaults to an explicitly recorded assumed eastward
-direction, and sun elevation is an equinox-noon scenario approximation. These
+Tim's adapter maps albedo and substrate to its existing simulation inputs. Scalar
+wind is applied only when the caller explicitly supplies `windTowardDeg`; no wind
+direction is assumed by default. Sun elevation is an equinox-noon scenario approximation. These
 assumptions are shown separately from the observational record.
 
 The TypeScript adapter additionally exposes the full separately ingested seasonal

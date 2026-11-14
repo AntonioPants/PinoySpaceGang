@@ -81,7 +81,7 @@ export function App() {
           return next;
         });
       })
-      .catch((err) => setMessage(`Could not load terrain packs: ${(err as Error).message}`));
+      .catch((err) => setMessage(`Could not load the site catalog: ${(err as Error).message}`));
   }, []);
 
   // ?launch: start once the chosen site is available (terrain packs load asynchronously)

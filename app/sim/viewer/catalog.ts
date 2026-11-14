@@ -42,7 +42,7 @@ export async function loadViewerCatalog(
         throw new Error(`${site.id}: manifest does not match catalog`);
       }
       const buffer = await (await get(new URL(manifest.grid.sample_file, manifestUrl))).arrayBuffer();
-      const native = { ...catalogSiteToSite(site, manifest, buffer, catalog),
+      const native = { ...catalogSiteToSite(site, manifest, buffer, {}, catalog),
         analogOf: undefined, name: `${site.name} (${site.body}, native)` };
       const scenarios: SiteTerrain[] = [native];
       if (site.body === 'earth') {
