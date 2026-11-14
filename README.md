@@ -1,5 +1,12 @@
 # Planetary Analog Simulator
 
+## Game direction and team handoff
+
+Read [the agreed game journey](docs/GAME_VISION.md) and [AI guidance](AGENTS.md).
+The planner is the current game shell: select Moon/Mars, match an Earth testbed,
+choose equipment, board the ship systems console, launch, run descent and debrief.
+The 3D interior and cinematics plug into `web/src/game/integrations.ts` when ready.
+
 The populated shared catalog is [`web/public/sites.json`](web/public/sites.json).
 See [integration, categories and rebuild commands](docs/SITE_CATALOG.md) and
 [ingested providers and data gaps](docs/DATA_SOURCES_AND_GAPS.md).

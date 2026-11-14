@@ -1,0 +1,9 @@
+---
+description: Shared game direction, ownership and integration boundaries
+alwaysApply: true
+---
+
+Read `AGENTS.md` and `docs/GAME_VISION.md` for the agreed player journey.
+Treat the browser UI as the current game shell, not the final product format.
+Use `web/src/game/contracts.ts` and register independent scenes in
+`web/src/game/integrations.ts`; preserve the shared physics and mission state.

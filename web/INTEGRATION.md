@@ -1,4 +1,16 @@
-# Team integration boundary — proposed v1
+# Team integration boundary
+
+## Game session (current handoff)
+
+Read `../docs/GAME_VISION.md` for the agreed game direction. `src/game/GameSession.tsx`
+now wraps the descent. It preserves equipment and selected sites through planetary
+arrival, control center, liftoff, Earth approach, descent and outcome. Missing
+cinematics skip cleanly; the 2D systems console remains playable until Tim's interior
+arrives. Register new scenes in `src/game/integrations.ts` using `contracts.ts`.
+The console edits `MissionSettings`; launch validates and rebuilds `MissionConfig`
+before any departure sequence. The report receives this final mission and real
+telemetry. New scenes use the game contracts; older props in `lib/types.ts` are
+legacy proposals. Weather is checked against terrain ID.
 
 ## Update: catalog, fidelity, sensors, real weather
 
@@ -56,17 +68,20 @@ Vite deduplicates React across the two directories; no second physics install is
   constant 0.02 kg/m3 density. These are simplified scenario assumptions.
 - The frontend overrides dry mass, fuel, maximum thrust, and slope limit.
   Other lander settings use the engine defaults (311 s Isp, drag coefficient 1.2,
-  reference area 15 m2, 2.5 m leg radius). Lidar and velocimeter are enabled.
+  reference area 15 m2, 2.5 m leg radius). Hazard sensors follow the mission choice;
+  the velocimeter remains enabled.
   UI dust/glare are scenario interference inputs; the new engine also derives site
   interference from catalog substrate, albedo and latitude with provenance.
-  Wind is the explicit UI speed toward east, never an inferred catalog vector.
+  Manual wind is the explicit UI speed toward east. Selected Earth weather supplies
+  a modelled wind vector and air density instead of the constant Earth defaults.
   Seed is 1. Time limit is 300 simulated seconds.
 - Start: x=-400 m, y=0, altitude 1000 m AGL; velocity=(25,0,-20) m/s.
   Target is (0,0). These are shown in the preflight screen.
 - The view stops flights leaving the measured patch instead of showing an outcome
   based on clamped edge terrain. Restart/configure remains available.
-- Report values are model outcomes, not readiness certification. Analog similarity
-  and fidelity remain unknown; metre-scale safety cannot be established by a 30 m DEM.
+- Report values are model outcomes, not readiness certification. Calculated terrain
+  similarity and flight fidelity remain scientifically unvalidated; metre-scale safety
+  cannot be established by a 30 m DEM.
 - JSON exports include the frontend mission and raw flight telemetry.
 
 ## Conditions import
@@ -93,24 +108,25 @@ terrain service. Further fidelity requires georeferenced imagery and finer DEMs.
 
 ## Furgan: cutscenes
 
-`ApproachCutsceneProps` contains `{ config, onComplete }`.
-`OutcomeCutsceneProps` contains `{ result, onComplete }`.
-Provide a Skip action, size to the parent, respect reduced motion, and keep sound
-muted until explicit user interaction. Call `onComplete` once per playback.
+Implement `SceneProps` for liftoff/Earth approach and `OutcomeSceneProps` for the
+telemetry-driven outcome, from `src/game/contracts.ts`. Register components in
+`src/game/integrations.ts`; no planner or physics changes are needed. The host provides
+Skip. Size to the parent, respect reduced motion, and keep sound muted until explicit
+user interaction. Call `onComplete` once per playback and clean up resources on unmount.
+See `../docs/GAME_VISION.md` for the full sequence and Tim's control-center interface.
 
 ## Data team
 
-`src/data/sites.ts` projects `public/sites.json` into navigation labels; it does
+`src/lib/catalog.ts` loads `public/sites.json` into navigation labels; it does
 not own separate scientific records. Eleven Earth packs and seven planetary regions
-are available, including Haughton, Qaidam and Lucus Planum. Proposed
-pairings sort first; other Earth sites remain usable as independent experiments.
+are available, including Haughton, Qaidam and Lucus Planum. Proposed pairings sort
+first, ranked by available terrain scores; other sites remain usable as experiments.
 `loadProfile` supports both Kilbourne's original manifest and the new compact
 catalog manifests, deriving width and relief from actual samples. It validates
 every sample and the selected site ID. Exports retain the selected pack path.
-A stale profile cannot be passed to another site's mission. Catalog terrain scores
-and pair-specific explanations appear in the evidence panel; planetary DEMs feed
-the flight-report comparison. Scientific-equivalence and fidelity claims remain
-explicitly unvalidated.
+A stale profile cannot be passed to another site's mission. Planetary DEMs feed
+the report's comparisons and catalog terrain scores appear for proposed pairings.
+Scientific equivalence and fidelity remain explicitly unvalidated.
 
 ## Ownership
 

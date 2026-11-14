@@ -396,3 +396,28 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
 .report-panel > ul { font-size: 12px; color: var(--muted); line-height: 1.7; }
 .report-panel p + h3, .report-panel ul + h3, .report-panel .note + h3 { margin-top: 30px; }
 .strategy-options + .segmented, .field-help + .segmented { margin-top: 12px; }
+
+/* Game shell. Tim's 3D interior can replace the console without changing inputs. */
+.equipment-picker { margin: 26px 0; }
+.equipment-picker h3 { font-size: 15px; }
+.equipment-picker .strategy-options { margin-top: 14px; }
+.game-session { position: relative; }
+.systems-console { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 30px; }
+.systems-console h2 { margin: 20px 0 12px; font-size: 30px; font-weight: 400; }
+.systems-console > p, .console-loadout p { color: var(--muted); font-size: 12px; max-width: 85ch; }
+.console-layout { display: grid; grid-template-columns: .75fr 1.3fr; gap: 40px; margin: 30px 0; padding: 26px 0; border-block: 1px solid var(--line); }
+.console-loadout h3 { font-size: 16px; }
+.console-loadout dl > div { display: flex; justify-content: space-between; gap: 20px; padding: 12px 0; font-size: 12px; }
+.console-loadout dt { color: var(--muted); }
+.console-loadout dd { margin: 0; font-variant-numeric: tabular-nums; }
+.console-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-content: start; }
+.console-controls label { display: flex; flex-direction: column; gap: 9px; font-size: 12px; }
+.console-controls select, .console-controls input { min-width: 0; width: 100%; min-height: 44px; padding: 10px; background: #080808; border: 1px solid #484842; border-radius: 4px; }
+.console-controls input:disabled { opacity: .45; }
+.scene-skip { position: absolute; top: 16px; right: 16px; background: #111c; z-index: 5; }
+@media (max-width: 760px) {
+  .systems-console { padding: 22px 18px; }
+  .systems-console > .section-heading { flex-wrap: wrap; }
+  .console-layout { grid-template-columns: 1fr; gap: 25px; }
+  .console-controls { grid-template-columns: 1fr; }
+}

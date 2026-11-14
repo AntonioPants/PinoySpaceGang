@@ -5,7 +5,7 @@ import TerrainChart from './components/TerrainChart';
 import Dialog from './components/Dialog';
 import TerrainExplorer from './components/TerrainExplorer';
 import ConditionsImport from './components/ConditionsImport';
-import FlightReport from './components/FlightReport';
+import EquipmentPicker from './game/EquipmentPicker';
 import { CatalogDetails } from '../../app/sim/viewer/components/CatalogDetails';
 import { catalogSiteToSite } from '../../app/sim/src/catalog';
 import type { FlightTelemetry } from '../../app/sim/src/types';
@@ -17,7 +17,9 @@ import { buildMission, defaultSettings, gravityFor, loadProfile, validateSetting
 import type { Body, MissionConfig, MissionSettings, TerrainProfile } from './lib/types';
 
 const STORAGE_KEY = 'analog-atlas-draft-v1';
-const Descent = lazy(() => import('./components/Descent'));
+const GameSession = lazy(() => import('./game/GameSession'));
+const FlightReport = lazy(() => import('./components/FlightReport'));
+const FlightReportNHB = lazy(() => import('./components/FlightReportNHB'));
 function restoreDraft(catalog: Catalog) {
   const { targets, analogs } = catalog;
   try {
@@ -58,11 +60,12 @@ function Mission({ catalog }: { catalog: Catalog }) {
   const pairing = pairingOf(catalog, targetId, analog.id);
   const available = analogs.filter(a => a.available);
   const weatherAvailable = hasWeatherProfile(analog.id);
-  const [weather, setWeather] = useState<EnvironmentProfile | null>(null), [weatherError, setWeatherError] = useState('');
+  const [loadedWeather, setWeather] = useState<{ siteId: string; data: EnvironmentProfile } | null>(null), [weatherError, setWeatherError] = useState('');
+  const weather = loadedWeather?.siteId === analog.id ? loadedWeather.data : null;
   useEffect(() => {
     const abort = new AbortController(); setWeather(null); setWeatherError('');
     if (!weatherAvailable) return;
-    loadWeatherProfile(analog.id, abort.signal).then(setWeather).catch(error => { if (!abort.signal.aborted) setWeatherError(error instanceof Error ? error.message : 'Could not load weather.'); });
+    loadWeatherProfile(analog.id, abort.signal).then(data => { if (!abort.signal.aborted) setWeather({ siteId: analog.id, data }); }).catch(error => { if (!abort.signal.aborted) setWeatherError(error instanceof Error ? error.message : 'Could not load weather.'); });
     return () => abort.abort();
   }, [analog.id, weatherAvailable]);
   const realWeather = settings.environment === 'earth' && settings.realWeatherMonth > 0 && weatherAvailable;
@@ -80,6 +83,9 @@ function Mission({ catalog }: { catalog: Catalog }) {
   const [downloadError, setDownloadError] = useState('');
   const [terrainView, setTerrainView] = useState(false);
   const [flight, setFlight] = useState<FlightTelemetry | null>(null);
+  const [flightSettings, setFlightSettings] = useState<MissionSettings>(draft.settings);
+  // Design trial: ?style=nhb opens the report in the 1976 manual style (docs/DESIGN_FRAMEWORK.md).
+  const [reportStyle, setReportStyle] = useState<'standard' | 'nhb'>(() => new URLSearchParams(location.search).get('style') === 'nhb' ? 'nhb' : 'standard');
   const bodyPoints = useMemo(() => targets.filter(t => t.body === target.body), [target.body]);
   const vacuum = settings.environment === 'planetary' && target.body === 'Moon';
   const gravity = gravityFor(target, settings);
@@ -93,7 +99,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.getElementById('mission-title')?.focus({ preventScroll: true });
-  }, [step]);
+  }, [step, reportStyle]);
   useEffect(() => {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ targetId, analogId, settings })); setStorageAvailable(true); }
     catch { setStorageAvailable(false); }
@@ -120,22 +126,23 @@ function Mission({ catalog }: { catalog: Catalog }) {
   const terrainStatus = <div className={`data-notice ${loadError ? 'warning' : ''}`} role="status">
     {loadError ? <><span>{loadError}</span><button className="text-button" onClick={() => setRetry(v => v + 1)}>Retry download</button></> : <><span className={`status-dot ${profile ? '' : 'pending'}`} />{profile ? `${analog.name} terrain loaded` : 'Loading terrain pack…'}</>}
   </div>;
+  if (step === 4 && flight && mission && profile && reportStyle === 'nhb') return <Suspense fallback={<p role="status">Preparing alternate report...</p>}><FlightReportNHB flight={flight} mission={mission} profile={profile} analogEntry={catalog.entries.get(analog.id)} planetaryEntry={catalog.entries.get(target.id)} onRetry={() => {setSettings(flightSettings);setReportStyle('standard');setStep(2);}} onStandardView={() => setReportStyle('standard')} /></Suspense>;
   return <>
     <a className="skip-link" href="#mission-main">Skip to mission workspace</a>
     <header className="app-header">
-      <a href="#" onClick={e => { e.preventDefault(); setStep(0); }} className="brand" aria-label="Analog Atlas home"><Orbit size={31} strokeWidth={1.4} /><span>analog<span className="brand-light">atlas</span><small>Planetary field lab</small></span></a>
+      <a href="#" onClick={e => { e.preventDefault(); setStep(0); }} className="brand" aria-label="Analog Atlas home"><Orbit size={31} strokeWidth={1.4} /><span>analog<span className="brand-light">atlas</span><small>Planetary flight simulator</small></span></a>
       <div className="header-right"><span className="team-name">Pinoy Space Gang <span>/</span> Mission 001</span><button className="subtle-button" onClick={() => setDialog('sources')}><Layers3 size={16} /> Data & sources</button></div>
     </header>
     <nav className="stepper" aria-label="Mission stages">
-      {['Destination', 'Earth analog', 'Configure', 'Descent', 'Report'].map((label, i) => <button key={label} aria-current={step === i ? 'step' : undefined} disabled={(step === 3 && i !== 3) || (i === 3 && (!mission || step !== 3)) || (i === 4 && !flight) || (i === 2 && (!profile || !analog.available))} onClick={() => setStep(i)}>
+      {['Destination', 'Earth analog', 'Equipment', 'Mission', 'Debrief'].map((label, i) => <button key={label} aria-current={step === i ? 'step' : undefined} disabled={(step === 3 && i !== 3) || (i === 3 && (!mission || step !== 3)) || (i === 4 && !flight) || (i === 2 && (!profile || !analog.available))} onClick={() => { if (step === 4 && i < 3) setSettings(flightSettings); setStep(i); }}>
         <span className="step-number">{step > i ? <Check size={14} /> : String(i + 1).padStart(2, '0')}</span><span>{label}</span>{i < 4 && <ChevronRight className="step-chevron" size={14} />}
       </button>)}
     </nav>
     <main id="mission-main">
       <section className="workspace-heading">
         <div><div className="breadcrumb">Mission workspace <span>/</span> {['Select a destination', 'Explore a testbed', 'Prepare your experiment', 'Fly the descent', 'Review the outcome'][step]}</div>
-          <h1 id="mission-title" tabIndex={-1}>{['Select a destination.', 'Find your Earth testbed.', 'Configure the mission.', 'Descent control.', 'Flight report.'][step]}</h1>
-          <p>{['Explore the Moon and Mars. Choose a region to test your landing strategy on Earth.', 'Inspect a measured landscape and the evidence behind its proposed pairing.', 'Set the vehicle, controls and environment before launch.', 'Follow the trajectory, manage thrust and monitor the landing.', 'Review the touchdown, inspect telemetry and prepare the next run.'][step]}</p></div>
+          <h1 id="mission-title" tabIndex={-1}>{['Select a destination.', 'Find your Earth testbed.', 'Prepare your equipment.', 'Mission control.', 'Flight debrief.'][step]}</h1>
+          <p>{['Explore the Moon and Mars. Choose a region to test your landing strategy on Earth.', 'Inspect a measured landscape and the evidence behind its proposed pairing.', 'Choose a loadout and initial conditions. Fine-tune the experiment from the ship systems console.', 'Prepare aboard your ship, launch the mission and follow the Earth descent.', 'Review the touchdown, inspect telemetry and prepare the next run.'][step]}</p></div>
         <div className="prototype-label"><Radio size={14} /><span>Mission workspace<small>{step === 0 ? 'Moon / Mars / Earth' : `${target.body} → Earth`}</small></span></div>
       </section>
       {step === 0 && <section className="workspace destination-workspace" aria-label="Planetary destination">
@@ -185,7 +192,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
               <button className="text-button" onClick={() => setDialog('sources')}>Inspect evidence & sources <ExternalLink size={13} /></button>
             </section>
           </> : <div className="empty-data"><Layers3 size={26} /><h3>Terrain handoff pending</h3><p>This candidate is listed in the project brief. Choose {available[0].name} to configure a mission with real elevation data.</p><button className="subtle-button" onClick={() => selectAnalog(available[0].id)}>Use {available[0].name}</button></div>}
-          <CatalogDetails site={selectedSite} />
+          <details className="pairing-explanation"><summary>Explore full site data and provenance</summary><CatalogDetails site={selectedSite} /></details>
           <div className="panel-actions"><button className="subtle-button" onClick={() => setStep(0)}><ArrowLeft size={16} /> Destination</button><button className="primary-button" disabled={!analog.available || !profile} onClick={() => setStep(2)}>Configure mission <ArrowRight size={17} /></button></div>
         </div>
       </section>}
@@ -199,9 +206,10 @@ function Mission({ catalog }: { catalog: Catalog }) {
           <button className="text-button" onClick={() => setStep(1)}><ArrowLeft size={15} /> Change Earth analog</button>
         </div>
         <div className="config-panel"><div className="section-heading"><h2><SlidersHorizontal size={21} /> Mission configuration</h2><button className="text-button" onClick={() => setSettings({ ...defaultSettings })}>Reset</button></div>
+          <EquipmentPicker settings={settings} onChange={setSettings} />
           <ConditionsImport settings={settings} targetId={targetId} targets={targets} onApply={proposal=>{setSettings(proposal.settings);if(proposal.targetId)setTargetId(proposal.targetId);setFlight(null);}} />
-          <fieldset><legend>01 <span>Control strategy</span></legend><div className="strategy-options">{([{ mode: 'AUTONOMOUS_HAZARD_AVOID', name: 'Autonomous', detail: 'Hazard-avoidance controller' }, { mode: 'MANUAL_CONTROL', name: 'Manual', detail: 'Pilot-controlled thrust' }] as const).map(item => <button key={item.mode} className={settings.mode === item.mode ? 'selected' : ''} aria-pressed={settings.mode === item.mode} onClick={() => update('mode', item.mode)}>{item.mode === 'MANUAL_CONTROL' ? <Settings2 size={20} /> : <Orbit size={20} />}<strong>{item.name}</strong><small>{item.detail}</small></button>)}</div><div className="segmented environment" aria-label="Hazard sensor">{([['lidar', 'Lidar'], ['camera', 'Camera'], ['none', 'No hazard sensor']] as const).map(([value, name]) => <button key={value} aria-pressed={settings.hazardSensor === value} onClick={() => update('hazardSensor', value)}>{name}</button>)}</div><p className="field-help">{settings.hazardSensor === 'lidar' ? 'Lidar maps hazards and is barely affected by glare.' : settings.hazardSensor === 'camera' ? 'A camera maps hazards but is degraded by glare and low sun.' : 'No hazard detection: the lander cannot see rocks or slopes and never diverts.'} Runs Tim’s descent engine with a velocimeter.</p></fieldset>
-          <fieldset><legend>02 <span>Environment</span></legend><div className="segmented environment"><button aria-pressed={settings.environment === 'planetary'} onClick={() => update('environment', 'planetary')}>{target.body} physics scenario</button><button aria-pressed={settings.environment === 'earth'} onClick={() => update('environment', 'earth')}>Earth field test</button></div><p className="field-help">{vacuum ? 'Lunar gravity and vacuum over Earth terrain. Wind is disabled.' : settings.environment === 'earth' ? 'Earth gravity with user-defined wind. Soil properties remain unknown.' : 'Mars gravity over Earth terrain, with constant 0.02 kg/m³ atmospheric density.'}</p>
+          <fieldset><legend>01 <span>Control strategy</span></legend><div className="strategy-options">{([{ mode: 'AUTONOMOUS_HAZARD_AVOID', name: 'Autonomous', detail: 'Hazard-avoidance controller' }, { mode: 'MANUAL_CONTROL', name: 'Manual', detail: 'Pilot-controlled thrust' }] as const).map(item => <button key={item.mode} className={settings.mode === item.mode ? 'selected' : ''} aria-pressed={settings.mode === item.mode} onClick={() => update('mode', item.mode)}>{item.mode === 'MANUAL_CONTROL' ? <Settings2 size={20} /> : <Orbit size={20} />}<strong>{item.name}</strong><small>{item.detail}</small></button>)}</div><div className="segmented environment" aria-label="Hazard sensor">{([['lidar', 'Lidar'], ['camera', 'Camera'], ['none', 'No hazard sensor']] as const).map(([value, name]) => <button key={value} aria-pressed={settings.hazardSensor === value} onClick={() => update('hazardSensor', value)}>{name}</button>)}</div><p className="field-help">{settings.hazardSensor === 'lidar' ? 'Lidar maps hazards and is barely affected by glare.' : settings.hazardSensor === 'camera' ? 'A camera maps hazards but is degraded by glare and low sun.' : 'No hazard detection: the lander cannot see rocks or slopes and never diverts.'} Velocity sensing is enabled.</p></fieldset>
+          <fieldset><legend>02 <span>Environment</span></legend><div className="segmented environment"><button aria-pressed={settings.environment === 'planetary'} onClick={() => update('environment', 'planetary')}>{target.body} physics scenario</button><button aria-pressed={settings.environment === 'earth'} onClick={() => update('environment', 'earth')}>Earth field test</button></div><p className="field-help">{vacuum ? 'Lunar gravity and vacuum over Earth terrain. Wind is disabled.' : settings.environment === 'earth' ? 'Earth gravity with user-defined wind. Soil mechanics remain unmeasured.' : 'Mars gravity over Earth terrain, with constant 0.02 kg/m³ atmospheric density.'}</p>
             {settings.environment === 'earth' && (weatherAvailable ? <>
               <div className="segmented environment"><button aria-pressed={!realWeather} onClick={() => update('realWeatherMonth', 0)}>Manual wind</button><button aria-pressed={realWeather} onClick={() => update('realWeatherMonth', settings.realWeatherMonth || 7)}>Real weather</button></div>
               {realWeather && <div className="weather-pickers"><label>Month <select aria-label="Weather month" value={settings.realWeatherMonth} onChange={e => update('realWeatherMonth', Number(e.target.value))}>{['January','February','March','April','May','June','July','August','September','October','November','December'].map((name, i) => <option key={name} value={i + 1}>{name}</option>)}</select></label><label>Hour <select aria-label="Weather scenario" value={settings.weatherScenario} onChange={e => update('weatherScenario', e.target.value as MissionSettings['weatherScenario'])}><option value="typical">Typical</option><option value="high_wind">High wind</option></select></label></div>}
@@ -223,8 +231,9 @@ function Mission({ catalog }: { catalog: Catalog }) {
           <div className="config-footer"><span><span className="status-dot" />{storageAvailable ? 'Draft saved on this device' : 'Draft held in this session'}</span><button className="primary-button" disabled={!profile || validateSettings(settings).length > 0 || (realWeather && !weatherHour)} onClick={reviewMission}>Review mission <ArrowRight size={17} /></button></div>
         </div>
       </section>}
-      {step === 3 && mission && profile && <Suspense fallback={<p role="status">Loading descent viewer…</p>}><Descent mission={mission} profile={profile} entry={catalog.entries.get(analog.id)} weather={weather} onExit={()=>setStep(2)} onReport={report=>{setFlight(report);setStep(4);}} /></Suspense>}
-      {step === 4 && flight && mission && profile && <FlightReport flight={flight} mission={mission} profile={profile} analogEntry={catalog.entries.get(analog.id)} planetaryEntry={catalog.entries.get(targetId)} onRetry={()=>setStep(2)} />}
+      {step === 3 && mission && profile && <Suspense fallback={<div className="flight-workspace empty-data" role="status">Preparing ship systems…</div>}><GameSession target={target} entry={catalog.entries.get(analog.id)} initialMission={mission} settings={settings} profile={profile} weather={weather} weatherAvailable={weatherAvailable} onExit={next => {setSettings(next);setStep(2);}} onReport={(report, finalMission, finalSettings)=>{setMission(finalMission);setFlightSettings(finalSettings);setFlight(report);setStep(4);}} /></Suspense>}
+      {step === 4 && flight && mission && profile && <Suspense fallback={<p role="status">Preparing debrief…</p>}><FlightReport analogEntry={catalog.entries.get(analog.id)} planetaryEntry={catalog.entries.get(target.id)} flight={flight} mission={mission} profile={profile} onRetry={()=>{setSettings(flightSettings);setStep(2);}} /></Suspense>}
+      {step === 4 && flight && <p className="field-help"><button className="text-button" onClick={() => setReportStyle('nhb')}>View this report in the 1976 manual style (design trial)</button></p>}
       <footer className="workspace-footer"><span><span className="status-dot" /> {step === 0 ? 'Explore first. Validate with evidence.' : 'Real terrain. Explicit assumptions.'}</span><span>Earth data: Copernicus DEM <span className="footer-separator">/</span> <button className="text-button" onClick={() => setDialog('sources')}>Credits & limitations</button></span></footer>
     </main>
     {dialog === 'sources' && <Dialog title="Data, evidence & limitations" onClose={() => setDialog(null)}><div className="source-content">
@@ -233,7 +242,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
       {!profile && <p>Terrain metadata is unavailable. Load the terrain pack to inspect its full attribution and limitations.</p>}
       <h3>Planetary targets & globe imagery</h3><p>Targets, analogs and pairings come from the team’s site catalog. Planetary terrain is MOLA (Mars) and LOLA (Moon) at 150–500 m per sample. Pairing scores compare terrain descriptors only; they are proposals, not validated analogs.</p><a href={target.source} target="_blank" rel="noreferrer">Planetary data archive for {target.body} <ExternalLink size={14} /></a><p>Moon and Earth reference textures: Three.js example assets. Mars surface: procedural illustration. Globes are navigation aids, not measurement surfaces.</p><a href="https://github.com/mrdoob/three.js/tree/dev/examples/textures/planets" target="_blank" rel="noreferrer">Globe texture source <ExternalLink size={14} /></a><a href={profile?.manifest.license_url ?? "/terrain/kilbourne-hole-v1/COPERNICUS-LICENSE.pdf"} target="_blank" rel="noreferrer">Terrain licence <ExternalLink size={14} /></a>
     </div></Dialog>}
-    {dialog === 'mission' && mission && <Dialog title="Your mission is configured" onClose={() => setDialog(null)}><div className="source-content"><div className="review-icon"><Rocket size={28} /></div><p><strong>{target.name}</strong> scenario on the <strong>{analog.name}</strong> terrain.</p><div className="mission-summary"><div><span>Control</span><strong>{settings.mode === 'MANUAL_CONTROL' ? 'Manual' : 'Autonomous'}</strong></div><div><span>Environment</span><strong>{settings.environment === 'earth' ? 'Earth field test' : `${target.body} physics scenario`}</strong></div><div><span>Terrain samples</span><strong>{mission.earthAnalog.elevationProfile.length} at {mission.earthAnalog.sampleSpacingM} m</strong></div></div><div className="note"><CircleHelp size={18} /><p>Descent uses Tim’s physics engine and viewer. Cinematic cutscenes are still pending. The model starts 1,000 m above ground with explicit default vehicle assumptions; this is an experiment, not a readiness certification.</p></div><button className="primary-button wide launch-mission" onClick={()=>{setFlight(null);setDialog(null);setStep(3);}}>Continue to descent <Rocket size={17}/></button><button className="subtle-button wide" onClick={downloadMission}><Download size={17} /> {saved ? 'Download mission again' : 'Download mission JSON'}</button>{saved && <p role="status" className="mint-text">Mission JSON prepared for download.</p>}{downloadError && <p role="alert">{downloadError}</p>}</div></Dialog>}
+    {dialog === 'mission' && mission && <Dialog title="Review your mission" onClose={() => setDialog(null)}><div className="source-content"><div className="review-icon"><Rocket size={28} /></div><p><strong>{target.name}</strong> scenario on the <strong>{analog.name}</strong> terrain.</p><div className="mission-summary"><div><span>Control</span><strong>{settings.mode === 'MANUAL_CONTROL' ? 'Manual' : 'Autonomous'}</strong></div><div><span>Environment</span><strong>{settings.environment === 'earth' ? 'Earth field test' : `${target.body} physics scenario`}</strong></div><div><span>Terrain grid</span><strong>{profile?.manifest.grid.rows} × {profile?.manifest.grid.columns} at {mission.earthAnalog.sampleSpacingM} m</strong></div></div><div className="note"><CircleHelp size={18} /><p>Board the systems console to finalize conditions. Launch then enters the Earth descent at 1,000 m above ground with your selected equipment.</p></div><button className="primary-button wide launch-mission" onClick={()=>{setFlight(null);setDialog(null);setStep(3);}}>Board ship <Rocket size={17}/></button><button className="subtle-button wide" onClick={downloadMission}><Download size={17} /> {saved ? 'Download mission again' : 'Download mission JSON'}</button>{saved && <p role="status" className="accent-text">Mission JSON prepared for download.</p>}{downloadError && <p role="alert">{downloadError}</p>}</div></Dialog>}
   </>;
 }
 function Slider({ label, value, min, max, step, unit, disabled, onChange }: { label: string; value: number; min: number; max: number; step: number; unit: string; disabled?: boolean; onChange: (n: number) => void }) {
