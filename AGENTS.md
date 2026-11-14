@@ -4,8 +4,8 @@ Read `docs/GAME_VISION.md` before changing the player journey, scenes or contrac
 This is a game built with React/Three.js, not a conventional informational website.
 The current browser planner and 2D console are playable prototype stages.
 
-- Eyad owns `web/` integration and mission state; Tim owns physics and the first-person
-  lander cabin (`web/src/game/interior/`, the control center); the planetary start scene
+- Eyad owns `web/` integration and mission state; Tim owns physics and the third-person
+  ship bridge (`web/src/game/interior/`, the control center); the planetary start scene
   is still open. Furgan owns cinematic scenes/VFX.
 - Preserve the journey: planetary target → ranked Earth analog → equipment →
   planetary arrival → ship control center → liftoff → Earth approach → descent →

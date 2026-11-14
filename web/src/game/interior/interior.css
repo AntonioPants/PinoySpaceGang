@@ -1,47 +1,113 @@
-/* The lander cabin (web/src/game/interior). Scoped so nothing else in the app changes. */
+/* The ship's bridge (web/src/game/interior). Scoped so nothing else in the app changes. */
 .ship-interior { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
 .cabin-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 16px 22px; }
 .cabin-toolbar strong { font-size: 16px; font-weight: 500; }
 .cabin-toolbar small { display: block; color: var(--muted); font-size: 11px; margin-top: 5px; }
 .cabin-toolbar > div + div { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .cabin-toolbar .subtle-button { padding: 8px 11px; font-size: 12px; }
-.ship-interior kbd { display: inline-block; min-width: 18px; padding: 1px 5px; border: 1px solid #55554d; border-radius: 3px; font: inherit; font-size: 11px; text-align: center; }
-.cabin-view { position: relative; height: min(72vh, 660px); background: #000; overflow: hidden; cursor: grab; touch-action: none; }
+.cabin-toolbar .subtle-button[aria-pressed=true] { border-color: #f1d9ab; color: #f1d9ab; }
+.ship-interior kbd { display: inline-block; min-width: 18px; padding: 1px 5px; border: 1px solid #6a7480; border-radius: 3px; font: inherit; font-size: 11px; text-align: center; }
+.cabin-view { position: relative; height: min(74vh, 700px); background: #02040b; overflow: hidden; overflow: clip; cursor: grab; touch-action: none; }
 .cabin-view:active { cursor: grabbing; }
-.cabin-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.cabin-screens { position: absolute; inset: 0; pointer-events: none; }
+/* pages underneath, the 3D picture on top with see-through holes where the monitors are */
+.cabin-screens { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.cabin-canvas { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; display: block; pointer-events: none; }
+.cabin-overlay { position: absolute; z-index: 2; cursor: default; }
 .cabin-hint { margin: 0; padding: 12px 22px; font-size: 12px; color: var(--muted); }
 .ship-interior-flat > .field-help { margin: 0 0 12px; }
+.cabin-prompt { left: 50%; bottom: 26px; transform: translateX(-50%); padding: 10px 18px; border: 1px solid #35d6ff88; border-radius: 4px; background: #04121dd9; color: #dff6ff; font-size: 14px; white-space: nowrap; box-shadow: 0 0 22px #35d6ff33; }
+.cabin-prompt kbd { border-color: #35d6ff; color: #35d6ff; margin-right: 8px; }
 
-/* a monitor's page: real controls, placed on the 3D monitor */
-/* No overflow here: a scrolling box placed in 3D is not hit-tested by the browser, so its
-   controls could not be clicked. Each page's content has to fit its monitor. */
-.monitor-screen { box-sizing: border-box; padding: 26px 30px; background: #06080b; color: #ece7da; border: 1px solid #2f3540; cursor: default;
-  font-size: 17px; line-height: 1.4; pointer-events: auto; user-select: none; backface-visibility: hidden; }
-.monitor-screen header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-bottom: 14px; margin-bottom: 16px; border-bottom: 1px solid #2f3540; }
-.monitor-screen h2 { margin: 0; font-size: 30px; font-weight: 400; }
-.monitor-screen h3 { margin: 0 0 6px; font-size: 18px; font-weight: 500; }
-.monitor-tag { display: inline-block; justify-self: start; padding: 4px 10px; border: 1px solid #6c6a5f; border-radius: 3px; font-size: 14px; white-space: nowrap; }
-.monitor-tag.go, li.go > .monitor-tag { border-color: #7fbf8f; color: #a9e3b6; }
-.monitor-tag.caution, li.caution > .monitor-tag { border-color: #d9b872; color: #f1d9ab; }
-.monitor-tag.hold, li.hold > .monitor-tag { border-color: #e2705c; color: #ff9d8c; }
-.monitor-facts { margin: 0 0 14px; }
-.monitor-facts > div { display: flex; justify-content: space-between; gap: 24px; padding: 5px 0; border-bottom: 1px solid #1c2129; }
-.monitor-facts dt { color: #9aa1ab; flex: none; }
-.monitor-facts dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
-.monitor-checks { list-style: none; margin: 0 0 12px; padding: 0; }
-.monitor-checks li { display: grid; grid-template-columns: 92px 1fr; column-gap: 14px; align-items: baseline; padding: 5px 0; border-bottom: 1px solid #1c2129; }
-.monitor-checks strong { font-weight: 500; }
-.monitor-checks p { grid-column: 2; margin: 2px 0 0; color: #b4bac3; font-size: 15px; }
-.monitor-note, .monitor-screen .field-help { margin: 10px 0 0; color: #9aa1ab; font-size: 14px; }
-.monitor-lede { margin: 0 0 18px; font-size: 19px; }
-.monitor-actions { display: flex; gap: 14px; flex-wrap: wrap; margin: 18px 0 6px; }
-.monitor-actions .primary-button { font-size: 20px; padding: 16px 28px; }
-.monitor-actions .subtle-button { font-size: 16px; padding: 14px 20px; }
-.monitor-screen .equipment-picker h3 { font-size: 18px; }
-.monitor-screen .strategy-options button strong { font-size: 18px; }
-.monitor-screen .strategy-options button small { font-size: 14px; }
-.monitor-screen .console-controls { gap: 14px 22px; }
-.monitor-screen .console-controls label { font-size: 15px; gap: 6px; }
-.monitor-screen .console-controls select, .monitor-screen .console-controls input { font-size: 16px; min-height: 40px; padding: 7px 10px; }
-.monitor-screen :focus-visible { outline: 3px solid #f1d9ab; outline-offset: 2px; }
+/* ---- a monitor's page: real controls on the 3D screen, in the ship's own look.
+   No overflow here: a scrolling box placed in 3D is not hit-tested by the browser, so its controls
+   could not be clicked. Each page's content has to fit its monitor. */
+.monitor-screen { --accent: #35d6ff; box-sizing: border-box; padding: 26px 34px 24px; cursor: default; pointer-events: auto; user-select: none;
+  color: #e6f4ff; font-size: 17px; line-height: 1.35;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, #ffffff06 3px 4px),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 9%, transparent) 1px, transparent 1px) 0 0 / 48px 48px,
+    linear-gradient(0deg, color-mix(in srgb, var(--accent) 9%, transparent) 1px, transparent 1px) 0 0 / 48px 48px,
+    radial-gradient(130% 100% at 50% -10%, color-mix(in srgb, var(--accent) 34%, #071624) 0%, #06131f 52%, #030a12 100%);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 60%, transparent), inset 0 0 90px color-mix(in srgb, var(--accent) 26%, transparent); }
+.monitor-screen header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-bottom: 12px; margin-bottom: 16px; border-bottom: 2px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.monitor-screen h2 { margin: 0; font-size: 34px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); text-shadow: 0 0 18px color-mix(in srgb, var(--accent) 70%, transparent); }
+.monitor-screen h3, .launch-menu h3 { margin: 0 0 10px; font-size: 14px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: color-mix(in srgb, var(--accent) 75%, #fff); }
+.mon-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 0 38px; }
+.mon-label { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: #a9c4d8; margin-bottom: 6px; }
+.mon-field { margin-bottom: 14px; position: relative; }
+.mon-note { display: block; margin: 6px 0 0; font-size: 14px; color: #9db6c9; }
+.mon-readout { padding: 6px 12px; border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent); border-radius: 3px; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; color: #cfe9f8; background: #0008; }
+.mon-readout b { color: var(--accent); font-size: 19px; margin-left: 6px; }
+.mon-readout.warn, .mon-readout.warn b { border-color: #ffb454; color: #ffb454; }
+.mon-link { display: flex; align-items: center; gap: 5px; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: #a9c4d8; }
+.mon-link i { width: 5px; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.mon-link i:nth-child(1) { height: 8px; } .mon-link i:nth-child(2) { height: 14px; } .mon-link i:nth-child(3) { height: 20px; margin-right: 8px; }
+
+/* segmented switch */
+.mon-segmented { display: flex; gap: 6px; }
+.mon-segmented button, .mon-cards button, .mon-dropdown-button, .mon-dropdown li button { font: inherit; color: #cfe3f1; background: #0a1d2ccc; border: 1px solid color-mix(in srgb, var(--accent) 35%, #24384a); border-radius: 3px; cursor: pointer; }
+.mon-segmented button { flex: 1; padding: 9px 8px; font-size: 16px; }
+.mon-segmented button[aria-pressed=true], .mon-cards button[aria-pressed=true] { color: #041018; background: var(--accent); border-color: var(--accent); box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 60%, transparent); font-weight: 600; }
+.mon-segmented button:hover, .mon-cards button:hover, .mon-dropdown-button:hover, .mon-dropdown li button:hover { border-color: var(--accent); }
+
+/* slider with a lit track and a live readout */
+.mon-slider output { font-size: 20px; letter-spacing: 0; text-transform: none; color: var(--accent); font-variant-numeric: tabular-nums; text-shadow: 0 0 12px color-mix(in srgb, var(--accent) 55%, transparent); }
+.mon-slider output small { font-size: 13px; color: #a9c4d8; }
+.mon-slider input { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 22px; margin: 0; background: transparent; cursor: pointer; }
+.mon-slider input::-webkit-slider-runnable-track { height: 8px; border-radius: 4px; border: 1px solid #2a4458; background: linear-gradient(90deg, var(--accent) var(--fill), #0b2233 var(--fill)); box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 30%, transparent); }
+.mon-slider input::-moz-range-track { height: 8px; border-radius: 4px; border: 1px solid #2a4458; background: linear-gradient(90deg, var(--accent) var(--fill), #0b2233 var(--fill)); }
+.mon-slider input::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 24px; margin-top: -9px; border-radius: 3px; border: 2px solid #041018; background: #f2fbff; box-shadow: 0 0 12px var(--accent); }
+.mon-slider input::-moz-range-thumb { width: 14px; height: 22px; border-radius: 3px; border: 2px solid #041018; background: #f2fbff; box-shadow: 0 0 12px var(--accent); }
+.mon-slider.off { opacity: .45; }
+
+/* drop-down drawn inside the page */
+.mon-dropdown-button { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 9px 12px; font-size: 16px; text-align: left; }
+.mon-dropdown-button i { width: 9px; height: 9px; border: solid var(--accent); border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-2px, -2px); }
+.mon-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+.mon-dropdown ul { position: absolute; z-index: 5; left: 0; right: 0; top: 100%; margin: 4px 0 0; padding: 5px; list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+  background: #06141ff5; border: 1px solid var(--accent); border-radius: 3px; box-shadow: 0 0 26px color-mix(in srgb, var(--accent) 40%, transparent); }
+.mon-dropdown li:first-child { grid-column: 1 / -1; }
+.mon-dropdown li button { width: 100%; padding: 5px 8px; font-size: 14px; text-align: left; white-space: nowrap; }
+.mon-dropdown li[aria-selected=true] button { background: var(--accent); color: #041018; font-weight: 600; }
+
+/* loadout cards */
+.mon-cards { display: grid; gap: 8px; margin-bottom: 4px; }
+.mon-cards button { padding: 11px 14px; text-align: left; }
+.mon-cards strong { display: block; font-size: 19px; font-weight: 600; }
+.mon-cards span { font-size: 14px; opacity: .85; }
+
+/* facts and checks */
+.mon-facts { margin: 0; }
+.mon-facts > div { display: grid; grid-template-columns: 132px 1fr; gap: 12px; padding: 9px 0; border-bottom: 1px solid #ffffff14; }
+.mon-facts dt { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: #a9c4d8; padding-top: 4px; }
+.mon-facts dd { margin: 0; font-size: 20px; }
+.mon-facts dd small { display: block; font-size: 13.5px; color: #9db6c9; }
+.mon-facts.compact { margin-top: 10px; }
+.mon-facts.compact > div { padding: 5px 0; } .mon-facts.compact dd { font-size: 17px; }
+.mon-banner { padding: 10px 14px; margin-bottom: 10px; border-radius: 3px; font-size: 24px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; text-align: center; }
+.mon-banner.go { color: #04150c; background: #6dffb0; box-shadow: 0 0 28px #6dffb088; }
+.mon-banner.caution { color: #1c1200; background: #ffb454; box-shadow: 0 0 28px #ffb45488; }
+.mon-banner.hold { color: #fff; background: #e2452f; box-shadow: 0 0 28px #e2452f88; }
+.mon-checks { list-style: none; margin: 0; padding: 0; }
+.mon-checks li { display: grid; grid-template-columns: 104px 1fr; gap: 10px; align-items: start; padding: 6px 0; border-bottom: 1px solid #ffffff14; }
+.mon-checks strong { font-weight: 600; font-size: 16px; }
+.mon-checks p { margin: 1px 0 0; font-size: 13.5px; color: #a9c4d8; }
+.mon-light { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+.mon-light i { width: 11px; height: 11px; border-radius: 50%; background: currentColor; box-shadow: 0 0 10px currentColor; }
+.mon-light.go { color: #6dffb0; } .mon-light.caution { color: #ffb454; } .mon-light.hold { color: #ff7a66; }
+.monitor-screen :focus-visible, .launch-menu :focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+/* ---- the launch menu that opens at the pilot seat */
+.launch-menu { --accent: #35d6ff; left: 28px; top: 50%; transform: translateY(-50%); width: min(430px, calc(100% - 56px)); padding: 22px 24px; color: #e6f4ff;
+  background: linear-gradient(180deg, #0a2134f2, #05101af2); border: 1px solid #35d6ffaa; border-radius: 6px; box-shadow: 0 0 50px #35d6ff40, inset 0 0 40px #35d6ff1a; }
+.launch-menu header { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 12px; margin-bottom: 14px; border-bottom: 2px solid #35d6ff88; }
+.launch-menu h2 { margin: 0; font-size: 24px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: #35d6ff; text-shadow: 0 0 16px #35d6ffaa; }
+.launch-lede { margin: 0 0 14px; font-size: 16px; }
+.launch-option { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; margin: 14px 0; font-size: 15px; cursor: pointer; }
+.launch-option input { width: 18px; height: 18px; accent-color: #35d6ff; }
+.launch-option small { flex-basis: 100%; color: #a9c4d8; font-size: 13px; }
+.launch-actions { display: grid; gap: 10px; }
+.launch-start { font: inherit; font-size: 21px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 16px; color: #041018; background: #6dffb0; border: 0; border-radius: 4px; cursor: pointer; box-shadow: 0 0 30px #6dffb077; }
+.launch-start:hover { background: #9dffc9; }
+.launch-stand { font: inherit; font-size: 15px; padding: 10px; color: #cfe3f1; background: transparent; border: 1px solid #3b556a; border-radius: 4px; cursor: pointer; }
+.launch-stand:hover { border-color: #35d6ff; }

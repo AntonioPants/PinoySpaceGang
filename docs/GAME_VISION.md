@@ -40,7 +40,7 @@ an Earth field test. Never silently switch physics because a scene changes locat
 - `web/src/game/GameSession.tsx` owns the scene sequence and final mission snapshot.
   It validates settings/terrain/weather before departure, ignores late completion
   callbacks, and passes the exact flown mission to the report.
-- The control-center stage is Tim's first-person lander cabin (`web/src/game/interior/`,
+- The control-center stage is Tim's third-person ship bridge (`web/src/game/interior/`,
   see "Ship interior" below). The flat 2D systems console remains as its fallback. The
   planetary start scene is still pending.
 - The descent flies in Furgan's live 3D view (`app/flightlab/view.ts`, wrapped by
@@ -59,36 +59,54 @@ an Earth field test. Never silently switch physics because a scene changes locat
 
 ## Ship interior (control center)
 
-The player sets up the mission from inside the lander, in first person. The camera is the
-character; there is no visible body. Registered as `controlCenter` and implementing
-`ControlCenterProps`; `App.tsx` and `GameSession.tsx` are unchanged.
+The player sets up the mission on the bridge of the ship, in third person: they walk a
+low-poly astronaut round a wide bridge that is flying in space, use three glowing wall
+monitors, then sit in the pilot seat to start. Registered as `controlCenter` and implementing
+`ControlCenterProps`; `App.tsx` and `GameSession.tsx` are unchanged. Everything is generated
+in code (`cabin.ts`, `astronaut.ts`, `exterior.ts`, shared helpers in `lowpoly.ts`); there are
+no model files.
 
-**Stations.** Four monitors and a porthole on the walls of an eight-sided cabin:
+**Stations.**
 
 | Key | Station | What it does |
 |---|---|---|
 | 1 | Mission control | Read-only. Departure site, Earth test site, catalogue terrain score, test physics, and the go / no-go checklist. The parent's launch `error` appears here as a hold. |
-| 2 | Equipment | Loadout choice (`EquipmentPicker`, `equipmentLoadouts`) and the manifest. |
-| 3 | Flight configuration | Strategy, hazard sensor, test environment, wind or modelled weather, dust and glare. The same `ConsoleControls` component as the flat console. |
-| 4 | Launch | Open checklist items, "Launch mission" (`onLaunch`) and "Return to equipment" (`onExit`). |
-| 5 | Window | The Moon or Mars outside, by `mission.planetaryTarget.body`. Changes nothing. |
+| 2 | Equipment | Loadout cards (`equipmentLoadouts`) and sliders for propellant, dry mass, maximum thrust and slope limit, with live thrust to weight. |
+| 3 | Flight configuration | Control mode, hazard sensor, sensor interference (site data, or dust and glare sliders), test physics, wind slider or modelled weather (drop-down). |
+| 4 | Pilot seat | The astronaut sits and the launch menu opens: open checklist items, a "Play cinematics" tick box, "Start mission" (`onLaunch`) and "Stand up". Starting cuts straight to the departure cinematic. |
 
-**Controls.** W A S D walk and sidestep; arrow keys walk and turn; drag to look (no pointer
-lock, so the cursor stays free for the monitors); E steps up to the nearest monitor; 1–5 go to
-a station; Escape steps back from a field. Keyboard only: the toolbar buttons and Tab reach
-every control, and focusing a control walks the player to its monitor. With reduced motion the
-camera snaps to stations instead of gliding.
+"Back to setup" in the toolbar calls `onExit`.
+
+**Controls.** W A S D walk, relative to the camera; ← → or dragging turns the camera (no
+pointer lock, so the cursor stays free for the monitors); E uses the monitor or seat in reach
+(a prompt names it); 1–4 go straight to a station; Escape steps back. Keyboard only: the
+toolbar buttons and Tab reach every control, and focusing a control brings the astronaut and
+camera to its monitor. With reduced motion the camera snaps instead of gliding and the stars
+do not drift. Movement rules (walls, furniture, where to stand, what is in reach) are pure
+functions in `player.ts` and are unit-tested.
 
 **How the monitors work.** Each monitor's content is a real page (React, via a portal) placed
-in the scene with Three.js `CSS3DRenderer`, layered over the WebGL canvas with one shared
-camera. That keeps text sharp and gives real buttons, menus, focus and screen-reader access.
-Two rules follow from it:
+in the scene with Three.js `CSS3DRenderer`, sharing one camera with the WebGL picture. That
+keeps text sharp and gives real sliders, buttons, focus and screen-reader access. The pages
+sit *underneath* a transparent WebGL canvas, and each monitor is a see-through "hole" in the
+3D picture, so the astronaut and furniture pass in front of the screens correctly. Rules that
+follow from it:
 
+- The canvas has `pointer-events: none`; clicks go through it to the pages, and dragging to
+  look is handled on the surrounding `.cabin-view`.
 - A monitor page must not scroll (`overflow` other than visible). The browser does not
   hit-test a scrolling box placed in 3D, so its controls stop receiving clicks. Content has
-  to fit the monitor; trim it rather than scroll it.
-- The pages are drawn on top of the canvas, so nothing in the cabin can pass in front of a
-  monitor. Keep fittings off the line of sight to the screens.
+  to fit the 840 × 490 px page in every state; trim it rather than scroll it.
+- The page layer uses `overflow: clip`. Focusing a control otherwise makes the browser scroll
+  the layer "into view" and the screens slide off their monitors.
+- A page's +Z must face the room: `rotationY = atan2(nx, nz)`, or its text is mirrored.
+- Monitor controls come from `screens/ui.tsx` (`Segmented`, `Slider`, `Dropdown`, `Light`) and
+  take their colour from the station's `accent`. The drop-down is drawn inside the page
+  because a native menu would open outside the 3D screen.
+
+**Cinematics choice.** The launch menu stores "Play cinematics" in localStorage
+(`analog-atlas-cinematics`). `scenes/SceneFrame.tsx` reads it: ticked plays the cinematic even
+when the system asks for reduced motion (the menu says so), unticked skips to the descent.
 
 **Go / no-go checklist** (`checklist.ts`). Settings valid (hold if not), thrust to weight in
 the gravity the descent will fly (caution below 1; it is a valid experiment that will
@@ -98,14 +116,15 @@ It only reports. The parent still validates and locks the mission at launch.
 **Fallback.** "Use flat console" switches to `SystemsConsole`, and it is used automatically
 when WebGL cannot start or the window is narrower than 760 px. Settings carry over both ways.
 
-**What is illustrative.** The cabin is a stage generated in code, not a model of a real
-spacecraft. The view outside is a generic lunar or Martian surface in the cutscene module's
-colour presets, not the selected site: the catalogue's planetary terrain is 150–500 m per
-sample, far too coarse to stand on.
+**What is illustrative.** The bridge, the astronaut and the view outside are a stage, not a
+model of a real spacecraft or a real orbit. The body in the window is a generic low-poly Moon
+or Mars chosen by `mission.planetaryTarget.body`, with a distant Earth; neither shows the
+selected sites.
 
-**Adding a station.** Add it to `STATIONS` in `stations.ts` (id, title, key, wall angle in
-steps of 45°), write its screen in `screens/`, and add one portal line in `ShipInterior.tsx`.
-The cabin builds the monitor housing from the station list.
+**Adding a station.** Add it to `STATIONS` in `stations.ts` (id, title, key, wall position,
+inward normal, accent), add an obstacle box if it has a console, write its screen in
+`screens/`, and add one portal line in `ShipInterior.tsx`. The cabin builds the monitor
+housing and console from the station list.
 
 ## Contracts and ownership
 

@@ -1,72 +1,59 @@
 /**
- * What the porthole shows: the surface of the body the mission departs from. It is generated in
- * code from the cutscene module's lunar and Mars colour presets. An illustration, not a view of
- * the selected site: the catalogue's planetary terrain is far too coarse to stand on.
+ * What is outside the windows: space. Stars, the body the mission departs from, a distant Earth
+ * ahead, and the Sun's light. The trip is the game's framing, not a simulated trajectory, so
+ * sizes and distances here are for looks only.
  */
 import * as THREE from 'three';
-import { PRESETS } from '../../components/cutscene';
+import { Kit } from './lowpoly';
 
-export function buildExterior(body: 'Moon' | 'Mars'): { group: THREE.Group; sky: THREE.Color; fog: THREE.Fog | null; sunDirection: THREE.Vector3; dispose: () => void } {
-  const look = body === 'Moon' ? PRESETS.lunar : PRESETS.mars;
-  const group = new THREE.Group();
-  const disposables: Array<{ dispose(): void }> = [];
+/** A faceted globe whose faces vary in tone, for the low-poly look. */
+function planet(kit: Kit, radius: number, colors: number[], detail: number, seed: number): THREE.Mesh {
+  const geo = new THREE.IcosahedronGeometry(radius, detail).toNonIndexed();
+  const pos = geo.attributes.position as THREE.BufferAttribute, col = new Float32Array(pos.count * 3);
+  const palette = colors.map(c => new THREE.Color(c)), c = new THREE.Color();
+  for (let f = 0; f < pos.count; f += 3) {
+    const x = pos.getX(f) / radius, y = pos.getY(f) / radius, z = pos.getZ(f) / radius;
+    const n = Math.sin(x * 5.1 + seed) * Math.cos(y * 4.3 - seed) + Math.sin(z * 6.7 + seed * 2) * 0.6 + Math.sin((x + y + z) * 11) * 0.25;
+    const i = Math.max(0, Math.min(palette.length - 1.001, (n + 1.6) / 3.2 * (palette.length - 1)));
+    c.copy(palette[Math.floor(i)]).lerp(palette[Math.floor(i) + 1], i % 1);
+    for (let k = 0; k < 3; k++) col.set([c.r, c.g, c.b], (f + k) * 3);
+  }
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3)); geo.computeVertexNormals();
+  const mat = kit.track(new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 1, metalness: 0 }));
+  return kit.mesh(geo, mat);
+}
 
-  // rolling ground with a few crater-like dips, coloured between the preset's two ground tones
-  const size = 900, seg = 120;
-  const geo = new THREE.PlaneGeometry(size, size, seg, seg); geo.rotateX(-Math.PI / 2);
-  const pos = geo.attributes.position as THREE.BufferAttribute;
-  const colors = new Float32Array(pos.count * 3);
-  const light = new THREE.Color(look.ground), dark = new THREE.Color(look.groundDark), c = new THREE.Color();
-  const craters = Array.from({ length: 26 }, (_, i) => {
-    const a = i * 2.399963, r = 30 + ((i * 53) % 330);
-    return { x: Math.cos(a) * r, z: Math.sin(a) * r, rad: 8 + ((i * 17) % 30) };
-  });
-  for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i), z = pos.getZ(i);
-    let h = 2.2 * Math.sin(x * 0.021) * Math.cos(z * 0.017) + 1.1 * Math.sin(x * 0.07 + 1.3) * Math.sin(z * 0.063) + 6 * Math.sin((x + z) * 0.004);
-    for (const k of craters) {
-      const d = Math.hypot(x - k.x, z - k.z) / k.rad;
-      if (d < 1) h -= k.rad * 0.16 * (1 - d * d); else if (d < 1.35) h += k.rad * 0.04 * (1.35 - d) / 0.35;
+export function buildSpace(body: 'Moon' | 'Mars'): { group: THREE.Group; sunDirection: THREE.Vector3; drift(dt: number): void; dispose(): void } {
+  const kit = new Kit(), group = new THREE.Group();
+
+  // stars: two sizes, a few tinted
+  for (const [count, size, seed] of [[2600, 1.4, 1], [320, 2.6, 7]] as const) {
+    const p = new Float32Array(count * 3), col = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      const u = ((i + seed) * 0.61803398875) % 1, v = ((i + seed) * 0.75487766625) % 1;
+      const th = u * Math.PI * 2, ph = Math.acos(1 - 2 * v), r = 1800;
+      p.set([Math.sin(ph) * Math.cos(th) * r, Math.cos(ph) * r, Math.sin(ph) * Math.sin(th) * r], i * 3);
+      const tint = i % 9 === 0 ? [1, 0.82, 0.66] : i % 7 === 0 ? [0.7, 0.84, 1] : [1, 1, 1], b = 0.55 + ((i * 37) % 45) / 100;
+      col.set([tint[0] * b, tint[1] * b, tint[2] * b], i * 3);
     }
-    const near = Math.hypot(x, z) < 14 ? 0 : 1;       // flat where the lander stands
-    pos.setY(i, h * near);
-    c.copy(dark).lerp(light, Math.min(1, Math.max(0, 0.55 + h * 0.07)));
-    colors.set([c.r, c.g, c.b], i * 3);
+    const geo = kit.track(new THREE.BufferGeometry());
+    geo.setAttribute('position', new THREE.BufferAttribute(p, 3)); geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    group.add(new THREE.Points(geo, kit.track(new THREE.PointsMaterial({ size, sizeAttenuation: false, vertexColors: true, fog: false }))));
   }
-  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3)); geo.computeVertexNormals();
-  const groundMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0 });
-  const ground = new THREE.Mesh(geo, groundMat); ground.position.y = -1.6;       // the cabin floor is above the surface
-  group.add(ground); disposables.push(geo, groundMat);
 
-  // scattered rocks
-  const rockGeo = new THREE.DodecahedronGeometry(1, 0), rockMat = new THREE.MeshStandardMaterial({ color: look.rock, roughness: 1, flatShading: true });
-  const rocks = new THREE.InstancedMesh(rockGeo, rockMat, 160);
-  const m = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new THREE.Vector3(), p = new THREE.Vector3();
-  for (let i = 0; i < 160; i++) {
-    const a = i * 2.39996 + 0.7, r = 9 + ((i * 37) % 170);
-    const k = 0.15 + ((i * 13) % 10) / 14;
-    p.set(Math.cos(a) * r, -1.6 + k * 0.3, Math.sin(a) * r); s.set(k, k * 0.7, k); q.setFromEuler(new THREE.Euler(i, i * 2, i * 3));
-    rocks.setMatrixAt(i, m.compose(p, q, s));
-  }
-  group.add(rocks); disposables.push(rockGeo, rockMat);
-
-  if (look.stars) {
-    const starGeo = new THREE.BufferGeometry(), n = 700, sp = new Float32Array(n * 3);
-    for (let i = 0; i < n; i++) {
-      const u = (i * 0.61803398875) % 1, v = (i * 0.75487766625) % 1;
-      const th = u * Math.PI * 2, ph = Math.acos(1 - v);        // upper hemisphere
-      sp.set([Math.sin(ph) * Math.cos(th) * 800, Math.cos(ph) * 800 + 10, Math.sin(ph) * Math.sin(th) * 800], i * 3);
-    }
-    starGeo.setAttribute('position', new THREE.BufferAttribute(sp, 3));
-    const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 1.6, sizeAttenuation: false, fog: false });
-    group.add(new THREE.Points(starGeo, starMat)); disposables.push(starGeo, starMat);
-  }
+  // the departure body, large and falling behind to the lower left; Earth small and ahead
+  const home = body === 'Moon'
+    ? planet(kit, 420, [0x4b4e55, 0x7c8089, 0xa9adb5, 0xd2d5da], 4, 1.3)
+    : planet(kit, 420, [0x6e3620, 0x9a4c2b, 0xc06a3c, 0xe0976a], 4, 2.1);
+  home.position.set(-520, -330, -820); group.add(home);
+  const earth = planet(kit, 46, [0x1d4f9c, 0x2f7ac4, 0x3c9a5a, 0xe9f1f6], 3, 4.2);
+  earth.position.set(250, 120, -1150); group.add(earth);
+  const haze = kit.mesh(new THREE.IcosahedronGeometry(50, 2), kit.track(new THREE.MeshBasicMaterial({ color: 0x7fc4ff, transparent: true, opacity: 0.18 })));
+  haze.position.copy(earth.position); group.add(haze);
 
   return {
-    group,
-    sky: new THREE.Color(look.stars ? look.skyTop : look.skyHorizon),
-    fog: look.stars ? null : new THREE.Fog(look.fog, 60, 520),
-    sunDirection: new THREE.Vector3(-0.75, 0.42, -0.5).normalize(),
-    dispose: () => { for (const d of disposables) d.dispose(); },
+    group, sunDirection: new THREE.Vector3(0.55, 0.35, -0.75).normalize(),
+    drift(dt) { home.rotation.y += dt * 0.012; earth.rotation.y += dt * 0.05; group.rotation.z += dt * 0.0015; },
+    dispose: () => kit.dispose(),
   };
 }

@@ -1,16 +1,21 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
+import { cinematicsChoice } from '../interior/LaunchMenu';
 
 /**
  * Shared frame for the cinematic scenes: the sound switch, and the still alternative shown when
- * the player has asked for reduced motion (with the option to play it anyway). Sound starts
- * off; it needs a deliberate choice.
+ * the player has asked for reduced motion (with the option to play it anyway). The "Play
+ * cinematics" choice made at the pilot seat overrides both ways. Sound starts off.
  */
 export function SceneFrame({ title, detail, reducedMotion, onComplete, children }: {
   title: string; detail: string; reducedMotion: boolean; onComplete: () => void;
   children: (muted: boolean) => ReactNode;
 }) {
   const [muted, setMuted] = useState(true);
-  const [playAnyway, setPlayAnyway] = useState(false);
+  // The player's choice at the pilot seat wins: 'on' plays even with reduced motion, 'off' skips.
+  const [choice] = useState(cinematicsChoice);
+  const [playAnyway, setPlayAnyway] = useState(choice === 'on');
+  useEffect(() => { if (choice === 'off') onComplete(); }, [choice, onComplete]);
+  if (choice === 'off') return null;
   if (reducedMotion && !playAnyway) return <section className="systems-console" aria-label={title}>
     <h2>{title}</h2><p>{detail}</p>
     <p className="field-help">The cinematic is not played because your system asks for reduced motion.</p>
