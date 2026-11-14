@@ -93,3 +93,7 @@ function frame(dt: number) {
 ```
 
 The contracts are in `src/types.ts` (`SimInput`, `SimEvent`, `FlightTelemetry`). The data team's formats load with `profileToSite()`, for `terrain_profile` JSON from `scripts/extract_profile.py`, and `terrainPackToSite()`, for `web/public/terrain/<id>/manifest.json` + `elevation.f32`. `parseSite()` reads the simpler synthetic format in `fixtures/sites.example.json`.
+
+Terrain profile imports reject missing/nonfinite elevations and invalid supplied
+roughness grids. Incomplete terrain must remain unavailable; no mean-height fill
+is performed. Complete catalog pairing explanations are in docs/LOCATION_HANDOFF.md.

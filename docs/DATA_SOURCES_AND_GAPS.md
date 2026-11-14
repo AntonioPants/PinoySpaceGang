@@ -7,7 +7,7 @@ the catalog. This report distinguishes implemented code from ingested data.
 | Provider | Used | Investigated / gap |
 |---|---|---|
 | ESA/Copernicus | GLO-30 public AWS mirror windows for all eleven Earth sites, including existing Kilbourne | Approximate 30m DSM, mainly 2011–2015; not bare-earth soil, not a current Sentinel radar retrieval. Quality masks not ingested. |
-| NASA PDS / USGS | MGS MOLA DEM mosaic windows for Jezero, Bagnold, Arsia and Phoenix | Approx 463m equatorial native postings; interpolated altimetry cannot resolve dunes/polygons/caves. NASA PDS science redistributed as USGS GeoTIFF, not a new PDS raw-product download. |
+| NASA PDS / USGS | MGS MOLA DEM mosaic windows for Jezero, Bagnold, Arsia, Phoenix and Lucus Planum | Approx 463m equatorial native postings; interpolated altimetry cannot resolve dunes/polygons/caves. NASA PDS science redistributed as USGS GeoTIFF, not a new PDS raw-product download. |
 | NASA LRO / USGS | LOLA March 2014 mosaic windows for Marius Hills and Shackleton | Approx 118m equatorial postings, variable physical spacing with latitude; scale 0.5 applied. No cave geometry. |
 | NASA POWER | 2024 T2M, WS10M, TS, ALLSKY_SRF_ALB daily responses for Earth sites | MERRA-2 temperature/wind regional reanalysis and CERES broadband albedo. 2m air and skin temperature are kept distinct. No vector wind supplied. Missing days excluded and count retained. |
 | NASA Earthdata Search | Existing configurable `fetch_earthdata.py` retained; no new Earthdata granules ingested | MODIS MOD11A2 surface temperature and MCD43A3 BRDF/albedo are useful future higher-resolution replacements. They require product QA and Earthdata Login; no credentials supplied or used. POWER is a separate NASA service, not proof of Earthdata granule ingestion. |
@@ -68,3 +68,7 @@ claimed because no SAR imagery is redistributed.
 Haughton and Qaidam now have real GLO-30 terrain windows with saved native subsets
 and 2024 POWER context. They do not have the six original sites' separate ten-year
 seasonal profiles. See LOCATION_HANDOFF.md for their exact footprints and limitations.
+
+Lucus Planum adds a real MOLA window from the public USGS S3 mosaic distribution;
+THEMIS image PIA24008 supplies the yardang interpretation and centre. All proposed
+pairings now state matches and differences explicitly; scores remain unvalidated.

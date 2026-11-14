@@ -401,7 +401,25 @@
         "terrain_available": true,
         "known_conditions": 11,
         "total_conditions": 14
-      }
+      },
+      "pairing_notes": {
+        "shackleton-rim": {
+          "status": "proposed_unvalidated",
+          "matches": [
+            "Both are impact-landform study areas; crater-related relief supports slope and approach-planning experiments."
+          ],
+          "differences": [
+            "Meteor includes a bowl/ejecta neighbourhood, while this Shackleton crop samples a rim.",
+            "Terrestrial sedimentary rock, atmosphere and erosion differ from lunar regolith, vacuum and polar illumination."
+          ],
+          "sources": [
+            "https://www.usgs.gov/centers/astrogeology-science-center/science/meteor-crater-sample-collection",
+            "https://science.nasa.gov/resource/shackleton-craters-illuminated-rim-shadowed-interior/"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+        }
+      },
+      "pairing_status": "proposed_unvalidated"
     },
     {
       "id": "badwater",
@@ -762,7 +780,25 @@
         "terrain_available": true,
         "known_conditions": 11,
         "total_conditions": 14
-      }
+      },
+      "pairing_notes": {
+        "jezero": {
+          "status": "proposed_unvalidated",
+          "matches": [
+            "Both provide a basin/sedimentary context relevant to interpreting past water and contrasting flat deposits with surrounding relief."
+          ],
+          "differences": [
+            "Badwater evaporite playa is not a Jezero delta replica; mineral mixtures and depositional histories are not established as equivalent.",
+            "Modern terrestrial heat, groundwater and salt-crust mechanics do not reproduce current Martian conditions."
+          ],
+          "sources": [
+            "https://doi.org/10.1029/2004JE002315",
+            "https://science.nasa.gov/resource/perseverance-explores-the-jezero-crater-delta/"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+        }
+      },
+      "pairing_status": "proposed_unvalidated"
     },
     {
       "id": "barrow-observatory",
@@ -1134,7 +1170,25 @@
         "terrain_available": true,
         "known_conditions": 11,
         "total_conditions": 14
-      }
+      },
+      "pairing_notes": {
+        "phoenix": {
+          "status": "proposed_unvalidated",
+          "matches": [
+            "Ice-rich periglacial ground and polygonal surface processes motivate a northern-plains operations comparison."
+          ],
+          "differences": [
+            "Vegetation, seasonal thaw and liquid water at Barrow differ from Mars.",
+            "Thirty-metre DSM and coarse MOLA do not resolve equivalent polygon geometry, ice depth or bearing strength."
+          ],
+          "sources": [
+            "https://tc.copernicus.org/articles/20/265/2026/tc-20-265-2026.html",
+            "https://science.nasa.gov/mission/phoenix/"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+        }
+      },
+      "pairing_status": "proposed_unvalidated"
     },
     {
       "id": "phoenix",
@@ -1810,7 +1864,40 @@
         "terrain_available": true,
         "known_conditions": 11,
         "total_conditions": 14
-      }
+      },
+      "pairing_notes": {
+        "shackleton-rim": {
+          "status": "proposed_unvalidated",
+          "matches": [
+            "Depression walls, slopes and surrounding relief provide a limited terrain-operations comparison."
+          ],
+          "differences": [
+            "Kilbourne is a volcanic maar; Shackleton is an impact crater. Their formation mechanisms and materials are different.",
+            "The Kilbourne basin crop is not a lunar rim or thermal/polar-shadow analog."
+          ],
+          "sources": [
+            "https://science.nasa.gov/blogs/notes-from-the-field/2018/01/24/kilbourne-and-aden-two-flavors-of-volcanism/",
+            "https://science.nasa.gov/resource/shackleton-craters-illuminated-rim-shadowed-interior/"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+        },
+        "arsia-flank": {
+          "status": "proposed_unvalidated",
+          "matches": [
+            "Volcanic context and exposed rocky relief support a proposed volcanic-terrain operations comparison."
+          ],
+          "differences": [
+            "A localized maar and a large shield-volcano flank have different eruption mechanisms, dimensions and landform geometry.",
+            "Shared broad basalt labels do not establish identical rock fractions, soil mechanics, atmosphere or temperature."
+          ],
+          "sources": [
+            "https://science.nasa.gov/blogs/notes-from-the-field/2018/01/24/kilbourne-and-aden-two-flavors-of-volcanism/",
+            "https://science.nasa.gov/solar-system/planets/mars/nasa-orbiter-finds-possible-cave-skylights-on-mars/"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+        }
+      },
+      "pairing_status": "proposed_unvalidated"
     },
     {
       "id": "craters-moon",
@@ -2159,7 +2246,40 @@
         "terrain_available": true,
         "known_conditions": 11,
         "total_conditions": 14
-      }
+      },
+      "pairing_notes": {
+        "arsia-flank": {
+          "status": "proposed_unvalidated",
+          "matches": [
+            "Lava-flow/vent terrain and broad basaltic context support volcanic surface-operations comparisons."
+          ],
+          "differences": [
+            "Flow ages, textures, weathering and vegetation differ; the Martian crop does not resolve individual lava obstacles.",
+            "Neither local friction nor plume response follows from the basalt label."
+          ],
+          "sources": [
+            "https://www.nps.gov/crmo/learn/nature/geologicactivity.htm",
+            "https://science.nasa.gov/solar-system/planets/mars/nasa-orbiter-finds-possible-cave-skylights-on-mars/"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+        },
+        "marius-hills": {
+          "status": "proposed_unvalidated",
+          "matches": [
+            "Volcanic lava and vent context motivates comparing routes and relief in volcanic landscapes."
+          ],
+          "differences": [
+            "Earth surface alteration and vegetation differ from airless lunar regolith cover.",
+            "Coarse lunar elevation and this Earth crop do not establish matched vents, pits or cave geometry."
+          ],
+          "sources": [
+            "https://www.nps.gov/crmo/learn/nature/geologicactivity.htm",
+            "https://www.lroc.asu.edu/posts/230"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+        }
+      },
+      "pairing_status": "proposed_unvalidated"
     },
     {
       "id": "lava-beds",
@@ -2508,7 +2628,40 @@
         "terrain_available": true,
         "known_conditions": 11,
         "total_conditions": 14
-      }
+      },
+      "pairing_notes": {
+        "marius-hills": {
+          "status": "proposed_unvalidated",
+          "matches": [
+            "Volcanic surfaces associated regionally with lava-tube/pit investigations motivate a surface-access comparison."
+          ],
+          "differences": [
+            "Surface DEMs contain no cave interior, roof thickness or verified traversable passage.",
+            "Terrestrial weathering, atmosphere and cave access differ from the lunar environment; a surface comparison does not validate a shelter."
+          ],
+          "sources": [
+            "https://www.nps.gov/labe/learn/nature/geology.htm",
+            "https://www.lroc.asu.edu/posts/230"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+        },
+        "arsia-flank": {
+          "status": "proposed_unvalidated",
+          "matches": [
+            "Volcanic terrain and regional interest in subsurface voids motivate surface reconnaissance comparisons."
+          ],
+          "differences": [
+            "An Earth lava-tube landscape is not evidence for a cave within the selected Arsia crop.",
+            "Neither DEM resolves voids, roofs or fine obstacles; atmospheric and material-mechanics equivalence is unestablished."
+          ],
+          "sources": [
+            "https://www.nps.gov/labe/learn/nature/geology.htm",
+            "https://science.nasa.gov/solar-system/planets/mars/nasa-orbiter-finds-possible-cave-skylights-on-mars/"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+        }
+      },
+      "pairing_status": "proposed_unvalidated"
     },
     {
       "id": "amboy",
@@ -2868,7 +3021,25 @@
         "terrain_available": true,
         "known_conditions": 11,
         "total_conditions": 14
-      }
+      },
+      "pairing_notes": {
+        "arsia-flank": {
+          "status": "proposed_unvalidated",
+          "matches": [
+            "Volcanic cone/flow context and broad basaltic interpretation offer a volcanic-terrain comparison."
+          ],
+          "differences": [
+            "Amboy cinder-cone terrain differs from the regional shield-volcano flank crop.",
+            "Cinder grain sizes, obstacle abundance and strength are not matched by a coarse DEM or a shared substrate label."
+          ],
+          "sources": [
+            "https://www.blm.gov/visit/amboy-crater-national-natural-landmark",
+            "https://science.nasa.gov/solar-system/planets/mars/nasa-orbiter-finds-possible-cave-skylights-on-mars/"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+        }
+      },
+      "pairing_status": "proposed_unvalidated"
     },
     {
       "id": "white-sands",
@@ -3238,7 +3409,25 @@
         "terrain_available": true,
         "known_conditions": 11,
         "total_conditions": 14
-      }
+      },
+      "pairing_notes": {
+        "bagnold": {
+          "status": "proposed_unvalidated",
+          "matches": [
+            "Wind-transported dunes motivate comparing aeolian landform organization and operations on granular slopes."
+          ],
+          "differences": [
+            "White Sands gypsum differs from Bagnold basaltic sand; cohesion, density and optical properties cannot be transferred directly.",
+            "MOLA does not resolve Bagnold dune slipfaces at the Earth DSM scale; wind and gravity differ."
+          ],
+          "sources": [
+            "https://www.nps.gov/whsa/learn/gypsum.htm",
+            "https://science.nasa.gov/blog/recap-of-the-bagnold-dune-investigation/"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+        }
+      },
+      "pairing_status": "proposed_unvalidated"
     },
     {
       "id": "capitol-reef",
@@ -3586,7 +3775,25 @@
         "terrain_available": true,
         "known_conditions": 11,
         "total_conditions": 14
-      }
+      },
+      "pairing_notes": {
+        "jezero": {
+          "status": "proposed_unvalidated",
+          "matches": [
+            "Exposed sedimentary relief and erosion provide a hypothesis for comparing terrain access to layered deposits."
+          ],
+          "differences": [
+            "Capitol Reef is not a demonstrated Jezero delta analog; lithology and depositional histories require independent comparison.",
+            "Regional slope/relief similarity cannot validate sediment provenance, resources or landing safety."
+          ],
+          "sources": [
+            "https://www.nps.gov/care/learn/nature/geology.htm",
+            "https://science.nasa.gov/resource/perseverance-explores-the-jezero-crater-delta/"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+        }
+      },
+      "pairing_status": "proposed_unvalidated"
     },
     {
       "id": "jezero",
@@ -5574,17 +5781,22 @@
       },
       "pairing_notes": {
         "shackleton-rim": {
+          "status": "proposed_unvalidated",
           "matches": [
             "Impact-generated terrain and local relief offer a proposed operations/terrain comparison."
           ],
           "differences": [
-            "This crop is Haughton floor context; the target crop is a Shackleton rim neighbourhood.",
-            "Earth atmosphere, seasonal water, weathering and illumination differ from lunar polar conditions.",
-            "Neither this crop nor its descriptor score establishes whole-crater similarity or local ice resources."
+            "The Haughton crop samples floor context; the target crop samples a Shackleton rim neighbourhood.",
+            "Earth atmosphere, seasonal water, weathering and illumination differ from lunar polar conditions; whole-crater equivalence is not established."
           ],
-          "status": "proposed_unvalidated"
+          "sources": [
+            "https://ntrs.nasa.gov/citations/20060013129",
+            "https://science.nasa.gov/resource/shackleton-craters-illuminated-rim-shadowed-interior/"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
         }
-      }
+      },
+      "pairing_status": "proposed_unvalidated"
     },
     {
       "id": "qaidam",
@@ -5596,8 +5808,10 @@
       "morphology": "rocky_desert",
       "substrate": "sedimentary_rock",
       "evidence_url": "https://doi.org/10.1029/2018JE005719",
-      "description": "Study window around published multilayered yardangs at 38.66 N, 93.27 E. Thirty-metre DSM supplies regional relief, not fine yardang walls or soil mechanics. A specific planetary catalog pairing is deferred; yardangs are not equivalent to the Bagnold sand dunes.",
-      "matches": [],
+      "description": "Study window around published multilayered yardangs at 38.66 N, 93.27 E. Thirty-metre DSM supplies regional relief, not fine yardang walls or soil mechanics. Proposed Lucus Planum comparison concerns wind-eroded ridges; yardangs are not equivalent to the Bagnold sand dunes.",
+      "matches": [
+        "lucus-planum"
+      ],
       "role": "earth_analog",
       "study_status": "research_area_not_landing_approval",
       "terrain": {
@@ -5952,8 +6166,327 @@
         "known_conditions": 11,
         "total_conditions": 14
       },
-      "pairing_notes": {},
-      "pairing_status": "deferred_pending_yardang_target_footprint"
+      "pairing_notes": {
+        "lucus-planum": {
+          "status": "proposed_unvalidated",
+          "matches": [
+            "Published Qaidam field work and NASA THEMIS imagery document wind-eroded ridges (yardangs), motivating an aeolian-erosion process comparison."
+          ],
+          "differences": [
+            "Qaidam field coordinates and the Lucus THEMIS image centre define separate study windows, not a measured one-to-one ridge correspondence.",
+            "Local Martian lithology is unresolved; terrestrial sedimentary material does not establish identical cementation or strength.",
+            "The roughly 463 m MOLA source cannot resolve individual yardang walls or validate crest spacing; atmosphere, gravity and erosional histories differ."
+          ],
+          "sources": [
+            "https://doi.org/10.1029/2018JE005719",
+            "https://www.jpl.nasa.gov/images/pia24008-lucus-planum-yardangs/"
+          ],
+          "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+        }
+      },
+      "pairing_status": "proposed_unvalidated"
+    },
+    {
+      "id": "lucus-planum",
+      "name": "Lucus Planum yardang study area",
+      "body": "mars",
+      "longitude": -172.773,
+      "latitude": -1.61604,
+      "region": "Medusae Fossae Formation",
+      "morphology": "rocky_desert",
+      "substrate": "unknown",
+      "evidence_url": "https://www.jpl.nasa.gov/images/pia24008-lucus-planum-yardangs/",
+      "description": "Sixteen-kilometre regional window centred on NASA THEMIS PIA24008 (187.227 E converted to -172.773 E). Imagery documents wind-eroded yardangs; coarse MOLA elevation cannot resolve individual ridges or demonstrate material equivalence.",
+      "matches": [],
+      "role": "planetary_target",
+      "study_status": "research_area_not_landing_approval",
+      "terrain": {
+        "manifest_url": "/terrain/lucus-planum/manifest.json",
+        "manifest_sha256": "60996230187d4533121d5c8dfc8a96afa02f43439c269895516e219b47095533",
+        "elevation_sha256": "3d109b618d641bf5243bb24f1b647b61d7c54f6fd1ceece9238c0a506e97465e",
+        "rows": 33,
+        "columns": 33,
+        "row_order": "north_to_south",
+        "column_order": "west_to_east",
+        "spacing_m": 500.0,
+        "source_url": "https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif",
+        "native_resolution_m_approx": 463.1
+      },
+      "conditions": {
+        "elevation_min": {
+          "value": -2698.743896484375,
+          "unit": "m",
+          "status": "derived",
+          "source": {
+            "product_id": "MGS-MOLA-MEGDR-USGS",
+            "url": "https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif"
+          },
+          "native_resolution_m": 463.1,
+          "analysis_resolution_m": 500.0,
+          "time_coverage": "MGS mission gridded archive",
+          "method": "Finite differences on local metre grid; summary over full footprint.",
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": null
+        },
+        "elevation_max": {
+          "value": -2514.757568359375,
+          "unit": "m",
+          "status": "derived",
+          "source": {
+            "product_id": "MGS-MOLA-MEGDR-USGS",
+            "url": "https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif"
+          },
+          "native_resolution_m": 463.1,
+          "analysis_resolution_m": 500.0,
+          "time_coverage": "MGS mission gridded archive",
+          "method": "Finite differences on local metre grid; summary over full footprint.",
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": null
+        },
+        "elevation_mean": {
+          "value": -2627.921875,
+          "unit": "m",
+          "status": "derived",
+          "source": {
+            "product_id": "MGS-MOLA-MEGDR-USGS",
+            "url": "https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif"
+          },
+          "native_resolution_m": 463.1,
+          "analysis_resolution_m": 500.0,
+          "time_coverage": "MGS mission gridded archive",
+          "method": "Finite differences on local metre grid; summary over full footprint.",
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": null
+        },
+        "slope_mean": {
+          "value": 0.6789447081655356,
+          "unit": "deg",
+          "status": "derived",
+          "source": {
+            "product_id": "MGS-MOLA-MEGDR-USGS",
+            "url": "https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif"
+          },
+          "native_resolution_m": 463.1,
+          "analysis_resolution_m": 500.0,
+          "time_coverage": "MGS mission gridded archive",
+          "method": "Finite differences on local metre grid; summary over full footprint.",
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": null
+        },
+        "slope_p50": {
+          "value": 0.5704032241296805,
+          "unit": "deg",
+          "status": "derived",
+          "source": {
+            "product_id": "MGS-MOLA-MEGDR-USGS",
+            "url": "https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif"
+          },
+          "native_resolution_m": 463.1,
+          "analysis_resolution_m": 500.0,
+          "time_coverage": "MGS mission gridded archive",
+          "method": "Finite differences on local metre grid; summary over full footprint.",
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": null
+        },
+        "slope_p95": {
+          "value": 1.5829647977983643,
+          "unit": "deg",
+          "status": "derived",
+          "source": {
+            "product_id": "MGS-MOLA-MEGDR-USGS",
+            "url": "https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif"
+          },
+          "native_resolution_m": 463.1,
+          "analysis_resolution_m": 500.0,
+          "time_coverage": "MGS mission gridded archive",
+          "method": "Finite differences on local metre grid; summary over full footprint.",
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": null
+        },
+        "slope_max": {
+          "value": 4.472387963642038,
+          "unit": "deg",
+          "status": "derived",
+          "source": {
+            "product_id": "MGS-MOLA-MEGDR-USGS",
+            "url": "https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif"
+          },
+          "native_resolution_m": 463.1,
+          "analysis_resolution_m": 500.0,
+          "time_coverage": "MGS mission gridded archive",
+          "method": "Finite differences on local metre grid; summary over full footprint.",
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": null
+        },
+        "wind_speed_10m": {
+          "value": null,
+          "unit": "m/s",
+          "status": "unknown",
+          "source": null,
+          "native_resolution_m": null,
+          "analysis_resolution_m": null,
+          "time_coverage": null,
+          "method": null,
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": "No validated site-specific product ingested; substrate does not determine this value."
+        },
+        "air_temperature_2m": {
+          "value": null,
+          "unit": "degC",
+          "status": "unknown",
+          "source": null,
+          "native_resolution_m": null,
+          "analysis_resolution_m": null,
+          "time_coverage": null,
+          "method": null,
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": "No validated site-specific product ingested; substrate does not determine this value."
+        },
+        "surface_temperature": {
+          "value": null,
+          "unit": "K",
+          "status": "unknown",
+          "source": null,
+          "native_resolution_m": null,
+          "analysis_resolution_m": null,
+          "time_coverage": null,
+          "method": null,
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": "No validated site-specific product ingested; substrate does not determine this value."
+        },
+        "albedo": {
+          "value": null,
+          "unit": "1",
+          "status": "unknown",
+          "source": null,
+          "native_resolution_m": null,
+          "analysis_resolution_m": null,
+          "time_coverage": null,
+          "method": null,
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": "No validated site-specific product ingested; substrate does not determine this value."
+        },
+        "friction": {
+          "value": null,
+          "unit": "1",
+          "status": "unknown",
+          "source": null,
+          "native_resolution_m": null,
+          "analysis_resolution_m": null,
+          "time_coverage": null,
+          "method": null,
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": "No validated site-specific product ingested; substrate does not determine this value."
+        },
+        "cohesion": {
+          "value": null,
+          "unit": "Pa",
+          "status": "unknown",
+          "source": null,
+          "native_resolution_m": null,
+          "analysis_resolution_m": null,
+          "time_coverage": null,
+          "method": null,
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": "No validated site-specific product ingested; substrate does not determine this value."
+        },
+        "bulk_density": {
+          "value": null,
+          "unit": "kg/m3",
+          "status": "unknown",
+          "source": null,
+          "native_resolution_m": null,
+          "analysis_resolution_m": null,
+          "time_coverage": null,
+          "method": null,
+          "caveat": "Not a site-specific accuracy estimate.",
+          "reason": "No validated site-specific product ingested; substrate does not determine this value."
+        }
+      },
+      "comparison_features": {
+        "slope_mean": {
+          "value": 0.4656791878792932,
+          "unit": "deg",
+          "status": "derived",
+          "source": {
+            "product_id": "MGS-MOLA-MEGDR-USGS",
+            "url": "https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif"
+          },
+          "native_resolution_m": 463.1,
+          "analysis_resolution_m": 1000,
+          "time_coverage": null,
+          "method": "Area-average to 1000m; gradient slope; 3x3 local RMS height; relief max-min.",
+          "caveat": "Small footprint and coarse source limit representativeness; RMS includes regional slope.",
+          "reason": null
+        },
+        "roughness_rms": {
+          "value": 6.677026713084737,
+          "unit": "m",
+          "status": "derived",
+          "source": {
+            "product_id": "MGS-MOLA-MEGDR-USGS",
+            "url": "https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif"
+          },
+          "native_resolution_m": 463.1,
+          "analysis_resolution_m": 1000,
+          "time_coverage": null,
+          "method": "Area-average to 1000m; gradient slope; 3x3 local RMS height; relief max-min.",
+          "caveat": "Small footprint and coarse source limit representativeness; RMS includes regional slope.",
+          "reason": null
+        },
+        "relief": {
+          "value": 31.544921875,
+          "unit": "m",
+          "status": "derived",
+          "source": {
+            "product_id": "MGS-MOLA-MEGDR-USGS",
+            "url": "https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif"
+          },
+          "native_resolution_m": 463.1,
+          "analysis_resolution_m": 1000,
+          "time_coverage": null,
+          "method": "Area-average to 1000m; gradient slope; 3x3 local RMS height; relief max-min.",
+          "caveat": "Small footprint and coarse source limit representativeness; RMS includes regional slope.",
+          "reason": null
+        }
+      },
+      "simulation_defaults": {},
+      "classification": {
+        "morphology": "rocky_desert",
+        "substrate": "unknown",
+        "status": "interpreted",
+        "source_url": "https://www.jpl.nasa.gov/images/pia24008-lucus-planum-yardangs/",
+        "atmosphere": "thin_co2",
+        "slope_p95_class": "level",
+        "roughness_3km": "low",
+        "annual_air_temperature": null
+      },
+      "identifiers": [
+        "rocky_desert"
+      ],
+      "bbox": [
+        -172.91224768753898,
+        -1.7552224900794506,
+        -172.633752312461,
+        -1.4768528777442873
+      ],
+      "footprint_method": "Raster outer bounds of square local metric study area centred on selected coordinates; includes surrounding context.",
+      "limitations": [
+        "Morphology and substrate are area interpretations, not pixel classifications or soil mechanics.",
+        "No validated resource inventory; water/ice/cave hypotheses are not confirmed local resources."
+      ],
+      "feature_measurements": {},
+      "resources": {
+        "status": "unknown",
+        "value": null,
+        "reason": "No footprint-specific resource abundance product ingested."
+      },
+      "resource_indicators": [],
+      "completeness": {
+        "terrain_available": true,
+        "known_conditions": 7,
+        "total_conditions": 14
+      }
     }
   ],
   "pairings": [
@@ -5995,6 +6528,21 @@
         "same_morphology_label": false,
         "score": null,
         "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
+      "explanation": {
+        "status": "proposed_unvalidated",
+        "matches": [
+          "Both are impact-landform study areas; crater-related relief supports slope and approach-planning experiments."
+        ],
+        "differences": [
+          "Meteor includes a bowl/ejecta neighbourhood, while this Shackleton crop samples a rim.",
+          "Terrestrial sedimentary rock, atmosphere and erosion differ from lunar regolith, vacuum and polar illumination."
+        ],
+        "sources": [
+          "https://www.usgs.gov/centers/astrogeology-science-center/science/meteor-crater-sample-collection",
+          "https://science.nasa.gov/resource/shackleton-craters-illuminated-rim-shadowed-interior/"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
       }
     },
     {
@@ -6035,6 +6583,21 @@
         "same_morphology_label": false,
         "score": null,
         "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
+      "explanation": {
+        "status": "proposed_unvalidated",
+        "matches": [
+          "Both provide a basin/sedimentary context relevant to interpreting past water and contrasting flat deposits with surrounding relief."
+        ],
+        "differences": [
+          "Badwater evaporite playa is not a Jezero delta replica; mineral mixtures and depositional histories are not established as equivalent.",
+          "Modern terrestrial heat, groundwater and salt-crust mechanics do not reproduce current Martian conditions."
+        ],
+        "sources": [
+          "https://doi.org/10.1029/2004JE002315",
+          "https://science.nasa.gov/resource/perseverance-explores-the-jezero-crater-delta/"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
       }
     },
     {
@@ -6075,6 +6638,21 @@
         "same_morphology_label": true,
         "score": null,
         "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
+      "explanation": {
+        "status": "proposed_unvalidated",
+        "matches": [
+          "Ice-rich periglacial ground and polygonal surface processes motivate a northern-plains operations comparison."
+        ],
+        "differences": [
+          "Vegetation, seasonal thaw and liquid water at Barrow differ from Mars.",
+          "Thirty-metre DSM and coarse MOLA do not resolve equivalent polygon geometry, ice depth or bearing strength."
+        ],
+        "sources": [
+          "https://tc.copernicus.org/articles/20/265/2026/tc-20-265-2026.html",
+          "https://science.nasa.gov/mission/phoenix/"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
       }
     },
     {
@@ -6115,6 +6693,21 @@
         "same_morphology_label": true,
         "score": null,
         "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
+      "explanation": {
+        "status": "proposed_unvalidated",
+        "matches": [
+          "Depression walls, slopes and surrounding relief provide a limited terrain-operations comparison."
+        ],
+        "differences": [
+          "Kilbourne is a volcanic maar; Shackleton is an impact crater. Their formation mechanisms and materials are different.",
+          "The Kilbourne basin crop is not a lunar rim or thermal/polar-shadow analog."
+        ],
+        "sources": [
+          "https://science.nasa.gov/blogs/notes-from-the-field/2018/01/24/kilbourne-and-aden-two-flavors-of-volcanism/",
+          "https://science.nasa.gov/resource/shackleton-craters-illuminated-rim-shadowed-interior/"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
       }
     },
     {
@@ -6155,6 +6748,21 @@
         "same_morphology_label": false,
         "score": null,
         "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
+      "explanation": {
+        "status": "proposed_unvalidated",
+        "matches": [
+          "Volcanic context and exposed rocky relief support a proposed volcanic-terrain operations comparison."
+        ],
+        "differences": [
+          "A localized maar and a large shield-volcano flank have different eruption mechanisms, dimensions and landform geometry.",
+          "Shared broad basalt labels do not establish identical rock fractions, soil mechanics, atmosphere or temperature."
+        ],
+        "sources": [
+          "https://science.nasa.gov/blogs/notes-from-the-field/2018/01/24/kilbourne-and-aden-two-flavors-of-volcanism/",
+          "https://science.nasa.gov/solar-system/planets/mars/nasa-orbiter-finds-possible-cave-skylights-on-mars/"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
       }
     },
     {
@@ -6195,6 +6803,21 @@
         "same_morphology_label": false,
         "score": null,
         "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
+      "explanation": {
+        "status": "proposed_unvalidated",
+        "matches": [
+          "Lava-flow/vent terrain and broad basaltic context support volcanic surface-operations comparisons."
+        ],
+        "differences": [
+          "Flow ages, textures, weathering and vegetation differ; the Martian crop does not resolve individual lava obstacles.",
+          "Neither local friction nor plume response follows from the basalt label."
+        ],
+        "sources": [
+          "https://www.nps.gov/crmo/learn/nature/geologicactivity.htm",
+          "https://science.nasa.gov/solar-system/planets/mars/nasa-orbiter-finds-possible-cave-skylights-on-mars/"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
       }
     },
     {
@@ -6235,6 +6858,21 @@
         "same_morphology_label": false,
         "score": null,
         "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
+      "explanation": {
+        "status": "proposed_unvalidated",
+        "matches": [
+          "Volcanic lava and vent context motivates comparing routes and relief in volcanic landscapes."
+        ],
+        "differences": [
+          "Earth surface alteration and vegetation differ from airless lunar regolith cover.",
+          "Coarse lunar elevation and this Earth crop do not establish matched vents, pits or cave geometry."
+        ],
+        "sources": [
+          "https://www.nps.gov/crmo/learn/nature/geologicactivity.htm",
+          "https://www.lroc.asu.edu/posts/230"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
       }
     },
     {
@@ -6275,6 +6913,21 @@
         "same_morphology_label": false,
         "score": null,
         "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
+      "explanation": {
+        "status": "proposed_unvalidated",
+        "matches": [
+          "Volcanic surfaces associated regionally with lava-tube/pit investigations motivate a surface-access comparison."
+        ],
+        "differences": [
+          "Surface DEMs contain no cave interior, roof thickness or verified traversable passage.",
+          "Terrestrial weathering, atmosphere and cave access differ from the lunar environment; a surface comparison does not validate a shelter."
+        ],
+        "sources": [
+          "https://www.nps.gov/labe/learn/nature/geology.htm",
+          "https://www.lroc.asu.edu/posts/230"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
       }
     },
     {
@@ -6315,6 +6968,21 @@
         "same_morphology_label": false,
         "score": null,
         "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
+      "explanation": {
+        "status": "proposed_unvalidated",
+        "matches": [
+          "Volcanic terrain and regional interest in subsurface voids motivate surface reconnaissance comparisons."
+        ],
+        "differences": [
+          "An Earth lava-tube landscape is not evidence for a cave within the selected Arsia crop.",
+          "Neither DEM resolves voids, roofs or fine obstacles; atmospheric and material-mechanics equivalence is unestablished."
+        ],
+        "sources": [
+          "https://www.nps.gov/labe/learn/nature/geology.htm",
+          "https://science.nasa.gov/solar-system/planets/mars/nasa-orbiter-finds-possible-cave-skylights-on-mars/"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
       }
     },
     {
@@ -6355,6 +7023,21 @@
         "same_morphology_label": false,
         "score": null,
         "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
+      "explanation": {
+        "status": "proposed_unvalidated",
+        "matches": [
+          "Volcanic cone/flow context and broad basaltic interpretation offer a volcanic-terrain comparison."
+        ],
+        "differences": [
+          "Amboy cinder-cone terrain differs from the regional shield-volcano flank crop.",
+          "Cinder grain sizes, obstacle abundance and strength are not matched by a coarse DEM or a shared substrate label."
+        ],
+        "sources": [
+          "https://www.blm.gov/visit/amboy-crater-national-natural-landmark",
+          "https://science.nasa.gov/solar-system/planets/mars/nasa-orbiter-finds-possible-cave-skylights-on-mars/"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
       }
     },
     {
@@ -6395,6 +7078,21 @@
         "same_morphology_label": true,
         "score": null,
         "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
+      "explanation": {
+        "status": "proposed_unvalidated",
+        "matches": [
+          "Wind-transported dunes motivate comparing aeolian landform organization and operations on granular slopes."
+        ],
+        "differences": [
+          "White Sands gypsum differs from Bagnold basaltic sand; cohesion, density and optical properties cannot be transferred directly.",
+          "MOLA does not resolve Bagnold dune slipfaces at the Earth DSM scale; wind and gravity differ."
+        ],
+        "sources": [
+          "https://www.nps.gov/whsa/learn/gypsum.htm",
+          "https://science.nasa.gov/blog/recap-of-the-bagnold-dune-investigation/"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
       }
     },
     {
@@ -6435,6 +7133,21 @@
         "same_morphology_label": false,
         "score": null,
         "reason": "Categorical interpretations are not calibrated geological distances; not folded into terrain score."
+      },
+      "explanation": {
+        "status": "proposed_unvalidated",
+        "matches": [
+          "Exposed sedimentary relief and erosion provide a hypothesis for comparing terrain access to layered deposits."
+        ],
+        "differences": [
+          "Capitol Reef is not a demonstrated Jezero delta analog; lithology and depositional histories require independent comparison.",
+          "Regional slope/relief similarity cannot validate sediment provenance, resources or landing safety."
+        ],
+        "sources": [
+          "https://www.nps.gov/care/learn/nature/geology.htm",
+          "https://science.nasa.gov/resource/perseverance-explores-the-jezero-crater-delta/"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
       }
     },
     {
@@ -6471,19 +7184,79 @@
       "reason": "Environment lacks compatible observations; combined score withheld.",
       "interpretation": "Engineering terrain descriptor comparison; excludes geological equivalence and landing safety.",
       "explanation": {
+        "status": "proposed_unvalidated",
         "matches": [
           "Impact-generated terrain and local relief offer a proposed operations/terrain comparison."
         ],
         "differences": [
-          "This crop is Haughton floor context; the target crop is a Shackleton rim neighbourhood.",
-          "Earth atmosphere, seasonal water, weathering and illumination differ from lunar polar conditions.",
-          "Neither this crop nor its descriptor score establishes whole-crater similarity or local ice resources."
+          "The Haughton crop samples floor context; the target crop samples a Shackleton rim neighbourhood.",
+          "Earth atmosphere, seasonal water, weathering and illumination differ from lunar polar conditions; whole-crater equivalence is not established."
         ],
-        "status": "proposed_unvalidated"
+        "sources": [
+          "https://ntrs.nasa.gov/citations/20060013129",
+          "https://science.nasa.gov/resource/shackleton-craters-illuminated-rim-shadowed-interior/"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
       },
       "geology_comparison": {
         "same_substrate_label": false,
         "same_morphology_label": false,
+        "score": null,
+        "reason": "Categorical labels are not a validated geological similarity metric."
+      }
+    },
+    {
+      "earth_id": "qaidam",
+      "planetary_id": "lucus-planum",
+      "method_version": "1.0.0",
+      "terrain_score": 0.967607,
+      "coverage": 1.0,
+      "features": [
+        {
+          "feature": "slope_mean",
+          "weight": 0.4,
+          "fixed_scale": 15.0,
+          "distance": 0.02726543845258517,
+          "contribution": 0.3890938246189659
+        },
+        {
+          "feature": "roughness_rms",
+          "weight": 0.4,
+          "fixed_scale": 150.0,
+          "distance": 0.0382736952781129,
+          "contribution": 0.38469052188875485
+        },
+        {
+          "feature": "relief",
+          "weight": 0.2,
+          "fixed_scale": 1000.0,
+          "distance": 0.030886962890625,
+          "contribution": 0.19382260742187502
+        }
+      ],
+      "environment_score": null,
+      "combined_score": null,
+      "reason": "Environment lacks compatible observations; combined score withheld.",
+      "interpretation": "Engineering terrain descriptor comparison; excludes geological equivalence and landing safety.",
+      "explanation": {
+        "status": "proposed_unvalidated",
+        "matches": [
+          "Published Qaidam field work and NASA THEMIS imagery document wind-eroded ridges (yardangs), motivating an aeolian-erosion process comparison."
+        ],
+        "differences": [
+          "Qaidam field coordinates and the Lucus THEMIS image centre define separate study windows, not a measured one-to-one ridge correspondence.",
+          "Local Martian lithology is unresolved; terrestrial sedimentary material does not establish identical cementation or strength.",
+          "The roughly 463 m MOLA source cannot resolve individual yardang walls or validate crest spacing; atmosphere, gravity and erosional histories differ."
+        ],
+        "sources": [
+          "https://doi.org/10.1029/2018JE005719",
+          "https://www.jpl.nasa.gov/images/pia24008-lucus-planum-yardangs/"
+        ],
+        "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "geology_comparison": {
+        "same_substrate_label": false,
+        "same_morphology_label": true,
         "score": null,
         "reason": "Categorical labels are not a validated geological similarity metric."
       }

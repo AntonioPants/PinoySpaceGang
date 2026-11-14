@@ -10,6 +10,7 @@ import numpy as np
 
 from .build import CACHE, PUBLIC, ROOT, dump, sha
 from .scoring import compare
+from .pairings import attach_handoff
 
 
 def register(site_ids):
@@ -39,15 +40,6 @@ def register(site_ids):
         shutil.copy2(CACHE / f'{site_id}-source.json', manifest_path.parent / 'source-receipt.json')
         manifest['source']['subset_file'] = 'source-window.tif'
         manifest['source']['receipt_file'] = 'source-receipt.json'
-        if site_id == 'haughton':
-            record['pairing_notes'] = {'shackleton-rim': {
-                'matches': ['Impact-generated terrain and local relief offer a proposed operations/terrain comparison.'],
-                'differences': ['This crop is Haughton floor context; the target crop is a Shackleton rim neighbourhood.', 'Earth atmosphere, seasonal water, weathering and illumination differ from lunar polar conditions.', 'Neither this crop nor its descriptor score establishes whole-crater similarity or local ice resources.'],
-                'status': 'proposed_unvalidated',
-            }}
-        elif site_id == 'qaidam':
-            record['pairing_notes'] = {}
-            record['pairing_status'] = 'deferred_pending_yardang_target_footprint'
         dump(manifest_path, manifest)
         record['terrain']['manifest_sha256'] = sha(manifest_path)
         dump(manifest_path.parent / 'checksums.json', {
@@ -95,6 +87,7 @@ def register(site_ids):
                 'explanation': record.get('pairing_notes', {}).get(target_id),
                 'geology_comparison': {'same_substrate_label': record['substrate'] == target['substrate'], 'same_morphology_label': record['morphology'] == target['morphology'], 'score': None, 'reason': 'Categorical labels are not a validated geological similarity metric.'},
             })
+    attach_handoff(catalog)
     dump(catalog_path, catalog)
     dump(ROOT / 'data/catalog-run-report.json', {'operation': 'register-site-records', 'registered_sites': site_ids, 'failures': [], 'sites': len(by_id), 'terrain_available': sum(s.get('terrain') is not None for s in by_id.values())})
     print(f'Registered {", ".join(site_ids)}; {len(catalog["sites"])} total sites')

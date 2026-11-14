@@ -114,7 +114,7 @@ MOLA uses areoid heights, LOLA uses a 1737400m reference sphere. Absolute elevat
 is never compared across bodies.
 
 Selected Earth sites: Kilbourne, Meteor Crater, Amboy, White Sands, Badwater,
-Barrow Observatory, Craters of the Moon, Lava Beds, Capitol Reef. This expands
+Barrow Observatory, Craters of the Moon, Lava Beds, Capitol Reef, Haughton and Qaidam. This expands
 the original 6–8-candidate scope to include the user's additional selections.
 Capitol Reef is explicitly a candidate sedimentary-relief analog, not a newly
 discovered or validated Jezero match. A regional square mixes geological units.
@@ -125,9 +125,9 @@ are defensible volcanic candidates but were deferred because Amboy, Craters of
 the Moon and Lava Beds already cover that class; impact, salt, dune and icy
 terrain provide greater variety. Their exclusion is not a scientific rejection.
 
-Six planetary research targets: Jezero delta neighbourhood, Bagnold regional dune
+Seven planetary research targets: Jezero delta neighbourhood, Bagnold regional dune
 context, Arsia flank, Phoenix northern plains, Marius Hills volcanic terrain,
-Shackleton northern rim. None is certified safe for landing. The original broad
+Shackleton northern rim, and Lucus Planum yardangs. None is certified safe for landing. The original broad
 Arsia lava-tube entry is narrowed to a volcanic study area without claiming an
 identified cave. Shackleton is a local rim crop, not the previous all-longitude
 polar cap. Phoenix adds an icy/periglacial comparison for Barrow.
@@ -179,7 +179,7 @@ No commits, merges, pushes or deployment are performed by these commands.
 
 ## Haughton and Qaidam terrain additions
 
-The catalog now includes eleven Earth sites and six planetary sites. Both new
+The catalog now includes eleven Earth sites and seven planetary sites. Both new
 Earth packs use real Copernicus GLO-30 elevation, 161 × 161 north-first float32
 samples at 30 m output spacing, and selected 4.8 km windows. Native source windows
 and receipts are retained alongside the output for reprocessing. Licence and
@@ -189,8 +189,8 @@ attribution follow the existing Copernicus contract.
   structure on Devon Island, Canada. The proposed Shackleton comparison includes
   explicit matches and differences; a floor crop is not a lunar rim replica.
 - `qaidam`: 38.66 N, 93.27 E, a published multilayered-yardang location in Qinghai,
-  China. The window replaces the earlier broad basin placeholder. A dedicated
-  planetary yardang footprint has not been selected, so pairing is deferred.
+  China. The window replaces the earlier broad basin placeholder. A proposed
+  Lucus Planum yardang pairing is supplied with a real coarse MOLA terrain window.
 
 Coordinates designate processing windows, not safe landing points. Source DSM
 sampling is approximately one arc-second north/south; longitude sampling changes
@@ -216,3 +216,40 @@ bytes and hashes are preserved.
 
 Evidence: [NASA Haughton field report](https://ntrs.nasa.gov/citations/20060013129)
 and [Qaidam yardang field study](https://doi.org/10.1029/2018JE005719).
+
+## Complete pairing explanations and strict missing-data policy
+
+Every enabled Earth record now has `pairing_notes`, mirrored in each pairing's
+`explanation`: explicit matches, differences, source links, scope and
+`proposed_unvalidated` status. The source of these explanations is
+`scripts/catalog/pairings.py`, shared by full builds and incremental registration.
+Adding a pairing requires providing its explanation. No validated similarity,
+engineering transfer or landing certification is implied by a terrain score.
+
+Qaidam now pairs with `lucus-planum`: a 16 km study window centred on NASA/JPL
+THEMIS image PIA24008 at latitude -1.61604, east longitude 187.227 degrees
+(stored as -172.773 degrees). THEMIS imagery documents wind-eroded yardangs;
+MOLA at roughly 463 m native postings supplies regional context. The 33 × 33,
+500 m output does not reconstruct individual yardang walls. Substrate, local
+material properties and environmental similarity remain unresolved.
+
+Evidence: https://www.jpl.nasa.gov/images/pia24008-lucus-planum-yardangs/
+Earth field context: https://doi.org/10.1029/2018JE005719
+
+The old USGS mosaic host returned HTTP 403 during acquisition. The source URL
+recorded for Lucus is the public USGS `asc-mars` S3 distribution of the same MOLA
+mosaic. Saved native source samples, scale/offset receipt and hashes are included.
+
+Both `terrainPackToSite()` and `profileToSite()` reject missing or nonfinite
+heights. The JSON importer additionally rejects malformed or invalid supplied
+roughness layers, and no longer fills missing elevations with the mean. Missing
+optional roughness is left absent. There is no automatic synthetic replacement.
+
+Reproduce the new target and register it with the updated Qaidam record:
+
+```sh
+python -m scripts.catalog.build --site lucus-planum
+python -m scripts.catalog.build --site qaidam
+python -m scripts.catalog.register --site lucus-planum --site qaidam
+python -m scripts.catalog.handoff
+```
