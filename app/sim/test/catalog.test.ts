@@ -1,55 +1,86 @@
-import { describe, it, expect } from 'vitest';
-import { readFile } from 'node:fs/promises';
-import { loadTerrainPacks, loadViewerCatalog } from '../viewer/catalog.ts';
+import { describe, expect, it } from 'vitest';
+import { analogFidelity, pairingsFor, runSim, siteInterference } from '../src/index.ts';
+import { loadCatalogSite, readCatalog } from '../scripts/catalog-node.ts';
+import { readFileSync } from 'node:fs';
 
-const publicRoot = new URL('../../../web/public/', import.meta.url);
-const localFetch: typeof fetch = async (input) => {
-  try {
-    const url = new URL(String(input));
-    return new Response(new Uint8Array(await readFile(new URL(url.pathname.slice(1), publicRoot))));
-  } catch { return new Response('', { status: 404 }); }
-};
+const catalog = readCatalog();
 
-describe('production catalog integration', () => {
-  it('loads every real site and explicit pairing with south-first elevation samples', async () => {
-    const sites = await loadTerrainPacks('/sites.json', localFetch);
-    const catalog = JSON.parse(await readFile(new URL('sites.json', publicRoot), 'utf8'));
-    expect(sites).toHaveLength(catalog.sites.length + catalog.pairings.length);
-    for (const entry of catalog.sites) {
-      const site = sites.find(s => s.id === entry.id)!;
-      expect(site.body).toBe(entry.body);
-      expect(site.analogOf).toBeUndefined();
-      const url = new URL(entry.terrain.manifest_url.slice(1), publicRoot);
-      const manifest = JSON.parse(await readFile(url, 'utf8'));
-      const data = await readFile(new URL(manifest.grid.sample_file, url));
-      expect(site.heightmap.heights[0]).toBe(data.readFloatLE((manifest.grid.rows - 1) * manifest.grid.columns * 4));
+describe('site catalog adapter', () => {
+  it('includes complete seasonal profiles with their separate baseline and unknown mechanics', () => {
+    const site = loadCatalogSite(catalog, 'kilbourne-hole-v1');
+    const profile = JSON.parse(readFileSync(new URL('../../../data/environment/kilbourne_hole.json', import.meta.url), 'utf8'));
+    expect(site.catalog?.environment.profile).toEqual(profile);
+    expect(loadCatalogSite(catalog, 'jezero').catalog?.environment.status).toBe('unavailable');
+  });
+  it('preserves all categories, quantities and unknowns without dropping provenance', () => {
+    for (const entry of catalog.sites.filter(s => s.terrain)) {
+      const site = loadCatalogSite(catalog, entry.id);
+      expect(site.catalog?.record).toEqual(entry);
+      expect(site.catalog?.pairings).toEqual(catalog.pairings.filter(p => p.earth_id === entry.id || p.planetary_id === entry.id));
     }
-    expect(sites.find(s => s.id === 'kilbourne-hole-v1--shackleton-rim')?.analogOf).toBe('moon');
-    expect(sites.find(s => s.id === 'kilbourne-hole-v1--arsia-flank')?.analogOf).toBe('mars');
   });
-  it('reports failed catalog fetches', async () => {
-    await expect(loadTerrainPacks('/missing.json', localFetch)).rejects.toThrow('HTTP 404');
+  it('loads every site that has terrain', () => {
+    for (const entry of catalog.sites.filter((s) => s.terrain)) {
+      const site = loadCatalogSite(catalog, entry.id);
+      expect(site.heightmap.heights.length).toBe(entry.terrain!.rows * entry.terrain!.columns);
+      expect(site.heightmap.cellSize).toBe(entry.terrain!.spacing_m);
+    }
   });
-  it('keeps failed packs unavailable while retaining working terrain', async () => {
-    const brokenFetch: typeof fetch = (input, init) => String(input).includes('/amboy/elevation.f32')
-      ? Promise.resolve(new Response('', { status: 404 })) : localFetch(input, init);
-    const result = await loadViewerCatalog('/sites.json', brokenFetch);
-    expect(result.sites.some(s => s.id === 'kilbourne-hole-v1')).toBe(true);
-    expect(result.sites.some(s => s.id.startsWith('amboy'))).toBe(false);
-    expect(result.unavailable.find(s => s.id === 'amboy')?.reason).toContain('HTTP 404');
-    expect(result.unavailable.map(s => s.id)).toEqual(['amboy', 'haughton', 'qaidam']);
+
+  it('maps catalog conditions to physics inputs, with sources', () => {
+    const k = loadCatalogSite(catalog, 'kilbourne-hole-v1');
+    const entry = catalog.sites.find((s) => s.id === 'kilbourne-hole-v1')!;
+    expect(k.albedo).toBe(entry.conditions.albedo.value);
+    expect(Math.hypot(k.wind!.x, k.wind!.y)).toBeCloseTo(entry.conditions.wind_speed_10m.value!, 6);
+    expect(k.soilType).toBe('basalt');
+    expect(k.sources!.wind_speed_10m).toMatch(/direction assumed/);
+    // best pairing for Kilbourne is arsia-flank (Mars)
+    expect(pairingsFor(catalog, k.id)[0].planetary_id).toBe('arsia-flank');
+    expect(k.analogOf).toBe('mars');
   });
-  it('does not substitute terrain for a catalog record with no pack', async () => {
-    const missingFetch: typeof fetch = async (input, init) => {
-      const response = await localFetch(input, init);
-      if (!String(input).endsWith('/sites.json')) return response;
-      const catalog = await response.json();
-      catalog.sites.find((s: { id: string }) => s.id === 'amboy').terrain = null;
-      return new Response(JSON.stringify(catalog));
-    };
-    const result = await loadViewerCatalog('/sites.json', missingFetch);
-    expect(result.unavailable.find(s => s.id === 'amboy')?.reason).toBe('No production terrain pack');
-    expect(result.sites.some(s => s.id.startsWith('amboy'))).toBe(false);
-    expect(result.sites.filter(s => s.analogOf).every(s => s.name?.includes('proposed analog'))).toBe(true);
+
+  it('derives harsher camera conditions at the lunar pole than at mid-latitude Earth', () => {
+    const pole = siteInterference(loadCatalogSite(catalog, 'shackleton-rim'));
+    const desert = siteInterference(loadCatalogSite(catalog, 'white-sands'));
+    expect(pole.dust).toBeGreaterThan(desert.dust); // fine regolith vs gypsum sand
+    expect(loadCatalogSite(catalog, 'shackleton-rim').sunElevationDeg).toBeLessThan(1);
+  });
+
+  it('the autopilot lands at a target on a crater wall (Meteor Crater) by diverting', () => {
+    const tel = runSim({ site: { ...loadCatalogSite(catalog, 'meteor-crater'), analogOf: 'moon' }, strategy: 'autonomous' });
+    expect(tel.summary!.diverted).toBe(true);
+    expect(tel.summary!.outcome).toBe('success');
+  });
+});
+
+describe('analog fidelity', () => {
+  it('a site compared with itself scores 100', () => {
+    const moon = loadCatalogSite(catalog, 'marius-hills');
+    expect(analogFidelity(moon, { ...moon, body: 'earth' }, { seeds: [1] }).score).toBe(100);
+  });
+
+  it('scores a catalog pairing and reports both flights', () => {
+    const p = catalog.pairings.find((x) => x.earth_id === 'craters-moon' && x.planetary_id === 'marius-hills')!;
+    const r = analogFidelity(loadCatalogSite(catalog, p.planetary_id), loadCatalogSite(catalog, p.earth_id), {
+      seeds: [1, 2],
+      catalogTerrainScore: p.terrain_score,
+    });
+    expect(r.gravity).toBe(1.62);
+    expect(r.score).toBeGreaterThan(50);
+    expect(r.score).toBeLessThanOrEqual(100);
+    expect(r.planetary.outcomes).toHaveLength(2);
+    expect(r.catalogTerrainScore).toBe(p.terrain_score);
+  });
+
+  it('drops when the analog flight ends differently', () => {
+    const moon = loadCatalogSite(catalog, 'marius-hills');
+    const rocky = { ...moon, id: 'rocky-twin', body: 'earth' as const, rockAbundance: 0.3 };
+    const blind = { base: { sensors: { hazard: 'none' as const } }, seeds: [1, 2, 3, 4, 5, 6] };
+    expect(analogFidelity(moon, rocky, blind).score).toBeLessThan(analogFidelity(moon, { ...moon, body: 'earth' }, blind).score);
+  });
+
+  it('refuses an Earth site as the planetary side', () => {
+    const earth = loadCatalogSite(catalog, 'amboy');
+    expect(() => analogFidelity(earth, earth)).toThrow(/Moon\/Mars/);
   });
 });

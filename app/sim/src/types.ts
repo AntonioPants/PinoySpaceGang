@@ -29,6 +29,8 @@ export interface Heightmap {
 }
 
 export interface SiteTerrain {
+  /** Full sourced catalog data; metadata is not automatically a physics override. */
+  catalog?: import('./catalog.ts').SiteCatalogData;
   id: string;
   name?: string;
   /** Where the terrain physically is. */
@@ -44,6 +46,23 @@ export interface SiteTerrain {
   gravity?: number;
   /** Overrides the body's default near-surface air density (kg/m^3). */
   airDensity?: number;
+  /** Std-dev of wind gusts around the mean wind, m/s (e.g. from hourly NASA POWER / MCD data). */
+  windGustMps?: number;
+  /**
+   * Rock abundance k: fraction of the surface covered by rocks (Diviner on the Moon, TES/THEMIS
+   * on Mars). Drives a Golombek–Rapp boulder field below the DEM's resolution. See surface.ts.
+   */
+  rockAbundance?: number;
+  /** Optional sub-grid roughness (RMS metres) on its own grid, e.g. roughness_rms_m from extract_profile.py. */
+  roughnessGrid?: Heightmap;
+  /** 0..1 fraction of the ground covered by snow (glare). */
+  snowCover?: number;
+  /** Typical sun elevation at the site/time, degrees (low sun → long shadows and glare). */
+  sunElevationDeg?: number;
+  /** 0..1 fraction of the area in shadow (e.g. LOLA polar illumination maps). */
+  shadowFraction?: number;
+  /** Where each number came from: field name → dataset citation. Shown in the report. */
+  sources?: Record<string, string>;
 }
 
 export interface TouchdownLimits {
@@ -105,7 +124,10 @@ export interface SimInput {
   /** Air density to simulate: 'target' (default), 'native' or explicit kg/m^3. */
   atmosphere?: EnvironmentMode;
   sensors?: Partial<SensorSuite>;
+  /** Overrides; anything left out is derived from the site's soil, albedo, snow and shadow data. */
   interference?: Partial<Interference>;
+  /** What-if override of the site's rock abundance (0..0.4). */
+  rockAbundance?: number;
   /** Intended landing point (x, y). Defaults to (0, 0). */
   target?: Vec2;
   /** Initial state. Position z is height above the terrain under the lander. */
@@ -217,7 +239,16 @@ export interface FlightSummary {
 export interface FlightTelemetry {
   siteId: string;
   strategy: Strategy;
-  environment: { gravity: number; airDensity: number; simulatedBody: Body };
+  environment: {
+    gravity: number;
+    airDensity: number;
+    simulatedBody: Body;
+    wind: Vec2;
+    rockAbundance: number;
+    rocksGenerated: number;
+    interference: Interference;
+    sources: Record<string, string>;
+  };
   lander: LanderConfig;
   samples: TelemetrySample[];
   events: SimEvent[];

@@ -19,7 +19,40 @@ shape. It uses the existing Kilbourne `createTerrainData` loader to validate
 binary samples and flips north-first rows once to south-first, keeping west-first
 columns. Elevations remain absolute metres; the physics grid uses its default
 centered origin. A scalar annual wind speed cannot populate a directional wind
-vector. No wind, gravity, atmosphere or friction overrides are silently inserted.
+vector. The standalone map loader does not create wind or friction overrides.
+
+All catalog adapters preserve the entire site under `site.catalog.record`.
+This includes `classification` (morphology, substrate, atmosphere, slope class,
+roughness class and annual temperature class), `identifiers`, all `conditions`,
+`comparison_features`, `feature_measurements`, resources, footprints, terrain
+provenance, completeness, limitations and `simulation_defaults`. Null values and
+their reasons remain intact. No fields are reduced to a single wind-speed value.
+Related comparison records are in `site.catalog.pairings`. Pass the catalog as
+the third argument of `loadCatalogTerrain(site, origin, catalog)` to include them
+in the standalone map adapter. The TypeScript physics adapter includes them when
+its catalog argument is provided. Explicit viewer analog scenarios also expose
+`site.catalog.target` as a separate complete planetary record.
+
+Select a real site in the viewer to inspect **Site categories and conditions**.
+Expand any section for values, units, status, provenance and missing-data reasons,
+or download the complete site record. These properties remain metadata unless
+the physics adapter explicitly uses them; temperatures are not a thermal model.
+Tim's adapter maps albedo, substrate and scalar wind to its existing simulation
+inputs. Wind direction defaults to an explicitly recorded assumed eastward
+direction, and sun elevation is an equinox-noon scenario approximation. These
+assumptions are shown separately from the observational record.
+
+The TypeScript adapter additionally exposes the full separately ingested seasonal
+profile under `site.catalog.environment.profile` for Kilbourne, Meteor, Amboy,
+Badwater, White Sands and Barrow. Its baseline is **2015–2024**, kept distinct from
+the catalog's 2024 means. All months, seasons, scenario rows, radiation, soil context,
+unknown mechanics and sources are preserved. The explicit ID join is in
+`app/sim/src/catalog-environment.ts`; other sites return an unavailable status with
+a reason. The viewer displays and downloads this profile too. These fields do not
+automatically override physics; Tim's existing seasonal adapter can select a period.
+The standalone map adapter preserves the catalog record but seasonal profiles must
+still be loaded through `app/lib/environment.mjs` as described in
+[environment integration](environment-integration.md).
 
 The physics viewer loads `/sites.json` through `app/sim/viewer/catalog.ts`.
 Vite serves `web/public` so catalog and terrain URLs work in development and
@@ -30,8 +63,8 @@ environment, plus explicitly labelled Earth/planetary analog scenarios from
 Earth terrain and the target body's simulation environment, not the target's
 terrain or measured local weather. Native IDs remain unchanged.
 The viewer uses `terrainPackToSite` to flip north-first samples exactly once.
-Substrate labels are descriptive only; catalog wind magnitudes are not converted
-into directional vectors and no soil-mechanics values are inferred.
+No friction, cohesion or density measurements are inferred from substrate labels.
+Tim's existing plume/dust interpretation remains a simulation model.
 Adding a site with a valid terrain manifest to the catalog requires no viewer
 code change. Failed catalog requests appear in the viewer error message. Individual
 missing or failed terrain packs appear as disabled options with reasons; other sites

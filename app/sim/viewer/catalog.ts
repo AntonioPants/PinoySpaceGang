@@ -1,18 +1,5 @@
-import { terrainPackToSite } from '../src/loaders.ts';
-import type { Body, SiteTerrain } from '../src/types.ts';
-
-interface CatalogSite {
-  id: string;
-  name: string;
-  body: Body;
-  substrate?: string;
-  terrain: { manifest_url: string } | null;
-}
-interface Catalog {
-  schema_version: string;
-  sites: CatalogSite[];
-  pairings: { earth_id: string; planetary_id: string }[];
-}
+import { catalogSiteToSite, type SiteCatalog } from '../src/catalog.ts';
+import type { SiteTerrain } from '../src/types.ts';
 export interface UnavailableSite { id: string; name: string; reason: string }
 export interface CatalogResult { sites: SiteTerrain[]; unavailable: UnavailableSite[] }
 
@@ -40,7 +27,7 @@ export async function loadViewerCatalog(
     if (!response.ok) throw new Error(`${url.pathname}: HTTP ${response.status}`);
     return response;
   }
-  const catalog: Catalog = await (await get(base)).json();
+  const catalog: SiteCatalog = await (await get(base)).json();
   if (catalog.schema_version !== '1.0.0' || !Array.isArray(catalog.sites) || !Array.isArray(catalog.pairings)) {
     throw new Error('Unsupported site catalog');
   }
@@ -55,13 +42,15 @@ export async function loadViewerCatalog(
         throw new Error(`${site.id}: manifest does not match catalog`);
       }
       const buffer = await (await get(new URL(manifest.grid.sample_file, manifestUrl))).arrayBuffer();
-      const native = { ...terrainPackToSite(manifest, buffer), name: `${site.name} (${site.body}, native)`, soilType: site.substrate };
+      const native = { ...catalogSiteToSite(site, manifest, buffer, catalog),
+        analogOf: undefined, name: `${site.name} (${site.body}, native)` };
       const scenarios: SiteTerrain[] = [native];
       if (site.body === 'earth') {
         for (const pair of catalog.pairings.filter(pair => pair.earth_id === site.id)) {
           const target = byId.get(pair.planetary_id);
           if (!target || !['moon', 'mars'].includes(target.body)) throw new Error(`Invalid pairing target: ${pair.planetary_id}`);
           scenarios.push({ ...native, id: `${site.id}--${target.id}`, analogOf: target.body as 'moon' | 'mars',
+            catalog: { ...native.catalog!, target },
             name: `${site.name} → ${target.name} (${target.body}, proposed analog)` });
         }
       }

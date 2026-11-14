@@ -14,6 +14,12 @@
   background: var(--bg);
 }
 * { box-sizing: border-box; }
+.catalog-details { overflow-wrap: anywhere; margin: 12px 0; }
+.catalog-details details { padding: 5px 0; border-bottom: 1px solid var(--line); }
+.catalog-details summary { cursor: pointer; text-transform: capitalize; }
+.catalog-details dt { color: var(--dim); margin-top: 6px; }
+.catalog-details dd { margin-left: 8px; }
+.catalog-details a { color: var(--accent); }
 body { margin: 0; }
 #root { height: 100vh; display: grid; grid-template-columns: 250px 1fr 320px; grid-template-rows: 44px 1fr; }
 header { grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; padding: 0 16px; border-bottom: 1px solid var(--line); background: var(--panel); }
@@ -63,3 +69,8 @@ kbd { border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; backgro
 .warn { color: var(--warn); }
 .bad { color: var(--bad); }
 .check { text-transform: none; letter-spacing: 0; font-size: 13px; }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+fieldset:disabled { opacity: 0.4; }
+.conditions { margin-top: 10px; border-top: 1px dashed var(--line); padding-top: 8px; }
+.conditions .sources { font-size: 11px; color: var(--dim); padding-left: 14px; }
+.conditions .sources b { color: var(--ink); font-weight: 600; }

@@ -16,7 +16,7 @@ type AnalogOf = Exclude<Body, 'earth'>;
 export interface TerrainProfile {
   site: { id: string; name: string; type: 'earth_analog' | 'planetary_site'; body: Body };
   spatial: { width: number; height: number; resolution_m: { x: number; y: number } };
-  terrain: { elevation_m: Array<Array<number | null>> };
+  terrain: { elevation_m: Array<Array<number | null>>; roughness_rms_m?: Array<Array<number | null>> };
 }
 
 export function profileToSite(profile: TerrainProfile, opts: { analogOf?: AnalogOf } = {}): SiteTerrain {
@@ -41,12 +41,22 @@ export function profileToSite(profile: TerrainProfile, opts: { analogOf?: Analog
     }
   }
   const body = profile.site.body;
+  const cellSize = (x + y) / 2;
+  // roughness_rms_m, same grid: modulates where generated boulders cluster (see surface.ts)
+  let roughnessGrid: SiteTerrain['roughnessGrid'];
+  const rough = profile.terrain.roughness_rms_m;
+  if (Array.isArray(rough) && rough.length === rows && rough.every((r) => r.length === cols)) {
+    const rh = new Float32Array(rows * cols);
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) rh[r * cols + c] = rough[rows - 1 - r][c] ?? 0;
+    roughnessGrid = { cols, rows, cellSize, heights: rh };
+  }
   return {
     id: profile.site.id,
     name: profile.site.name,
     body,
     analogOf: body === 'earth' ? opts.analogOf : undefined,
-    heightmap: { cols, rows, cellSize: (x + y) / 2, heights },
+    heightmap: { cols, rows, cellSize, heights },
+    roughnessGrid,
   };
 }
 

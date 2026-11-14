@@ -6,12 +6,12 @@ const boulders = [{ center: { x: 0, y: 0 }, radiusM: 25, count: 60 }];
 
 /** Synthetic test scenarios alongside the real catalog sites. */
 export const PRESETS: Record<string, { label: string; make: () => SiteTerrain }> = {
-  moon: { label: 'Moon — highlands (synthetic)', make: () => syntheticTerrain({ id: 'moon', body: 'moon', craters: 6 }) },
+  moon: { label: 'Moon — highlands (synthetic)', make: () => ({ ...syntheticTerrain({ id: 'moon', body: 'moon', craters: 6 }), soilType: 'regolith', rockAbundance: 0.02 }) },
   moonRocks: {
     label: 'Moon — boulder field at target',
     make: () => syntheticTerrain({ id: 'moon-boulders', body: 'moon', craters: 6, boulderFields: boulders }),
   },
-  mars: { label: 'Mars — plains (synthetic)', make: () => syntheticTerrain({ id: 'mars', body: 'mars', craters: 4, wind: { x: 6, y: 2 } }) },
+  mars: { label: 'Mars — plains (synthetic)', make: () => ({ ...syntheticTerrain({ id: 'mars', body: 'mars', craters: 4, wind: { x: 6, y: 2 } }), soilType: 'dust', rockAbundance: 0.05, windGustMps: 2 }) },
   marsRocks: {
     label: 'Mars — boulder field at target',
     make: () => syntheticTerrain({ id: 'mars-boulders', body: 'mars', craters: 4, wind: { x: 6, y: 2 }, boulderFields: boulders }),

@@ -10,3 +10,11 @@ export { GridTerrain, syntheticTerrain, slopeDegAt, roughnessAt, normalAt, gradi
 export { parseSite, parseSites } from './sites.ts';
 export { profileToSite, terrainPackToSite } from './loaders.ts';
 export type { TerrainProfile, TerrainPackManifest } from './loaders.ts';
+export { Surface, RockField, golombekQ, cumulativeRockArea, rocksPerSquareMetre } from './surface.ts';
+export type { Rock, HazardField } from './surface.ts';
+export { siteInterference, dustFromSoil, glareFromSite, applyEnvironment } from './environment.ts';
+export type { SiteEnvironment } from './environment.ts';
+export { catalogSiteToSite, pairingsFor } from './catalog.ts';
+export type { SiteCatalog, CatalogSite, CatalogPairing, CatalogSiteOptions } from './catalog.ts';
+export { analogFidelity } from './fidelity.ts';
+export type { FidelityResult, FidelityOptions, SiteFlightStats } from './fidelity.ts';

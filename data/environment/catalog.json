@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "baseline": [
+    2015,
+    2024
+  ],
+  "sites": [
+    {
+      "id": "amboy_crater",
+      "name": "Amboy Crater, California",
+      "file": "amboy_crater.json",
+      "sha256": "6cc6a0f2a81b85705067dfceba17028b7b68c4bf850db0949af73eb8b73b4e76"
+    },
+    {
+      "id": "badwater_basin",
+      "name": "Badwater Basin, California",
+      "file": "badwater_basin.json",
+      "sha256": "e5ea54f10a4883394eadb31d245c7abb5887fecd72e9ae5dbc759b6bf5505b9c"
+    },
+    {
+      "id": "kilbourne_hole",
+      "name": "Kilbourne Hole, New Mexico",
+      "file": "kilbourne_hole.json",
+      "sha256": "fc684c88ad330b3c3d3b9de04e79b4963ceda3f36f9b0b2bce34d2f163726ca8"
+    },
+    {
+      "id": "meteor_crater",
+      "name": "Meteor Crater, Arizona",
+      "file": "meteor_crater.json",
+      "sha256": "0fe935c78e34dc4dedd9b12fb5e1b938780ac512590590451a93ec3000ce64c2"
+    },
+    {
+      "id": "utqiagvik_beo",
+      "name": "Utqiaġvik / Barrow Environmental Observatory, Alaska",
+      "file": "utqiagvik_beo.json",
+      "sha256": "99b5db9463ff7b5d41db2a4185bc2d66c09c0e1ee8168bae136d2707de0e1fad"
+    },
+    {
+      "id": "white_sands",
+      "name": "White Sands, New Mexico",
+      "file": "white_sands.json",
+      "sha256": "bbf5341127f17f7d7bd255c1345c2a59382a146559679f2348139d8e9a67ad3f"
+    }
+  ]
+}
