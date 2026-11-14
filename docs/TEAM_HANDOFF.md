@@ -51,10 +51,12 @@ cycle spacecraft, legs and sensors, updating the visible procedural lander.
 Replace prototype entries with equipment IDs, names, visual assets, units, provenance,
 compatibility and physical parameters. Agree mappings with Tim for mass, leg radius,
 stroke/damping/contact behaviour and touchdown limits. Supply each item's limitations.
-Do not silently invent gear effects: currently the three gear shapes are visual only,
+Do not silently invent gear effects: apart from their footprint width (below) the three gear shapes are visual only,
 while spacecraft mass/thrust/fuel and hazard sensor do feed the existing physics.
 
-The selected IDs travel in `MissionConfig.equipment`. `gearPhysics: 'pending'` remains
+The selected IDs travel in `MissionConfig.equipment`. The physics already uses each gear's
+drawn footprint radius (`web/src/lib/gear.ts`, `gearPhysics: 'footprint'`): slope, roughness
+and rocks are measured across it. That is geometry, not gear behaviour; everything else remains pending
 until genuine gear behaviour is integrated. `equipmentSettings` is the mapping seam;
 preserve the player's environmental settings when applying equipment. The screen's
 `EquipmentBayProps` uses a controlled selection and `onChange` callback.
