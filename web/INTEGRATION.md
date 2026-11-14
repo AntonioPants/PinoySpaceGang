@@ -6,6 +6,11 @@
   planetary target's own terrain pack and on the Earth analog (`src/lib/fidelity.ts`, engine
   `app/sim/src/fidelity.ts`). It shows the score, its four components and the catalog terrain
   score for a proposed pairing. It compares simulated flights over two elevation grids only.
+- **Stress test score.** One guided landing succeeds on almost any terrain, so the guided score
+  barely separates analogs. The report therefore also flies 25 blind landings (no hazard
+  sensor) spread over each terrain and compares the landable share, touchdown slope and fuel
+  (`stressFor` / engine `stressFidelity`). It uses terrain data only. The planetary grids are
+  much coarser than the Earth grids, which the report states beside the score.
 - **Hazard sensor.** The configurator offers lidar, camera or no hazard sensor
   (`MissionConfig.strategy.hazardSensor`).
 - **Sensor interference.** Dust and glare default to values the engine derives from the

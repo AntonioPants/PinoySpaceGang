@@ -112,3 +112,132 @@ export function analogFidelity(planetary: SiteTerrain, analog: SiteTerrain, opts
       'score = 40% outcome agreement + 25% touchdown speeds + 20% ground slope/roughness + 15% fuel used.',
   };
 }
+
+// ---------------------------------------------------------------------------------------------
+// Stress test
+// ---------------------------------------------------------------------------------------------
+
+export interface StressOptions {
+  /** Shared flight setup, as for analogFidelity. Any hazard sensor is switched off for the test. */
+  base?: Partial<Omit<SimInput, 'site' | 'target' | 'start'>>;
+  /** Landing targets per side of the grid laid over each terrain (n × n flights per site). Default 5. */
+  gridSize?: number;
+  /**
+   * Optional ASSUMED rock abundance applied to BOTH sites (no site has measured values yet).
+   * Default 0: the test then uses terrain data only and assumes nothing.
+   */
+  assumedRockAbundance?: number;
+  catalogTerrainScore?: number | null;
+}
+
+export interface StressSiteStats {
+  siteId: string;
+  flights: number;
+  /** Share of blind landings that ended in success: how much of the terrain is landable. */
+  successRate: number;
+  meanSlopeDeg: number;
+  meanFuelUsedKg: number;
+  outcomes: Record<string, number>;
+}
+
+export interface StressFidelityResult {
+  /** 0..100 */
+  score: number;
+  components: { successRate: number; ground: number; fuel: number };
+  planetary: StressSiteStats;
+  analog: StressSiteStats;
+  gridSize: number;
+  assumedRockAbundance: number;
+  catalogTerrainScore: number | null;
+  gravity: number;
+  airDensity: number;
+  method: string;
+}
+
+/**
+ * Analog fidelity under stress. A single guided landing at the centre of each terrain succeeds
+ * almost everywhere, because hazard avoidance finds a safe spot, so it cannot tell analogs
+ * apart. The stress test removes that help: it lands BLIND (no hazard sensor, no divert) at a
+ * grid of targets spread over the middle of each terrain and compares how much of each one is
+ * actually landable.
+ *
+ *   landable share (50 %)  how close the two sites' blind-landing success rates are
+ *   ground         (30 %)  mean slope under the legs at touchdown, relative to the limit
+ *   fuel           (20 %)  mean fuel used
+ *
+ * Caveat that belongs next to every score: the planetary grids (150–500 m per sample) are much
+ * coarser than the Earth grids (30 m), so planetary terrain looks smoother than it is and a
+ * rugged Earth site scores lower partly for that reason.
+ */
+export function stressFidelity(planetary: SiteTerrain, analog: SiteTerrain, opts: StressOptions = {}): StressFidelityResult {
+  if (planetary.body === 'earth') throw new Error('stressFidelity: first site must be the Moon/Mars site');
+  const n = opts.gridSize ?? 5;
+  const k = opts.assumedRockAbundance ?? 0;
+  const base: Omit<SimInput, 'site'> = {
+    ...opts.base,
+    strategy: 'autonomous',
+    sensors: { ...opts.base?.sensors, hazard: 'none' },
+  };
+  const analogSite: SiteTerrain = { ...analog, analogOf: planetary.body };
+  const lander = resolveLander({ ...base, site: planetary });
+  let gravity = 0;
+  let airDensity = 0;
+
+  const fly = (site: SiteTerrain, id: string): StressSiteStats => {
+    const { cols, rows, cellSize } = site.heightmap;
+    // targets over the central 50 % of the patch, so the 400 m approach stays on the grid
+    const halfX = ((cols - 1) * cellSize) / 4;
+    const halfY = ((rows - 1) * cellSize) / 4;
+    const runs: FlightSummary[] = [];
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n; j++) {
+        const target = { x: -halfX + (2 * halfX * (i + 0.5)) / n, y: -halfY + (2 * halfY * (j + 0.5)) / n };
+        const tel = runSim({
+          ...base,
+          site,
+          target,
+          rockAbundance: k > 0 ? k : undefined,
+          seed: 1 + i * n + j,
+          gravity: base.gravity ?? 'target',
+          atmosphere: base.atmosphere ?? 'target',
+        });
+        gravity = tel.environment.gravity;
+        airDensity = tel.environment.airDensity;
+        runs.push(tel.summary!);
+      }
+    }
+    const outcomes: Record<string, number> = {};
+    for (const r of runs) outcomes[r.outcome] = (outcomes[r.outcome] ?? 0) + 1;
+    return {
+      siteId: id,
+      flights: runs.length,
+      successRate: runs.filter((r) => r.outcome === 'success').length / runs.length,
+      meanSlopeDeg: mean(runs.map((r) => r.slopeDeg)),
+      meanFuelUsedKg: mean(runs.map((r) => r.fuelUsedKg)),
+      outcomes,
+    };
+  };
+
+  const P = fly(planetary, planetary.id);
+  const A = fly(analogSite, analog.id);
+  const components = {
+    successRate: agree(P.successRate, A.successRate, 1),
+    ground: agree(P.meanSlopeDeg, A.meanSlopeDeg, lander.limits.maxSlopeDeg),
+    fuel: agree(P.meanFuelUsedKg, A.meanFuelUsedKg, 0.5 * lander.fuelKg),
+  };
+  return {
+    score: Math.round(100 * (0.5 * components.successRate + 0.3 * components.ground + 0.2 * components.fuel)),
+    components,
+    planetary: P,
+    analog: A,
+    gridSize: n,
+    assumedRockAbundance: k,
+    catalogTerrainScore: opts.catalogTerrainScore ?? null,
+    gravity,
+    airDensity,
+    method:
+      `${n * n} blind landings (no hazard sensor) spread over the middle of each terrain` +
+      (k > 0 ? `, with an assumed ${(k * 100).toFixed(0)}% rock abundance on both` : '') +
+      '; score = 50% landable share + 30% touchdown slope + 20% fuel used.',
+  };
+}

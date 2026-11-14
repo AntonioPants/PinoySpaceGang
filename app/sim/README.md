@@ -27,7 +27,9 @@ npx tsx scripts/run.ts --site profile:../../data/processed/earth_analogs/<id>.js
 npx tsx scripts/fidelity.ts --seeds 3     # every catalog pairing → out/fidelity.json
 ```
 
-With today's coarse planetary terrain (150–500 m per pixel) and no rock-abundance data, every pairing lands cleanly and scores 93–100, so the score does not yet separate good analogs from poor ones.
+Guidance finds a safe spot on almost any terrain, so every pairing scores 93–100 on this guided comparison.
+
+`stressFidelity(planetarySite, analogSite)` separates them: it lands blind (no hazard sensor) at a 5 × 5 grid of targets spread over each terrain and compares the landable share (50%), touchdown slope (30%) and fuel used (20%). It uses terrain data only; an assumed rock abundance is optional and labelled. On the current catalog the pairings score 63–100. The planetary grids (150–500 m per sample) are much coarser than the Earth grids (30 m), so planetary terrain looks smoother than it is and rugged Earth sites score lower partly for that reason.
 
 ## Browser viewer (React)
 

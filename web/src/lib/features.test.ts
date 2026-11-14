@@ -5,7 +5,7 @@ import type { EnvironmentProfile } from '../../../app/lib/environment.mjs';
 import { analogs, catalogSites, targets, terrainScore } from '../data/sites';
 import { buildMission, defaultSettings, extractProfile } from './mission';
 import { toSimInput } from './simulation';
-import { fidelityFor } from './fidelity';
+import { fidelityFor, stressFor } from './fidelity';
 import { parseConditions, parseSettingsFile } from './importSettings';
 import { WEATHER_PROFILE_ID, hasWeatherProfile, utmGridNorthBearingDeg } from './weather';
 import type { TerrainManifest } from './types';
@@ -64,6 +64,20 @@ describe('analog fidelity in the report', () => {
     const mission = buildMission(target('jezero'), analogProfile, { ...defaultSettings, environment: 'earth' });
     const result = fidelityFor(mission, analogProfile, profileOf('jezero'));
     expect(result.gravity).toBe(3.72); expect(result.airDensity).toBe(0.02);
+  });
+});
+
+describe('stress test in the report', () => {
+  it('separates a rugged analog from a gentle one for the same target, using terrain data only', () => {
+    const planet = profileOf('arsia-flank');
+    const score = (analogId: string) => {
+      const profile = profileOf(analogId);
+      return stressFor(buildMission(target('arsia-flank'), profile, defaultSettings, { terrainScore: terrainScore('arsia-flank', analogId) }), profile, planet);
+    };
+    const gentle = score('amboy'), rugged = score('craters-moon');
+    expect(gentle.assumedRockAbundance).toBe(0);
+    expect(rugged.analog.successRate).toBeLessThan(gentle.analog.successRate);
+    expect(rugged.score).toBeLessThan(gentle.score - 10);
   });
 });
 
