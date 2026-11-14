@@ -39,7 +39,7 @@
       ],
       "properties": {
         "method_version": {
-          "const": "2.0.0"
+          "const": "2.1.0"
         },
         "weight_status": {
           "const": "engineering_assumption_not_calibrated"

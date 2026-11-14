@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, it } from 'vitest';
 import raw from '../../public/sites.json';
-import { parseCatalog, recommendedAnalog, recommendedAnalogs } from './catalog';
+import { displaySiteName, parseCatalog, recommendedAnalog, recommendedAnalogs } from './catalog';
 import { percent } from './matching';
 import AnalogComparison from '../components/AnalogComparison';
 
@@ -12,7 +12,7 @@ it('shows both location records with the match metrics and no audit breakdown or
   const shown=catalog.matching!.comparisons.find(p=>p.planetary_id==='shackleton-rim' && p.earth_id==='kilbourne-hole-v1')!;
   expect(shown.analog_score_percent).toBeCloseTo(0.5*shown.landform_match_percent!+0.5*shown.terrain_similarity_percent!,2);
   for(const text of ['Analog match','Overall match','Terrain match','Not verified','same landform type',percent(shown.analog_score_percent),percent(shown.terrain_similarity_percent)]) expect(html).toContain(text);
-  for(const text of ['Moon / Mars location','Selected Earth location','Shackleton northern rim study area','Kilbourne Hole','Coordinates','Surface material','Wind speed (10 m)']) expect(html).toContain(text);
+  for(const text of ['Moon / Mars location','Selected Earth location','Shackleton northern rim','Kilbourne Hole','Coordinates','Surface material','Wind speed (10 m)']) expect(html).toContain(text);
   const lunar=html.split('aria-label="Moon / Mars location"')[1].split('</article>')[0];
   expect(lunar).not.toContain('Air temperature (2 m)');
   expect(lunar).not.toContain('Wind speed (10 m)');
@@ -79,4 +79,23 @@ it.each(['malapert-massif','mons-mouton'])('exposes the new lunar study area %s 
   expect(lunar).not.toContain('Wind speed (10 m)');
   expect(lunar).toContain('Regional thermal-bin minimum');
   expect(lunar).toContain('Surface temperature');
+});
+
+
+it("offers exactly ten per target and keeps every ground available separately",()=>{
+  const c=parseCatalog(raw);
+  expect(c.analogs.filter(s=>s.available)).toHaveLength(102);
+  for(const t of c.targets) expect(recommendedAnalogs(c,t.id)).toHaveLength(10);
+  for(const s of c.entries.values()) expect(s.name).not.toMatch(/study\s*area/i);
+});
+
+it('removes compass offsets and keeps terrain patch names distinct and stable',()=>{
+  expect(displaySiteName('Example study area region: 6.1 km E, 15.7 km S')).toBe('Example region');
+  const catalog=parseCatalog(raw);
+  const reversed=parseCatalog({...raw, sites:[...raw.sites].reverse()});
+  expect(new Set(catalog.analogs.map(s=>s.name)).size).toBe(catalog.analogs.length);
+  for(const site of catalog.entries.values()) {
+    expect(site.name).not.toMatch(/\d+(?:\.\d+)?\s*km\s*[NSEW]\b/i);
+    expect(reversed.entries.get(site.id)?.name).toBe(site.name);
+  }
 });

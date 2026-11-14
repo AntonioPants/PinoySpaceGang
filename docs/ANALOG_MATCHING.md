@@ -1,3 +1,7 @@
+# Current selection policy (2.1.0)
+
+The default opening and planner show ten eligible Earth candidates per target, with no minimum score cutoff. Research-backed proposals retain priority, followed by descending analog score within each tier. Explore all lists all available grounds (currently 102). Scores, inferred-label discounts and frozen scales are unchanged. Missing/corrupt terrain is still excluded; never pad with invented records. Earlier cutoff descriptions below are historical. Display names omit study area; IDs and science provenance remain intact.
+
 # Evidence-gated Earth/planetary matching (2.0.0)
 
 ## Analog score (2.0.0, live ranking)
