@@ -37,7 +37,8 @@ Simulator code so far:
 
 - `sim/` holds the descent physics engine (TypeScript, zero runtime deps, Vitest). `cd sim && npm test`,
   `npm run typecheck`, `npx tsx scripts/run.ts --site moon --hazards`. Contracts live in
-  `sim/src/types.ts`; the proposed `sites.json` shape is `sim/fixtures/sites.example.json`. See `sim/README.md`.
+  `sim/src/types.ts`; the proposed `sites.json` shape is `sim/fixtures/sites.example.json`. React integration: the `sim/react/useLanderSim.ts` hook. Dev viewer (React + Vite): `npm run viewer`.
+  See `sim/README.md`.
 
 The rest of the simulator's stack and layout (globe, UI, cutscenes) is not decided yet. Record it here once it is.
 

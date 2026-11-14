@@ -11,10 +11,10 @@ npx tsx scripts/run.ts --site earth-native              # Earth gravity with a l
 npx tsx scripts/run.ts --site path/sites.json:<id>      # fly a real site
 ```
 
-## Browser viewer
+## Browser viewer (React)
 
 ```bash
-npm run viewer        # opens http://localhost:5199
+npm run viewer        # Vite + React 18, opens http://localhost:5199
 ```
 
 The viewer has a side view that follows the lander and zooms in as it descends, with dust, explosions and tip-over animations. A top-view hillshade marks unsafe ground in red and shows the hazard-scan ring, the divert point and the flight path. It also shows a live HUD, an event log and a result card with a telemetry JSON download. You can fly manually with <kbd>W</kbd>/<kbd>S</kbd> and the arrow keys, and load a real `sites.json`. URL shortcuts: `?site=moonRocks&speed=8&launch` and `&at=85` to jump to t = 85 s.
@@ -34,7 +34,18 @@ The viewer has a side view that follows the lander and zooms in as it descends, 
 
 Default vehicle: an Apollo LM-class lander (7 t dry, 1.5 t fuel, 45 kN, Isp 311 s). Override it with `input.lander`.
 
-## Using it from the app (Eyad / Furgan)
+## Using it from React (Eyad / Furgan)
+
+`react/useLanderSim.ts` is the integration hook, and the viewer in `viewer/App.tsx` uses it. The physics steps in a `requestAnimationFrame` loop outside React's render cycle. React state (`hud`, `events`, `summary`) refreshes at about 15 Hz. Canvas or Three.js views draw from `onFrame`:
+
+```tsx
+const lander = useLanderSim({ speed: 1 });            // keyboard manual flight built in
+lander.launch({ site, strategy: 'autonomous', sensors: { hazard: 'lidar' } });
+useEffect(() => lander.onFrame((sim, dt, input) => drawScene(sim.state)), [lander.onFrame]);
+// lander.hud → HUD, lander.events → Furgan's VFX triggers, lander.summary → report screen
+```
+
+## Using the engine directly (any framework)
 
 ```ts
 import { createSim, createManualPilot, keysToPilotInput, parseSites } from '../sim/src/index.ts';
