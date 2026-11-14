@@ -16,12 +16,14 @@ from scipy.ndimage import uniform_filter
 
 from .selection import records
 from .scoring import compare
+from .pairings import attach_handoff
 from .diviner import thermal_bins
 
 ROOT = Path(__file__).resolve().parents[2]
 PUBLIC = ROOT / 'web/public'
 CACHE = ROOT / 'data/cache/catalog'
-MARS = 'https://planetarymaps.usgs.gov/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif'
+# Public USGS S3 distribution of the same MOLA mosaic; older host may return HTTP 403.
+MARS = 'https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif'
 MOON = 'https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LOLA_Global_LDEM_118m_Mar2014.tif'
 
 def dump(path, value):
@@ -205,14 +207,20 @@ def main():
         entry['completeness']={'terrain_available':entry['terrain'] is not None,'known_conditions':sum(p['value'] is not None for p in entry['conditions'].values()),'total_conditions':len(entry['conditions'])}
         out.append(entry)
     if args.site:
-        dump(CACHE/f'{args.site}-record.json',out[0]); return
+        if not out:
+            parser.error('Unknown site ID')
+        dump(CACHE/f'{args.site}-record.json',out[0])
+        if failures:
+            print(json.dumps(failures, indent=2), flush=True)
+            raise SystemExit(1)
+        return
     byid={s['id']:s for s in out}; pairs=[]
     for s in out:
         for target in s['matches']:
             a,b=dict(s['comparison_features']),dict(byid[target]['comparison_features'])
             pairs.append({'earth_id':s['id'],'planetary_id':target,**compare(a,b),
                           'geology_comparison':{'same_substrate_label':s['substrate']==byid[target]['substrate'],'same_morphology_label':s['morphology']==byid[target]['morphology'],'score':None,'reason':'Categorical interpretations are not calibrated geological distances; not folded into terrain score.'}})
-    dump(PUBLIC/'sites.json',{'schema_version':'1.0.0','coordinate_convention':'east-positive longitude [-180,180], body-specific latitude; Earth WGS84, Moon/Mars planetocentric','sites':out,'pairings':pairs})
+    dump(PUBLIC/'sites.json',attach_handoff({'schema_version':'1.0.0','coordinate_convention':'east-positive longitude [-180,180], body-specific latitude; Earth WGS84, Moon/Mars planetocentric','sites':out,'pairings':pairs}))
     dump(ROOT/'data/catalog-run-report.json',{'failures':failures,'sites':len(out),'terrain_available':sum(s['terrain'] is not None for s in out)})
     print('Catalog written;',len(failures),'reported failures',flush=True)
     if failures: raise SystemExit(1)

@@ -21,16 +21,31 @@ describe('terrain loaders', () => {
     expect(tel.summary).toBeDefined();
   });
 
-  it('converts a terrain_profile document, filling nodata', () => {
+  it('converts a complete terrain_profile document without inventing samples', () => {
     const profile = {
       site: { id: 'test_site', name: 'Test', type: 'earth_analog' as const, body: 'earth' as const },
       spatial: { width: 3, height: 2, resolution_m: { x: 10, y: 10 } },
-      terrain: { elevation_m: [[5, 5, 5], [1, null, 3]] },
+      terrain: { elevation_m: [[5, 5, 5], [1, 2, 3]] },
     };
     const site = profileToSite(profile, { analogOf: 'mars' });
     expect(site.analogOf).toBe('mars');
     const h = Array.from(site.heightmap.heights);
-    expect(h.slice(0, 3)).toEqual([1, expect.closeTo(3.8, 5), 3]); // south row first; null → mean of valid cells
+    expect(h.slice(0, 3)).toEqual([1, 2, 3]); // south row first
     expect(h.slice(3)).toEqual([5, 5, 5]);
   });
 });
+
+ describe('strict missing-data handling', () => {
+   const profile = { site: { id:'test', name:'Test', type:'earth_analog' as const, body:'earth' as const }, spatial:{width:2,height:2,resolution_m:{x:30,y:30}}, terrain:{elevation_m:[[1,2],[3,4]] as (number|null)[][]} };
+   it.each([null,NaN,Infinity,-Infinity])('rejects missing/nonfinite elevation %s', value => {
+     const p = structuredClone(profile); p.terrain.elevation_m[1][0] = value;
+     expect(() => profileToSite(p)).toThrow('no synthetic filling');
+   });
+   it('rejects a malformed optional roughness layer instead of replacing unknowns with zero', () => {
+     expect(() => profileToSite({...profile,terrain:{...profile.terrain,roughness_rms_m:[[0,null],[0,0]]}})).toThrow('roughness');
+   });
+   it('rejects malformed rows and overflowing sample values', () => {
+     expect(() => profileToSite({...profile,terrain:{elevation_m:[[1],[2]]}})).toThrow('columns');
+     expect(() => profileToSite({...profile,terrain:{elevation_m:[[1,1e100],[3,4]]}})).toThrow('float32');
+   });
+ });

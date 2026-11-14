@@ -33,7 +33,12 @@ def validate():
         assert west<east and south<north
         assert west<=s['longitude']<=east and south<=s['latitude']<=north
     byid={s['id']:s for s in catalog['sites']}
+    for site in catalog['sites']:
+        if site['body'] == 'earth' and site['terrain']:
+            assert site['matches'], f"{site['id']}: enabled Earth site needs a proposed pairing"
+            assert set(site['matches']) == {p['planetary_id'] for p in catalog['pairings'] if p['earth_id'] == site['id']}
     for pair in catalog['pairings']:
+        assert pair['explanation']['status'] == 'proposed_unvalidated'
         expected=compare(byid[pair['earth_id']]['comparison_features'],byid[pair['planetary_id']]['comparison_features'])
         assert all(pair[k]==v for k,v in expected.items())
     print(f"PASS: {len(ids)} sites, {len(catalog['pairings'])} reproducible pairings; schemas, units, bounds, assets, hashes and missing values")
