@@ -40,8 +40,9 @@ an Earth field test. Never silently switch physics because a scene changes locat
 - `web/src/game/GameSession.tsx` owns the scene sequence and final mission snapshot.
   It validates settings/terrain/weather before departure, ignores late completion
   callbacks, and passes the exact flown mission to the report.
-- The control-center stage currently uses a functional, explicitly labelled 2D
-  systems console. Tim's 3D interior and planetary start scene are still pending.
+- The control-center stage is Tim's first-person lander cabin (`web/src/game/interior/`,
+  see "Ship interior" below). The flat 2D systems console remains as its fallback. The
+  planetary start scene is still pending.
 - The descent flies in Furgan's live 3D view (`app/flightlab/view.ts`, wrapped by
   `web/src/components/Descent3D.tsx`). The view steps Tim's physics each frame and draws its
   true state; at touchdown it plays the ending for the real outcome, so the `outcome` slot is
@@ -52,9 +53,59 @@ an Earth field test. Never silently switch physics because a scene changes locat
   `web/src/game/scenes/`) and hands over at the simulation's start state. Sound starts off. With reduced motion a
   still card is shown first, with the option to play the cinematic anyway.
   `liftoff` and `planetaryArrival` remain null and are skipped. The standalone test bench is
-  still available with `?cutscene-demo`. The 3D cockpit remains pending.
+  still available with `?cutscene-demo`.
 - All earlier planner controls remain available as initial setup/debug controls.
   When the 3D interior is ready, preserve the console as an accessibility fallback.
+
+## Ship interior (control center)
+
+The player sets up the mission from inside the lander, in first person. The camera is the
+character; there is no visible body. Registered as `controlCenter` and implementing
+`ControlCenterProps`; `App.tsx` and `GameSession.tsx` are unchanged.
+
+**Stations.** Four monitors and a porthole on the walls of an eight-sided cabin:
+
+| Key | Station | What it does |
+|---|---|---|
+| 1 | Mission control | Read-only. Departure site, Earth test site, catalogue terrain score, test physics, and the go / no-go checklist. The parent's launch `error` appears here as a hold. |
+| 2 | Equipment | Loadout choice (`EquipmentPicker`, `equipmentLoadouts`) and the manifest. |
+| 3 | Flight configuration | Strategy, hazard sensor, test environment, wind or modelled weather, dust and glare. The same `ConsoleControls` component as the flat console. |
+| 4 | Launch | Open checklist items, "Launch mission" (`onLaunch`) and "Return to equipment" (`onExit`). |
+| 5 | Window | The Moon or Mars outside, by `mission.planetaryTarget.body`. Changes nothing. |
+
+**Controls.** W A S D walk and sidestep; arrow keys walk and turn; drag to look (no pointer
+lock, so the cursor stays free for the monitors); E steps up to the nearest monitor; 1–5 go to
+a station; Escape steps back from a field. Keyboard only: the toolbar buttons and Tab reach
+every control, and focusing a control walks the player to its monitor. With reduced motion the
+camera snaps to stations instead of gliding.
+
+**How the monitors work.** Each monitor's content is a real page (React, via a portal) placed
+in the scene with Three.js `CSS3DRenderer`, layered over the WebGL canvas with one shared
+camera. That keeps text sharp and gives real buttons, menus, focus and screen-reader access.
+Two rules follow from it:
+
+- A monitor page must not scroll (`overflow` other than visible). The browser does not
+  hit-test a scrolling box placed in 3D, so its controls stop receiving clicks. Content has
+  to fit the monitor; trim it rather than scroll it.
+- The pages are drawn on top of the canvas, so nothing in the cabin can pass in front of a
+  monitor. Keep fittings off the line of sight to the screens.
+
+**Go / no-go checklist** (`checklist.ts`). Settings valid (hold if not), thrust to weight in
+the gravity the descent will fly (caution below 1; it is a valid experiment that will
+probably crash), weather profile present when modelled weather is selected (hold if not).
+It only reports. The parent still validates and locks the mission at launch.
+
+**Fallback.** "Use flat console" switches to `SystemsConsole`, and it is used automatically
+when WebGL cannot start or the window is narrower than 760 px. Settings carry over both ways.
+
+**What is illustrative.** The cabin is a stage generated in code, not a model of a real
+spacecraft. The view outside is a generic lunar or Martian surface in the cutscene module's
+colour presets, not the selected site: the catalogue's planetary terrain is 150–500 m per
+sample, far too coarse to stand on.
+
+**Adding a station.** Add it to `STATIONS` in `stations.ts` (id, title, key, wall angle in
+steps of 45°), write its screen in `screens/`, and add one portal line in `ShipInterior.tsx`.
+The cabin builds the monitor housing from the station list.
 
 ## Contracts and ownership
 
