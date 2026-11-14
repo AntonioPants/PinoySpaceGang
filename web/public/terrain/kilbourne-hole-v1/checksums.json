@@ -1,0 +1,54 @@
+{
+  "ATTRIBUTION.txt": {
+    "sha256": "c9cdcbec1f4cb567dd2051b3b9065106324b7e01b97754b8770adca3e95dad4d",
+    "bytes": 475
+  },
+  "COPERNICUS-LICENSE.pdf": {
+    "sha256": "9cd37d37ea654bbcaf0a2e059e6a3a5b5f76072824d8dd860ccf274ada8951bd",
+    "bytes": 113786
+  },
+  "README.md": {
+    "sha256": "bc474bc61544da92eb05f295845beeddd9de290e7de658eaefff93f6f749b6b1",
+    "bytes": 8736
+  },
+  "elevation-utm.tif": {
+    "sha256": "432c70f774b65b22e7c91478c524899a063871ce71fe1b9ffb4d93584d6d843e",
+    "bytes": 79644
+  },
+  "elevation.f32": {
+    "sha256": "1f1eafaee1781ecd570e9b6acac1f2adf03952d64afc02f4238798cd168c99d9",
+    "bytes": 103684
+  },
+  "heightmap-16bit.png": {
+    "sha256": "49027eed8f6778152e85913bfb02559768bd47fdc1506e889bf940d235f2338c",
+    "bytes": 40967
+  },
+  "load-terrain.mjs": {
+    "sha256": "1a7ef320ebd13fdb7fced27ca7e1addf68ed3b39e43f361f63e209c5d3019ab2",
+    "bytes": 3055
+  },
+  "location.geojson": {
+    "sha256": "567314badfc3066c5ed507cbefc1d1eb9a2622814a346ab54e66cbb4a41dd1ed",
+    "bytes": 1105
+  },
+  "manifest.json": {
+    "sha256": "6703022ab928882231dfe4d00e5e1fb9ed53673d4405ac50c270ed8e4215ed50",
+    "bytes": 4481
+  },
+  "preview.png": {
+    "sha256": "b497f18b5b7d66f008331d11bf61b98954b33b5703c002b05f06b5aa58c905ea",
+    "bytes": 192299
+  },
+  "slope-degrees.tif": {
+    "sha256": "fae80509ab30ad9dbed98744ca90133ca5a7fdba3909b11be6086e8be6e4987f",
+    "bytes": 95298
+  },
+  "source-window-wgs84.tif": {
+    "sha256": "33169e9dbe2f4cb3c02b7878c70ab093540036f6542b1c7090bced7a77552fa5",
+    "bytes": 106232
+  },
+  "terrain.glb": {
+    "sha256": "93aaf85f1d4349eb9aa598bb8a4f3cf5786bd0d5267ae12b51d02017b48b2aef",
+    "bytes": 1237732
+  }
+}
