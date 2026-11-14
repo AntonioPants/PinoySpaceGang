@@ -54,7 +54,24 @@ export function autopilot(opts: AutopilotOptions = {}): Controller {
       }
       const obs: Observation = { ...raw, altitudeAGL: Math.max(0, est.h), velocity: { x: est.vx, y: est.vy, z: est.vz } };
       const maxAcc = lander.maxThrustN / obs.massKg;
-      const h = obs.altitudeAGL;
+      // Terrain look-ahead: measure height above the highest ground between here and the aim
+      // point (within the next few seconds of travel), so a crater wall or ridge on the way in
+      // is cleared instead of being flown into. Needs a terrain sensor.
+      let rise = 0;
+      if (ctx.hazardView) {
+        const view = ctx.hazardView;
+        const px = obs.position.x;
+        const py = obs.position.y;
+        const toAim = Math.hypot(ctx.aim.x - px, ctx.aim.y - py);
+        const reach = Math.min(toAim, Math.hypot(est.vx, est.vy) * 10 + 30);
+        if (toAim > 1) {
+          const here = view.heightAt(px, py);
+          const dx = (ctx.aim.x - px) / toAim;
+          const dy = (ctx.aim.y - py) / toAim;
+          for (let d = 10; d <= reach; d += 10) rise = Math.max(rise, view.heightAt(px + dx * d, py + dy * d) - here);
+        }
+      }
+      const h = Math.max(0, obs.altitudeAGL - rise);
 
       if (opts.hazardAvoidance && !scanned && ctx.hazardView && h <= scanAlt) {
         scanned = true;
@@ -98,20 +115,25 @@ export function autopilot(opts: AutopilotOptions = {}): Controller {
         vzDes = -(Math.min(40, Math.sqrt(2 * aVBrake * (h - termAlt))) + termRate);
       } else if (dist > 2 || Math.hypot(vhx, vhy) > 0.4 || vhErr > 0.4) {
         // hover & translate (P66): hold height above the *ground* so rising terrain can't catch us
-        vzDes = Math.max(-1.5, Math.min(2, 0.6 * (0.7 * termAlt - h)));
+        vzDes = Math.max(-1.5, Math.min(8, 0.6 * (0.7 * termAlt - h)));
       } else {
         vzDes = -termRate;
       }
       const kz = 1.2;
       let az = g + kz * (vzDes - vz);
 
-      // engine off while falling well clear of the ground and below the profile
-      if (az <= 0.05 * g && h > 60) return { throttle: 0, tiltX: 0, tiltY: 0 };
-      az = Math.max(az, 0.05 * g);
-
       // limit tilt (tighter close to the ground so the lander touches down upright)
       const tiltLim = h < 6 ? Math.min(maxTilt, 4 * DEG) : maxTilt;
       const ah = Math.hypot(ahx, ahy);
+
+      // engine off while falling well clear of the ground, below the profile, with no
+      // sideways braking due
+      if (az <= 0.05 * g && h > 60 && ah < 0.3) return { throttle: 0, tiltX: 0, tiltY: 0 };
+      az = Math.max(az, 0.05 * g);
+      // Sideways thrust only comes from tilting the main engine, so braking laterally needs
+      // enough vertical thrust to tilt against: burn harder rather than overshoot the target.
+      if (h > termAlt) az = Math.max(az, Math.min(ah / Math.tan(tiltLim), 0.8 * maxAcc));
+
       const ahMax = az * Math.tan(tiltLim);
       if (ah > ahMax) {
         ahx *= ahMax / ah;

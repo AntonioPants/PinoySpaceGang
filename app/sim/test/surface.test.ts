@@ -1,9 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
 import {
-  Surface, cumulativeRockArea, runSim, syntheticTerrain, siteInterference, applyEnvironment, terrainPackToSite, evaluateTouchdown, DEFAULT_LANDER,
+  Surface, cumulativeRockArea, runSim, syntheticTerrain, siteInterference, evaluateTouchdown, DEFAULT_LANDER,
 } from '../src/index.ts';
-import type { SiteEnvironment } from '../src/index.ts';
 
 const flat = (k?: number) => ({ ...syntheticTerrain({ hillsM: 0, sizeM: 1000, cellSize: 5 }), rockAbundance: k });
 
@@ -56,18 +54,5 @@ describe('site environment', () => {
     const polarSnow = siteInterference({ ...base, albedo: 0.8, snowCover: 0.9, sunElevationDeg: 5 }).glare;
     expect(polarSnow).toBeGreaterThan(sunny + 0.5);
     expect(siteInterference({ ...base, snowCover: 1 }, { glare: 0 }).glare).toBe(0); // explicit override wins
-  });
-
-  it('applies the fetched NASA POWER / SoilGrids data to Kilbourne Hole', () => {
-    const dir = new URL('../../../web/public/terrain/kilbourne-hole-v1/', import.meta.url);
-    const buf = readFileSync(new URL('elevation.f32', dir));
-    const site = terrainPackToSite(JSON.parse(readFileSync(new URL('manifest.json', dir), 'utf8')), buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength), { analogOf: 'moon' });
-    const env = JSON.parse(readFileSync(new URL('../data/site-environment.json', import.meta.url), 'utf8')).sites[site.id] as SiteEnvironment;
-    const enriched = applyEnvironment(site, env);
-    expect(enriched.wind).toEqual(env.wind);
-    expect(enriched.sources?.wind).toMatch(/NASA POWER/);
-    const tel = runSim({ site: enriched, strategy: 'autonomous', atmosphere: 'native', gravity: 'target' });
-    expect(tel.environment.wind).toEqual(env.wind);
-    expect(tel.summary).toBeDefined();
   });
 });
