@@ -1,0 +1,2501 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "Field Shift engine",
+  "description": "Decision support for crop rotations from NASA Earth observations. Scores are relative comparisons, never yield or profit predictions.",
+  "version": "0.1.0"
+ },
+ "paths": {
+  "/api/health": {
+   "get": {
+    "tags": [
+     "status"
+    ],
+    "summary": "Health",
+    "description": "Status of every data source: configured, cached for this point, and (optionally) reachable.",
+    "operationId": "health_api_health_get",
+    "parameters": [
+     {
+      "name": "lat",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "number",
+         "maximum": 75,
+         "minimum": -60
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Lat"
+      }
+     },
+     {
+      "name": "lon",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "number",
+         "maximum": 180,
+         "minimum": -180
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Lon"
+      }
+     },
+     {
+      "name": "probe",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "description": "Also make a live request to each open data service (slow)",
+       "default": false,
+       "title": "Probe"
+      },
+      "description": "Also make a live request to each open data service (slow)"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Health Api Health Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/config": {
+   "get": {
+    "tags": [
+     "status"
+    ],
+    "summary": "App Config",
+    "operationId": "app_config_api_config_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response App Config Api Config Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/crops": {
+   "get": {
+    "tags": [
+     "knowledge base"
+    ],
+    "summary": "Crops",
+    "description": "The crop knowledge base, with the source of every value.",
+    "operationId": "crops_api_crops_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Crops Api Crops Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/climate": {
+   "get": {
+    "tags": [
+     "data"
+    ],
+    "summary": "Climate",
+    "description": "Season calendar, per-season climate indicators, yearly series and trends since 1991.",
+    "operationId": "climate_api_climate_get",
+    "parameters": [
+     {
+      "name": "lat",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "number",
+       "maximum": 75,
+       "minimum": -60,
+       "description": "Latitude in decimal degrees",
+       "title": "Lat"
+      },
+      "description": "Latitude in decimal degrees"
+     },
+     {
+      "name": "lon",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "number",
+       "maximum": 180,
+       "minimum": -180,
+       "description": "Longitude in decimal degrees",
+       "title": "Lon"
+      },
+      "description": "Longitude in decimal degrees"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Climate Api Climate Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/soil": {
+   "get": {
+    "tags": [
+     "data"
+    ],
+    "summary": "Soil",
+    "description": "SoilGrids estimate for the point (labelled modelled) + derived texture class.",
+    "operationId": "soil_api_soil_get",
+    "parameters": [
+     {
+      "name": "lat",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "number",
+       "maximum": 75,
+       "minimum": -60,
+       "description": "Latitude in decimal degrees",
+       "title": "Lat"
+      },
+      "description": "Latitude in decimal degrees"
+     },
+     {
+      "name": "lon",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "number",
+       "maximum": 180,
+       "minimum": -180,
+       "description": "Longitude in decimal degrees",
+       "title": "Lon"
+      },
+      "description": "Longitude in decimal degrees"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Soil Api Soil Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/drought": {
+   "get": {
+    "tags": [
+     "data"
+    ],
+    "summary": "Drought",
+    "description": "Field vitals, flash-drought early-warning level and multi-year field memory.",
+    "operationId": "drought_api_drought_get",
+    "parameters": [
+     {
+      "name": "lat",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "number",
+       "maximum": 75,
+       "minimum": -60,
+       "description": "Latitude in decimal degrees",
+       "title": "Lat"
+      },
+      "description": "Latitude in decimal degrees"
+     },
+     {
+      "name": "lon",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "number",
+       "maximum": 180,
+       "minimum": -180,
+       "description": "Longitude in decimal degrees",
+       "title": "Lon"
+      },
+      "description": "Longitude in decimal degrees"
+     },
+     {
+      "name": "lang",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "enum": [
+        "en",
+        "fil"
+       ],
+       "type": "string",
+       "default": "en",
+       "title": "Lang"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Drought Api Drought Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/backtest": {
+   "get": {
+    "tags": [
+     "data"
+    ],
+    "summary": "Backtest",
+    "description": "Engine water-stress estimate vs observed MODIS NDVI.\n\nMODIS takes several minutes to download for a new location, so the first call starts a\nbackground download and returns ``status: \"fetching\"``; poll until ``status: \"ready\"``.",
+    "operationId": "backtest_api_backtest_get",
+    "parameters": [
+     {
+      "name": "lat",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "number",
+       "maximum": 75,
+       "minimum": -60,
+       "description": "Latitude in decimal degrees",
+       "title": "Lat"
+      },
+      "description": "Latitude in decimal degrees"
+     },
+     {
+      "name": "lon",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "number",
+       "maximum": 180,
+       "minimum": -180,
+       "description": "Longitude in decimal degrees",
+       "title": "Lon"
+      },
+      "description": "Longitude in decimal degrees"
+     },
+     {
+      "name": "lang",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "enum": [
+        "en",
+        "fil"
+       ],
+       "type": "string",
+       "default": "en",
+       "title": "Lang"
+      }
+     },
+     {
+      "name": "fetch",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "default": true,
+       "title": "Fetch"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Backtest Api Backtest Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/geocode": {
+   "get": {
+    "tags": [
+     "data"
+    ],
+    "summary": "Geocode",
+    "description": "Place search for the map (OpenStreetMap Nominatim). Only the typed query is sent.",
+    "operationId": "geocode_api_geocode_get",
+    "parameters": [
+     {
+      "name": "q",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "minLength": 2,
+       "maxLength": 120,
+       "title": "Q"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Geocode Api Geocode Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/plan": {
+   "post": {
+    "tags": [
+     "plan"
+    ],
+    "summary": "Plan",
+    "description": "Ranked rotations with scores + reasons, replay, adaptive rules, soil projection,\nirrigation, why-it-lost, sources used and information gaps.",
+    "operationId": "plan_api_plan_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PlanRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PlanResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/advisor": {
+   "post": {
+    "tags": [
+     "plan"
+    ],
+    "summary": "Ask Advisor",
+    "description": "Answer a question about a plan (Claude with engine tools if a key is set, else rule-based).",
+    "operationId": "ask_advisor_api_advisor_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AdvisorRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AdvisorResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "AdaptiveComparison": {
+    "properties": {
+     "fixed_mean": {
+      "type": "number",
+      "title": "Fixed Mean"
+     },
+     "adaptive_mean": {
+      "type": "number",
+      "title": "Adaptive Mean"
+     },
+     "gain_mean": {
+      "type": "number",
+      "title": "Gain Mean"
+     },
+     "fixed_worst20": {
+      "type": "number",
+      "title": "Fixed Worst20"
+     },
+     "adaptive_worst20": {
+      "type": "number",
+      "title": "Adaptive Worst20"
+     },
+     "gain_worst20": {
+      "type": "number",
+      "title": "Gain Worst20"
+     },
+     "fixed_failed_seasons": {
+      "type": "integer",
+      "title": "Fixed Failed Seasons"
+     },
+     "adaptive_failed_seasons": {
+      "type": "integer",
+      "title": "Adaptive Failed Seasons"
+     },
+     "rules": {
+      "type": "integer",
+      "title": "Rules"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "fixed_mean",
+     "adaptive_mean",
+     "gain_mean",
+     "fixed_worst20",
+     "adaptive_worst20",
+     "gain_worst20",
+     "fixed_failed_seasons",
+     "adaptive_failed_seasons",
+     "rules"
+    ],
+    "title": "AdaptiveComparison"
+   },
+   "AdaptivePlan": {
+    "properties": {
+     "decision_points": {
+      "items": {
+       "$ref": "#/components/schemas/DecisionPoint"
+      },
+      "type": "array",
+      "title": "Decision Points"
+     },
+     "comparison": {
+      "$ref": "#/components/schemas/AdaptiveComparison"
+     },
+     "yearly": {
+      "items": {
+       "$ref": "#/components/schemas/AdaptiveYear"
+      },
+      "type": "array",
+      "title": "Yearly"
+     },
+     "summary": {
+      "type": "string",
+      "title": "Summary"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "decision_points",
+     "comparison",
+     "yearly",
+     "summary"
+    ],
+    "title": "AdaptivePlan"
+   },
+   "AdaptiveYear": {
+    "properties": {
+     "year": {
+      "type": "integer",
+      "title": "Year"
+     },
+     "fixed": {
+      "type": "number",
+      "title": "Fixed"
+     },
+     "adaptive": {
+      "type": "number",
+      "title": "Adaptive"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "year",
+     "fixed",
+     "adaptive"
+    ],
+    "title": "AdaptiveYear"
+   },
+   "AdvisorRequest": {
+    "properties": {
+     "question": {
+      "type": "string",
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Question"
+     },
+     "plan_context": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Plan Context",
+      "description": "The plan returned by /api/plan (or a subset)"
+     },
+     "plan_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Plan Id",
+      "description": "Id of a plan the engine still has in memory"
+     },
+     "history": {
+      "items": {
+       "additionalProperties": {
+        "type": "string"
+       },
+       "type": "object"
+      },
+      "type": "array",
+      "title": "History",
+      "description": "Earlier {role, content} turns"
+     },
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "fil"
+      ],
+      "title": "Lang",
+      "default": "en"
+     }
+    },
+    "type": "object",
+    "required": [
+     "question"
+    ],
+    "title": "AdvisorRequest"
+   },
+   "AdvisorResponse": {
+    "properties": {
+     "answer": {
+      "type": "string",
+      "title": "Answer"
+     },
+     "mode": {
+      "type": "string",
+      "title": "Mode"
+     },
+     "model": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Model"
+     },
+     "tools_used": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Tools Used"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "answer",
+     "mode"
+    ],
+    "title": "AdvisorResponse"
+   },
+   "CropOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "title": "Id"
+     },
+     "name": {
+      "additionalProperties": {
+       "type": "string"
+      },
+      "type": "object",
+      "title": "Name"
+     },
+     "family": {
+      "type": "string",
+      "title": "Family"
+     },
+     "seasons": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Seasons"
+     },
+     "duration_days": {
+      "type": "integer",
+      "title": "Duration Days"
+     },
+     "income_band": {
+      "type": "integer",
+      "title": "Income Band"
+     },
+     "n_fixing": {
+      "type": "boolean",
+      "title": "N Fixing"
+     },
+     "deep_taproot": {
+      "type": "boolean",
+      "title": "Deep Taproot"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "family",
+     "seasons",
+     "duration_days",
+     "income_band",
+     "n_fixing",
+     "deep_taproot"
+    ],
+    "title": "CropOut"
+   },
+   "DecisionPoint": {
+    "properties": {
+     "slot": {
+      "type": "integer",
+      "title": "Slot"
+     },
+     "year_in_rotation": {
+      "type": "integer",
+      "title": "Year In Rotation"
+     },
+     "season": {
+      "type": "string",
+      "title": "Season"
+     },
+     "planned_crop": {
+      "type": "string",
+      "title": "Planned Crop"
+     },
+     "has_rule": {
+      "type": "boolean",
+      "title": "Has Rule"
+     },
+     "sow_date": {
+      "type": "string",
+      "title": "Sow Date"
+     },
+     "message": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Message"
+     },
+     "check_date": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Check Date"
+     },
+     "indicator": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Indicator"
+     },
+     "indicator_label": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Indicator Label"
+     },
+     "threshold": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Threshold"
+     },
+     "unit": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unit"
+     },
+     "direction": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Direction"
+     },
+     "if_below": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "If Below"
+     },
+     "if_above": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "If Above"
+     },
+     "alt_crop": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Alt Crop"
+     },
+     "rule_text": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Rule Text"
+     },
+     "evidence": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Evidence"
+     },
+     "stats": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Stats"
+     },
+     "switch_years": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "title": "Switch Years"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "slot",
+     "year_in_rotation",
+     "season",
+     "planned_crop",
+     "has_rule",
+     "sow_date"
+    ],
+    "title": "DecisionPoint"
+   },
+   "FeasibilityCheck": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "passed": {
+      "type": "boolean",
+      "title": "Passed"
+     },
+     "text": {
+      "type": "string",
+      "title": "Text"
+     },
+     "value": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Value"
+     },
+     "limit": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Limit"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "name",
+     "passed",
+     "text"
+    ],
+    "title": "FeasibilityCheck"
+   },
+   "FeasibilityOut": {
+    "properties": {
+     "crop_id": {
+      "type": "string",
+      "title": "Crop Id"
+     },
+     "season": {
+      "type": "string",
+      "title": "Season"
+     },
+     "feasible": {
+      "type": "boolean",
+      "title": "Feasible"
+     },
+     "checks": {
+      "items": {
+       "$ref": "#/components/schemas/FeasibilityCheck"
+      },
+      "type": "array",
+      "title": "Checks"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "crop_id",
+     "season",
+     "feasible",
+     "checks"
+    ],
+    "title": "FeasibilityOut"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "IrrigationPlan": {
+    "properties": {
+     "unit": {
+      "type": "string",
+      "title": "Unit"
+     },
+     "efficiency": {
+      "type": "number",
+      "title": "Efficiency"
+     },
+     "water_source": {
+      "type": "string",
+      "title": "Water Source"
+     },
+     "slots": {
+      "items": {
+       "$ref": "#/components/schemas/IrrigationSlot"
+      },
+      "type": "array",
+      "title": "Slots"
+     },
+     "net_m3_per_year_mean": {
+      "type": "number",
+      "title": "Net M3 Per Year Mean"
+     },
+     "net_m3_per_year_p80": {
+      "type": "number",
+      "title": "Net M3 Per Year P80"
+     },
+     "gross_m3_per_year_mean": {
+      "type": "number",
+      "title": "Gross M3 Per Year Mean"
+     },
+     "applied_m3_per_year_mean": {
+      "type": "number",
+      "title": "Applied M3 Per Year Mean"
+     },
+     "note": {
+      "type": "string",
+      "title": "Note"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "unit",
+     "efficiency",
+     "water_source",
+     "slots",
+     "net_m3_per_year_mean",
+     "net_m3_per_year_p80",
+     "gross_m3_per_year_mean",
+     "applied_m3_per_year_mean",
+     "note"
+    ],
+    "title": "IrrigationPlan"
+   },
+   "IrrigationSlot": {
+    "properties": {
+     "slot": {
+      "type": "integer",
+      "title": "Slot"
+     },
+     "crop": {
+      "type": "string",
+      "title": "Crop"
+     },
+     "season": {
+      "type": "string",
+      "title": "Season"
+     },
+     "net_mm_mean": {
+      "type": "number",
+      "title": "Net Mm Mean"
+     },
+     "net_m3_mean": {
+      "type": "number",
+      "title": "Net M3 Mean"
+     },
+     "net_m3_p80": {
+      "type": "number",
+      "title": "Net M3 P80"
+     },
+     "gross_m3_mean": {
+      "type": "number",
+      "title": "Gross M3 Mean"
+     },
+     "crop_demand_mm": {
+      "type": "number",
+      "title": "Crop Demand Mm"
+     },
+     "rain_mm": {
+      "type": "number",
+      "title": "Rain Mm"
+     },
+     "water_met_pct": {
+      "type": "number",
+      "title": "Water Met Pct"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "slot",
+     "crop",
+     "season",
+     "net_mm_mean",
+     "net_m3_mean",
+     "net_m3_p80",
+     "gross_m3_mean",
+     "crop_demand_mm",
+     "rain_mm",
+     "water_met_pct"
+    ],
+    "title": "IrrigationSlot"
+   },
+   "PlanRequest": {
+    "properties": {
+     "lat": {
+      "type": "number",
+      "maximum": 75.0,
+      "minimum": -60.0,
+      "title": "Lat"
+     },
+     "lon": {
+      "type": "number",
+      "maximum": 180.0,
+      "minimum": -180.0,
+      "title": "Lon"
+     },
+     "current_rotation": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "maxItems": 6,
+      "minItems": 2,
+      "title": "Current Rotation",
+      "description": "Crop ids for [Y1 main, Y1 off, Y2 main, Y2 off, Y3 main, Y3 off]; use 'fallow' for an empty off season. A 2-item list is repeated for all three years."
+     },
+     "soil_overrides": {
+      "$ref": "#/components/schemas/SoilOverrides"
+     },
+     "priorities": {
+      "$ref": "#/components/schemas/Priorities"
+     },
+     "water_source": {
+      "type": "string",
+      "enum": [
+       "rainfed",
+       "supplemental",
+       "irrigated"
+      ],
+      "title": "Water Source",
+      "default": "rainfed"
+     },
+     "drainage": {
+      "type": "string",
+      "enum": [
+       "auto",
+       "poor",
+       "moderate",
+       "good"
+      ],
+      "title": "Drainage",
+      "default": "auto"
+     },
+     "ranking_mode": {
+      "type": "string",
+      "enum": [
+       "average",
+       "worst_case",
+       "regret"
+      ],
+      "title": "Ranking Mode",
+      "default": "average"
+     },
+     "excluded_crops": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Excluded Crops",
+      "description": "Crops the farmer will not grow"
+     },
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "fil"
+      ],
+      "title": "Lang",
+      "default": "en"
+     }
+    },
+    "type": "object",
+    "required": [
+     "lat",
+     "lon",
+     "current_rotation"
+    ],
+    "title": "PlanRequest"
+   },
+   "PlanResponse": {
+    "properties": {
+     "plan_id": {
+      "type": "string",
+      "title": "Plan Id"
+     },
+     "generated_at": {
+      "type": "string",
+      "title": "Generated At"
+     },
+     "lang": {
+      "type": "string",
+      "title": "Lang"
+     },
+     "location": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Location"
+     },
+     "season_plan": {
+      "$ref": "#/components/schemas/SeasonPlanOut"
+     },
+     "soil": {
+      "$ref": "#/components/schemas/SoilOut"
+     },
+     "settings": {
+      "$ref": "#/components/schemas/PlanSettings"
+     },
+     "years": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "title": "Years"
+     },
+     "crops": {
+      "items": {
+       "$ref": "#/components/schemas/CropOut"
+      },
+      "type": "array",
+      "title": "Crops"
+     },
+     "feasibility": {
+      "items": {
+       "$ref": "#/components/schemas/FeasibilityOut"
+      },
+      "type": "array",
+      "title": "Feasibility"
+     },
+     "enumeration": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Enumeration"
+     },
+     "winner_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Winner Id"
+     },
+     "rotations": {
+      "items": {
+       "$ref": "#/components/schemas/RotationOut"
+      },
+      "type": "array",
+      "title": "Rotations"
+     },
+     "ranking": {
+      "items": {
+       "$ref": "#/components/schemas/RankedRow"
+      },
+      "type": "array",
+      "title": "Ranking"
+     },
+     "why_it_lost": {
+      "items": {
+       "$ref": "#/components/schemas/WhyLost"
+      },
+      "type": "array",
+      "title": "Why It Lost"
+     },
+     "backtest": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Backtest"
+     },
+     "sources": {
+      "items": {
+       "$ref": "#/components/schemas/SourceStatus"
+      },
+      "type": "array",
+      "title": "Sources"
+     },
+     "gaps": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Gaps"
+     },
+     "disclaimer": {
+      "type": "string",
+      "title": "Disclaimer"
+     },
+     "timing_s": {
+      "type": "number",
+      "title": "Timing S"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "plan_id",
+     "generated_at",
+     "lang",
+     "location",
+     "season_plan",
+     "soil",
+     "settings",
+     "years",
+     "crops",
+     "feasibility",
+     "enumeration",
+     "winner_id",
+     "rotations",
+     "ranking",
+     "why_it_lost",
+     "backtest",
+     "sources",
+     "gaps",
+     "disclaimer",
+     "timing_s"
+    ],
+    "title": "PlanResponse"
+   },
+   "PlanSettings": {
+    "properties": {
+     "water_source": {
+      "type": "string",
+      "title": "Water Source"
+     },
+     "drainage": {
+      "type": "string",
+      "title": "Drainage"
+     },
+     "drainage_source": {
+      "type": "string",
+      "title": "Drainage Source"
+     },
+     "ranking_mode": {
+      "type": "string",
+      "title": "Ranking Mode"
+     },
+     "weights": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Weights"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "water_source",
+     "drainage",
+     "drainage_source",
+     "ranking_mode",
+     "weights"
+    ],
+    "title": "PlanSettings"
+   },
+   "Priorities": {
+    "properties": {
+     "water": {
+      "type": "number",
+      "maximum": 100.0,
+      "minimum": 0.0,
+      "title": "Water",
+      "description": "Using water well",
+      "default": 25
+     },
+     "soil": {
+      "type": "number",
+      "maximum": 100.0,
+      "minimum": 0.0,
+      "title": "Soil",
+      "description": "Building soil health",
+      "default": 25
+     },
+     "income": {
+      "type": "number",
+      "maximum": 100.0,
+      "minimum": 0.0,
+      "title": "Income",
+      "description": "Relative income",
+      "default": 25
+     },
+     "risk": {
+      "type": "number",
+      "maximum": 100.0,
+      "minimum": 0.0,
+      "title": "Risk",
+      "description": "Low climate risk",
+      "default": 25
+     }
+    },
+    "type": "object",
+    "title": "Priorities",
+    "description": "Farmer priority sliders (any non-negative scale; they are normalised to sum to 1)."
+   },
+   "RankedRow": {
+    "properties": {
+     "rank": {
+      "type": "integer",
+      "title": "Rank"
+     },
+     "slots": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Slots"
+     },
+     "overall": {
+      "type": "number",
+      "title": "Overall"
+     },
+     "worst_case": {
+      "type": "number",
+      "title": "Worst Case"
+     },
+     "max_regret": {
+      "type": "number",
+      "title": "Max Regret"
+     },
+     "win_rate_vs_current": {
+      "type": "number",
+      "title": "Win Rate Vs Current"
+     },
+     "water": {
+      "type": "number",
+      "title": "Water"
+     },
+     "soil": {
+      "type": "number",
+      "title": "Soil"
+     },
+     "risk": {
+      "type": "number",
+      "title": "Risk"
+     },
+     "income": {
+      "type": "number",
+      "title": "Income"
+     },
+     "shown_as": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Shown As"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "rank",
+     "slots",
+     "overall",
+     "worst_case",
+     "max_regret",
+     "win_rate_vs_current",
+     "water",
+     "soil",
+     "risk",
+     "income"
+    ],
+    "title": "RankedRow"
+   },
+   "Reason": {
+    "properties": {
+     "criterion": {
+      "type": "string",
+      "title": "Criterion"
+     },
+     "tone": {
+      "type": "string",
+      "title": "Tone"
+     },
+     "text": {
+      "type": "string",
+      "title": "Text"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "criterion",
+     "tone",
+     "text"
+    ],
+    "title": "Reason"
+   },
+   "ReplayStats": {
+    "properties": {
+     "years": {
+      "type": "integer",
+      "title": "Years"
+     },
+     "mean_score": {
+      "type": "number",
+      "title": "Mean Score"
+     },
+     "worst20_score": {
+      "type": "number",
+      "title": "Worst20 Score"
+     },
+     "worst_years": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "title": "Worst Years"
+     },
+     "max_regret": {
+      "type": "number",
+      "title": "Max Regret"
+     },
+     "mean_regret": {
+      "type": "number",
+      "title": "Mean Regret"
+     },
+     "win_rate_vs_current": {
+      "type": "number",
+      "title": "Win Rate Vs Current"
+     },
+     "mean_performance": {
+      "type": "number",
+      "title": "Mean Performance"
+     },
+     "worst20_performance": {
+      "type": "number",
+      "title": "Worst20 Performance"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "years",
+     "mean_score",
+     "worst20_score",
+     "worst_years",
+     "max_regret",
+     "mean_regret",
+     "win_rate_vs_current",
+     "mean_performance",
+     "worst20_performance"
+    ],
+    "title": "ReplayStats"
+   },
+   "RotationOut": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "title": "Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "is_current": {
+      "type": "boolean",
+      "title": "Is Current"
+     },
+     "rank": {
+      "type": "integer",
+      "title": "Rank"
+     },
+     "slots": {
+      "items": {
+       "$ref": "#/components/schemas/SlotOut"
+      },
+      "type": "array",
+      "title": "Slots"
+     },
+     "scores": {
+      "$ref": "#/components/schemas/Scores"
+     },
+     "replay": {
+      "$ref": "#/components/schemas/ReplayStats"
+     },
+     "yearly": {
+      "items": {
+       "$ref": "#/components/schemas/YearRow"
+      },
+      "type": "array",
+      "title": "Yearly"
+     },
+     "reasons": {
+      "items": {
+       "$ref": "#/components/schemas/Reason"
+      },
+      "type": "array",
+      "title": "Reasons"
+     },
+     "rule_violations": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Rule Violations"
+     },
+     "adaptive": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/AdaptivePlan"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "soil_projection": {
+      "$ref": "#/components/schemas/SoilProjection"
+     },
+     "irrigation": {
+      "$ref": "#/components/schemas/IrrigationPlan"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "is_current",
+     "rank",
+     "slots",
+     "scores",
+     "replay",
+     "yearly",
+     "reasons",
+     "soil_projection",
+     "irrigation"
+    ],
+    "title": "RotationOut"
+   },
+   "Scores": {
+    "properties": {
+     "overall": {
+      "type": "number",
+      "title": "Overall"
+     },
+     "worst_case": {
+      "type": "number",
+      "title": "Worst Case"
+     },
+     "water": {
+      "type": "number",
+      "title": "Water"
+     },
+     "soil": {
+      "type": "number",
+      "title": "Soil"
+     },
+     "risk": {
+      "type": "number",
+      "title": "Risk"
+     },
+     "income": {
+      "type": "number",
+      "title": "Income"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "overall",
+     "worst_case",
+     "water",
+     "soil",
+     "risk",
+     "income"
+    ],
+    "title": "Scores"
+   },
+   "SeasonInfo": {
+    "properties": {
+     "kind": {
+      "type": "string",
+      "title": "Kind"
+     },
+     "months": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "title": "Months"
+     },
+     "label": {
+      "type": "string",
+      "title": "Label"
+     },
+     "sow_label": {
+      "type": "string",
+      "title": "Sow Label"
+     },
+     "length_days": {
+      "type": "integer",
+      "title": "Length Days"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "kind",
+     "months",
+     "label",
+     "sow_label",
+     "length_days"
+    ],
+    "title": "SeasonInfo"
+   },
+   "SeasonPlanOut": {
+    "properties": {
+     "regime": {
+      "type": "string",
+      "title": "Regime"
+     },
+     "main": {
+      "$ref": "#/components/schemas/SeasonInfo"
+     },
+     "off": {
+      "$ref": "#/components/schemas/SeasonInfo"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "regime",
+     "main",
+     "off"
+    ],
+    "title": "SeasonPlanOut"
+   },
+   "SlotOut": {
+    "properties": {
+     "index": {
+      "type": "integer",
+      "title": "Index"
+     },
+     "year": {
+      "type": "integer",
+      "title": "Year"
+     },
+     "season": {
+      "type": "string",
+      "title": "Season"
+     },
+     "season_kind": {
+      "type": "string",
+      "title": "Season Kind"
+     },
+     "crop": {
+      "type": "string",
+      "title": "Crop"
+     },
+     "crop_name": {
+      "type": "string",
+      "title": "Crop Name"
+     },
+     "family": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Family"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "index",
+     "year",
+     "season",
+     "season_kind",
+     "crop",
+     "crop_name"
+    ],
+    "title": "SlotOut"
+   },
+   "SlotYear": {
+    "properties": {
+     "outcome": {
+      "type": "number",
+      "title": "Outcome"
+     },
+     "status": {
+      "type": "string",
+      "title": "Status"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "outcome",
+     "status"
+    ],
+    "title": "SlotYear"
+   },
+   "SoilOut": {
+    "properties": {
+     "values": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Values"
+     },
+     "provenance": {
+      "additionalProperties": {
+       "type": "string"
+      },
+      "type": "object",
+      "title": "Provenance"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "values",
+     "provenance"
+    ],
+    "title": "SoilOut"
+   },
+   "SoilOverrides": {
+    "properties": {
+     "ph": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10.0,
+        "minimum": 3.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ph"
+     },
+     "soc_g_kg": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 200.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Soc G Kg",
+      "description": "Soil organic carbon, g/kg"
+     },
+     "nitrogen_g_kg": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 20.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Nitrogen G Kg"
+     },
+     "clay_pct": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Clay Pct"
+     },
+     "sand_pct": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Sand Pct"
+     },
+     "silt_pct": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Silt Pct"
+     },
+     "bulk_density": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 2.0,
+        "minimum": 0.5
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Bulk Density"
+     },
+     "cec_cmol_kg": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cec Cmol Kg"
+     },
+     "ec_ds_m": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 40.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ec Ds M",
+      "description": "Soil salinity (ECe), dS/m"
+     },
+     "texture": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Texture",
+      "description": "USDA texture class, e.g. 'clay loam'"
+     },
+     "compaction_suspected": {
+      "type": "boolean",
+      "title": "Compaction Suspected",
+      "default": false
+     }
+    },
+    "type": "object",
+    "title": "SoilOverrides",
+    "description": "Farmer-entered soil values; anything given here replaces the SoilGrids estimate."
+   },
+   "SoilProjection": {
+    "properties": {
+     "label": {
+      "type": "string",
+      "title": "Label"
+     },
+     "illustrative": {
+      "type": "boolean",
+      "title": "Illustrative"
+     },
+     "years": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "title": "Years"
+     },
+     "soc_available": {
+      "type": "boolean",
+      "title": "Soc Available"
+     },
+     "soc_t_ha": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "number"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Soc T Ha"
+     },
+     "soc_g_kg": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "number"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Soc G Kg"
+     },
+     "soc_change_pct": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Soc Change Pct"
+     },
+     "c_input_t_ha_yr": {
+      "type": "number",
+      "title": "C Input T Ha Yr"
+     },
+     "n_fertiliser_need_kg_ha_yr": {
+      "type": "number",
+      "title": "N Fertiliser Need Kg Ha Yr"
+     },
+     "n_from_legumes_kg_ha_yr": {
+      "type": "number",
+      "title": "N From Legumes Kg Ha Yr"
+     },
+     "n_cumulative_need_kg_ha": {
+      "items": {
+       "type": "number"
+      },
+      "type": "array",
+      "title": "N Cumulative Need Kg Ha"
+     },
+     "n_cumulative_from_legumes_kg_ha": {
+      "items": {
+       "type": "number"
+      },
+      "type": "array",
+      "title": "N Cumulative From Legumes Kg Ha"
+     },
+     "assumptions": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Assumptions"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "label",
+     "illustrative",
+     "years",
+     "soc_available",
+     "c_input_t_ha_yr",
+     "n_fertiliser_need_kg_ha_yr",
+     "n_from_legumes_kg_ha_yr",
+     "n_cumulative_need_kg_ha",
+     "n_cumulative_from_legumes_kg_ha",
+     "assumptions"
+    ],
+    "title": "SoilProjection"
+   },
+   "SourceStatus": {
+    "properties": {
+     "source": {
+      "type": "string",
+      "title": "Source"
+     },
+     "title": {
+      "type": "string",
+      "title": "Title"
+     },
+     "provider": {
+      "type": "string",
+      "title": "Provider",
+      "default": ""
+     },
+     "kind": {
+      "type": "string",
+      "title": "Kind",
+      "default": ""
+     },
+     "resolution": {
+      "type": "string",
+      "title": "Resolution",
+      "default": ""
+     },
+     "available": {
+      "type": "boolean",
+      "title": "Available",
+      "default": false
+     },
+     "origin": {
+      "type": "string",
+      "title": "Origin",
+      "default": "unavailable"
+     },
+     "used_for": {
+      "type": "string",
+      "title": "Used For",
+      "default": ""
+     },
+     "reason": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Reason"
+     },
+     "date_start": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Date Start"
+     },
+     "date_end": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Date End"
+     },
+     "fetched_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fetched At"
+     },
+     "stale": {
+      "type": "boolean",
+      "title": "Stale",
+      "default": false
+     },
+     "pending": {
+      "type": "boolean",
+      "title": "Pending",
+      "default": false
+     },
+     "needs_credentials": {
+      "type": "boolean",
+      "title": "Needs Credentials",
+      "default": false
+     },
+     "credentials_configured": {
+      "type": "boolean",
+      "title": "Credentials Configured",
+      "default": true
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "source",
+     "title"
+    ],
+    "title": "SourceStatus"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   },
+   "WhyLost": {
+    "properties": {
+     "rotation_id": {
+      "type": "string",
+      "title": "Rotation Id"
+     },
+     "behind_by": {
+      "type": "number",
+      "title": "Behind By"
+     },
+     "criteria_vs_winner": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Criteria Vs Winner"
+     },
+     "weakest_criterion": {
+      "type": "string",
+      "title": "Weakest Criterion"
+     },
+     "strongest_criterion": {
+      "type": "string",
+      "title": "Strongest Criterion"
+     },
+     "priority_change": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Priority Change"
+     },
+     "rainfall_change": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Rainfall Change"
+     },
+     "summary": {
+      "type": "string",
+      "title": "Summary"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "rotation_id",
+     "behind_by",
+     "criteria_vs_winner",
+     "weakest_criterion",
+     "strongest_criterion",
+     "priority_change",
+     "rainfall_change",
+     "summary"
+    ],
+    "title": "WhyLost"
+   },
+   "YearRow": {
+    "properties": {
+     "year": {
+      "type": "integer",
+      "title": "Year"
+     },
+     "score": {
+      "type": "number",
+      "title": "Score"
+     },
+     "performance": {
+      "type": "number",
+      "title": "Performance"
+     },
+     "water": {
+      "type": "number",
+      "title": "Water"
+     },
+     "risk": {
+      "type": "number",
+      "title": "Risk"
+     },
+     "income": {
+      "type": "number",
+      "title": "Income"
+     },
+     "regret": {
+      "type": "number",
+      "title": "Regret"
+     },
+     "beats_current": {
+      "type": "boolean",
+      "title": "Beats Current"
+     },
+     "failed_slots": {
+      "type": "integer",
+      "title": "Failed Slots"
+     },
+     "bad_year": {
+      "type": "boolean",
+      "title": "Bad Year"
+     },
+     "slots": {
+      "items": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/SlotYear"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Slots"
+     }
+    },
+    "additionalProperties": true,
+    "type": "object",
+    "required": [
+     "year",
+     "score",
+     "performance",
+     "water",
+     "risk",
+     "income",
+     "regret",
+     "beats_current",
+     "failed_slots",
+     "bad_year",
+     "slots"
+    ],
+    "title": "YearRow"
+   }
+  }
+ }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Field Shift - crop rotations with NASA data",
+  "short_name": "Field Shift",
+  "description": "Explore crop-rotation plans tested against 35 years of NASA weather.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f1f8f2",
+  "theme_color": "#265d38",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
