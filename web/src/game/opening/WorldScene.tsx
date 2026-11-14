@@ -12,7 +12,8 @@ export interface WorldProps {
   onBody: (body: Body) => void; onHover: (body: Body | null) => void;
   onTarget: (id: string) => void; onAnalog: (id: string) => void;
 }
-const centres = { Moon: new T.Vector3(-3.6, .4, 0), Earth: EARTH_CENTRE, Mars: new T.Vector3(3.7, .1, 0) };
+const centres = { Moon: new T.Vector3(-3.6, .4, 0), Earth: EARTH_CENTRE, Mars: new T.Vector3(5.4, .4, -5) };
+// Mars sits about twice as far from Earth as the Moon, and further back. Still staged, not to scale.
 const radii = { Moon: .85, Earth: 1.5, Mars: 1.18 };
 function release(root: T.Object3D) {
   root.traverse(o => { if (o instanceof T.Mesh || o instanceof T.Points) { o.geometry.dispose(); const materials = Array.isArray(o.material) ? o.material : [o.material]; materials.forEach(m => m.dispose()); } });
@@ -54,17 +55,33 @@ export default function WorldScene(props: WorldProps) {
     }
     const stars = new Float32Array(1200*3);
     for (let i=0;i<1200;i++) { const a=i*2.39996, z=1-2*(i+.5)/1200, r=Math.sqrt(1-z*z)*90; stars.set([Math.cos(a)*r,z*90,Math.sin(a)*r],i*3); }
-    const starGeo = new T.BufferGeometry(); starGeo.setAttribute('position',new T.BufferAttribute(stars,3)); scene.add(new T.Points(starGeo,new T.PointsMaterial({color:0xc6c1b5,size:.065,sizeAttenuation:true})));
+    const starGeo = new T.BufferGeometry(); starGeo.setAttribute('position',new T.BufferAttribute(stars,3)); const starShell = new T.Points(starGeo,new T.PointsMaterial({color:0xc6c1b5,size:.065,sizeAttenuation:true})); scene.add(starShell);
+    // Title-screen motion: a second, nearer field of stars streams past the camera, as if the
+    // worlds were being approached. It slows on the world overview and stops once a world is chosen.
+    const DRIFT = 900, drift = new Float32Array(DRIFT*3); let driftSeed = 4421, driftLevel = 0;
+    const driftRandom = () => { driftSeed = (driftSeed * 16807) % 2147483647; return driftSeed / 2147483647; };
+    for (let i=0;i<DRIFT;i++) {
+      let x = 0, y = 0;
+      // Keep the lane through the three worlds clear, so no star flies out of a planet.
+      do { x = (driftRandom()*2-1)*46; y = (driftRandom()*2-1)*28; } while (Math.abs(x) < 9 && Math.abs(y) < 3.4);
+      drift.set([x, y, 14 - driftRandom()*95], i*3);
+    }
+    const driftGeo = new T.BufferGeometry(), driftPositions = new T.BufferAttribute(drift,3); driftGeo.setAttribute('position',driftPositions);
+    const driftMaterial = new T.PointsMaterial({color:0xf1e9d6,size:.085,sizeAttenuation:true,transparent:true,opacity:0,depthWrite:false,fog:false});
+    const driftStars = new T.Points(driftGeo,driftMaterial); driftStars.frustumCulled = false; driftStars.visible = false; scene.add(driftStars);
     const markers = new T.Group(); scene.add(markers);
     let terrain: T.Group | null = null, terrainProfile: TerrainProfile | null = null, terrainMaterial: T.MeshStandardMaterial | null = null;
     const departingPatches: T.Group[] = [];
-    let terrainRelief = 0, earthRoute: { from: CameraPose; to: CameraPose; elapsed: number } | null = null;
+    let terrainRelief = 0, earthRoute: { from: CameraPose; to: CameraPose; elapsed: number; seconds: number } | null = null;
     let goalTarget = new T.Vector3(), goalOffset = camera.position.clone(), goalUp = new T.Vector3(0,1,0), moving = true, surface = false;
     const fly = (target: T.Vector3, offset: T.Vector3, up = new T.Vector3(0,1,0), onEarth = false) => {
       goalTarget=target; goalOffset=offset; goalUp=up; moving=true; controls.enabled=false;
+      const end = target.clone().add(offset);
+      // A straight dive takes 2.6 s; a trip to the far side of Earth takes up to 4 s.
       earthRoute = onEarth ? {
         from: { position: camera.position.clone(), target: controls.target.clone(), up: camera.up.clone().normalize() },
-        to: { position: target.clone().add(offset), target, up }, elapsed: 0,
+        to: { position: end, target, up }, elapsed: 0,
+        seconds: 2.6 + 1.4 * camera.position.clone().sub(centres.Earth).angleTo(end.clone().sub(centres.Earth)) / Math.PI,
       } : null;
     };
     const finishFlight = () => {
@@ -114,6 +131,11 @@ export default function WorldScene(props: WorldProps) {
       if(surface && terrain) {
         const offset=new T.Vector3(2000,1300 + terrainRelief*.5,3200).applyQuaternion(terrain.quaternion).multiplyScalar(METRE_SCALE);
         fly(terrain.position.clone(),offset,new T.Vector3(0,1,0).applyQuaternion(terrain.quaternion),true);
+      } else if(p.stage==='earth' && p.surface) {
+        // The site's terrain is still loading. Wait directly above it, so the descent that
+        // follows carries straight on down instead of starting again from a side-on orbit.
+        const site=p.selectedAnalog;
+        fly(globePoint(site.lat,site.lon,radii.Earth).add(centres.Earth),globePoint(site.lat,site.lon,2.2),new T.Vector3(0,1,0),true);
       } else if(p.stage==='title') {
         fly(new T.Vector3(0,.1,0),new T.Vector3(0,1.4,10).multiplyScalar(Math.max(1,1.45/camera.aspect)));
       } else if(p.stage==='worlds') {
@@ -136,11 +158,20 @@ export default function WorldScene(props: WorldProps) {
     const render=()=>{const now=performance.now(),dt=Math.min((now-last)/1000,.05);last=now;
       if (earthRoute) {
         earthRoute.elapsed += dt;
-        const progress = reduced.matches ? 1 : Math.min(earthRoute.elapsed / 4.8, 1);
+        const progress = reduced.matches ? 1 : Math.min(earthRoute.elapsed / earthRoute.seconds, 1);
         const pose = earthFlight(earthRoute.from, earthRoute.to, progress);
         camera.position.copy(pose.position); camera.up.copy(pose.up); controls.target.copy(pose.target); camera.lookAt(pose.target);
         if (progress === 1) { earthRoute = null; finishFlight(); }
       } else if(moving){const a=reduced.matches?1:1-Math.exp(-4*dt);controls.target.lerp(goalTarget,a);camera.up.lerp(goalUp,a).normalize();const off=camera.position.clone().sub(controls.target);const distance=Math.exp(T.MathUtils.lerp(Math.log(Math.max(off.length(),.000001)),Math.log(goalOffset.length()),a));off.normalize().lerp(goalOffset.clone().normalize(),a).normalize().multiplyScalar(distance);camera.position.copy(controls.target).add(off);camera.lookAt(controls.target);if(camera.position.distanceTo(goalTarget.clone().add(goalOffset))<goalOffset.length()*.002){camera.position.copy(goalTarget).add(goalOffset);controls.target.copy(goalTarget);finishFlight();}}
+      const driftGoal = live.current.stage==='title' ? 1 : live.current.stage==='worlds' ? .3 : 0;
+      driftLevel += (driftGoal - driftLevel) * (1 - Math.exp(-2.2*dt));
+      driftStars.visible = driftLevel > .01; driftMaterial.opacity = Math.min(1, driftLevel*3) * .9;
+      if (driftStars.visible && !reduced.matches) {
+        // Each star keeps its own speed, so nearer ones overtake: depth without moving the camera.
+        for (let i=0;i<DRIFT;i++) { let z = drift[i*3+2] + (1.4 + (i%7)*.55) * driftLevel * dt; if (z > 14) z -= 95; drift[i*3+2] = z; }
+        driftPositions.needsUpdate = true;
+      }
+      if (!reduced.matches) starShell.rotation.y += dt * .004;
       // Earth and its horizon stay present at every altitude; no globe/terrain swap.
       for(const [body,mesh] of planets)mesh.visible=!surface||body==='Earth';
       const nearGround = terrain && live.current.stage === 'earth' ? 1 - T.MathUtils.smoothstep(camera.position.distanceTo(centres.Earth) - radii.Earth, .002, .025) : 0;

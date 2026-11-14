@@ -100,6 +100,22 @@ export class CutsceneAudio {
     o.connect(og).connect(this.master); o.start(t); o.stop(t + 1.4);
   }
 
+  /** A latch closing: two sharp ticks over a short metallic knock, in a range small speakers play. */
+  clunk() {
+    if (!this.ctx) return;
+    const ctx = this.ctx, t = ctx.currentTime;
+    for (const [at, level] of [[0, 0.8], [0.11, 0.5]]) {
+      const src = ctx.createBufferSource(); src.buffer = this.noise;
+      const f = ctx.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 2600; f.Q.value = 2.5;
+      const g = ctx.createGain(); g.gain.setValueAtTime(level, t + at); g.gain.exponentialRampToValueAtTime(0.001, t + at + 0.05);
+      src.connect(f).connect(g).connect(this.master); src.start(t + at, Math.random()); src.stop(t + at + 0.07);
+    }
+    const o = ctx.createOscillator(); o.type = "triangle";
+    o.frequency.setValueAtTime(320, t); o.frequency.exponentialRampToValueAtTime(110, t + 0.16);
+    const og = ctx.createGain(); og.gain.setValueAtTime(0.6, t); og.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+    o.connect(og).connect(this.master); o.start(t); o.stop(t + 0.25);
+  }
+
   thud() {
     if (!this.ctx) return;
     const ctx = this.ctx, t = ctx.currentTime;
