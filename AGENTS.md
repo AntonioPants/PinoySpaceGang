@@ -1,11 +1,12 @@
 # Shared project context
 
-Read `docs/GAME_VISION.md` before changing the player journey, scenes or contracts.
+Read `docs/TEAM_HANDOFF.md` and `docs/GAME_VISION.md` before changing the player journey, scenes or contracts.
 This is a game built with React/Three.js, not a conventional informational website.
 The current browser planner and 2D console are playable prototype stages.
 
-- Eyad owns `web/` integration and mission state; Tim owns physics and the upcoming
-  planetary start / interactive 3D ship interior; Furgan owns cinematic scenes/VFX.
+- Current ownership is in `docs/TEAM_HANDOFF.md`: Eyad owns the opening; Yousef owns
+  equipment/gear data; Furgan owns all cinematics and optimization; Tim owns the
+  character/ship controls/physics; Antonio owns terrain matching and character debrief.
 - Preserve the journey: planetary target → ranked Earth analog → equipment →
   planetary arrival → ship control center → liftoff → Earth approach → descent →
   outcome → debrief. Missing cinematics skip cleanly; the console remains playable.

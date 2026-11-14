@@ -1,5 +1,6 @@
 import type { GameIntegrations } from './contracts';
 import SystemsConsole from './SystemsConsole';
+import { lazy } from 'react';
 
 // Team integration point. See docs/GAME_VISION.md before registering a scene.
 // Tim: replace controlCenter with the 3D ship interior; planetaryArrival is optional.
@@ -9,6 +10,6 @@ export const gameIntegrations: GameIntegrations = {
   planetaryArrival: null,
   controlCenter: SystemsConsole,
   liftoff: null,
-  earthApproach: null,
-  outcome: null,
+  earthApproach: lazy(() => import('./CinematicBridge').then(m => ({ default: m.EarthApproach }))),
+  outcome: lazy(() => import('./CinematicBridge').then(m => ({ default: m.LandingOutcome }))),
 };

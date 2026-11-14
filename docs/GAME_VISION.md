@@ -1,3 +1,7 @@
+# Current team agreement
+
+Read [TEAM_HANDOFF.md](TEAM_HANDOFF.md). Its ownership and current implementation supersede the historical notes below.
+
 # Planetary Analog game — team direction
 
 Confirmed by Eyad on 14 November 2026. This document supersedes earlier descriptions

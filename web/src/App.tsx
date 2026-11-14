@@ -17,6 +17,7 @@ import { buildMission, defaultSettings, gravityFor, loadProfile, validateSetting
 import type { Body, MissionConfig, MissionSettings, TerrainProfile } from './lib/types';
 
 const STORAGE_KEY = 'analog-atlas-draft-v1';
+const OpeningGame = lazy(() => import('./game/opening/OpeningGame'));
 const GameSession = lazy(() => import('./game/GameSession'));
 const FlightReport = lazy(() => import('./components/FlightReport'));
 const FlightReportNHB = lazy(() => import('./components/FlightReportNHB'));
@@ -45,7 +46,7 @@ export default function App() {
   if (!catalog) return <main className="main-shell" id="mission-main"><div className={`data-notice ${error ? 'warning' : ''}`} role="status">
     {error ? <><span>{error}</span><button className="text-button" onClick={() => setAttempt(v => v + 1)}>Retry</button></> : <><span className="status-dot pending" />Loading site catalog…</>}
   </div></main>;
-  return <Mission catalog={catalog} />;
+  return new URLSearchParams(location.search).has('planner') ? <Mission catalog={catalog} /> : <Suspense fallback={<p role="status">Preparing mission worlds…</p>}><OpeningGame catalog={catalog}/></Suspense>;
 }
 
 function Mission({ catalog }: { catalog: Catalog }) {
