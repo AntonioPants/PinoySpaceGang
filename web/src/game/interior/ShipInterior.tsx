@@ -132,7 +132,7 @@ function Cabin({ mission, settings, onSettingsChange, onLaunch, onExit, error, w
     <div ref={mount} className="cabin-view" />
     <p className="cabin-hint">Walk with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>, turn with <kbd>←</kbd> <kbd>→</kbd> or by dragging, step up to the nearest monitor with <kbd>E</kbd>. The cabin and the view outside are illustrative.</p>
     {createPortal(<MissionControlScreen mission={mission} settings={settings} checks={checks} />, pages.mission)}
-    {createPortal(<EquipmentScreen settings={settings} onSettingsChange={onSettingsChange} />, pages.equipment)}
+    {createPortal(<EquipmentScreen settings={settings} onSettingsChange={onSettingsChange} equipment={mission.equipment} onEquipment={onExit} />, pages.equipment)}
     {createPortal(<FlightConfigScreen mission={mission} settings={settings} onSettingsChange={onSettingsChange} weatherAvailable={weatherAvailable} weather={weather} />, pages.config)}
     {createPortal(<LaunchScreen checks={checks} onLaunch={onLaunch} onExit={onExit} />, pages.launch)}
   </section>;

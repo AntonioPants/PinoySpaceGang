@@ -67,8 +67,10 @@ and record hardware/browser, FPS, load times and memory; do not claim universal 
 from one laptop. Coordinate shared rendering changes with Eyad and Tim.
 
 Register planetary arrival, liftoff and Earth approach in `game/integrations.ts` using
-`SceneProps`; outcome takes `OutcomeSceneProps` and actual telemetry. The existing
-Earth opening/ending are attached through Tim's adapters in `game/scenes/`. No Earth scene
+`SceneProps`; any separate outcome takes `OutcomeSceneProps` and actual telemetry. The
+Earth opening is attached through Tim's adapter in `game/scenes/`. His `Descent3D`
+now flies Furgan's live view and plays the actual outcome itself, so the registry's
+separate outcome slot is null to avoid replaying the ending twice. No Earth scene
 is mislabeled as a planetary departure. Planetary arrival and liftoff remain empty.
 Use selected equipment IDs for the future animated model; the current cutscene lander
 is generic and does not yet depict all selected gear. Keep Skip available, honor reduced
@@ -83,8 +85,9 @@ Scene controls (sound, skip) float above the scene; the game adds a Credits over
 ## Tim — playable character, ship controls and physics
 
 Own the character, locomotion/input, in-ship interaction and landing settings plus
-`app/sim/`. Replace `game/integrations.ts`'s `controlCenter` with a component satisfying
-`ControlCenterProps`. Read settings, call `onSettingsChange`, show launch errors and
+`app/sim/`. The first-person cabin from `tim/ship-interior` is now integrated as
+`controlCenter`, with its four interactive monitors and a flat console fallback.
+Keep it satisfying `ControlCenterProps`. Read settings, call `onSettingsChange`, show launch errors and
 call `onLaunch` for an explicit player action. The host rebuilds and locks the mission.
 Keep the systems console as a functional accessibility fallback.
 
@@ -121,6 +124,6 @@ Checks: `cd web; pnpm build; pnpm test`, then root
 Earth site, terrain zoom/back, every equipment arrow, Launch Journey, console, cinematic
 skip, flight, outcome and debrief. Verify small screens, reduced motion and missing assets.
 
-Known remaining work: character/interior, planetary departure/liftoff, measured equipment
+Known remaining work: planetary departure/liftoff, measured equipment
 data and gear physics, selected-gear cinematic models, character debrief, performance
 profiling and final packaging. These are explicit handoffs, not completed features.

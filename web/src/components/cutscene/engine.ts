@@ -146,6 +146,7 @@ export class CutsceneEngine {
     this.ui = this.buildOverlay(opts.showSkip !== false, opts.letterbox !== false);
     if (opts.terrain) {                                   // the data licence requires the credit to be shown
       const m = opts.terrain.manifest, c = document.createElement("div");
+      c.className = 'terrain-credit';
       c.style.cssText = "position:absolute;left:2%;right:2%;bottom:1.4%;text-align:center;font-size:clamp(7px,.85vw,11px);opacity:.6;letter-spacing:.03em;line-height:1.2";
       c.textContent = `Terrain: ${m.name}. ${[m.source?.dataset, m.attribution].filter(Boolean).join(': ')}`;
       this.ui.root.appendChild(c);
