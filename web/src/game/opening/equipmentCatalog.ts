@@ -18,6 +18,7 @@ export const initialEquipment: EquipmentSelection = { vehicleId: vehicles[0].id,
 export function equipmentSettings(selection: EquipmentSelection, previous: MissionSettings): MissionSettings {
   const vehicle = vehicles.find(v=>v.id===selection.vehicleId);
   if(!vehicle || !landingGear.some(g=>g.id===selection.landingGearId) || !sensors.some(s=>s.id===selection.hazardSensor)) throw new Error('Select available equipment before launching.');
-  // Gear is presentation-only until Yousef supplies validated gear parameters and Tim maps them.
+  // Gear changes no settings. Its footprint width reaches the physics through lib/gear.ts; everything
+  // else about it waits for Yousef's validated gear parameters.
   return {...previous,...vehicle.settings,hazardSensor:selection.hazardSensor};
 }

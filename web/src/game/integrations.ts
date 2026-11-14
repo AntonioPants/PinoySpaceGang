@@ -12,7 +12,7 @@ const ShipInterior = lazy(() => import('./interior/ShipInterior'));
 // controlCenter is the third-person ship bridge (./interior); planetaryArrival is still open.
 // Furgan's opening cutscene is registered as earthApproach (adapter in ./scenes), and his
 // live 3D view flies the descent and its ending (components/Descent3D). His departure cutscene is
-// registered as liftoff.
+// registered as liftoff; it replaces Tim's space departure shot (./scenes/DepartureScene, unused).
 // A null cinematic is skipped; it does not block a playable mission.
 export const gameIntegrations: GameIntegrations = {
   planetaryArrival: null,

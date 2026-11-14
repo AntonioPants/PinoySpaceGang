@@ -26,6 +26,6 @@ export default function EquipmentBay({selection,onChange}:EquipmentBayProps) {
   const groups=[{label:'Spacecraft',key:'vehicleId' as const,items:vehicles},{label:'Landing gear',key:'landingGearId' as const,items:landingGear},{label:'Hazard sensor',key:'hazardSensor' as const,items:sensors}];
   return <><div className="equipment-scene" ref={host}>{error&&<p>3D preview unavailable. Equipment controls remain available.</p>}</div><div className="equipment-rails">
     {groups.map(group=>{const index=group.items.findIndex(item=>item.id===selection[group.key]),item=group.items[index];const cycle=(n:number)=>onChange({...selection,[group.key]:group.items[(index+n+group.items.length)%group.items.length].id});return <section className="equipment-rail" key={group.key}><div className="rail-heading"><span>{group.label}</span><span>{index+1} / {group.items.length}</span></div><div className="rail-choice"><button aria-label={`Previous ${group.label.toLowerCase()}`} onClick={()=>cycle(-1)}><ChevronLeft/></button><strong aria-live="polite">{item.name}</strong><button aria-label={`Next ${group.label.toLowerCase()}`} onClick={()=>cycle(1)}><ChevronRight/></button></div><p>{'detail' in item?item.detail:''}</p></section>;})}
-    <p className="gear-note">Prototype loadouts. Gear shapes are visual previews; gear-specific physics is not yet simulated.</p>
+    <p className="gear-note">Prototype loadouts. The physics uses each gear’s footprint width (where the legs meet the ground); its stability, leg count and pads are not simulated yet.</p>
   </div></>;
 }
