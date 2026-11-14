@@ -19,7 +19,10 @@ import type { FlightSummary, Outcome, SimInput, SiteTerrain } from './types.ts';
 import { runSim, resolveLander } from './engine.ts';
 
 export interface FidelityOptions {
-  /** Shared flight setup (strategy, lander, sensors, interference...). `site` is ignored. */
+  /**
+   * Shared flight setup (strategy, lander, sensors, interference...). `gravity` and `atmosphere`
+   * default to the planetary body's; set them to use the exact scenario values of a flown mission.
+   */
   base?: Partial<Omit<SimInput, 'site'>>;
   /** Seeds to fly on each site. Default [1, 2, 3]. */
   seeds?: number[];
@@ -76,7 +79,7 @@ export function analogFidelity(planetary: SiteTerrain, analog: SiteTerrain, opts
   const analogSite: SiteTerrain = { ...analog, analogOf: planetary.body };
 
   const fly = (site: SiteTerrain) =>
-    seeds.map((seed) => runSim({ ...base, site, seed, gravity: 'target', atmosphere: 'target' }));
+    seeds.map((seed) => runSim({ ...base, site, seed, gravity: base.gravity ?? 'target', atmosphere: base.atmosphere ?? 'target' }));
   const pTel = fly(planetary);
   const aTel = fly(analogSite);
   const p = pTel.map((t) => t.summary!);
