@@ -6598,6 +6598,167 @@
           "https://science.nasa.gov/resource/shackleton-craters-illuminated-rim-shadowed-interior/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.554145,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 0.7209092448821428,
+            "planetary_value": 6.650994018124058,
+            "unit": "deg",
+            "absolute_difference": 5.930084773241915,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 12.840797691240114,
+            "planetary_value": 92.10736958451929,
+            "unit": "m",
+            "absolute_difference": 79.26657189327918,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 44.8065185546875,
+            "planetary_value": 426.5174560546875,
+            "unit": "m",
+            "absolute_difference": 381.7109375,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.502934,
+          "score_max": 0.613751,
+          "score_span": 0.110817,
+          "assessment": "sensitive",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "impact_crater",
+          "planetary_morphology": "crater",
+          "earth_substrate": "sedimentary_rock",
+          "planetary_substrate": "lunar_regolith",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "not_applicable",
+            "comparison_status": "not_applicable",
+            "reason": "No equivalent atmospheric quantity on an airless body."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "not_applicable",
+            "comparison_status": "not_applicable",
+            "reason": "No equivalent atmospheric quantity on an airless body."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N35_00_W112_00_DEM/Copernicus_DSM_COG_10_N35_00_W112_00_DEM.tif",
+            "elevation_sha256": "3c4d68b555651fc573471bf8ef3e8b6984be4f51f176c05ee19e71dd9541e16a",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              -111.05448841875231,
+              35.00521395017657,
+              -111.00152562324303,
+              35.04878020599075
+            ]
+          },
+          "planetary": {
+            "source_url": "https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LOLA_Global_LDEM_118m_Mar2014.tif",
+            "elevation_sha256": "78a305c1241f186964c0a95d55d986aae0ab9497dadd037f1da2826b6c14115e",
+            "native_posting_m_approx": 118.5,
+            "pack_spacing_m": 150.0,
+            "footprint_bbox": [
+              -12.493039586436442,
+              -89.63162026838636,
+              12.493039586436442,
+              -89.46215072651293
+            ]
+          }
+        }
       }
     },
     {
@@ -6653,6 +6814,167 @@
           "https://science.nasa.gov/resource/perseverance-explores-the-jezero-crater-delta/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.854737,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 0.012011654500499317,
+            "planetary_value": 1.9199755804709027,
+            "unit": "deg",
+            "absolute_difference": 1.9079639259704033,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 0.14362042051105606,
+            "planetary_value": 26.75900733240103,
+            "unit": "m",
+            "absolute_difference": 26.615386911889974,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 0.5848159790039062,
+            "planetary_value": 117.63037109375,
+            "unit": "m",
+            "absolute_difference": 117.0455551147461,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.853075,
+          "score_max": 0.854869,
+          "score_span": 0.001794,
+          "assessment": "limited_change",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "playa",
+          "planetary_morphology": "delta",
+          "earth_substrate": "evaporite",
+          "planetary_substrate": "sedimentary_rock",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N36_00_W117_00_DEM/Copernicus_DSM_COG_10_N36_00_W117_00_DEM.tif",
+            "elevation_sha256": "150f8a5d1a98325200246d788e97dff6998b7738d928db65e42cf37a4cbd795a",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              -116.85191968175863,
+              36.22318514565227,
+              -116.79806540816935,
+              36.26680879832457
+            ]
+          },
+          "planetary": {
+            "source_url": "https://planetarymaps.usgs.gov/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif",
+            "elevation_sha256": "75d0113cdf23be36e7de0018ab0992eb15726c32137bcb76ba967de323936339",
+            "native_posting_m_approx": 463.1,
+            "pack_spacing_m": 500.0,
+            "footprint_bbox": [
+              77.25315665665735,
+              18.31076129276425,
+              77.54684334334267,
+              18.589182490079452
+            ]
+          }
+        }
       }
     },
     {
@@ -6708,6 +7030,167 @@
           "https://science.nasa.gov/mission/phoenix/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.939824,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 0.06242087665059226,
+            "planetary_value": 0.7985666184803315,
+            "unit": "deg",
+            "absolute_difference": 0.7361457418297392,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 0.7704941832131587,
+            "planetary_value": 11.995870291099592,
+            "unit": "m",
+            "absolute_difference": 11.225376107886433,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 3.3976471424102783,
+            "planetary_value": 56.45458984375,
+            "unit": "m",
+            "absolute_difference": 53.05694270133972,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.936142,
+          "score_max": 0.943171,
+          "score_span": 0.007029,
+          "assessment": "limited_change",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "polygonal_ground",
+          "planetary_morphology": "polygonal_ground",
+          "earth_substrate": "permafrost",
+          "planetary_substrate": "icy_regolith",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N71_00_W157_00_DEM/Copernicus_DSM_COG_10_N71_00_W157_00_DEM.tif",
+            "elevation_sha256": "f97be7a9ecabe62953acb25f9c130e5db0325ea02d1c1f15920300f19a3d5f5b",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              -156.66995902529996,
+              71.25749647169353,
+              -156.5298912330277,
+              71.30248147991921
+            ]
+          },
+          "planetary": {
+            "source_url": "https://planetarymaps.usgs.gov/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif",
+            "elevation_sha256": "c03eec6c3f70ba00234c7c3a4b0d57b8f34a8948ccf1870120a3115b6dc1865b",
+            "native_posting_m_approx": 463.1,
+            "pack_spacing_m": 500.0,
+            "footprint_bbox": [
+              -126.12740126184369,
+              68.08039712106333,
+              -125.37259873815628,
+              68.35918249007946
+            ]
+          }
+        }
       }
     },
     {
@@ -6763,6 +7246,167 @@
           "https://science.nasa.gov/resource/shackleton-craters-illuminated-rim-shadowed-interior/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.645536,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 2.122976120792047,
+            "planetary_value": 6.650994018124058,
+            "unit": "deg",
+            "absolute_difference": 4.528017897332011,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 29.530662578633265,
+            "planetary_value": 92.10736958451929,
+            "unit": "m",
+            "absolute_difference": 62.57670700588602,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 92.2896728515625,
+            "planetary_value": 426.5174560546875,
+            "unit": "m",
+            "absolute_difference": 334.227783203125,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.591351,
+          "score_max": 0.700077,
+          "score_span": 0.108726,
+          "assessment": "sensitive",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "crater",
+          "planetary_morphology": "crater",
+          "earth_substrate": "basalt",
+          "planetary_substrate": "lunar_regolith",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "not_applicable",
+            "comparison_status": "not_applicable",
+            "reason": "No equivalent atmospheric quantity on an airless body."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "not_applicable",
+            "comparison_status": "not_applicable",
+            "reason": "No equivalent atmospheric quantity on an airless body."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N31_00_W107_00_DEM/Copernicus_DSM_COG_10_N31_00_W107_00_DEM.tif",
+            "elevation_sha256": "1f1eafaee1781ecd570e9b6acac1f2adf03952d64afc02f4238798cd168c99d9",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              -106.99501576921531,
+              31.94982647082462,
+              -106.94299627748264,
+              31.994168979289416
+            ]
+          },
+          "planetary": {
+            "source_url": "https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LOLA_Global_LDEM_118m_Mar2014.tif",
+            "elevation_sha256": "78a305c1241f186964c0a95d55d986aae0ab9497dadd037f1da2826b6c14115e",
+            "native_posting_m_approx": 118.5,
+            "pack_spacing_m": 150.0,
+            "footprint_bbox": [
+              -12.493039586436442,
+              -89.63162026838636,
+              12.493039586436442,
+              -89.46215072651293
+            ]
+          }
+        }
       }
     },
     {
@@ -6818,6 +7462,167 @@
           "https://science.nasa.gov/solar-system/planets/mars/nasa-orbiter-finds-possible-cave-skylights-on-mars/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.893899,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 2.122976120792047,
+            "planetary_value": 0.617583512791277,
+            "unit": "deg",
+            "absolute_difference": 1.50539260800077,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 29.530662578633265,
+            "planetary_value": 8.93302357402856,
+            "unit": "m",
+            "absolute_difference": 20.597639004604705,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 92.2896728515625,
+            "planetary_value": 37.140625,
+            "unit": "m",
+            "absolute_difference": 55.1490478515625,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.869329,
+          "score_max": 0.914812,
+          "score_span": 0.045483,
+          "assessment": "limited_change",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "crater",
+          "planetary_morphology": "volcanic_plain",
+          "earth_substrate": "basalt",
+          "planetary_substrate": "basalt",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N31_00_W107_00_DEM/Copernicus_DSM_COG_10_N31_00_W107_00_DEM.tif",
+            "elevation_sha256": "1f1eafaee1781ecd570e9b6acac1f2adf03952d64afc02f4238798cd168c99d9",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              -106.99501576921531,
+              31.94982647082462,
+              -106.94299627748264,
+              31.994168979289416
+            ]
+          },
+          "planetary": {
+            "source_url": "https://planetarymaps.usgs.gov/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif",
+            "elevation_sha256": "e5dd7534d0772770e0d8b47f6b107b43ca9c75451f9d7a2bc0df673f982f7505",
+            "native_posting_m_approx": 463.1,
+            "pack_spacing_m": 500.0,
+            "footprint_bbox": [
+              -120.14097192598176,
+              -9.13918249007945,
+              -119.85902807401823,
+              -8.86079088203674
+            ]
+          }
+        }
       }
     },
     {
@@ -6873,6 +7678,167 @@
           "https://science.nasa.gov/solar-system/planets/mars/nasa-orbiter-finds-possible-cave-skylights-on-mars/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.903959,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 1.6380932934075823,
+            "planetary_value": 0.617583512791277,
+            "unit": "deg",
+            "absolute_difference": 1.0205097806163053,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 29.545106381257863,
+            "planetary_value": 8.93302357402856,
+            "unit": "m",
+            "absolute_difference": 20.612082807229303,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 106.447509765625,
+            "planetary_value": 37.140625,
+            "unit": "m",
+            "absolute_difference": 69.306884765625,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.8972,
+          "score_max": 0.922162,
+          "score_span": 0.024962,
+          "assessment": "limited_change",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "lava_field",
+          "planetary_morphology": "volcanic_plain",
+          "earth_substrate": "basalt",
+          "planetary_substrate": "basalt",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N43_00_W114_00_DEM/Copernicus_DSM_COG_10_N43_00_W114_00_DEM.tif",
+            "elevation_sha256": "e031cfdc0a4bf4428ffb8a2366686f742912d0332c2607dc5159e738f1792322",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              -113.56071952923577,
+              43.39761233110836,
+              -113.49930174107399,
+              43.44238080699547
+            ]
+          },
+          "planetary": {
+            "source_url": "https://planetarymaps.usgs.gov/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif",
+            "elevation_sha256": "e5dd7534d0772770e0d8b47f6b107b43ca9c75451f9d7a2bc0df673f982f7505",
+            "native_posting_m_approx": 463.1,
+            "pack_spacing_m": 500.0,
+            "footprint_bbox": [
+              -120.14097192598176,
+              -9.13918249007945,
+              -119.85902807401823,
+              -8.86079088203674
+            ]
+          }
+        }
       }
     },
     {
@@ -6928,6 +7894,167 @@
           "https://www.lroc.asu.edu/posts/230"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.920694,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 1.6380932934075823,
+            "planetary_value": 0.9363239662218626,
+            "unit": "deg",
+            "absolute_difference": 0.7017693271857196,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 29.545106381257863,
+            "planetary_value": 11.050322564759906,
+            "unit": "m",
+            "absolute_difference": 18.494783816497957,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 106.447509765625,
+            "planetary_value": 50.082763671875,
+            "unit": "m",
+            "absolute_difference": 56.36474609375,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.911703,
+          "score_max": 0.942667,
+          "score_span": 0.030964,
+          "assessment": "limited_change",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "lava_field",
+          "planetary_morphology": "volcanic_plain",
+          "earth_substrate": "basalt",
+          "planetary_substrate": "basalt",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "not_applicable",
+            "comparison_status": "not_applicable",
+            "reason": "No equivalent atmospheric quantity on an airless body."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "not_applicable",
+            "comparison_status": "not_applicable",
+            "reason": "No equivalent atmospheric quantity on an airless body."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N43_00_W114_00_DEM/Copernicus_DSM_COG_10_N43_00_W114_00_DEM.tif",
+            "elevation_sha256": "e031cfdc0a4bf4428ffb8a2366686f742912d0332c2607dc5159e738f1792322",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              -113.56071952923577,
+              43.39761233110836,
+              -113.49930174107399,
+              43.44238080699547
+            ]
+          },
+          "planetary": {
+            "source_url": "https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LOLA_Global_LDEM_118m_Mar2014.tif",
+            "elevation_sha256": "5d58cd02e12e0c9f3f71a62d4539299fcf9732e0738b3736c9de3ca5f139f0e4",
+            "native_posting_m_approx": 118.5,
+            "pack_spacing_m": 150.0,
+            "footprint_bbox": [
+              -56.88418588709495,
+              14.018365161730076,
+              -56.71581411290504,
+              14.1816202683866
+            ]
+          }
+        }
       }
     },
     {
@@ -6983,6 +8110,167 @@
           "https://www.lroc.asu.edu/posts/230"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.822354,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 2.899748918690416,
+            "planetary_value": 0.9363239662218626,
+            "unit": "deg",
+            "absolute_difference": 1.9634249524685532,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 47.12820328413804,
+            "planetary_value": 11.050322564759906,
+            "unit": "m",
+            "absolute_difference": 36.07788071937813,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 195.4857177734375,
+            "planetary_value": 50.082763671875,
+            "unit": "m",
+            "absolute_difference": 145.4029541015625,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.808345,
+          "score_max": 0.842712,
+          "score_span": 0.034367,
+          "assessment": "limited_change",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "lava_field",
+          "planetary_morphology": "volcanic_plain",
+          "earth_substrate": "basalt",
+          "planetary_substrate": "basalt",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "not_applicable",
+            "comparison_status": "not_applicable",
+            "reason": "No equivalent atmospheric quantity on an airless body."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "not_applicable",
+            "comparison_status": "not_applicable",
+            "reason": "No equivalent atmospheric quantity on an airless body."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N41_00_W122_00_DEM/Copernicus_DSM_COG_10_N41_00_W122_00_DEM.tif",
+            "elevation_sha256": "26935f3c727017c0c71993d5166aed381f0fc895afd076679de4885294b44850",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              -121.5395163269734,
+              41.69787537563197,
+              -121.48046411786011,
+              41.7421177805474
+            ]
+          },
+          "planetary": {
+            "source_url": "https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LOLA_Global_LDEM_118m_Mar2014.tif",
+            "elevation_sha256": "5d58cd02e12e0c9f3f71a62d4539299fcf9732e0738b3736c9de3ca5f139f0e4",
+            "native_posting_m_approx": 118.5,
+            "pack_spacing_m": 150.0,
+            "footprint_bbox": [
+              -56.88418588709495,
+              14.018365161730076,
+              -56.71581411290504,
+              14.1816202683866
+            ]
+          }
+        }
       }
     },
     {
@@ -7038,6 +8326,167 @@
           "https://science.nasa.gov/solar-system/planets/mars/nasa-orbiter-finds-possible-cave-skylights-on-mars/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.805619,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 2.899748918690416,
+            "planetary_value": 0.617583512791277,
+            "unit": "deg",
+            "absolute_difference": 2.282165405899139,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 47.12820328413804,
+            "planetary_value": 8.93302357402856,
+            "unit": "m",
+            "absolute_difference": 38.19517971010948,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 195.4857177734375,
+            "planetary_value": 37.140625,
+            "unit": "m",
+            "absolute_difference": 158.3450927734375,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.793842,
+          "score_max": 0.822207,
+          "score_span": 0.028365,
+          "assessment": "limited_change",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "lava_field",
+          "planetary_morphology": "volcanic_plain",
+          "earth_substrate": "basalt",
+          "planetary_substrate": "basalt",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N41_00_W122_00_DEM/Copernicus_DSM_COG_10_N41_00_W122_00_DEM.tif",
+            "elevation_sha256": "26935f3c727017c0c71993d5166aed381f0fc895afd076679de4885294b44850",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              -121.5395163269734,
+              41.69787537563197,
+              -121.48046411786011,
+              41.7421177805474
+            ]
+          },
+          "planetary": {
+            "source_url": "https://planetarymaps.usgs.gov/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif",
+            "elevation_sha256": "e5dd7534d0772770e0d8b47f6b107b43ca9c75451f9d7a2bc0df673f982f7505",
+            "native_posting_m_approx": 463.1,
+            "pack_spacing_m": 500.0,
+            "footprint_bbox": [
+              -120.14097192598176,
+              -9.13918249007945,
+              -119.85902807401823,
+              -8.86079088203674
+            ]
+          }
+        }
       }
     },
     {
@@ -7093,6 +8542,167 @@
           "https://science.nasa.gov/solar-system/planets/mars/nasa-orbiter-finds-possible-cave-skylights-on-mars/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.994808,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 0.6853475928960098,
+            "planetary_value": 0.617583512791277,
+            "unit": "deg",
+            "absolute_difference": 0.06776408010473278,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 9.808249079542936,
+            "planetary_value": 8.93302357402856,
+            "unit": "m",
+            "absolute_difference": 0.8752255055143756,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 42.39617919921875,
+            "planetary_value": 37.140625,
+            "unit": "m",
+            "absolute_difference": 5.25555419921875,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.988835,
+          "score_max": 0.998189,
+          "score_span": 0.009354,
+          "assessment": "limited_change",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "crater",
+          "planetary_morphology": "volcanic_plain",
+          "earth_substrate": "basalt",
+          "planetary_substrate": "basalt",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N34_00_W116_00_DEM/Copernicus_DSM_COG_10_N34_00_W116_00_DEM.tif",
+            "elevation_sha256": "c9d7902d3c19b92ccc44c738740999d66e20abd8bc6170dc9506aed02c9f2fb2",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              -115.80662698530362,
+              34.527960581578675,
+              -115.75335931125501,
+              34.57203409353121
+            ]
+          },
+          "planetary": {
+            "source_url": "https://planetarymaps.usgs.gov/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif",
+            "elevation_sha256": "e5dd7534d0772770e0d8b47f6b107b43ca9c75451f9d7a2bc0df673f982f7505",
+            "native_posting_m_approx": 463.1,
+            "pack_spacing_m": 500.0,
+            "footprint_bbox": [
+              -120.14097192598176,
+              -9.13918249007945,
+              -119.85902807401823,
+              -8.86079088203674
+            ]
+          }
+        }
       }
     },
     {
@@ -7148,6 +8758,167 @@
           "https://science.nasa.gov/blog/recap-of-the-bagnold-dune-investigation/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.748415,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 0.06276436814725492,
+            "planetary_value": 3.2718848490896177,
+            "unit": "deg",
+            "absolute_difference": 3.209120480942363,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 0.7655286890105055,
+            "planetary_value": 46.45664393835147,
+            "unit": "m",
+            "absolute_difference": 45.69111524934096,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 4.2940673828125,
+            "planetary_value": 225.1201171875,
+            "unit": "m",
+            "absolute_difference": 220.8260498046875,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.724541,
+          "score_max": 0.771998,
+          "score_span": 0.047457,
+          "assessment": "limited_change",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "dune_field",
+          "planetary_morphology": "dune_field",
+          "earth_substrate": "gypsum_sand",
+          "planetary_substrate": "basaltic_sand",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N32_00_W107_00_DEM/Copernicus_DSM_COG_10_N32_00_W107_00_DEM.tif",
+            "elevation_sha256": "5cd1054e3759b73de17cd1062e351be4739e7335e3f54801bf1b0f3c6dbaa6d1",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              -106.25610038681597,
+              32.79796425468859,
+              -106.20391219499493,
+              32.84203077505174
+            ]
+          },
+          "planetary": {
+            "source_url": "https://planetarymaps.usgs.gov/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif",
+            "elevation_sha256": "70321e4aaa04833ef2cc5c9242ef2f26e9500aa307136d03fd8e6a4518b0f289",
+            "native_posting_m_approx": 463.1,
+            "pack_spacing_m": 500.0,
+            "footprint_bbox": [
+              137.2303218065262,
+              -4.829182490079451,
+              137.5096781934738,
+              -4.550803780741133
+            ]
+          }
+        }
       }
     },
     {
@@ -7203,6 +8974,167 @@
           "https://science.nasa.gov/resource/perseverance-explores-the-jezero-crater-delta/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.981894,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 2.2803377125892705,
+            "planetary_value": 1.9199755804709027,
+            "unit": "deg",
+            "absolute_difference": 0.3603621321183679,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 25.08483548874159,
+            "planetary_value": 26.75900733240103,
+            "unit": "m",
+            "absolute_difference": 1.6741718436594404,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 97.4698486328125,
+            "planetary_value": 117.63037109375,
+            "unit": "m",
+            "absolute_difference": 20.1605224609375,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.978017,
+          "score_max": 0.988393,
+          "score_span": 0.010376,
+          "assessment": "limited_change",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "canyon",
+          "planetary_morphology": "delta",
+          "earth_substrate": "sedimentary_rock",
+          "planetary_substrate": "sedimentary_rock",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N38_00_W112_00_DEM/Copernicus_DSM_COG_10_N38_00_W112_00_DEM.tif",
+            "elevation_sha256": "073fa35ca497a1d6b7b7afb5b6e0d8c00d90935e69c9faf2bbde4f4bee659ef4",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              -111.157658833876,
+              38.25820108611053,
+              -111.10235765301128,
+              38.301792382459546
+            ]
+          },
+          "planetary": {
+            "source_url": "https://planetarymaps.usgs.gov/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif",
+            "elevation_sha256": "75d0113cdf23be36e7de0018ab0992eb15726c32137bcb76ba967de323936339",
+            "native_posting_m_approx": 463.1,
+            "pack_spacing_m": 500.0,
+            "footprint_bbox": [
+              77.25315665665735,
+              18.31076129276425,
+              77.54684334334267,
+              18.589182490079452
+            ]
+          }
+        }
       }
     },
     {
@@ -7258,6 +9190,167 @@
           "https://science.nasa.gov/resource/shackleton-craters-illuminated-rim-shadowed-interior/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.552238,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 0.8007257676519126,
+            "planetary_value": 6.650994018124058,
+            "unit": "deg",
+            "absolute_difference": 5.850268250472145,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 10.745567387810345,
+            "planetary_value": 92.10736958451929,
+            "unit": "m",
+            "absolute_difference": 81.36180219670895,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 52.56695556640625,
+            "planetary_value": 426.5174560546875,
+            "unit": "m",
+            "absolute_difference": 373.95050048828125,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.514032,
+          "score_max": 0.585233,
+          "score_span": 0.071201,
+          "assessment": "limited_change",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "impact_crater",
+          "planetary_morphology": "crater",
+          "earth_substrate": "sedimentary_rock",
+          "planetary_substrate": "lunar_regolith",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "not_applicable",
+            "comparison_status": "not_applicable",
+            "reason": "No equivalent atmospheric quantity on an airless body."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "not_applicable",
+            "comparison_status": "not_applicable",
+            "reason": "No equivalent atmospheric quantity on an airless body."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N75_00_W090_00_DEM/Copernicus_DSM_COG_10_N75_00_W090_00_DEM.tif",
+            "elevation_sha256": "ff017a52616e1eb865cacd072cff6d1a4796c2d0ccf5a7172fe394132e0e4999",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              -89.76956194752482,
+              75.34738613293392,
+              -89.59068477813,
+              75.39258554129579
+            ]
+          },
+          "planetary": {
+            "source_url": "https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LOLA_Global_LDEM_118m_Mar2014.tif",
+            "elevation_sha256": "78a305c1241f186964c0a95d55d986aae0ab9497dadd037f1da2826b6c14115e",
+            "native_posting_m_approx": 118.5,
+            "pack_spacing_m": 150.0,
+            "footprint_bbox": [
+              -12.493039586436442,
+              -89.63162026838636,
+              12.493039586436442,
+              -89.46215072651293
+            ]
+          }
+        }
       }
     },
     {
@@ -7314,6 +9407,167 @@
           "https://www.jpl.nasa.gov/images/pia24008-lucus-planum-yardangs/"
         ],
         "scope": "Literature-informed comparison hypothesis plus regional terrain descriptors; not independently validated geological equivalence, engineering transfer or landing suitability."
+      },
+      "accuracy_check": {
+        "method_version": "1.0.0",
+        "status": "reproduced_regional_comparison",
+        "validated_accuracy_percent": null,
+        "accuracy_reason": "No independent ground-truth matched-landform benchmark or site-specific DEM error model. Similarity is not accuracy.",
+        "recomputed_terrain_score": 0.967607,
+        "coverage": 1.0,
+        "catalog_features_reproduced": true,
+        "feature_differences": [
+          {
+            "feature": "slope_mean",
+            "earth_value": 0.8746607646680707,
+            "planetary_value": 0.4656791878792932,
+            "unit": "deg",
+            "absolute_difference": 0.40898157678877756,
+            "weight": 0.4,
+            "fixed_difference_scale": 15.0
+          },
+          {
+            "feature": "roughness_rms",
+            "earth_value": 12.418081004801671,
+            "planetary_value": 6.677026713084737,
+            "unit": "m",
+            "absolute_difference": 5.741054291716934,
+            "weight": 0.4,
+            "fixed_difference_scale": 150.0
+          },
+          {
+            "feature": "relief",
+            "earth_value": 62.431884765625,
+            "planetary_value": 31.544921875,
+            "unit": "m",
+            "absolute_difference": 30.886962890625,
+            "weight": 0.2,
+            "fixed_difference_scale": 1000.0
+          }
+        ],
+        "analysis": {
+          "window_m": 4000,
+          "cell_size_m": 1000,
+          "roughness_support_m": 3000,
+          "cell_count": 16,
+          "roughness_interior_window_count": 4,
+          "caveat": "Very small regional sample; roughness includes slope. Equal grid spacing does not equal native resolving power. Absolute elevation is not compared across different vertical datums."
+        },
+        "window_sensitivity": {
+          "offsets_east_north_m": [
+            [
+              0,
+              0
+            ],
+            [
+              -250,
+              0
+            ],
+            [
+              250,
+              0
+            ],
+            [
+              0,
+              -250
+            ],
+            [
+              0,
+              250
+            ]
+          ],
+          "valid_comparisons": 25,
+          "score_min": 0.954804,
+          "score_max": 0.979801,
+          "score_span": 0.024997,
+          "assessment": "limited_change",
+          "reason": "25 independent combinations of five window positions. A span over 0.10 flags sensitivity by an engineering rule; this is not a confidence interval or an accuracy estimate."
+        },
+        "geology": {
+          "earth_morphology": "rocky_desert",
+          "planetary_morphology": "rocky_desert",
+          "earth_substrate": "sedimentary_rock",
+          "planetary_substrate": "unknown",
+          "assessment": "interpretation_only",
+          "reason": "Use the pair-specific matches and differences. Matching category names do not establish matching origin, grain size or mechanics."
+        },
+        "environment_checks": [
+          {
+            "property": "wind_speed_10m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "air_temperature_2m",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "surface_temperature",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "albedo",
+            "earth_status": "modeled",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "friction",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "cohesion",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          },
+          {
+            "property": "bulk_density",
+            "earth_status": "unknown",
+            "planetary_status": "unknown",
+            "comparison_status": "insufficient_compatible_evidence",
+            "reason": "No validated matched product definition, spatial support and time coverage; no numerical environmental score."
+          }
+        ],
+        "sources": {
+          "earth": {
+            "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N38_00_E093_00_DEM/Copernicus_DSM_COG_10_N38_00_E093_00_DEM.tif",
+            "elevation_sha256": "96a74a13f9d204cec16bcc36e433afeaefffed56068e4988de8db10005d8303d",
+            "native_posting_m_approx": 30.0,
+            "pack_spacing_m": 30.0,
+            "footprint_bbox": [
+              93.24216985323615,
+              38.63816919448528,
+              93.29784694669169,
+              38.68182423704416
+            ]
+          },
+          "planetary": {
+            "source_url": "https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif",
+            "elevation_sha256": "3d109b618d641bf5243bb24f1b647b61d7c54f6fd1ceece9238c0a506e97465e",
+            "native_posting_m_approx": 463.1,
+            "pack_spacing_m": 500.0,
+            "footprint_bbox": [
+              -172.91224768753898,
+              -1.7552224900794506,
+              -172.633752312461,
+              -1.4768528777442873
+            ]
+          }
+        }
       }
     }
   ]

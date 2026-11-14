@@ -28,7 +28,7 @@ def preserve_handoff(record, previous=None):
     return record
 
 
-def make_catalog(sites):
+def make_catalog(sites, public=None):
     byid = {s['id']: s for s in sites}
     pairs = []
     for site in sites:
@@ -40,6 +40,9 @@ def make_catalog(sites):
                     'same_substrate_label': site['substrate'] == target['substrate'],
                     'same_morphology_label': site['morphology'] == target['morphology'],
                     'score': None, 'reason': 'Categorical interpretations are not calibrated geological distances; not folded into terrain score.'}})
-    return attach_handoff({'schema_version': '1.0.0',
+    catalog = attach_handoff({'schema_version': '1.0.0',
         'coordinate_convention': 'east-positive longitude [-180,180], body-specific latitude; Earth WGS84, Moon/Mars planetocentric',
         'sites': sites, 'pairings': pairs})
+    from pathlib import Path
+    from .accuracy import attach_accuracy
+    return attach_accuracy(catalog, public or Path(__file__).resolve().parents[2]/'web/public')

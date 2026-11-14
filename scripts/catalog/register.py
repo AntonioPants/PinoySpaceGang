@@ -27,7 +27,7 @@ def register(site_ids, public=PUBLIC, cache=CACHE):
             preserve_handoff(record, by_id.get(sid))
             shutil.copytree(pending/'terrain'/sid, stage/'terrain'/sid, dirs_exist_ok=True)
             by_id[sid] = record
-        dump(stage/'sites.json', make_catalog(list(by_id.values())))
+        dump(stage/'sites.json', make_catalog(list(by_id.values()), stage))
         validate(stage)
     dump(ROOT/'data/catalog-run-report.json', {'operation': 'register', 'registered_sites': site_ids,
         'published': True, 'failures': [], 'sites': len(by_id)})

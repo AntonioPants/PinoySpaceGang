@@ -228,7 +228,7 @@ def build_records(args, public):
     if args.site:
         previous.update({s['id']: s for s in out})
         out = list(previous.values())
-    catalog = make_catalog(out)
+    catalog = make_catalog(out, public)
     dump(public/'sites.json', catalog)
     return catalog
 

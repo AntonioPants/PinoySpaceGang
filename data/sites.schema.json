@@ -292,7 +292,8 @@
         "terrain_score",
         "environment_score",
         "combined_score",
-        "explanation"
+        "explanation",
+        "accuracy_check"
       ],
       "properties": {
         "earth_id": {
@@ -341,6 +342,111 @@
             "scope": {
               "type": "string",
               "minLength": 1
+            }
+          }
+        },
+        "accuracy_check": {
+          "$ref": "#/$defs/accuracy_check"
+        }
+      }
+    },
+    "accuracy_check": {
+      "type": "object",
+      "required": [
+        "method_version",
+        "status",
+        "validated_accuracy_percent",
+        "accuracy_reason",
+        "recomputed_terrain_score",
+        "catalog_features_reproduced",
+        "window_sensitivity",
+        "sources",
+        "environment_checks",
+        "feature_differences",
+        "analysis",
+        "geology",
+        "coverage"
+      ],
+      "properties": {
+        "method_version": {
+          "const": "1.0.0"
+        },
+        "status": {
+          "enum": [
+            "reproduced_regional_comparison",
+            "insufficient_or_inconsistent_data"
+          ]
+        },
+        "validated_accuracy_percent": {
+          "type": "null"
+        },
+        "accuracy_reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recomputed_terrain_score": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "coverage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "catalog_features_reproduced": {
+          "type": "boolean"
+        },
+        "feature_differences": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "environment_checks": {
+          "type": "array",
+          "minItems": 7
+        },
+        "window_sensitivity": {
+          "type": "object",
+          "required": [
+            "score_min",
+            "score_max",
+            "score_span",
+            "valid_comparisons",
+            "reason"
+          ],
+          "properties": {
+            "valid_comparisons": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 25
+            },
+            "score_min": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1
+            },
+            "score_max": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1
+            },
+            "score_span": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1
             }
           }
         }

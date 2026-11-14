@@ -72,6 +72,11 @@ def validate(public=PUBLIC):
         assert pair['explanation']['status'] == 'proposed_unvalidated'
         expected=compare(byid[pair['earth_id']]['comparison_features'],byid[pair['planetary_id']]['comparison_features'])
         assert all(pair[k]==v for k,v in expected.items())
+    from copy import deepcopy
+    from .accuracy import attach_accuracy
+    audited=attach_accuracy(deepcopy(catalog),public)
+    for actual,expected in zip(catalog['pairings'],audited['pairings']):
+        assert actual.get('accuracy_check')==expected['accuracy_check'], 'Pairing accuracy audit missing or stale; refresh catalog metadata'
     print(f"PASS: {len(ids)} sites, {len(catalog['pairings'])} reproducible pairings; schemas, units, bounds, assets, hashes and missing values")
 
 if __name__=='__main__': validate()

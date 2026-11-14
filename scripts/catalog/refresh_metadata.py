@@ -11,7 +11,7 @@ def main():
         catalog = json.loads((stage/'sites.json').read_text(encoding='utf-8'))
         for record in catalog['sites']:
             preserve_handoff(record)
-        dump(stage/'sites.json', make_catalog(catalog['sites']))
+        dump(stage/'sites.json', make_catalog(catalog['sites'], stage))
         validate(stage)
 
 
