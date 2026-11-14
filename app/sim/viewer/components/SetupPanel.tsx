@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { parseSites } from '../../src/index.ts';
 import type { SimInput, SiteTerrain } from '../../src/index.ts';
 import { PRESETS } from '../sites.ts';
+import type { UnavailableSite } from '../catalog.ts';
 
 export interface Setup {
   siteKey: string;
@@ -33,6 +34,7 @@ interface Props {
   setup: Setup;
   onChange: (s: Setup) => void;
   fileSites: Map<string, SiteTerrain>;
+  unavailable: UnavailableSite[];
   onSitesLoaded: (sites: SiteTerrain[], fileName: string) => void;
   onError: (msg: string) => void;
   speed: number;
@@ -67,7 +69,11 @@ export function SetupPanel(p: Props) {
         {[...p.fileSites.values()].map((s) => (
           <option key={s.id} value={`file:${s.id}`}>{s.name ?? s.id}</option>
         ))}
+        {p.unavailable.map(s => (
+          <option key={s.id} value={`unavailable:${s.id}`} disabled>{s.name} — unavailable: {s.reason}</option>
+        ))}
       </select>
+      <p className="hint">Pairings are proposed analog comparisons, not validated landing sites.</p>
 
       <label htmlFor="sitesFile">Load sites.json (synthetic format)</label>
       <input key={fileKey} type="file" id="sitesFile" accept=".json,application/json" onChange={(e) => loadFile(e.target.files?.[0])} />

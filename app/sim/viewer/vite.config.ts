@@ -7,5 +7,6 @@ import { fileURLToPath } from 'node:url';
 export default defineConfig({
   plugins: [react()],
   root: fileURLToPath(new URL('.', import.meta.url)),
+  publicDir: fileURLToPath(new URL('../../../web/public', import.meta.url)),
   server: { port: 5199, open: true, fs: { allow: [fileURLToPath(new URL('../../..', import.meta.url))] } },
 });
