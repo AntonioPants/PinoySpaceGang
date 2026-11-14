@@ -3,6 +3,7 @@ export const TERRAIN_BASE = '/terrain/kilbourne-hole-v1/';
 export const defaultSettings: MissionSettings = {
   mode: 'AUTONOMOUS_HAZARD_AVOID', environment: 'planetary',
   fuelMassKg: 350, dryMassKg: 800, thrusterForceN: 12000, maxSlopeToleranceDeg: 12, windSpeedMs: 0, dust: 0, glare: 0,
+  hazardSensor: 'lidar', siteConditions: true,
 };
 export function extractProfile(manifest: TerrainManifest, buffer: ArrayBuffer): TerrainProfile {
   const { rows, columns, spacing_m, dtype, byte_order } = manifest.grid;
@@ -18,12 +19,13 @@ export function extractProfile(manifest: TerrainManifest, buffer: ArrayBuffer): 
   });
   return { manifest, heightsM, sampleSpacingM: spacing_m, row, buffer };
 }
-export async function loadProfile(signal?: AbortSignal): Promise<TerrainProfile> {
-  const response = await fetch(`${TERRAIN_BASE}manifest.json`, { signal });
+export async function loadProfile(signal?: AbortSignal, base = TERRAIN_BASE): Promise<TerrainProfile> {
+  if (!/^\/terrain\/[\w.-]+\/$/.test(base)) throw new Error('Invalid terrain location.');
+  const response = await fetch(`${base}manifest.json`, { signal });
   if (!response.ok) throw new Error(`Terrain manifest unavailable (${response.status}).`);
   const manifest: TerrainManifest = await response.json();
   if (!/^[\w.-]+$/.test(manifest.grid.sample_file)) throw new Error('Invalid terrain sample filename.');
-  const samples = await fetch(`${TERRAIN_BASE}${manifest.grid.sample_file}`, { signal });
+  const samples = await fetch(`${base}${manifest.grid.sample_file}`, { signal });
   if (!samples.ok) throw new Error(`Elevation samples unavailable (${samples.status}).`);
   return extractProfile(manifest, await samples.arrayBuffer());
 }
@@ -35,21 +37,25 @@ export function validateSettings(s: MissionSettings): string[] {
   }
   if (!['MANUAL_CONTROL', 'AUTONOMOUS_HAZARD_AVOID'].includes(s.mode)) errors.push('Unknown control mode.');
   if (!['earth', 'planetary'].includes(s.environment)) errors.push('Unknown environment mode.');
+  if (!['lidar', 'camera', 'none'].includes(s.hazardSensor)) errors.push('Unknown hazard sensor.');
+  if (typeof s.siteConditions !== 'boolean') errors.push('siteConditions must be true or false.');
   return errors;
 }
-export function buildMission(site: PlanetarySite, profile: TerrainProfile, settings: MissionSettings): MissionConfig {
+export interface MissionContext { terrainBase?: string; analogName?: string; terrainScore?: number | null }
+export function buildMission(site: PlanetarySite, profile: TerrainProfile, settings: MissionSettings, context: MissionContext = {}): MissionConfig {
   const errors = validateSettings(settings);
   if (errors.length) throw new Error(errors.join(' '));
   const lunarVacuum = settings.environment === 'planetary' && site.body === 'Moon';
   return {
     schemaVersion: '1.0.0', createdAt: new Date().toISOString(),
     planetaryTarget: { id: site.id, name: site.name, body: site.body, gravity: site.gravity },
-    earthAnalog: { id: profile.manifest.id, name: profile.manifest.name, terrainBaseUrl: TERRAIN_BASE,
+    earthAnalog: { id: profile.manifest.id, name: context.analogName ?? profile.manifest.name, terrainBaseUrl: context.terrainBase ?? TERRAIN_BASE,
       elevationProfile: profile.heightsM, sampleSpacingM: profile.sampleSpacingM, profileRow: profile.row,
-      verticalOffsetM: profile.manifest.local_frame.vertical_offset_m, sourceSha256: profile.manifest.source.sha256 },
-    strategy: { mode: settings.mode, thrusterForceN: settings.thrusterForceN, fuelMassKg: settings.fuelMassKg, dryMassKg: settings.dryMassKg, maxSlopeToleranceDeg: settings.maxSlopeToleranceDeg },
+      verticalOffsetM: profile.manifest.local_frame.vertical_offset_m, sourceSha256: profile.manifest.source.sha256 ?? profile.manifest.source.subset_sha256 ?? '' },
+    strategy: { mode: settings.mode, hazardSensor: settings.hazardSensor, thrusterForceN: settings.thrusterForceN, fuelMassKg: settings.fuelMassKg, dryMassKg: settings.dryMassKg, maxSlopeToleranceDeg: settings.maxSlopeToleranceDeg },
     environment: { mode: settings.environment, gravityMs2: gravityFor(site, settings), windSpeedMs: lunarVacuum ? 0 : settings.windSpeedMs,
-      atmosphereModel: lunarVacuum ? 'none' : settings.environment === 'earth' ? 'earth-standard' : 'mars-constant', dust: settings.dust, glare: settings.glare },
-    evidence: { quantitativeSimilarityScore: null, analogFidelityScore: null, status: 'unvalidated-pair', limitations: profile.manifest.limitations },
+      atmosphereModel: lunarVacuum ? 'none' : settings.environment === 'earth' ? 'earth-standard' : 'mars-constant', dust: settings.dust, glare: settings.glare, interferenceSource: settings.siteConditions ? 'site' : 'manual' },
+    evidence: { quantitativeSimilarityScore: context.terrainScore ?? null, analogFidelityScore: null,
+      status: typeof context.terrainScore === 'number' ? 'proposed-pair' : 'unvalidated-pair', limitations: profile.manifest.limitations },
   };
 }

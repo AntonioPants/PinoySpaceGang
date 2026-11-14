@@ -7,14 +7,18 @@ export interface PlanetarySite {
 export interface AnalogSite {
   id: string; name: string; region: string; lat: number; lon: number;
   available: boolean; description: string;
+  /** Folder of the site's terrain pack, e.g. /terrain/amboy/ (absent when no pack exists). */
+  terrainBase?: string; morphology?: string; substrate?: string; evidenceUrl?: string; reliefM?: number;
 }
 export interface TerrainManifest {
   schema_version: number; id: string; name: string; body: string;
   grid: { rows: number; columns: number; spacing_m: number; width_m: number; depth_m: number; dtype: string; byte_order: string; sample_file: string };
   local_frame: { vertical_offset_m: number };
-  statistics: { relief_m: number; slope_p95_deg: number };
-  source: { dataset: string; catalog: string; sha256: string; vertical_datum: string };
-  analog: { basis: string; sources: string[] };
+  /** Kilbourne v1 packs carry statistics and analog evidence; catalog packs carry only a source. */
+  statistics?: { relief_m: number; slope_p95_deg: number };
+  source: { dataset?: string; catalog?: string; sha256?: string; subset_sha256?: string; url?: string; vertical_datum: string };
+  analog?: { basis: string; sources: string[] };
+  license_url?: string;
   limitations: string[]; attribution: string;
 }
 export interface TerrainProfile {
@@ -28,6 +32,10 @@ export interface MissionSettings {
   fuelMassKg: number; dryMassKg: number; thrusterForceN: number;
   maxSlopeToleranceDeg: number; windSpeedMs: number;
   dust: number; glare: number;
+  /** Terrain sensor used for hazard detection. */
+  hazardSensor: 'lidar' | 'camera' | 'none';
+  /** True: dust and glare come from the analog site's surface data; false: the manual sliders. */
+  siteConditions: boolean;
 }
 /** Proposed frontend handoff v1. Coordinate and unit conventions are explicit. */
 export interface MissionConfig {
@@ -38,9 +46,10 @@ export interface MissionConfig {
     sampleSpacingM: number; profileRow: number; verticalOffsetM: number;
     sourceSha256: string;
   };
-  strategy: { mode: MissionSettings['mode']; thrusterForceN: number; fuelMassKg: number; dryMassKg: number; maxSlopeToleranceDeg: number };
-  environment: { mode: MissionSettings['environment']; gravityMs2: number; windSpeedMs: number; atmosphereModel: 'none' | 'earth-standard' | 'mars-constant'; dust: number; glare: number };
-  evidence: { quantitativeSimilarityScore: null; analogFidelityScore: null; status: 'unvalidated-pair'; limitations: string[] };
+  strategy: { mode: MissionSettings['mode']; hazardSensor: MissionSettings['hazardSensor']; thrusterForceN: number; fuelMassKg: number; dryMassKg: number; maxSlopeToleranceDeg: number };
+  environment: { mode: MissionSettings['environment']; gravityMs2: number; windSpeedMs: number; atmosphereModel: 'none' | 'earth-standard' | 'mars-constant'; dust: number; glare: number; interferenceSource: 'site' | 'manual' };
+  /** quantitativeSimilarityScore is the catalog's terrain-descriptor score for a proposed pairing (0–1), else null. */
+  evidence: { quantitativeSimilarityScore: number | null; analogFidelityScore: null; status: 'unvalidated-pair' | 'proposed-pair'; limitations: string[] };
 }
 export interface SimulationResult {
   success: boolean; failureReason?: string;

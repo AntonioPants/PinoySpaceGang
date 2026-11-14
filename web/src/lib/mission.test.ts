@@ -22,7 +22,7 @@ describe('terrain to mission handoff', () => {
   });
   it('exports lunar vacuum with no wind while retaining provenance and unknown scores', () => {
     const mission = buildMission(targets[0], fixture().profile, { ...defaultSettings, windSpeedMs: 12 });
-    expect(mission.environment).toEqual({ mode: 'planetary', gravityMs2: 1.62, windSpeedMs: 0, atmosphereModel: 'none', dust: 0, glare: 0 });
+    expect(mission.environment).toEqual({ mode: 'planetary', gravityMs2: 1.62, windSpeedMs: 0, atmosphereModel: 'none', dust: 0, glare: 0, interferenceSource: 'site' });
     expect(mission.earthAnalog.sourceSha256).toBe(manifest.source.sha256);
     expect(mission.earthAnalog.elevationProfile).toEqual([10, 20, 30]);
     expect(mission.evidence.quantitativeSimilarityScore).toBeNull();
