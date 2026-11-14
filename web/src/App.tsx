@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, Check, ChevronRight, CircleHelp, Download, ExternalLink, Globe2, Layers3, MapPin, Orbit, Radio, Rocket, Settings2, ShieldCheck, SlidersHorizontal } from 'lucide-react';
 import Globe from './components/Globe';
 import TerrainChart from './components/TerrainChart';
 import Dialog from './components/Dialog';
 import TerrainExplorer from './components/TerrainExplorer';
 import ConditionsImport from './components/ConditionsImport';
-import Descent from './components/Descent';
 import FlightReport from './components/FlightReport';
 import type { FlightTelemetry } from '../../app/sim/src/types';
 import { analogs, normalizeTargetId, targets } from './data/sites';
@@ -13,6 +12,7 @@ import { buildMission, defaultSettings, gravityFor, loadProfile, validateSetting
 import type { Body, MissionConfig, MissionSettings, TerrainProfile } from './lib/types';
 
 const STORAGE_KEY = 'analog-atlas-draft-v1';
+const Descent = lazy(() => import('./components/Descent'));
 function restoreDraft() {
   try {
     const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null');
@@ -167,7 +167,7 @@ export default function App() {
           <div className="config-footer"><span><span className="status-dot" />{storageAvailable ? 'Draft saved on this device' : 'Draft held in this session'}</span><button className="primary-button" disabled={!profile || validateSettings(settings).length > 0} onClick={reviewMission}>Review mission <ArrowRight size={17} /></button></div>
         </div>
       </section>}
-      {step === 3 && mission && profile && <Descent mission={mission} profile={profile} onExit={()=>setStep(2)} onReport={report=>{setFlight(report);setStep(4);}} />}
+      {step === 3 && mission && profile && <Suspense fallback={<div className="flight-workspace empty-data" role="status">Preparing descent controls…</div>}><Descent mission={mission} profile={profile} onExit={()=>setStep(2)} onReport={report=>{setFlight(report);setStep(4);}} /></Suspense>}
       {step === 4 && flight && mission && <FlightReport flight={flight} mission={mission} onRetry={()=>setStep(2)} />}
       <footer className="workspace-footer"><span><span className="status-dot" /> {step === 0 ? 'Explore first. Validate with evidence.' : 'Real terrain. Explicit assumptions.'}</span><span>Earth data: Copernicus DEM <span className="footer-separator">/</span> <button className="text-button" onClick={() => setDialog('sources')}>Credits & limitations</button></span></footer>
     </main>

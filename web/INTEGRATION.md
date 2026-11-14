@@ -1,6 +1,6 @@
 # Team integration boundary — proposed v1
 
-Updated after merging main at 868a01a. The UI uses the shared location catalog and
+Updated after merging main at dd4cb18. The UI uses the shared location catalog and
 Tim's catalog-aware physics adapter. The only physics-source cleanup is removing
 an unused type import that prevented the frontend's strict TypeScript build.
 

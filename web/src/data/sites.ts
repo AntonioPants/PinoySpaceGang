@@ -1,9 +1,12 @@
 import catalogJson from '../../public/sites.json';
-import type { CatalogSite } from '../../../app/sim/src/catalog';
+import type { SiteCatalog } from '../../../app/sim/src/catalog';
 import type { AnalogSite, PlanetarySite } from '../lib/types';
 
 // The shared catalog owns IDs, coordinates, terrain paths and source evidence.
-export const catalogSites = catalogJson.sites as CatalogSite[];
+// JSON import inference creates incompatible optional keys for heterogeneous records.
+// The committed catalog is validated by scripts/catalog/check-consumers.mjs.
+export const siteCatalog = catalogJson as unknown as SiteCatalog;
+export const catalogSites = siteCatalog.sites;
 const names: Record<string, string> = {
   'shackleton-rim': 'Shackleton rim', 'marius-hills': 'Marius Hills', jezero: 'Jezero delta',
   'arsia-flank': 'Arsia Mons flank', phoenix: 'Phoenix plains', bagnold: 'Bagnold dunes',
