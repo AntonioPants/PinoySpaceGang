@@ -1,5 +1,25 @@
 # Team integration boundary — proposed v1
 
+## Update: catalog, fidelity, sensors, real weather
+
+- **Sites come from the catalog.** `src/lib/catalog.ts` reads `public/sites.json`: every
+  planetary target, every Earth analog with a terrain pack, and the proposed pairings (best
+  terrain score first). `src/data/sites.ts` is now only a test fixture. Terrain loads from each
+  site's own pack, so the Kilbourne-only notes below describe the first version.
+- **Analog Fidelity Score.** The flight report flies the configured vehicle autonomously on the
+  planetary target's own terrain and on the Earth analog (`src/lib/fidelity.ts`, engine
+  `app/sim/src/fidelity.ts`) and shows the score, its four components and the catalog terrain
+  score. It compares simulated flights over two elevation grids, nothing more.
+- **Sensors and interference.** The configurator offers lidar, camera or no hazard sensor. Dust
+  and glare default to values derived from the analog's catalog surface data; manual sliders
+  remain. `MissionConfig` gained `strategy.hazardSensor`, `environment.interferenceSource`
+  and `environment.realWeather`.
+- **Real weather.** In an Earth field test, six sites can use a real modelled hour (month plus
+  typical or high-wind) from `data/environment` via `app/lib/environment-site.ts`. The catalog
+  and weather site IDs differ; the mapping is `WEATHER_PROFILE_ID` in `src/lib/weather.ts`.
+  Earth weather is never applied to a Moon or Mars scenario.
+
+
 Updated after integrating Tim's engine from main at 5491f1e. The physics module remains unchanged; frontend adapters handle the contract differences.
 
 ## Tim: physics (connected)

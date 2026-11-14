@@ -44,13 +44,13 @@ export default function FlightReport({flight,mission,profile,analogEntry,planeta
     <h3>Site conditions used</h3>
     <div className="report-metrics">
       <div><span>Gravity</span><strong>{env.gravity} m/s²</strong></div>
-      <div><span>Air density</span><strong>{env.airDensity} kg/m³</strong></div>
-      <div><span>Wind (scenario setting)</span><strong>{Math.hypot(env.wind.x,env.wind.y).toFixed(1)} m/s</strong></div>
+      <div><span>Air density</span><strong>{Number(env.airDensity.toFixed(3))} kg/m³</strong></div>
+      <div><span>Wind ({mission.environment.realWeather?'real modelled hour':'scenario setting'})</span><strong>{Math.hypot(env.wind.x,env.wind.y).toFixed(1)} m/s</strong></div>
       <div><span>Dust interference ({mission.environment.interferenceSource==='site'?'from site data':'manual'})</span><strong>{Math.round(env.interference.dust*100)}%</strong></div>
       <div><span>Glare interference ({mission.environment.interferenceSource==='site'?'from site data':'manual'})</span><strong>{Math.round(env.interference.glare*100)}%</strong></div>
       <div><span>Hazard sensor</span><strong>{mission.strategy.hazardSensor==='none'?'None':mission.strategy.hazardSensor}</strong></div>
     </div>
-    {sources.length>0 && <ul>{sources.map(([key,value])=><li key={key}>{({soilType:'Surface material',albedo:'Albedo',sunElevationDeg:'Sun elevation',wind_speed_10m:'Wind speed',rock_abundance:'Rock abundance'} as Record<string,string>)[key]??key}: {value}</li>)}</ul>}
+    {sources.length>0 && <ul>{sources.map(([key,value])=><li key={key}>{({soilType:'Surface material',albedo:'Albedo',sunElevationDeg:'Sun elevation',wind_speed_10m:'Wind speed',wind:'Wind',airDensity:'Air density',rock_abundance:'Rock abundance'} as Record<string,string>)[key]??key}: {value}</li>)}</ul>}
     <div className="note"><p>{env.rocksGenerated>0?`${env.rocksGenerated} boulders were generated from a rock abundance of ${(env.rockAbundance*100).toFixed(1)}%.`:'No rock-abundance data exists for this site, so the terrain has no boulders.'} The {profile.sampleSpacingM} m grid cannot establish footpad-scale landing safety. {result.diverted?'Guidance diverted from the initial target.':'No hazard-avoidance diversion was recorded.'}</p></div>
     <button className="subtle-button" onClick={()=>downloadJson({schemaVersion:'1.0.0',mission,flight,fidelity:fidelity.status==='done'?fidelity.result:null},`flight-${mission.planetaryTarget.id}.json`)}>Download flight telemetry JSON</button>
   </section>;

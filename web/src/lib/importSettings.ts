@@ -2,7 +2,7 @@ import { targets } from '../data/sites';
 import { validateSettings } from './mission';
 import type { MissionSettings } from './types';
 export interface SettingsProposal { settings: MissionSettings; targetId?: string; changed: string[] }
-const fields = ['mode', 'environment', 'fuelMassKg', 'dryMassKg', 'thrusterForceN', 'maxSlopeToleranceDeg', 'windSpeedMs', 'dust', 'glare', 'hazardSensor', 'siteConditions'] as const;
+const fields = ['mode', 'environment', 'fuelMassKg', 'dryMassKg', 'thrusterForceN', 'maxSlopeToleranceDeg', 'windSpeedMs', 'dust', 'glare', 'hazardSensor', 'siteConditions', 'realWeatherMonth', 'weatherScenario'] as const;
 /** Target IDs an import may name: the loaded catalog's, or the built-in fixtures. */
 export type KnownTargets = readonly { id: string }[];
 const obj = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
@@ -24,6 +24,8 @@ export function parseSettingsFile(text: string, current: MissionSettings, known:
     if (data.environment.dust !== undefined) patch.dust = data.environment.dust;
     if (data.environment.glare !== undefined) patch.glare = data.environment.glare;
     if (data.environment.interferenceSource !== undefined) patch.siteConditions = data.environment.interferenceSource === 'site';
+    if (obj(data.environment.realWeather)) { patch.realWeatherMonth = data.environment.realWeather.month; patch.weatherScenario = data.environment.realWeather.scenario; }
+    else if (data.environment.realWeather === null) patch.realWeatherMonth = 0;
     return proposal(patch, current, obj(data.planetaryTarget) ? data.planetaryTarget.id : undefined, known);
   }
   if (obj(data.settings)) {

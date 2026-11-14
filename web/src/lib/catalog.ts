@@ -38,7 +38,9 @@ export function parseCatalog(raw: unknown): Catalog {
   if (data?.schema_version !== '1.0.0' || !Array.isArray(data.sites) || !Array.isArray(data.pairings)) throw new Error('Unsupported site catalog.');
   const entries = new Map(data.sites.map(site => [site.id, site]));
   if (entries.size !== data.sites.length) throw new Error('Duplicate catalog site IDs.');
-  const targets: PlanetarySite[] = data.sites.filter(s => s.role === 'planetary_target' && s.body !== 'earth').map(s => ({
+  // Moon targets first, so the planner opens on the nearest destination.
+  const targets: PlanetarySite[] = data.sites.filter(s => s.role === 'planetary_target' && s.body !== 'earth')
+    .sort((a, b) => Number(a.body !== 'moon') - Number(b.body !== 'moon')).map(s => ({
     id: s.id, name: s.name, body: s.body === 'moon' ? 'Moon' : 'Mars', region: s.region, lat: s.latitude, lon: s.longitude,
     gravity: GRAVITY[s.body as 'moon' | 'mars'], description: s.description,
     interests: [label(s.morphology), label(s.substrate)].filter((v): v is string => !!v).map(cap), source: s.evidence_url,

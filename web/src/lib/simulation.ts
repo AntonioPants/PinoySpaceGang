@@ -2,6 +2,8 @@ import { terrainPackToSite } from '../../../app/sim/src/loaders';
 import { catalogSiteToSite } from '../../../app/sim/src/catalog';
 import type { CatalogSite } from '../../../app/sim/src/catalog';
 import type { SimInput, SiteTerrain } from '../../../app/sim/src/types';
+import type { EnvironmentProfile } from '../../../app/lib/environment.mjs';
+import { withRealWeather } from './weather';
 import type { MissionConfig, TerrainProfile } from './types';
 
 /** The Earth analog as the physics flies it: terrain plus, when a catalog entry is given, its surface data. */
@@ -28,12 +30,16 @@ export function flightSetup(mission: MissionConfig): Pick<SimInput, 'strategy' |
   };
 }
 
-export function toSimInput(mission: MissionConfig, profile: TerrainProfile, entry?: CatalogSite): SimInput {
+export function toSimInput(mission: MissionConfig, profile: TerrainProfile, entry?: CatalogSite, weather?: EnvironmentProfile | null): SimInput {
   const body = mission.planetaryTarget.body === 'Moon' ? 'moon' : 'mars';
-  return {
+  const input: SimInput = {
     site: analogSite(mission, profile, entry), ...flightSetup(mission),
     gravity: mission.environment.gravityMs2,
     atmosphere: mission.environment.mode === 'earth' ? 1.225 : body === 'moon' ? 0 : 0.02,
     seed:1,
   };
+  const real = mission.environment.realWeather;
+  if (!real) return input;
+  if (!weather || !entry) throw new Error('This mission uses real weather, but the weather profile is not loaded.');
+  return withRealWeather(input, weather, real, entry);
 }

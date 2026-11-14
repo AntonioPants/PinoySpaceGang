@@ -3,7 +3,7 @@ export const TERRAIN_BASE = '/terrain/kilbourne-hole-v1/';
 export const defaultSettings: MissionSettings = {
   mode: 'AUTONOMOUS_HAZARD_AVOID', environment: 'planetary',
   fuelMassKg: 350, dryMassKg: 800, thrusterForceN: 12000, maxSlopeToleranceDeg: 12, windSpeedMs: 0, dust: 0, glare: 0,
-  hazardSensor: 'lidar', siteConditions: true,
+  hazardSensor: 'lidar', siteConditions: true, realWeatherMonth: 0, weatherScenario: 'typical',
 };
 export function extractProfile(manifest: TerrainManifest, buffer: ArrayBuffer): TerrainProfile {
   const { rows, columns, spacing_m, dtype, byte_order } = manifest.grid;
@@ -39,9 +39,13 @@ export function validateSettings(s: MissionSettings): string[] {
   if (!['earth', 'planetary'].includes(s.environment)) errors.push('Unknown environment mode.');
   if (!['lidar', 'camera', 'none'].includes(s.hazardSensor)) errors.push('Unknown hazard sensor.');
   if (typeof s.siteConditions !== 'boolean') errors.push('siteConditions must be true or false.');
+  if (!Number.isInteger(s.realWeatherMonth) || s.realWeatherMonth < 0 || s.realWeatherMonth > 12) errors.push('realWeatherMonth must be 0 (manual) or 1–12.');
+  if (!['typical', 'high_wind'].includes(s.weatherScenario)) errors.push('Unknown weather scenario.');
   return errors;
 }
-export interface MissionContext { terrainBase?: string; analogName?: string; terrainScore?: number | null }
+export interface MissionContext { terrainBase?: string; analogName?: string; terrainScore?: number | null;
+  /** True when a real weather profile exists for the analog site. */
+  weatherAvailable?: boolean }
 export function buildMission(site: PlanetarySite, profile: TerrainProfile, settings: MissionSettings, context: MissionContext = {}): MissionConfig {
   const errors = validateSettings(settings);
   if (errors.length) throw new Error(errors.join(' '));
@@ -54,7 +58,9 @@ export function buildMission(site: PlanetarySite, profile: TerrainProfile, setti
       verticalOffsetM: profile.manifest.local_frame.vertical_offset_m, sourceSha256: profile.manifest.source.sha256 ?? profile.manifest.source.subset_sha256 ?? '' },
     strategy: { mode: settings.mode, hazardSensor: settings.hazardSensor, thrusterForceN: settings.thrusterForceN, fuelMassKg: settings.fuelMassKg, dryMassKg: settings.dryMassKg, maxSlopeToleranceDeg: settings.maxSlopeToleranceDeg },
     environment: { mode: settings.environment, gravityMs2: gravityFor(site, settings), windSpeedMs: lunarVacuum ? 0 : settings.windSpeedMs,
-      atmosphereModel: lunarVacuum ? 'none' : settings.environment === 'earth' ? 'earth-standard' : 'mars-constant', dust: settings.dust, glare: settings.glare, interferenceSource: settings.siteConditions ? 'site' : 'manual' },
+      atmosphereModel: lunarVacuum ? 'none' : settings.environment === 'earth' ? 'earth-standard' : 'mars-constant', dust: settings.dust, glare: settings.glare, interferenceSource: settings.siteConditions ? 'site' : 'manual',
+      realWeather: settings.environment === 'earth' && settings.realWeatherMonth > 0 && context.weatherAvailable
+        ? { month: settings.realWeatherMonth, scenario: settings.weatherScenario } : null },
     evidence: { quantitativeSimilarityScore: context.terrainScore ?? null, analogFidelityScore: null,
       status: typeof context.terrainScore === 'number' ? 'proposed-pair' : 'unvalidated-pair', limitations: profile.manifest.limitations },
   };
