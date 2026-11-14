@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0.0",
+  "sites": [
+    {
+      "id": "kilbourne_hole",
+      "name": "Kilbourne Hole, New Mexico",
+      "latitude": 31.972,
+      "longitude": -106.969,
+      "coordinate_role": "representative sampling point, not a certified landing point or mapped footprint",
+      "surface_materials": {
+        "values": [
+          "volcanic rock",
+          "loose crater deposits"
+        ],
+        "evidence": "literature",
+        "source_url": "https://www.blm.gov/visit/kilbourne-hole-volcanic-crater",
+        "spatial_support": "site context; not a point sample or complete surface-unit map"
+      }
+    },
+    {
+      "id": "meteor_crater",
+      "name": "Meteor Crater, Arizona",
+      "latitude": 35.027,
+      "longitude": -111.022,
+      "coordinate_role": "representative sampling point, not a certified landing point or mapped footprint",
+      "surface_materials": {
+        "values": [
+          "sedimentary rock",
+          "impact ejecta",
+          "floor sediment"
+        ],
+        "evidence": "literature",
+        "source_url": "https://www.usgs.gov/centers/astrogeology-science-center/science/meteor-crater-sample-collection",
+        "spatial_support": "site context; not a point sample or complete surface-unit map"
+      }
+    },
+    {
+      "id": "amboy_crater",
+      "name": "Amboy Crater, California",
+      "latitude": 34.55,
+      "longitude": -115.78,
+      "coordinate_role": "representative sampling point, not a certified landing point or mapped footprint",
+      "surface_materials": {
+        "values": [
+          "basaltic lava",
+          "volcanic cinders"
+        ],
+        "evidence": "literature",
+        "source_url": "https://pds-geosciences.wustl.edu/missions/amboycrater/index.htm",
+        "spatial_support": "site context; not a point sample or complete surface-unit map"
+      }
+    },
+    {
+      "id": "badwater_basin",
+      "name": "Badwater Basin, California",
+      "latitude": 36.23,
+      "longitude": -116.77,
+      "coordinate_role": "representative sampling point, not a certified landing point or mapped footprint",
+      "surface_materials": {
+        "values": [
+          "salt crust",
+          "basin sediment"
+        ],
+        "evidence": "literature",
+        "source_url": "https://www.nps.gov/deva/learn/nature/salt-flats.htm",
+        "spatial_support": "site context; not a point sample or complete surface-unit map"
+      }
+    },
+    {
+      "id": "white_sands",
+      "name": "White Sands, New Mexico",
+      "latitude": 32.78,
+      "longitude": -106.17,
+      "coordinate_role": "representative sampling point, not a certified landing point or mapped footprint",
+      "surface_materials": {
+        "values": [
+          "gypsum sand"
+        ],
+        "evidence": "literature",
+        "source_url": "https://science.nasa.gov/earth/earth-observatory/new-mexicos-white-sands-151371/",
+        "spatial_support": "site context; not a point sample or complete surface-unit map"
+      }
+    },
+    {
+      "id": "utqiagvik_beo",
+      "name": "Utqiaġvik / Barrow Environmental Observatory, Alaska",
+      "latitude": 71.28155,
+      "longitude": -156.610283,
+      "coordinate_role": "representative sampling point, not a certified landing point or mapped footprint",
+      "surface_materials": {
+        "values": [
+          "organic-rich surface soil",
+          "mineral soil",
+          "ice-rich permafrost"
+        ],
+        "evidence": "literature",
+        "source_url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0130557",
+        "spatial_support": "site context; not a point sample or complete surface-unit map"
+      }
+    }
+  ]
+}
