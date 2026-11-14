@@ -11,8 +11,8 @@ def main():
     lines = [
         '# Earth location handoff', '',
         'Generated from `web/public/sites.json` with `python -m scripts.catalog.handoff`.', '',
-        'Nine Earth locations have production terrain packs. Haughton and Qaidam remain',
-        'unavailable candidates; no terrain or study footprints are invented for them.', '',
+        f"{sum(s['body'] == 'earth' and s.get('terrain') is not None for s in catalog['sites'])} Earth locations have production terrain packs, including Haughton and Qaidam.",
+        'These are selected study windows; they do not cover entire craters or basins.', '',
         'Pairings below are proposed engineering comparisons, not validated geological',
         'equivalence, landing safety, or mission suitability. The numerical terrain scores',
         'are reproducible descriptors, not independently validated similarity assessments.', '',
@@ -55,6 +55,10 @@ def main():
             lines += [f"Proposed pairing: **{target['name']}** (`{target['id']}`). "
                       f"Target context and limitations: {target['description']} "
                       f"[Target evidence]({target['evidence_url']}).", '']
+        if not site['matches']:
+            lines += ['Proposed pairing: deferred pending selection of an appropriate planetary study footprint; no match score is claimed.', '']
+        for target_id, notes in site.get('pairing_notes', {}).items():
+            lines += [f"Pair-specific explanation ({target_id}):", 'Matches: ' + ' '.join(notes['matches']), 'Differences: ' + ' '.join(notes['differences']), '']
         lines += ['Limitations: ' + ' '.join(site['limitations']), '',
                   'Unknown feature measurements: ' + ', '.join(
                       key for key, value in site.get('feature_measurements', {}).items()

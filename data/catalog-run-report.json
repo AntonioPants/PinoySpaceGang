@@ -1,5 +1,10 @@
 {
+  "operation": "register-site-records",
+  "registered_sites": [
+    "haughton",
+    "qaidam"
+  ],
   "failures": [],
-  "sites": 15,
-  "terrain_available": 15
+  "sites": 17,
+  "terrain_available": 17
 }

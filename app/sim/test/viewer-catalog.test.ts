@@ -40,7 +40,7 @@ describe('production catalog integration', () => {
     expect(result.sites.some(s => s.id === 'kilbourne-hole-v1')).toBe(true);
     expect(result.sites.some(s => s.id.startsWith('amboy'))).toBe(false);
     expect(result.unavailable.find(s => s.id === 'amboy')?.reason).toContain('HTTP 404');
-    expect(result.unavailable.map(s => s.id)).toEqual(['amboy', 'haughton', 'qaidam']);
+    expect(result.unavailable.map(s => s.id)).toEqual(['amboy']);
   });
   it('does not substitute terrain for a catalog record with no pack', async () => {
     const missingFetch: typeof fetch = async (input, init) => {
@@ -56,3 +56,19 @@ describe('production catalog integration', () => {
     expect(result.sites.filter(s => s.analogOf).every(s => s.name?.includes('proposed analog'))).toBe(true);
   });
 });
+
+ it('enables Haughton and Qaidam from real packs and disables them on asset failure', async () => {
+   const loaded = await loadViewerCatalog('/sites.json', localFetch);
+   for (const id of ['haughton', 'qaidam']) {
+     const site = loaded.sites.find(s => s.id === id)!;
+     expect(site).toBeDefined();
+     expect(site.heightmap.heights.length).toBe(161 * 161);
+     expect(loaded.unavailable.some(s => s.id === id)).toBe(false);
+     expect(site.catalog?.environment.status).toBe('unavailable'); // No ten-year seasonal profile supplied.
+   }
+   const failNew: typeof fetch = (url, init) => /terrain\/(haughton|qaidam)\/elevation/.test(String(url))
+     ? Promise.resolve(new Response('', {status:404})) : localFetch(url, init);
+   const failed = await loadViewerCatalog('/sites.json', failNew);
+   expect(failed.unavailable.map(s => s.id)).toEqual(['haughton','qaidam']);
+   expect(failed.sites.some(s => /^(haughton|qaidam)/.test(s.id))).toBe(false);
+ });

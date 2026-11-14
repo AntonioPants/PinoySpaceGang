@@ -68,7 +68,7 @@ Tim's existing plume/dust interpretation remains a simulation model.
 Adding a site with a valid terrain manifest to the catalog requires no viewer
 code change. Failed catalog requests appear in the viewer error message. Individual
 missing or failed terrain packs appear as disabled options with reasons; other sites
-continue loading. Haughton and Qaidam are explicitly disabled candidates. Pairing
+continue loading. Haughton and Qaidam now load real Copernicus packs. If absent from a deployment, they remain disabled with a reason. Pairing
 options are labelled proposed analogs, not validated scientific matches.
 
 All packs support the existing JS geometry loader, so extra GLBs and PNGs are
@@ -176,3 +176,43 @@ The build writes `data/catalog-run-report.json` with precise failed stages;
 failures are retained as explicit missing catalog assets and cause a nonzero
 exit. Inspect this report and run validation before consuming rebuilt data.
 No commits, merges, pushes or deployment are performed by these commands.
+
+## Haughton and Qaidam terrain additions
+
+The catalog now includes eleven Earth sites and six planetary sites. Both new
+Earth packs use real Copernicus GLO-30 elevation, 161 × 161 north-first float32
+samples at 30 m output spacing, and selected 4.8 km windows. Native source windows
+and receipts are retained alongside the output for reprocessing. Licence and
+attribution follow the existing Copernicus contract.
+
+- `haughton`: 75.37 N, 89.68 W, a floor study window within the Haughton impact
+  structure on Devon Island, Canada. The proposed Shackleton comparison includes
+  explicit matches and differences; a floor crop is not a lunar rim replica.
+- `qaidam`: 38.66 N, 93.27 E, a published multilayered-yardang location in Qinghai,
+  China. The window replaces the earlier broad basin placeholder. A dedicated
+  planetary yardang footprint has not been selected, so pairing is deferred.
+
+Coordinates designate processing windows, not safe landing points. Source DSM
+sampling is approximately one arc-second north/south; longitude sampling changes
+with latitude (notably Haughton). Small rocks, narrow yardang walls, ground ice and
+engineering soil properties remain unresolved. 2024 NASA POWER context is supplied;
+these additions do not have the separate 2015–2024 seasonal profiles.
+
+Rebuild only the additions, preserving all existing catalog records:
+
+```sh
+python -m scripts.catalog.build --site haughton
+python -m scripts.catalog.build --site qaidam
+python -m scripts.catalog.register --site haughton --site qaidam
+python -m scripts.catalog.handoff
+python -m scripts.catalog.validate
+node scripts/catalog/check-consumers.mjs
+```
+
+Registration validates raw/processed receipts before enabling a site. It also
+migrates old CRLF manifest hashes to the committed LF bytes after checking the
+exact CRLF correspondence; any unexplained mismatch fails. Existing elevation
+bytes and hashes are preserved.
+
+Evidence: [NASA Haughton field report](https://ntrs.nasa.gov/citations/20060013129)
+and [Qaidam yardang field study](https://doi.org/10.1029/2018JE005719).
