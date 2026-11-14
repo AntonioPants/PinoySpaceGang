@@ -122,8 +122,13 @@ the gravity the descent will fly (caution below 1; it is a valid experiment that
 probably crash), weather profile present when modelled weather is selected (hold if not).
 It only reports. The parent still validates and locks the mission at launch.
 
+**Phones.** Below 760 px the same bridge runs in a compact mode: the 3D monitors are dark glass
+and the station's page opens as a sheet over the view (a page on the 3D screen would be too
+small to use). Stations and the pilot seat are reached by tapping the toolbar; dragging looks
+around.
+
 **Fallback.** "Use flat console" switches to `SystemsConsole`, and it is used automatically
-when WebGL cannot start or the window is narrower than 760 px. Settings carry over both ways.
+when WebGL cannot start. Settings carry over both ways.
 
 **Look.** The bridge should read as an engineered crew cabin (Orion, Dragon, ISS, Shuttle
 flight deck), not neon sci-fi. Keep to these rules when adding to it:
