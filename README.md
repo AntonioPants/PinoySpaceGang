@@ -1,5 +1,9 @@
 # Planetary Analog Simulator
 
+The populated shared catalog is [`web/public/sites.json`](web/public/sites.json).
+See [integration, categories and rebuild commands](docs/SITE_CATALOG.md) and
+[ingested providers and data gaps](docs/DATA_SOURCES_AND_GAPS.md).
+
 This repository turns targeted Earth, Moon, and Mars elevation rasters into
 small JSON terrain grids for a browser-based simulator or physics engine. Raw
 downloads stay outside Git; processed profiles retain source citations,

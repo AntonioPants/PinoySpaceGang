@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .test-tmp/
+.test-tmp-catalog/
+data/cache/
 .venv/
 venv/
 

@@ -15,6 +15,9 @@ m = json.loads((PACK / "manifest.json").read_text())
 checksums = json.loads((PACK / "checksums.json").read_text())
 for name, record in checksums.items():
     data = (PACK / name).read_bytes()
+    # Git may check text out with CRLF on Windows; hashes describe canonical LF bytes.
+    if name.endswith(('.txt', '.md', '.json', '.mjs', '.geojson')):
+        data = data.replace(b'\r\n', b'\n')
     assert len(data) == record["bytes"], name
     assert hashlib.sha256(data).hexdigest() == record["sha256"], name
 
