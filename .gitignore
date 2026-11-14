@@ -1,24 +1,28 @@
-# secrets - never commit
-.env
-.env.*
-!.env.example
-
-# python
-engine/.venv/
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
 .pytest_cache/
+.test-tmp/
+.venv/
+venv/
 
-# node / next
-web/node_modules/
-web/.next/
-web/*.tsbuildinfo
-
-# local data cache (the committed demo snapshot lives in data/snapshot/)
-data/cache/
-
-# editors / OS
-.vscode/
+# Editors and operating systems
 .idea/
+.vscode/
 .DS_Store
 Thumbs.db
+
+# Environment and credentials
+.env
+.netrc
+
+# Downloaded source rasters are large and reproducible.
+data/raw/**
+!data/raw/.gitkeep
+
+# Temporary/partial outputs
+*.tmp
+*.part
+
+# Vendored tutorial contents are fetched separately.
+vendor/Synthetic_Aperture_Radar_Tutorial/
