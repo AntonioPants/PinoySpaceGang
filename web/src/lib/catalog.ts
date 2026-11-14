@@ -42,9 +42,24 @@ const candidates: AnalogSite[] = [
     description: 'Site missing from the deployed catalog.', matches: [] },
 ];
 
+export const displaySiteName = (name: string) => name
+  .replace(/\s*:\s*\d+(?:\.\d+)?\s*km\s*[EW]\s*,?\s*\d+(?:\.\d+)?\s*km\s*[NS]\s*$/i, '')
+  .replace(/\s*study\s*area\b/gi, '').replace(/\bbase-/gi, 'base ').replace(/\s+/g, ' ').trim();
+
 export function parseCatalog(raw: unknown): Catalog {
   const data = raw as { schema_version?: string; sites?: CatalogEntry[]; pairings?: Pairing[]; analog_matching?: AnalogMatching };
   if (data?.schema_version !== '1.0.0' || !Array.isArray(data.sites) || !Array.isArray(data.pairings)) throw new Error('Unsupported site catalog.');
+  // Number same-region patches by stable ID, independent of target ranking/order.
+  const groups = new Map<string, string[]>();
+  for (const site of data.sites) {
+    const name = displaySiteName(site.name);
+    groups.set(name, [...(groups.get(name) ?? []), site.id]);
+  }
+  for (const ids of groups.values()) ids.sort();
+  data.sites = data.sites.map(site => {
+    const name = displaySiteName(site.name), ids = groups.get(name)!;
+    return { ...site, name: ids.length > 1 ? `${name} · Terrain ${ids.indexOf(site.id) + 1}` : name };
+  });
   const entries = new Map(data.sites.map(site => [site.id, site]));
   if (entries.size !== data.sites.length) throw new Error('Duplicate catalog site IDs.');
   // Moon targets first, so the planner opens on the nearest destination.

@@ -45,7 +45,7 @@ def test_all_pairs_rank_without_claiming_scientific_accuracy():
     rows=result['comparisons']
     maximum=min(10,sum(s['body']=='earth' for s in catalog['sites']))*sum(s['body']!='earth' for s in catalog['sites'])
     # Quality cutoffs may legitimately leave fewer than ten candidates for a target.
-    assert 0 < len(rows) <= maximum
+    assert len(rows) == maximum
     assert len({(r['earth_id'],r['planetary_id']) for r in rows}) == len(rows)
     for row in rows:
         assert row['total_similarity_percent'] is None
@@ -59,7 +59,7 @@ def test_all_pairs_rank_without_claiming_scientific_accuracy():
         assert low-1e-3 <= row['terrain_similarity_percent'] <= high+1e-3
     for target in {r['planetary_id'] for r in rows}:
         candidates=[r for r in rows if r['planetary_id']==target]
-        assert len(candidates) <= 10
+        assert len(candidates) == 10
         assert [r['candidate_rank'] for r in candidates]==list(range(1,len(candidates)+1))
         proposed=[r for r in candidates if r['evidence_status']=='literature_informed_proposal']
         assert candidates[:len(proposed)]==proposed
