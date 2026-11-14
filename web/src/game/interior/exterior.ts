@@ -1,59 +1,88 @@
 /**
- * What is outside the windows: space. Stars, the body the mission departs from, a distant Earth
- * ahead, and the Sun's light. The trip is the game's framing, not a simulated trajectory, so
- * sizes and distances here are for looks only.
+ * What is outside the windows: space. Stars, the body the mission departs from and a distant
+ * Earth, lit by one Sun. The bodies wear real NASA imagery (see
+ * web/public/textures/bridge/SOURCES.md) but the scene is an illustration: sizes, distances
+ * and the trip itself are for looks, and nothing here shows the selected sites.
  */
 import * as THREE from 'three';
-import { Kit } from './lowpoly';
+import { Kit, seeded } from './lowpoly';
 
-/** A faceted globe whose faces vary in tone, for the low-poly look. */
-function planet(kit: Kit, radius: number, colors: number[], detail: number, seed: number): THREE.Mesh {
-  const geo = new THREE.IcosahedronGeometry(radius, detail).toNonIndexed();
-  const pos = geo.attributes.position as THREE.BufferAttribute, col = new Float32Array(pos.count * 3);
-  const palette = colors.map(c => new THREE.Color(c)), c = new THREE.Color();
-  for (let f = 0; f < pos.count; f += 3) {
-    const x = pos.getX(f) / radius, y = pos.getY(f) / radius, z = pos.getZ(f) / radius;
-    const n = Math.sin(x * 5.1 + seed) * Math.cos(y * 4.3 - seed) + Math.sin(z * 6.7 + seed * 2) * 0.6 + Math.sin((x + y + z) * 11) * 0.25;
-    const i = Math.max(0, Math.min(palette.length - 1.001, (n + 1.6) / 3.2 * (palette.length - 1)));
-    c.copy(palette[Math.floor(i)]).lerp(palette[Math.floor(i) + 1], i % 1);
-    for (let k = 0; k < 3; k++) col.set([c.r, c.g, c.b], (f + k) * 3);
-  }
-  geo.setAttribute('color', new THREE.BufferAttribute(col, 3)); geo.computeVertexNormals();
-  const mat = kit.track(new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 1, metalness: 0 }));
-  return kit.mesh(geo, mat);
-}
+const TEXTURES = '/textures/bridge/';
+
+const BODY_VERT = /* glsl */`
+  varying vec2 vUv; varying vec3 vNormalW; varying vec3 vViewW;
+  void main() {
+    vUv = uv; vNormalW = normalize(mat3(modelMatrix) * normal);
+    vec4 world = modelMatrix * vec4(position, 1.0); vViewW = normalize(cameraPosition - world.xyz);
+    gl_Position = projectionMatrix * viewMatrix * world;
+  }`;
+// sunlit side from the image, a soft terminator, and an almost black night side
+const BODY_FRAG = /* glsl */`
+  uniform sampler2D map; uniform vec3 sun; uniform float gain;
+  varying vec2 vUv; varying vec3 vNormalW;
+  void main() {
+    float lit = smoothstep(-0.05, 0.35, dot(normalize(vNormalW), sun));
+    gl_FragColor = vec4(texture2D(map, vUv).rgb * (lit * gain + 0.004), 1.0);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }`;
+// a thin band of scattered light at the limb, brightest on the day side
+const AIR_FRAG = /* glsl */`
+  uniform vec3 sun; uniform vec3 tint;
+  varying vec3 vNormalW; varying vec3 vViewW;
+  void main() {
+    vec3 n = normalize(vNormalW);
+    float rim = pow(clamp(1.0 + dot(n, normalize(vViewW)), 0.0, 1.0), 2.5);   // back faces: strongest at the edge
+    float day = smoothstep(-0.25, 0.5, dot(-n, sun));
+    gl_FragColor = vec4(tint * rim * day * 1.6, 1.0);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }`;
 
 export function buildSpace(body: 'Moon' | 'Mars'): { group: THREE.Group; sunDirection: THREE.Vector3; drift(dt: number): void; dispose(): void } {
   const kit = new Kit(), group = new THREE.Group();
+  // toward the Sun: off to the right and a little ahead, so it shines in through the window
+  const sunDirection = new THREE.Vector3(0.8, 0.45, -0.4).normalize();
+  const loader = new THREE.TextureLoader();
+  const blank = kit.track(new THREE.DataTexture(new Uint8Array([90, 90, 90, 255]), 1, 1)); blank.needsUpdate = true;
+  let gone = false;
 
-  // stars: two sizes, a few tinted
-  for (const [count, size, seed] of [[2600, 1.4, 1], [320, 2.6, 7]] as const) {
-    const p = new Float32Array(count * 3), col = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      const u = ((i + seed) * 0.61803398875) % 1, v = ((i + seed) * 0.75487766625) % 1;
-      const th = u * Math.PI * 2, ph = Math.acos(1 - 2 * v), r = 1800;
-      p.set([Math.sin(ph) * Math.cos(th) * r, Math.cos(ph) * r, Math.sin(ph) * Math.sin(th) * r], i * 3);
-      const tint = i % 9 === 0 ? [1, 0.82, 0.66] : i % 7 === 0 ? [0.7, 0.84, 1] : [1, 1, 1], b = 0.55 + ((i * 37) % 45) / 100;
-      col.set([tint[0] * b, tint[1] * b, tint[2] * b], i * 3);
-    }
-    const geo = kit.track(new THREE.BufferGeometry());
-    geo.setAttribute('position', new THREE.BufferAttribute(p, 3)); geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
-    group.add(new THREE.Points(geo, kit.track(new THREE.PointsMaterial({ size, sizeAttenuation: false, vertexColors: true, fog: false }))));
+  const globe = (file: string, radius: number, gain: number) => {
+    const uniforms = { map: { value: blank as THREE.Texture }, sun: { value: sunDirection }, gain: { value: gain } };
+    const mat = kit.track(new THREE.ShaderMaterial({ uniforms, vertexShader: BODY_VERT, fragmentShader: BODY_FRAG }));
+    loader.load(TEXTURES + file, t => {
+      if (gone) { t.dispose(); return; }
+      t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; kit.track(t); uniforms.map.value = t;
+    });
+    const m = kit.mesh(new THREE.SphereGeometry(radius, 96, 64), mat); m.castShadow = m.receiveShadow = false;
+    return m;
+  };
+
+  // stars: sparse, small, nearly all faint
+  const rnd = seeded(11), count = 1100, p = new Float32Array(count * 3), col = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    const th = rnd() * Math.PI * 2, ph = Math.acos(1 - 2 * rnd()), r = 1800;
+    p.set([Math.sin(ph) * Math.cos(th) * r, Math.cos(ph) * r, Math.sin(ph) * Math.sin(th) * r], i * 3);
+    const b = 0.12 + 0.88 * Math.pow(rnd(), 5), warm = (rnd() - 0.5) * 0.12;
+    col.set([b * (1 + warm), b, b * (1 - warm)], i * 3);
   }
+  const starGeo = kit.track(new THREE.BufferGeometry());
+  starGeo.setAttribute('position', new THREE.BufferAttribute(p, 3)); starGeo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  group.add(new THREE.Points(starGeo, kit.track(new THREE.PointsMaterial({ size: 1.5, sizeAttenuation: false, vertexColors: true, fog: false }))));
 
   // the departure body, large and falling behind to the lower left; Earth small and ahead
-  const home = body === 'Moon'
-    ? planet(kit, 420, [0x4b4e55, 0x7c8089, 0xa9adb5, 0xd2d5da], 4, 1.3)
-    : planet(kit, 420, [0x6e3620, 0x9a4c2b, 0xc06a3c, 0xe0976a], 4, 2.1);
-  home.position.set(-520, -330, -820); group.add(home);
-  const earth = planet(kit, 46, [0x1d4f9c, 0x2f7ac4, 0x3c9a5a, 0xe9f1f6], 3, 4.2);
-  earth.position.set(250, 120, -1150); group.add(earth);
-  const haze = kit.mesh(new THREE.IcosahedronGeometry(50, 2), kit.track(new THREE.MeshBasicMaterial({ color: 0x7fc4ff, transparent: true, opacity: 0.18 })));
-  haze.position.copy(earth.position); group.add(haze);
+  const home = globe(body === 'Moon' ? 'moon.jpg' : 'mars.jpg', 420, body === 'Moon' ? 1.5 : 1.7);
+  home.position.set(-520, -330, -820); home.rotation.set(0.3, 1.2, 0.1); group.add(home);
+  const earth = globe('earth.jpg', 46, 2.0);
+  earth.position.set(-60, 205, -1150); earth.rotation.set(0.41, 3.6, 0); group.add(earth);
+  const air = kit.mesh(new THREE.SphereGeometry(46 * 1.035, 64, 48), kit.track(new THREE.ShaderMaterial({
+    uniforms: { sun: { value: sunDirection }, tint: { value: new THREE.Color(0x6aa8ff) } }, vertexShader: BODY_VERT, fragmentShader: AIR_FRAG,
+    side: THREE.BackSide, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })));
+  air.castShadow = air.receiveShadow = false; air.position.copy(earth.position); group.add(air);
 
   return {
-    group, sunDirection: new THREE.Vector3(0.55, 0.35, -0.75).normalize(),
-    drift(dt) { home.rotation.y += dt * 0.012; earth.rotation.y += dt * 0.05; group.rotation.z += dt * 0.0015; },
-    dispose: () => kit.dispose(),
+    group, sunDirection,
+    drift(dt) { home.rotation.y += dt * 0.004; earth.rotation.y += dt * 0.02; },
+    dispose: () => { gone = true; kit.dispose(); },
   };
 }

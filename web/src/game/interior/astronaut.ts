@@ -14,9 +14,9 @@ export interface Astronaut {
 
 export function buildAstronaut(): Astronaut {
   const kit = new Kit();
-  const suit = kit.mat(0xf2f4f7, { rough: 0.7 }), shade = kit.mat(0xc9d0da), pack = kit.mat(0x8f9aaa, { metal: 0.3 });
-  const orange = kit.mat(0xff7a3d), dark = kit.mat(0x2a303a), visor = kit.mat(0xffc65a, { metal: 0.9, rough: 0.15, emissive: 0x7a4a08, glow: 0.5 });
-  const light = kit.mat(0x7ff3ff, { emissive: 0x7ff3ff, glow: 1.6 });
+  const suit = kit.mat(0xe8e6e0, { rough: 0.85 }), shade = kit.mat(0xb4b7ba, { rough: 0.8 }), pack = kit.mat(0xcfd0cf, { rough: 0.8 });
+  const patch = kit.mat(0x9c3d33, { rough: 0.9 }), dark = kit.mat(0x2b2d30), visor = kit.mat(0x8a6420, { metal: 1, rough: 0.18 });
+  const lamp = kit.mat(0xdfe6ea, { emissive: 0xdfe6ea, glow: 0.6 });
 
   const group = new THREE.Group();
   const body = new THREE.Group(); group.add(body);                    // everything above the feet; bobs while walking
@@ -25,11 +25,11 @@ export function buildAstronaut(): Astronaut {
   const torso = kit.box(0.56, 0.62, 0.36, suit, 0, 1.13, 0); body.add(torso);
   body.add(kit.box(0.6, 0.12, 0.4, shade, 0, 0.79, 0));               // belt
   body.add(kit.box(0.3, 0.22, 0.08, pack, 0, 1.2, -0.21));            // chest control box
-  body.add(kit.box(0.06, 0.06, 0.02, light, -0.08, 1.24, -0.255), kit.box(0.06, 0.06, 0.02, orange, 0.06, 1.24, -0.255));
+  body.add(kit.box(0.03, 0.03, 0.02, lamp, -0.08, 1.24, -0.255), kit.box(0.1, 0.05, 0.02, dark, 0.05, 1.24, -0.255));
   body.add(kit.box(0.5, 0.7, 0.24, pack, 0, 1.18, 0.3));              // backpack
-  body.add(kit.box(0.14, 0.14, 0.05, light, 0, 1.38, 0.43));
+  body.add(kit.box(0.3, 0.1, 0.03, shade, 0, 1.38, 0.425), kit.box(0.03, 0.03, 0.02, lamp, 0.17, 1.46, 0.425));
   body.add(kit.cyl(0.03, 0.03, 0.3, dark, 0.2, 1.62, 0.36, 5));       // antenna
-  for (const sx of [-1, 1]) body.add(kit.box(0.2, 0.12, 0.4, orange, sx * 0.3, 1.42, 0.02)); // shoulder flashes
+  for (const sx of [-1, 1]) body.add(kit.box(0.2, 0.12, 0.4, sx < 0 ? patch : shade, sx * 0.3, 1.42, 0.02)); // shoulders, one with the mission stripe
 
   // helmet: faceted globe, gold visor, collar ring
   const head = new THREE.Group(); head.position.set(0, 1.66, 0); body.add(head);
@@ -42,7 +42,7 @@ export function buildAstronaut(): Astronaut {
     const pivot = new THREE.Group(); pivot.position.set(x, y, 0);
     pivot.add(kit.cyl(upper[0], upper[0] * 0.9, upper[1], suit, 0, -upper[1] / 2, 0, 7));
     const joint = new THREE.Group(); joint.position.y = -upper[1]; pivot.add(joint);
-    joint.add(kit.cyl(0.07, 0.07, 0.05, orange, 0, 0, 0, 7));          // coloured band at the joint
+    joint.add(kit.cyl(0.07, 0.07, 0.05, shade, 0, 0, 0, 7));           // ring at the joint
     joint.add(kit.cyl(lower[0], lower[0] * 0.95, lower[1], suit, 0, -lower[1] / 2, 0, 7));
     joint.add(kit.box(endSize[0], endSize[1], endSize[2], endMat, 0, -lower[1] - endSize[1] / 2 + 0.02, endSize[2] > 0.2 ? -0.05 : 0));
     return { pivot, joint };

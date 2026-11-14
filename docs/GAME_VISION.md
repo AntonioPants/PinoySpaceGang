@@ -60,7 +60,7 @@ an Earth field test. Never silently switch physics because a scene changes locat
 ## Ship interior (control center)
 
 The player sets up the mission on the bridge of the ship, in third person: they walk a
-low-poly astronaut round a wide bridge that is flying in space, use three glowing wall
+low-poly astronaut round a wide bridge that is flying in space, use three wall
 monitors, then sit in the pilot seat to start. Registered as `controlCenter` and implementing
 `ControlCenterProps`; `App.tsx` and `GameSession.tsx` are unchanged. Everything is generated
 in code (`cabin.ts`, `astronaut.ts`, `exterior.ts`, shared helpers in `lowpoly.ts`); there are
@@ -100,8 +100,8 @@ follow from it:
 - The page layer uses `overflow: clip`. Focusing a control otherwise makes the browser scroll
   the layer "into view" and the screens slide off their monitors.
 - A page's +Z must face the room: `rotationY = atan2(nx, nz)`, or its text is mirrored.
-- Monitor controls come from `screens/ui.tsx` (`Segmented`, `Slider`, `Dropdown`, `Light`) and
-  take their colour from the station's `accent`. The drop-down is drawn inside the page
+- Monitor controls come from `screens/ui.tsx` (`Segmented`, `Slider`, `Dropdown`, `Light`).
+  The drop-down is drawn inside the page
   because a native menu would open outside the 3D screen.
 
 **Cinematics choice.** The launch menu stores "Play cinematics" in localStorage
@@ -116,13 +116,30 @@ It only reports. The parent still validates and locks the mission at launch.
 **Fallback.** "Use flat console" switches to `SystemsConsole`, and it is used automatically
 when WebGL cannot start or the window is narrower than 760 px. Settings carry over both ways.
 
+**Look.** The bridge should read as an engineered crew cabin (Orion, Dragon, ISS, Shuttle
+flight deck), not neon sci-fi. Keep to these rules when adding to it:
+
+- Neutral palette: off-white wall panels with seams, grey structure, dark floor and console tops.
+- Only these emit light: the monitors, the ceiling light panels, the dim dashboard displays and
+  a few small indicators. No glowing trim, floor strips or coloured lights.
+- Colour carries meaning: blue and yellow handrails, one yellow/black caution stripe (the
+  hatch sill), red only on guarded switches.
+- Monitor pages follow flight displays: near-black background, grey text, one muted blue for
+  the selected state and slider fill; green / amber / red only for go / caution / hold.
+- Light: ACES tone mapping, the Sun through the window and a soft overhead light, both casting
+  shadows, plus neutral fill. The finished cabin is merged into one mesh per material
+  (`mergeStatic` in `lowpoly.ts`); without that the frame rate halves.
+
 **What is illustrative.** The bridge, the astronaut and the view outside are a stage, not a
-model of a real spacecraft or a real orbit. The body in the window is a generic low-poly Moon
-or Mars chosen by `mission.planetaryTarget.body`, with a distant Earth; neither shows the
-selected sites.
+model of a real spacecraft or a real orbit. The Moon or Mars in the window (chosen by
+`mission.planetaryTarget.body`) and the distant Earth wear NASA imagery, listed with sources
+in `web/public/textures/bridge/SOURCES.md`: LRO/LROC colour mosaic (NASA SVS CGI Moon Kit),
+Viking MDIM 2.1 colour mosaic (NASA/JPL/USGS) and Blue Marble (NASA GSFC). They are
+decoration: sizes, distances and lighting are for looks and they do not show the selected
+sites. The instrument pages on the dashboard are dressing with made-up values.
 
 **Adding a station.** Add it to `STATIONS` in `stations.ts` (id, title, key, wall position,
-inward normal, accent), add an obstacle box if it has a console, write its screen in
+inward normal), add an obstacle box if it has a console, write its screen in
 `screens/`, and add one portal line in `ShipInterior.tsx`. The cabin builds the monitor
 housing and console from the station list.
 

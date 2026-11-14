@@ -20,14 +20,12 @@ export interface Station {
   x: number; z: number;
   /** Unit vector pointing from the wall into the room. */
   nx: number; nz: number;
-  /** Glow colour of the monitor and its fittings. */
-  accent: number;
 }
 
 export const STATIONS: readonly Station[] = [
-  { id: 'mission', title: 'Mission control', key: '1', x: -ROOM.halfWidthM, z: -0.4, nx: 1, nz: 0, accent: 0x35d6ff },
-  { id: 'equipment', title: 'Equipment', key: '2', x: 0, z: ROOM.halfDepthM, nx: 0, nz: -1, accent: 0xffb454 },
-  { id: 'config', title: 'Flight configuration', key: '3', x: ROOM.halfWidthM, z: -0.4, nx: -1, nz: 0, accent: 0x6dffb0 },
+  { id: 'mission', title: 'Mission control', key: '1', x: -ROOM.halfWidthM, z: -0.4, nx: 1, nz: 0 },
+  { id: 'equipment', title: 'Equipment', key: '2', x: 0, z: ROOM.halfDepthM, nx: 0, nz: -1 },
+  { id: 'config', title: 'Flight configuration', key: '3', x: ROOM.halfWidthM, z: -0.4, nx: -1, nz: 0 },
 ];
 
 /** The pilot's seat, facing the window. Sitting in it opens the launch menu. */

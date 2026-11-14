@@ -48,7 +48,6 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
     const el = document.createElement('div');
     el.className = `monitor-screen monitor-${s.id}`; el.dataset.station = s.id;
     el.style.width = `${PAGE.width}px`; el.style.height = `${PAGE.height}px`;
-    el.style.setProperty('--accent', `#${s.accent.toString(16).padStart(6, '0')}`);
     el.setAttribute('role', 'group'); el.setAttribute('aria-label', `${s.title} monitor`);
     return [s.id, el];
   })) as Record<StationId, HTMLDivElement>, []);
@@ -63,6 +62,8 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
     catch (e) { fail.current(e instanceof Error ? e.message : 'WebGL is not available'); return; }
     webgl.setPixelRatio(Math.min(devicePixelRatio, 2));
     webgl.setClearColor(0x000000, 0);
+    webgl.toneMapping = THREE.ACESFilmicToneMapping; webgl.toneMappingExposure = 1.05;
+    webgl.shadowMap.enabled = true; webgl.shadowMap.type = THREE.PCFSoftShadowMap;
     webgl.domElement.className = 'cabin-canvas';
     // The monitor pages sit BEHIND the canvas. Each monitor is a see-through hole in the 3D
     // picture, so the astronaut and the furniture pass in front of the screens correctly.
@@ -81,9 +82,19 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
     const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 4000);
     const cabin = buildCabin(), space = buildSpace(body), astronaut = buildAstronaut();
     scene.add(cabin.group, space.group, astronaut.group);
-    const sun = new THREE.DirectionalLight(0xfff1dc, 1.5); sun.position.copy(space.sunDirection).multiplyScalar(60);
-    scene.add(sun, new THREE.HemisphereLight(0xcfe0ff, 0x2a2f3a, 1.25));
-    for (const [x, z] of [[-3, -1.2], [3, -1.2], [0, 2.2]] as const) { const l = new THREE.PointLight(0xdfeaff, 10, 11, 1.3); l.position.set(x, ROOM.heightM - 0.4, z); scene.add(l); }
+    // Light: the Sun through the window (the only strong, warm light), the ceiling panels as a
+    // soft overhead light that puts shadows under things, and a little neutral fill.
+    const shadowed = (light: THREE.DirectionalLight, half: number, far: number, size: number) => {
+      light.castShadow = true; light.shadow.mapSize.set(size, size); light.shadow.bias = -0.0004; light.shadow.normalBias = 0.03;
+      const c = light.shadow.camera; c.left = -half; c.right = half; c.top = half; c.bottom = -half; c.near = 0.05; c.far = far; c.updateProjectionMatrix();
+      return light;
+    };
+    const sun = shadowed(new THREE.DirectionalLight(0xfff0dc, 4.2), 9, 70, 2048);
+    sun.position.copy(space.sunDirection).multiplyScalar(32); sun.target.position.set(0, 1, 0);
+    const overhead = shadowed(new THREE.DirectionalLight(0xfff6ec, 1.15), 7.5, 4, 2048);
+    overhead.position.set(0, ROOM.heightM - 0.25, 0); overhead.target.position.set(0, 0, 0.001);     // starts below the ceiling, so the ceiling casts nothing
+    scene.add(sun, sun.target, overhead, overhead.target, new THREE.HemisphereLight(0xf3efe8, 0x3a3b3d, 0.85));
+    for (const [x, z] of [[-3.2, -2], [3.2, -2], [-3.2, 2], [3.2, 2]] as const) { const l = new THREE.PointLight(0xfff3e4, 5, 9, 1.6); l.position.set(x, ROOM.heightM - 0.35, z); scene.add(l); }
 
     const holeGeo = new THREE.PlaneGeometry(SCREEN.widthM, SCREEN.heightM);
     // writes "fully transparent" into the picture wherever a screen is the nearest thing
@@ -94,8 +105,7 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
       const page = new CSS3DObject(pages[station.id]);
       page.position.copy(position); page.rotation.y = rotationY; page.scale.setScalar(SCREEN.widthM / PAGE.width);
       const hole = new THREE.Mesh(holeGeo, holeMat); hole.position.copy(position); hole.rotation.y = rotationY;
-      const glow = new THREE.PointLight(station.accent, 3.5, 5, 1.6); glow.position.set(position.x + station.nx * 1.1, SCREEN.centreHeightM, position.z + station.nz * 1.1);
-      scene.add(page, hole, glow); mounted.push(page, hole, glow);
+      scene.add(page, hole); mounted.push(page, hole);
     }
 
     const tp = new ThirdPerson(host, {
@@ -163,7 +173,7 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
       {using && <div className="cabin-overlay cabin-prompt" role="status"><kbd>Esc</kbd> Step back from {using.title}</div>}
       {mode.kind === 'seated' && <LaunchMenu checks={checks} reducedMotion={reducedMotion} onLaunch={onLaunch} onStand={() => player.current?.walk()} />}
     </div>
-    <p className="cabin-hint">Walk with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>, turn the camera with <kbd>←</kbd> <kbd>→</kbd> or by dragging, use what is in front of you with <kbd>E</kbd>. Sit in the pilot seat to start the mission. The ship and the view outside are illustrative.</p>
+    <p className="cabin-hint">Walk with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>, turn the camera with <kbd>←</kbd> <kbd>→</kbd> or by dragging, use what is in front of you with <kbd>E</kbd>. Sit in the pilot seat to start the mission. The ship is illustrative, and the view outside does not show your landing site. Moon, Mars and Earth imagery: NASA.</p>
     {createPortal(<MissionControlScreen mission={mission} settings={settings} checks={checks} />, pages.mission)}
     {createPortal(<EquipmentScreen mission={mission} settings={settings} onSettingsChange={onSettingsChange} />, pages.equipment)}
     {createPortal(<FlightConfigScreen mission={mission} settings={settings} onSettingsChange={onSettingsChange} weatherAvailable={weatherAvailable} weather={weather} />, pages.config)}
