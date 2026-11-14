@@ -8,7 +8,7 @@ import { buildTerrain, type Boulder, type Terrain } from "./terrain";
 import type { TerrainPack } from "./terrainPack";
 
 /** "ending" replays `params.flight`; "success" and "crash" are stand-ins for when there is no flight yet. */
-/** "liftoff" is the departure from the planetary site: ignition, dust blast, climb. */
+/** "liftoff" is the departure: ignition, dust blast, climb, in the gravity and air of the env's preset. */
 export type CutsceneKind = "opening" | "liftoff" | "ending" | "success" | "crash";
 export interface EngineOptions {
   muted?: boolean; showSkip?: boolean;
@@ -22,6 +22,21 @@ export interface EngineOptions {
 const DURATION_OPENING = 9.6;
 const DURATION_LIFTOFF = 8.5;
 const TAIL: Record<FlightOutcome, number> = { success: 6.5, "hard-landing": 6.5, "tip-over": 6, crash: 7, timeout: 3 };
+// Scene changes dissolve instead of cutting: a scene that ends leaves its last frame here, and the
+// next scene (cutscene, departure shot or live descent) starts under that still and fades it out.
+let handoff: { url: string; at: number } | null = null;
+/** Keeps `canvas`'s current frame for the next scene. Call it right after rendering that frame. */
+export function leaveHandoff(canvas: HTMLCanvasElement) {
+  try { handoff = { url: canvas.toDataURL("image/jpeg", 0.9), at: performance.now() }; } catch { handoff = null; }
+}
+/** The previous scene's last frame, if it ended moments ago. */
+export function peekHandoff(): string | null {
+  return handoff && performance.now() - handoff.at < 15000 ? handoff.url : null;
+}
+/** The still has been dissolved: the next scene change starts fresh. */
+export function clearHandoff() { handoff = null; }
+const DISSOLVE = 0.9;
+
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
@@ -104,7 +119,8 @@ export class CutsceneEngine {
   protected t = 0; protected last = 0; protected raf = 0;
   protected finish: (() => void) | null = null;
   protected ro: ResizeObserver;
-  protected ui: { root: HTMLDivElement; title: HTMLDivElement; sub: HTMLDivElement; cap: HTMLDivElement; flash: HTMLDivElement; fade: HTMLDivElement; skip: HTMLButtonElement };
+  protected ui: { root: HTMLDivElement; title: HTMLDivElement; sub: HTMLDivElement; cap: HTMLDivElement; flash: HTMLDivElement; fade: HTMLDivElement; skip: HTMLButtonElement; cover: HTMLDivElement };
+  protected coverAge = -1;                // < 0: the cover (previous scene's still, or black) has gone
   protected disposed = false;
 
   constructor(protected container: HTMLElement, protected env: CutsceneEnv, opts: EngineOptions = {}) {
@@ -162,6 +178,10 @@ export class CutsceneEngine {
     // fireball does not stall on shader compilation (a visible freeze on integrated GPUs).
     const hidden = [this.lander.group, this.lander.flame, this.fireball, this.scorch, this.targetRing].filter((o) => !o.visible);
     hidden.forEach((o) => { o.visible = true; }); this.renderer.compile(this.scene, this.camera); hidden.forEach((o) => { o.visible = false; });
+    // Until it runs, the scene sits under a cover: the last frame of the scene before it, or black.
+    const still = peekHandoff();
+    if (still) this.ui.cover.style.backgroundImage = `url("${still}")`;
+    this.coverAge = 0;
   }
 
   /** Plays a cutscene. Resolves when it ends or is skipped. Endings keep animating until the next play()/dispose(). */
@@ -270,14 +290,21 @@ export class CutsceneEngine {
     this.render();
     if (this.kind && this.kind !== "live" && this.t >= this.duration && this.finish) {
       const ending = this.kind !== "opening" && this.kind !== "liftoff";
+      if (!ending) leaveHandoff(this.renderer.domElement);     // the next scene dissolves from this frame
       this.finish();
-      if (!ending) { this.kind = null; return; }      // opening and liftoff stop on black; endings keep smouldering
+      if (!ending) { this.kind = null; return; }      // opening and liftoff hold their last frame; endings keep smouldering
     }
     this.raf = requestAnimationFrame(this.tick);
   };
 
   protected step(dt: number) {
     this.t += dt; this.frameDt = dt;
+    if (this.coverAge >= 0) {                     // dissolve from the previous scene
+      this.coverAge += dt;
+      const u = this.coverAge / DISSOLVE;
+      this.ui.cover.style.opacity = String(1 - easeInOut(u));
+      if (u >= 1) { this.coverAge = -1; this.ui.cover.style.display = "none"; clearHandoff(); }
+    }
     if (this.kind === "live") this.live(dt);
     else if (this.kind === "opening") this.opening(this.t, dt);
     else if (this.kind === "liftoff") this.liftoff(this.t, dt);
@@ -400,6 +427,7 @@ export class CutsceneEngine {
       this.audio.setThrust(0.12 + 0.45 * glow);
       this.trauma = Math.max(this.trauma, 0.1 + 0.2 * glow);
       if (t > 0.5) this.caption(this.env.name, this.env.subtitle ?? "Earth analog test flight");
+      if (!this.flags.whoosh) { this.flags.whoosh = true; this.audio.whoosh(2.6, 0.6); }
     } else {
       // B: one continuous shot. It swings from beside the lander round behind it, rises, and settles
       // on exactly the chase framing the live descent view opens with (app/flightlab/view.ts:
@@ -421,12 +449,11 @@ export class CutsceneEngine {
       this.trauma = Math.max(this.trauma, lit ? 0.16 : lerp(0.1, 0.06, s2));
       if (t > 4.2 && t < 7.6) this.caption("", "");
       if (t > 7.6) this.caption("Descent simulation", `Altitude ${Math.round(sp.z)} m · you have control`);
-      // a short dip to black: the descent view fades in from black on the same framing
-      this.ui.fade.style.opacity = String(clamp01((t - (END - 0.4)) / 0.35));
+      // no fade out: the live descent dissolves from this last frame on the same framing
     }
   }
 
-  /** Liftoff: the lander on its pad at the planetary site lights up, blasts the dust away and climbs out. */
+  /** Liftoff: the lander on its pad lights up, blasts the dust away and climbs out. */
   protected liftoff(t: number, dt: number) {
     const L = this.lander.group, h0 = this.terrain.heightAt(0, 0), END = DURATION_LIFTOFF;
     const IGNITE = 1.4, RISE = 1.9, A = 7;                      // s, s, m/s^2 climb
@@ -448,7 +475,6 @@ export class CutsceneEngine {
     if (t > 0.3 && t < 3.6) this.caption(this.env.name, this.env.subtitle ?? "Departure");
     else if (t > 5.2) this.caption("Liftoff", "Leaving the surface");
     else this.caption("", "");
-    this.ui.fade.style.opacity = String(clamp01((t - (END - 0.6)) / 0.5));
   }
 
   /**
@@ -730,6 +756,7 @@ export class CutsceneEngine {
     };
     const root = el("div", "position:absolute;inset:0;pointer-events:none;overflow:hidden;font-family:ui-sans-serif,system-ui,sans-serif;color:#fff", this.container);
     const bar = "position:absolute;left:0;right:0;height:9%;background:#000";
+    const cover = el("div", "position:absolute;inset:0;background:#000 center/cover no-repeat", root);
     const flash = el("div", "position:absolute;inset:0;background:#fff;opacity:0", root);
     if (letterbox) { el("div", bar + ";top:0", root); el("div", bar + ";bottom:0", root); }
     const fade = el("div", "position:absolute;inset:0;background:#000;opacity:0", root);
@@ -739,7 +766,7 @@ export class CutsceneEngine {
     const skip = el("button", "position:absolute;right:3%;bottom:11%;pointer-events:auto;display:none;background:rgba(0,0,0,.45);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:6px 14px;font:inherit;font-size:13px;letter-spacing:.1em;cursor:pointer", root);
     skip.textContent = "SKIP ▸"; skip.onclick = () => this.skip();
     if (!showSkip) skip.style.visibility = "hidden";
-    return { root, title, sub, cap, flash, fade, skip };
+    return { root, title, sub, cap, flash, fade, skip, cover };
   }
 
   protected caption(title: string, sub: string) {

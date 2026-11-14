@@ -59,7 +59,7 @@ view flies the descent and its ending (`web/src/components/Descent3D.tsx`). His 
 Lab (live 3D descent with sliders) is in `app/flightlab/`: `npm install && npm run build` writes
 `dist/flight-lab.html`. Prebuilt previews are in `docs/previews/`.
 The game registry has arrival, liftoff, Earth approach and outcome slots: liftoff is Furgan's
-blast-off cutscene (`web/src/game/scenes/LiftoffScene.tsx`), Earth approach is Furgan's cutscene,
+blast-off from Earth (`web/src/game/scenes/LiftoffScene.tsx`), Earth approach is Furgan's cutscene,
 arrival is still empty, and outcome is null because the 3D descent plays the ending.
 
 ## Team roles and ownership

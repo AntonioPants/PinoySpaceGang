@@ -112,13 +112,20 @@ function materialAt(f: Field, px: number, pz: number, seed: number) {
 
 /** Paints a square of the pack (centre cx, cz, half-size `half`, in pack metres) to a texture. */
 function paintPack(f: Field, st: SiteStyle, cx: number, cz: number, half: number, px: number, seed: number, fadeEdge: boolean) {
+  const it = paintPackSteps(f, st, cx, cz, half, px, seed, fadeEdge);
+  let r = it.next(); while (!r.done) r = it.next();
+  return r.value;
+}
+
+/** paintPack in steps of a few rows, so it can run in the background between animation frames. */
+function* paintPackSteps(f: Field, st: SiteStyle, cx: number, cz: number, half: number, px: number, seed: number, fadeEdge: boolean): Generator<void, HTMLCanvasElement> {
   const canvas = document.createElement("canvas"); canvas.width = canvas.height = px;
   const ctx = canvas.getContext("2d")!, img = ctx.createImageData(px, px), d = img.data;
   const C = { plain: srgb(st.plain), floor: srgb(st.floor), playa: srgb(st.playa), ejecta: srgb(st.ejecta), dune: srgb(st.dune),
     scree: srgb(st.scree), cliff: srgb(st.cliff), shrub: srgb(st.shrub) };
   const mpp = (2 * half) / px, col = [0, 0, 0];
   const mix = (to: number[], w: number) => { for (let k = 0; k < 3; k++) col[k] += (to[k] - col[k]) * w; };
-  for (let j = 0; j < px; j++) for (let i = 0; i < px; i++) {
+  for (let j = 0; j < px; j++) { if ((j & 3) === 3) yield; for (let i = 0; i < px; i++) {
     const X = cx - half + (i + 0.5) * mpp, Z = cz - half + (j + 0.5) * mpp;
     const m = materialAt(f, X, Z, seed);
     col[0] = C.plain[0]; col[1] = C.plain[1]; col[2] = C.plain[2];
@@ -145,7 +152,7 @@ function paintPack(f: Field, st: SiteStyle, cx: number, cz: number, half: number
     }
     const o = (j * px + i) * 4;
     d[o] = Math.min(255, col[0] * gg); d[o + 1] = Math.min(255, col[1] * gg); d[o + 2] = Math.min(255, col[2] * gg); d[o + 3] = 255;
-  }
+  } }
   ctx.putImageData(img, 0, 0);
   return canvas;
 }
@@ -155,6 +162,40 @@ const overviewCache = new Map<string, HTMLCanvasElement>();      // the whole-pa
 // on a Pi). The opening and the live descent build the same one back to back, so it is kept: the
 // descent then starts without a long black pause after the opening.
 const patchCache = new Map<string, HTMLCanvasElement>();
+const styleOf = (pack: TerrainPack) => (pack.manifest.id.startsWith("kilbourne") ? KILBOURNE_STYLE : null);
+const fieldCache = new WeakMap<TerrainPack, Field>();
+const fieldOf = (pack: TerrainPack) => { let f = fieldCache.get(pack); if (!f) { f = packField(pack); fieldCache.set(pack, f); } return f; };
+const patchKey = (pack: TerrainPack, seed: number, L: { x: number; z: number }) => `${pack.manifest.id}:${seed}:${L.x.toFixed(1)}:${L.z.toFixed(1)}`;
+const keepPatch = (key: string, c: HTMLCanvasElement) => {
+  patchCache.delete(key); patchCache.set(key, c);
+  while (patchCache.size > 4) patchCache.delete(patchCache.keys().next().value!);      // a few sites at most
+};
+
+/**
+ * Paints a site's terrain ahead of time, a few milliseconds per frame, so the cutscene that later
+ * builds it starts at once instead of freezing for seconds. Call it while an earlier scene plays.
+ * `landing` is in pack metres, as for buildTerrain; the seed must match the scene's (7 by default).
+ */
+export async function prepareTerrain(pack: TerrainPack, landing: { x: number; z: number }, seed = 7, signal?: AbortSignal) {
+  const style = styleOf(pack);
+  if (!style) return;                              // only painted sites are slow to build
+  const field = fieldOf(pack), { rows, columns, spacing_m: step } = pack.manifest.grid;
+  const W = (columns - 1) * step, D = (rows - 1) * step;
+  const run = async (steps: Generator<void, HTMLCanvasElement>) => {
+    for (;;) {
+      const until = performance.now() + 4;
+      let r = steps.next();
+      while (!r.done && performance.now() < until) r = steps.next();
+      if (r.done) return r.value;
+      await new Promise((ok) => setTimeout(ok, 12));
+      if (signal?.aborted) return null;
+    }
+  };
+  const oKey = `${pack.manifest.id}:${seed}`;
+  if (!overviewCache.has(oKey)) { const c = await run(paintPackSteps(field, style, W / 2, D / 2, W / 2, 1024, seed, true)); if (c) overviewCache.set(oKey, c); else return; }
+  const pKey = patchKey(pack, seed, landing);
+  if (!patchCache.has(pKey)) { const c = await run(paintPackSteps(field, style, landing.x, landing.z, 400, 768, seed, false)); if (c) keepPatch(pKey, c); }
+}
 
 /**
  * Terrain with the landing point at the scene origin (+X east, +Y up, +Z south).
@@ -173,8 +214,8 @@ export function buildTerrain(look: EnvLook, elevation: number[] | undefined, see
     const W = (columns - 1) * step, D = (rows - 1) * step, PATCH = 400, APRON = 9000;
     const raw = (px: number, pz: number) => pack.heightAt(Math.min(Math.max(px, 0), W), Math.min(Math.max(pz, 0), D)) ?? 0;
     const ref = raw(L.x, L.z);
-    const style = pack.manifest.id.startsWith("kilbourne") ? KILBOURNE_STYLE : null;
-    const field = packField(pack);
+    const style = styleOf(pack);
+    const field = fieldOf(pack);
     const heightAt = (x: number, z: number) => {
       const fade = 1 - smooth(PATCH * 0.65, PATCH * 0.92, Math.max(Math.abs(x), Math.abs(z)));
       return raw(L.x + x, L.z + z) - ref
@@ -190,10 +231,9 @@ export function buildTerrain(look: EnvLook, elevation: number[] | undefined, see
     if (style) fine.computeVertexNormals(); else colorize(fine, look, seed);
     let patch: HTMLCanvasElement | null = null;
     if (style) {
-      const key = `${pack.manifest.id}:${seed}:${L.x.toFixed(1)}:${L.z.toFixed(1)}`;
+      const key = patchKey(pack, seed, L);
       patch = patchCache.get(key) ?? paintPack(field, style, L.x, L.z, PATCH, 768, seed, false);
-      patchCache.delete(key); patchCache.set(key, patch);
-      while (patchCache.size > 4) patchCache.delete(patchCache.keys().next().value!);      // a few sites at most
+      keepPatch(key, patch);
     }
     group.add(new THREE.Mesh(fine, mat(patch ? toTexture(patch) : null)));
     // whole pack at source resolution, with an apron out to the horizon so the map has no visible edge

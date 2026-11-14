@@ -7,3 +7,5 @@
 .departure-note { position: absolute; left: 6%; bottom: 4%; font-size: 11px; color: #9aa3ad; }
 @keyframes departure-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .departure-caption { animation: none; } }
+.departure-cover { position: absolute; inset: 0; background: #000 center / cover no-repeat; pointer-events: none; animation: departure-dissolve ease-in-out both; }
+@keyframes departure-dissolve { from { opacity: 1; } to { opacity: 0; } }

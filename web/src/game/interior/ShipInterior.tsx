@@ -8,6 +8,7 @@ import { buildAstronaut } from './astronaut';
 import { buildCabin } from './cabin';
 import { buildChecklist } from './checklist';
 import { buildSpace } from './exterior';
+import { leaveHandoff } from '../../components/cutscene/engine';
 import LaunchMenu from './LaunchMenu';
 import { ThirdPerson, type Mode, type Target } from './player';
 import { ROOM, SCREEN, SEAT, STATIONS, type StationId } from './stations';
@@ -56,6 +57,7 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
   })) as Record<StationId, HTMLDivElement>, []);
   const body = mission.planetaryTarget.body;
   const fail = useRef(onFailure); fail.current = onFailure;
+  const snap = useRef<(() => void) | null>(null);      // draws a frame and keeps it for the next scene's dissolve
   const motion = useRef(reducedMotion); motion.current = reducedMotion;
 
   useEffect(() => {
@@ -164,8 +166,10 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
+    snap.current = () => { try { webgl.render(scene, camera); leaveHandoff(webgl.domElement); } catch { /* the next scene starts from black */ } };
 
     return () => {
+      snap.current = null;
       cancelAnimationFrame(raf); ro.disconnect(); host.removeEventListener('scroll', unscroll); tp.dispose(); player.current = null;
       for (const s of STATIONS) pages[s.id].removeEventListener('focusin', focusIn);
       for (const o of mounted) scene.remove(o);
@@ -199,7 +203,7 @@ function Bridge({ mission, settings, onSettingsChange, onLaunch, onExit, error, 
         {screens[using.id]}
         <button type="button" className="launch-stand" onClick={() => player.current?.walk()}>Done</button>
       </div>}
-      {mode.kind === 'seated' && <LaunchMenu checks={checks} reducedMotion={reducedMotion} onLaunch={onLaunch} onStand={() => player.current?.walk()} />}
+      {mode.kind === 'seated' && <LaunchMenu checks={checks} reducedMotion={reducedMotion} onLaunch={() => { snap.current?.(); onLaunch(); }} onStand={() => player.current?.walk()} />}
     </div>
     {compact ? mode.kind === 'walk' && <p className="cabin-hint">Tap a station above, drag to look around, and sit in the pilot seat to start. The ship is illustrative; the view outside does not show your landing site. Imagery: NASA.</p> : <p className="cabin-hint">Walk with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>, turn the camera with <kbd>←</kbd> <kbd>→</kbd> or by dragging, use what is in front of you with <kbd>E</kbd>. Sit in the pilot seat to start the mission. The ship is illustrative, and the view outside does not show your landing site. Moon, Mars and Earth imagery: NASA.</p>}
     {!compact && STATIONS.map(s => createPortal(screens[s.id], pages[s.id], s.id))}

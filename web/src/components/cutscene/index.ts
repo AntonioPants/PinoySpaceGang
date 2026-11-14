@@ -1,5 +1,6 @@
 export { default as Cutscene } from "./Cutscene";
-export { CutsceneEngine, type CutsceneKind, type EngineOptions } from "./engine";
+export { CutsceneAudio, soundOn, setSoundOn } from "./audio";
+export { CutsceneEngine, leaveHandoff, peekHandoff, clearHandoff, type CutsceneKind, type EngineOptions } from "./engine";
 export type { LanderSpec } from "./lander";
 export { PRESETS, type CutsceneEnv, type EndingParams, type PresetName } from "./presets";
 export { DEFAULT_START, type FlightLike, type FlightSample, type FlightOutcome, type StartState } from "./flight";

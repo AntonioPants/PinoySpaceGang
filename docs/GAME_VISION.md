@@ -61,7 +61,8 @@ an Earth field test. Never silently switch physics because a scene changes locat
   `web/src/game/scenes/`) and hands over at the simulation's start state. Sound starts on. With reduced motion a
   still card is shown first, with the option to play the cinematic anyway.
   `liftoff` is Furgan's blast-off cutscene (`scenes/LiftoffScene.tsx`: ignition, dust blast and
-  climb on the Moon or Mars surface; illustrative). `planetaryArrival` remains null and is skipped. The standalone test bench is
+  climb from Earth, since the test flight takes off and lands on Earth; illustrative). Scenes
+  dissolve into each other from the previous scene's last frame. `planetaryArrival` remains null and is skipped. The standalone test bench is
   still available with `?cutscene-demo`.
 - All earlier planner controls remain available as initial setup/debug controls.
   When the 3D interior is ready, preserve the console as an accessibility fallback.

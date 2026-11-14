@@ -1,11 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { CutsceneAudio } from '../../components/cutscene/audio';
+import { clearHandoff, leaveHandoff, peekHandoff } from '../../components/cutscene/engine';
 import type { SceneProps } from '../contracts';
 import { buildSpace } from '../interior/exterior';
 import { SceneFrame } from './SceneFrame';
 import './departure.css';
 
-const DURATION_S = 7;
+const DURATION_S = 7, DISSOLVE_S = 0.9;
 const ease = (t: number) => t * t * (3 - 2 * t);
 
 /**
@@ -17,18 +19,28 @@ export default function DepartureScene({ mission, reducedMotion, onComplete }: S
   const body = mission.planetaryTarget.body;
   return <SceneFrame title={`Leaving ${body === 'Moon' ? 'the Moon' : 'Mars'}`} reducedMotion={reducedMotion} onComplete={onComplete}
     detail={`The ship departs ${mission.planetaryTarget.name} for ${mission.earthAnalog.name} on Earth.`}>
-    {() => <Departure body={body} from={mission.planetaryTarget.name} to={mission.earthAnalog.name} onDone={onComplete} />}
+    {muted => <Departure body={body} from={mission.planetaryTarget.name} to={mission.earthAnalog.name} muted={muted} onDone={onComplete} />}
   </SceneFrame>;
 }
 
-function Departure({ body, from, to, onDone }: { body: 'Moon' | 'Mars'; from: string; to: string; onDone: () => void }) {
+/**
+ * The space shot itself. It dissolves from the last frame of the scene before it (or from black)
+ * and leaves its own last frame for the next scene to dissolve from, so it sits between cutscenes
+ * without a cut.
+ */
+export function Departure({ body, from, to, muted = false, onDone }: { body: 'Moon' | 'Mars'; from: string; to: string; muted?: boolean; onDone: () => void }) {
   const host = useRef<HTMLDivElement>(null);
+  const [still] = useState(peekHandoff);
   const done = useRef(onDone); done.current = onDone;
+  const audio = useRef<CutsceneAudio | null>(null);
+  useEffect(() => { audio.current?.setMuted(muted); }, [muted]);
   useEffect(() => {
     const el = host.current!;
+    const sound = new CutsceneAudio(); sound.muted = muted; sound.start(); audio.current = sound;
+    sound.setThrust(0.16); sound.whoosh(3.2, 0.35);              // the cruise engine, and the swing round to Earth
     let renderer: THREE.WebGLRenderer;
     try { renderer = new THREE.WebGLRenderer({ antialias: devicePixelRatio < 1.5, powerPreference: 'high-performance' }); }
-    catch { done.current(); return; }                     // no 3D: carry on with the mission
+    catch { sound.stop(); done.current(); return; }       // no 3D: carry on with the mission
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     el.prepend(renderer.domElement);
@@ -49,14 +61,17 @@ function Departure({ body, from, to, onDone }: { body: 'Moon' | 'Mars'; from: st
       camera.lookAt(look);
       space.drift(1 / 60);
       renderer.render(scene, camera);
-      if (t >= 1) { if (!finished) { finished = true; done.current(); } return; }
+      if (t > DISSOLVE_S / DURATION_S) clearHandoff();
+      if (t >= 1) { if (!finished) { finished = true; leaveHandoff(renderer.domElement); done.current(); } return; }
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
-    return () => { cancelAnimationFrame(raf); ro.disconnect(); space.dispose(); renderer.dispose(); renderer.forceContextLoss(); renderer.domElement.remove(); };
+    return () => { sound.stop(); audio.current = null; cancelAnimationFrame(raf); ro.disconnect(); space.dispose(); renderer.dispose(); renderer.forceContextLoss(); renderer.domElement.remove(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [body]);
   return <div ref={host} className="departure-scene">
     <div className="departure-caption"><strong>Leaving {body === 'Moon' ? 'the Moon' : 'Mars'}</strong><span>{from} → {to}, Earth</span></div>
     <small className="departure-note">Illustrative view. Moon, Mars and Earth imagery: NASA.</small>
+    <div className="departure-cover" style={{ animationDuration: `${DISSOLVE_S}s`, backgroundImage: still ? `url("${still}")` : undefined }} />
   </div>;
 }

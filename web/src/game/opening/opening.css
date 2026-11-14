@@ -45,7 +45,7 @@
 .immersive-game-session .cabin-hint{position:absolute;z-index:3;bottom:0;left:0;right:110px;padding:18px 28px;background:linear-gradient(transparent,#030405cc);font-size:10px;pointer-events:none}
 .immersive-game-session .ship-interior-flat{height:100%;overflow:auto;padding:30px 6vw;background:#030405}.immersive-game-session .ship-interior-flat .systems-console{border:0;border-radius:0;background:transparent}
 .immersive-game-session>.systems-console{height:100%;overflow:auto;border:0;border-radius:0;padding:6vh 8vw;background:radial-gradient(ellipse at 50% 120%,#302a1c,#0b0c0d 60%,#030405)}
-.immersive-game-session .flight-workspace{position:absolute;inset:0;border:0;border-radius:0;background:#030405;animation:game-fade .6s both}
+.immersive-game-session .flight-workspace{position:absolute;inset:0;border:0;border-radius:0;background:#030405}
 .immersive-game-session .flight-stage{position:absolute;inset:0;height:100%}
 .immersive-game-session .flight-toolbar{position:absolute;z-index:2;top:0;left:0;right:0;padding:24px 30px;background:linear-gradient(#030405d9,transparent);align-items:flex-start;border:0}
 .immersive-game-session .flight-toolbar strong{font-size:14px;display:block;max-width:35vw}.immersive-game-session .flight-toolbar button{font-size:11px;padding:10px 13px;min-height:38px}.immersive-game-session .flight-toolbar .primary-button{background:#171711b0;color:#dfc28d;border:1px solid #bda77866}
@@ -61,6 +61,8 @@
 .immersive-game-session .scene-skip{right:26px}.immersive-game-session .scene-sound{left:26px}
 .immersive-game-session>p[role=status],.journey-content>p[role=status]{height:100%;display:grid;place-items:center;color:#d6b77c;background:#030405}
 @keyframes game-fade{from{opacity:0}to{opacity:1}}
+/* a loading message that only shows if loading really takes a while */
+.late-status{animation:game-fade .4s 1s both}
 @media(max-height:750px) and (min-width:761px){.game-heading{top:88px}.game-selector{top:105px;max-height:calc(100% - 155px)}.game-selector h2{margin-bottom:10px}.game-site-list>button{padding:12px 4px}.site-description{margin:12px 0}.equipment-rails{top:100px;bottom:125px;overflow:auto}.equipment-scene{top:80px;bottom:80px}.world-labels{bottom:12%}.title-screen{padding-bottom:7vh}.title-screen p{margin:18px 0 25px}}
 @media(max-width:760px){
  .game-topbar{padding:18px 20px}.game-chapter{display:none}.game-tools{gap:16px}.game-wordmark{font-size:16px}
