@@ -421,3 +421,5 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
   .console-layout { grid-template-columns: 1fr; gap: 25px; }
   .console-controls { grid-template-columns: 1fr; }
 }
+.scene-frame { position: relative; }
+.scene-sound { position: absolute; top: 16px; left: 16px; background: #111c; z-index: 5; }

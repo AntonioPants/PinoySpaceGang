@@ -20,6 +20,7 @@ interface Props {
   terrainUrl?: string;         // or a pack folder to load, e.g. "/terrain/kilbourne-hole-v1/"
   landing?: { x: number; z: number };   // override: scene origin in pack metres
   muted?: boolean;
+  showSkip?: boolean;           // false when the host page provides its own Skip control
   onDone?: () => void;         // fires when the cutscene ends or is skipped
   className?: string;
 }
@@ -28,7 +29,7 @@ interface Props {
  * Plays one cutscene. Mount it after a user click so sound is allowed to start.
  * The scene is centred on the sim's target (opening) or on the flight's touchdown point (ending).
  */
-export default function Cutscene({ kind, env, flight, start, target, params, terrain, terrainUrl, landing, muted = false, onDone, className }: Props) {
+export default function Cutscene({ kind, env, flight, start, target, params, terrain, terrainUrl, landing, muted = false, showSkip = true, onDone, className }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const engine = useRef<CutsceneEngine | null>(null);
   const done = useRef(onDone); done.current = onDone;
@@ -53,7 +54,7 @@ export default function Cutscene({ kind, env, flight, start, target, params, ter
   useEffect(() => {
     if (!box.current || waiting) return;
     const e = new CutsceneEngine(box.current, JSON.parse(envKey) as CutsceneEnv,
-      { muted, terrain: pack ?? undefined, landing: JSON.parse(landKey) ?? undefined });
+      { muted, showSkip, terrain: pack ?? undefined, landing: JSON.parse(landKey) ?? undefined });
     engine.current = e;
     let live = true;
     e.play(kind, play.current).then(() => { if (live) done.current?.(); });

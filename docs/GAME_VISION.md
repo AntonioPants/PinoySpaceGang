@@ -42,10 +42,12 @@ an Earth field test. Never silently switch physics because a scene changes locat
   callbacks, and passes the exact flown mission to the report.
 - The control-center stage currently uses a functional, explicitly labelled 2D
   systems console. Tim's 3D interior and planetary start scene are still pending.
-- Furgan's cutscene modules and Flight Lab are now present from main. The cutscene
-  demo is available with `?cutscene-demo`, but the game registry's cinematic slots
-  remain null and are skipped until those modules are adapted to the game contracts.
-  The 3D cockpit remains pending.
+- Furgan's cutscenes are registered in the game registry: `earthApproach` plays his opening
+  (handing over at the simulation's start state) and `outcome` replays the end of the flight
+  that was actually flown. The adapters are in `web/src/game/scenes/`. Sound starts off and is
+  switched on by the player; with reduced motion a still card replaces the cinematic.
+  `liftoff` and `planetaryArrival` remain null and are skipped. The standalone test bench is
+  still available with `?cutscene-demo`. The 3D cockpit remains pending.
 - All earlier planner controls remain available as initial setup/debug controls.
   When the 3D interior is ready, preserve the console as an accessibility fallback.
 
