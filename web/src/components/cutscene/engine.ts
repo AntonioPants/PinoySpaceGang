@@ -156,6 +156,10 @@ export class CutsceneEngine {
     }
     this.ro = new ResizeObserver(() => this.resize()); this.ro.observe(container); this.resize();
     this.resetScene(); this.setCam(V(30, 6, 40), V(0, 3, 0)); this.render();
+    // Compile every material now, so the first frame that shows the lander, its flame or the
+    // fireball does not stall on shader compilation (a visible freeze on integrated GPUs).
+    const hidden = [this.lander.group, this.lander.flame, this.fireball, this.scorch, this.targetRing].filter((o) => !o.visible);
+    hidden.forEach((o) => { o.visible = true; }); this.renderer.compile(this.scene, this.camera); hidden.forEach((o) => { o.visible = false; });
   }
 
   /** Plays a cutscene. Resolves when it ends or is skipped. Endings keep animating until the next play()/dispose(). */
@@ -375,29 +379,32 @@ export class CutsceneEngine {
       this.setCam(camGround, from.lerp(p, easeInOut(u)));
       this.audio.setThrust(0.25 + u * 0.3);
       if (t > 0.5) this.caption(this.env.name, this.env.subtitle ?? "Earth analog test flight");
-    } else if (t < 6.6) {                                       // B: chase shot, coasting
-      const u = (t - 3.2) / 3.4;
+      this.ui.fade.style.opacity = String(clamp01((t - 3.0) / 0.2));              // quick dip to black into the next shot
+    } else {
+      // B: one continuous shot. It swings from beside the lander round behind it, rises, and settles
+      // on exactly the chase framing the live descent view opens with (app/flightlab/view.ts:
+      // behind the direction of travel, 34 m out, 0.32 rad up), so the hand-over has no jump.
+      const s1 = easeInOut((t - 3.2) / 3.4), s2 = easeInOut((t - 5.8) / (END - 0.35 - 5.8));
+      this.ui.fade.style.opacity = String(clamp01(1 - (t - 3.2) / 0.22));       // in from the dip at the scene change
       this.fireball.visible = false; L.visible = true;
-      L.position.copy(P); this.orient(V(-back.x, 0, -back.z), lerp(0.2, 0.06, u));
-      this.thrust(0, dt); this.audio.setThrust(0.12);
-      const ang = Math.atan2(back.z, back.x) + lerp(-0.9, 0.5, u), r = lerp(27, 17, u);
-      this.setCam(P.clone().add(V(Math.cos(ang) * r, lerp(11, 2, u), Math.sin(ang) * r)), P.clone().add(V(0, 2, 0)));
-      this.trauma = Math.max(this.trauma, 0.1);
-      if (t > 4.2) this.caption("", "");
-    } else {                                                    // C: over the shoulder, landing target ahead, engine lights
-      const u = (t - 6.6) / (END - 6.6);
-      L.visible = true; L.position.copy(P); this.orient(V(-back.x, 0, -back.z), 0.06);
+      L.position.copy(P); this.orient(V(-back.x, 0, -back.z), lerp(0.2, 0.06, s1));
       const lit = t > 7.5;
       if (lit && !this.flags.lit) { this.flags.lit = true; this.trauma = 0.45; this.flashLight.position.copy(P); this.flashLight.intensity = 2500; }
       this.thrust(lit ? Math.min(0.7, (t - 7.5) * 1.6) : 0, dt);
-      this.targetRing.visible = true; this.targetRing.position.set(0, h0 + 1.5, 0);
+      if (!lit) this.audio.setThrust(0.12);
+      this.targetRing.visible = t > 6.6; this.targetRing.position.set(0, h0 + 1.5, 0);
       this.targetRing.scale.setScalar(Math.max(18, P.distanceTo(V(0, h0, 0)) * 0.05) * (1 + 0.12 * Math.sin(t * 5)));
-      const side = V(-back.z, 0, back.x), toTarget = V(0, h0, 0).sub(P).normalize();
-      this.setCam(P.clone().addScaledVector(toTarget, -lerp(26, 40, u)).addScaledVector(side, 7).add(V(0, 7, 0)),
-        P.clone().lerp(V(0, h0, 0), lerp(0.05, 0.3, easeInOut(u))));
-      this.trauma = Math.max(this.trauma, lit ? 0.16 : 0.06);
+      const behind = Math.atan2(back.z, back.x);
+      const EL = 0.32, DIST = 34;
+      const az = lerp(behind + lerp(-0.9, 0.5, s1), behind, s2);
+      const r = lerp(lerp(27, 17, s1), DIST * Math.cos(EL), s2), y = lerp(lerp(11, 2, s1), DIST * Math.sin(EL), s2);
+      const aim = V(0, h0, 0).sub(P).multiplyScalar(0.1); if (aim.length() > DIST * 0.2) aim.setLength(DIST * 0.2);
+      this.setCam(P.clone().add(V(Math.cos(az) * r, y, Math.sin(az) * r)), P.clone().add(V(0, lerp(2, 1.5, s2), 0)).addScaledVector(aim, s2));
+      this.trauma = Math.max(this.trauma, lit ? 0.16 : lerp(0.1, 0.06, s2));
+      if (t > 4.2 && t < 7.6) this.caption("", "");
       if (t > 7.6) this.caption("Descent simulation", `Altitude ${Math.round(sp.z)} m · you have control`);
-      this.ui.fade.style.opacity = String(clamp01((t - (END - 0.7)) / 0.6));
+      // a short dip to black: the descent view fades in from black on the same framing
+      if (t > 3.6) this.ui.fade.style.opacity = String(clamp01((t - (END - 0.4)) / 0.35));
     }
   }
 

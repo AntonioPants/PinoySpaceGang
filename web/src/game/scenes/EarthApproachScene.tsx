@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Cutscene } from '../../components/cutscene';
 import { flightSetup } from '../../lib/simulation';
 import type { SceneProps } from '../contracts';
@@ -11,6 +12,8 @@ import { sceneEnv } from './sceneEnv';
 export default function EarthApproachScene({ mission, reducedMotion, onComplete, immersive }: SceneProps) {
   const { env, terrainUrl } = sceneEnv(mission);
   const { start, target } = flightSetup(mission);
+  // Fetch the descent screen's code while the opening plays, so the hand-over does not wait for it.
+  useEffect(() => { void import('../../components/Descent').then(() => import('../../components/Descent3D')).catch(() => { /* loads on demand instead */ }); }, []);
   return <SceneFrame title={`Approaching ${mission.earthAnalog.name}`} reducedMotion={reducedMotion} onComplete={onComplete}
     detail="The lander arrives 1,000 m above the ground, 400 m west of the target, and the descent begins.">
     {muted => <Cutscene fullscreen={immersive} kind="opening" env={env} terrainUrl={terrainUrl} requiredTerrainId={mission.earthAnalog.id} start={start} target={target} equipment={mission.equipment} muted={muted} showSkip={false} onDone={onComplete} />}

@@ -72,7 +72,7 @@ export interface SiteStyle {
  */
 export const KILBOURNE_STYLE: SiteStyle = {
   plain: "#b39a76", floor: "#b08d68", playa: "#d8cdb6", ejecta: "#c9b38c", dune: "#d6bd8c",
-  scree: "#7a5644", cliff: "#3d2e2e", shrub: "#59603f", shrubs: 0.55,
+  scree: "#8a6a52", cliff: "#5f4b40", shrub: "#59603f", shrubs: 0.55,
 };
 
 const srgb = (hex: string) => { const n = parseInt(hex.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
@@ -101,8 +101,9 @@ type Field = ReturnType<typeof packField>;
 /** Material weights at a pack position: how much cliff, scree, playa, crater floor and raised rim. */
 function materialAt(f: Field, px: number, pz: number, seed: number) {
   const e = f.elev(px, pz), s = f.slope(px, pz), n = fbm(px / 90, pz / 90, seed + 21) - 0.5;
-  const cliff = smooth(19, 29, s + n * 5);
-  const scree = smooth(9, 19, s + n * 4) * (1 - cliff);
+  // The 30 m grid smears a 12 m cliff over a wide band, so only the steepest cells get cliff colour.
+  const cliff = smooth(23, 33, s + n * 5);
+  const scree = smooth(11, 23, s + n * 4) * (1 - cliff);
   const inside = smooth(f.plain - 8, f.plain - 26, e);
   const playa = smooth(f.low + 5.5, f.low + 2, e + n * 3) * (1 - scree) * (1 - cliff);
   const raised = smooth(f.plain + 5, f.plain + 13, e + n * 4) * (1 - cliff);
@@ -135,7 +136,7 @@ function paintPack(f: Field, st: SiteStyle, cx: number, cz: number, half: number
       }
     } else if (hash(i, j, seed + 44) < open * 0.2) mix(C.shrub, 0.45);
     // basalt blocks on the scree, grain everywhere
-    if (m.scree > 0.25 && hash(i * 3, j * 7, seed + 45) < m.scree * 0.3) mix(C.cliff, 0.7);
+    if (m.scree > 0.25 && hash(i * 3, j * 7, seed + 45) < m.scree * 0.3) mix(C.cliff, 0.5);
     const g = 0.9 + 0.2 * (fbm(X / 37, Z / 37, seed + 46) - 0.5) * 2 * 0.6 + (hash(i, j, seed + 47) - 0.5) * 0.07;
     let gg = g;
     if (fadeEdge) {                                    // even colour at the border, so the apron beyond it is uniform
@@ -150,6 +151,10 @@ function paintPack(f: Field, st: SiteStyle, cx: number, cz: number, half: number
 }
 const toTexture = (canvas: HTMLCanvasElement) => { const t = new THREE.CanvasTexture(canvas); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; };
 const overviewCache = new Map<string, HTMLCanvasElement>();      // the whole-pack paint does not depend on the landing point
+// The fine patch round the landing point is the slowest part to build (most of a second, several
+// on a Pi). The opening and the live descent build the same one back to back, so it is kept: the
+// descent then starts without a long black pause after the opening.
+const patchCache = new Map<string, HTMLCanvasElement>();
 
 /**
  * Terrain with the landing point at the scene origin (+X east, +Y up, +Z south).
@@ -183,7 +188,14 @@ export function buildTerrain(look: EnvLook, elevation: number[] | undefined, see
     const fp = fine.attributes.position as THREE.BufferAttribute;
     for (let i = 0; i < fp.count; i++) fp.setY(i, heightAt(fp.getX(i), fp.getZ(i)));
     if (style) fine.computeVertexNormals(); else colorize(fine, look, seed);
-    group.add(new THREE.Mesh(fine, mat(style ? toTexture(paintPack(field, style, L.x, L.z, PATCH, 768, seed, false)) : null)));
+    let patch: HTMLCanvasElement | null = null;
+    if (style) {
+      const key = `${pack.manifest.id}:${seed}:${L.x.toFixed(1)}:${L.z.toFixed(1)}`;
+      patch = patchCache.get(key) ?? paintPack(field, style, L.x, L.z, PATCH, 768, seed, false);
+      patchCache.delete(key); patchCache.set(key, patch);
+      while (patchCache.size > 4) patchCache.delete(patchCache.keys().next().value!);      // a few sites at most
+    }
+    group.add(new THREE.Mesh(fine, mat(patch ? toTexture(patch) : null)));
     // whole pack at source resolution, with an apron out to the horizon so the map has no visible edge
     const R = rows + 2, C = columns + 2;
     const pos = new Float32Array(R * C * 3), uv = new Float32Array(R * C * 2);
