@@ -21,6 +21,7 @@ const OpeningGame = lazy(() => import('./game/opening/OpeningGame'));
 const GameSession = lazy(() => import('./game/GameSession'));
 const FlightReport = lazy(() => import('./components/FlightReport'));
 const FlightReportNHB = lazy(() => import('./components/FlightReportNHB'));
+const MoonGlobe = lazy(() => import('./components/MoonGlobe'));
 function restoreDraft(catalog: Catalog) {
   const { targets, analogs } = catalog;
   try {
@@ -50,6 +51,12 @@ export default function App() {
 }
 
 function Mission({ catalog }: { catalog: Catalog }) {
+  const [online, setOnline] = useState(navigator.onLine);
+  useEffect(() => {
+    const update = () => setOnline(navigator.onLine);
+    window.addEventListener('online', update); window.addEventListener('offline', update);
+    return () => { window.removeEventListener('online', update); window.removeEventListener('offline', update); };
+  }, []);
   const targets = catalog.targets;
   const [draft] = useState(() => restoreDraft(catalog));
   const [targetId, setTargetId] = useState(draft.targetId);
@@ -131,6 +138,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
   return <>
     <a className="skip-link" href="#mission-main">Skip to mission workspace</a>
     <header className="app-header">
+      <a href="?moon">Explore lunar terrain</a><span className="connection-status" role="status">{online ? 'Online' : 'Offline'}</span>
       <a href="#" onClick={e => { e.preventDefault(); setStep(0); }} className="brand" aria-label="Analog Atlas home"><Orbit size={31} strokeWidth={1.4} /><span>analog<span className="brand-light">atlas</span><small>Planetary flight simulator</small></span></a>
       <div className="header-right"><span className="team-name">Pinoy Space Gang <span>/</span> Mission 001</span><button className="subtle-button" onClick={() => setDialog('sources')}><Layers3 size={16} /> Data & sources</button></div>
     </header>
@@ -149,7 +157,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
       {step === 0 && <section className="workspace destination-workspace" aria-label="Planetary destination">
         <div className="planet-panel">
           <div className="planet-top"><div className="segmented" aria-label="Planet selection">{(['Moon', 'Mars'] as Body[]).map(body => <button key={body} aria-pressed={target.body === body} onClick={() => changeBody(body)}>{body === 'Moon' ? '◐' : '◉'} {body}</button>)}</div><span className="small-label">{bodyPoints.length} target regions</span></div>
-          <Globe body={target.body} points={bodyPoints} selected={targetId} onSelect={setTargetId} />
+          {target.body === 'Moon' ? <Suspense fallback={<Globe body="Moon" points={bodyPoints} selected={targetId} onSelect={setTargetId} />}><MoonGlobe points={bodyPoints} selected={targetId} onSelect={setTargetId} /></Suspense> : <Globe body={target.body} points={bodyPoints} selected={targetId} onSelect={setTargetId} />}
           <div className="planet-label"><span>Selected planetary body</span><strong>{target.body === 'Moon' ? 'Luna' : 'Mars'}</strong><p>{target.body === 'Moon' ? 'Earth’s natural satellite' : 'Fourth planet from the Sun'}</p></div>
           <div className="planet-scale"><span>Scenario gravity</span><strong>{target.gravity.toFixed(2)} <small>m/s²</small></strong><span>{target.body === 'Moon' ? 'Vacuum environment' : 'Thin atmosphere'}</span></div>
         </div>
