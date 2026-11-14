@@ -29,10 +29,14 @@ export default function Descent3D({ mission, profile, entry, weather, autoStart 
   // terrain for the 3D scene: the same pack the physics flies on
   useEffect(() => {
     const abort = new AbortController();
-    loadTerrainPack(mission.earthAnalog.terrainBaseUrl, abort.signal).then(p => { if (!abort.signal.aborted) setPack(p); })
+    loadTerrainPack(mission.earthAnalog.terrainBaseUrl, abort.signal).then(p => {
+      if (abort.signal.aborted) return;
+      if (p.manifest.id !== mission.earthAnalog.id) throw new Error('The 3D terrain does not match the selected site');
+      setPack(p);
+    })
       .catch(() => { if (!abort.signal.aborted) unavailable.current('the terrain could not be loaded for 3D'); });
     return () => abort.abort();
-  }, [mission.earthAnalog.terrainBaseUrl]);
+  }, [mission.earthAnalog.terrainBaseUrl, mission.earthAnalog.id]);
 
   const launch = useCallback(() => {
     if (!pack || !box.current) return;

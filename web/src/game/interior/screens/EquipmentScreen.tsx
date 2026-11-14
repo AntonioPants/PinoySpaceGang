@@ -1,5 +1,6 @@
 import type { MissionConfig, MissionSettings } from '../../../lib/types';
 import { equipmentLoadouts } from '../../equipment';
+import { landingGear } from '../../opening/equipmentCatalog';
 import { Slider } from './ui';
 
 /** Choose a lander loadout, then trim its mass, propellant and thrust. */
@@ -7,6 +8,7 @@ export default function EquipmentScreen({ mission, settings, onSettingsChange }:
   const set = <K extends keyof MissionSettings>(key: K, value: MissionSettings[K]) => onSettingsChange({ ...settings, [key]: value });
   const gravity = settings.environment === 'earth' ? 9.81 : mission.planetaryTarget.gravity;
   const twr = settings.thrusterForceN / ((settings.dryMassKg + settings.fuelMassKg) * gravity);
+  const gear = landingGear.find(g => g.id === mission.equipment?.landingGearId);
   const matches = (l: typeof equipmentLoadouts[number]) => Object.entries(l.settings).every(([k, v]) => settings[k as keyof MissionSettings] === v);
   return <>
     <header><h2>Equipment</h2><span className={`mon-readout ${twr < 1 ? 'warn' : ''}`}>Thrust to weight <b>{twr.toFixed(2)}</b></span></header>
@@ -17,7 +19,8 @@ export default function EquipmentScreen({ mission, settings, onSettingsChange }:
           <strong>{l.name}</strong><span>{l.detail}</span></button>)}</div>
         <p className="mon-note">Presets for the simulation, not specifications of real spacecraft. A loadout also sets the hazard sensor.</p>
         <dl className="mon-facts compact"><div><dt>Fuelled mass</dt><dd>{(settings.dryMassKg + settings.fuelMassKg).toLocaleString()} kg</dd></div>
-          <div><dt>Hazard sensor</dt><dd>{settings.hazardSensor === 'none' ? 'None' : settings.hazardSensor === 'lidar' ? 'Lidar' : 'Camera'}</dd></div></dl>
+          <div><dt>Hazard sensor</dt><dd>{settings.hazardSensor === 'none' ? 'None' : settings.hazardSensor === 'lidar' ? 'Lidar' : 'Camera'}</dd></div>
+          {gear && <div><dt>Landing gear</dt><dd>{gear.name}<small>Chosen in the equipment bay. Shown only; not yet in the physics.</small></dd></div>}</dl>
       </section>
       <section>
         <h3>Vehicle</h3>

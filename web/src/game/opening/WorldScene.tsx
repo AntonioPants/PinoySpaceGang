@@ -7,6 +7,7 @@ import { earthFlight, earthSurface, globePoint, EARTH_CENTRE, METRE_SCALE, type 
 export interface WorldProps {
   stage: 'title' | 'worlds' | 'destination' | 'earth'; body: Body; hover: Body | null;
   targets: PlanetarySite[]; analogs: AnalogSite[]; targetId: string; analogId: string;
+  selectedAnalog: AnalogSite;
   profile: TerrainProfile | null; surface: boolean;
   onBody: (body: Body) => void; onHover: (body: Body | null) => void;
   onTarget: (id: string) => void; onAnalog: (id: string) => void;
@@ -75,7 +76,7 @@ export default function WorldScene(props: WorldProps) {
       controls = new OrbitControls(camera, renderer.domElement);
       controls.target.copy(goalTarget); controls.enableDamping = true; controls.enablePan = false;
       controls.minDistance = surface ? Math.max(900, terrainRelief * 3) * METRE_SCALE : 2;
-      controls.maxDistance = surface ? .004 : 22;
+      controls.maxDistance = surface ? .004 : Math.max(22, goalOffset.length()*1.1);
       controls.maxPolarAngle = surface ? Math.PI * .42 : Math.PI;
       controls.enabled = !['worlds','title'].includes(live.current.stage);
       departingPatches.splice(0).forEach(patch => { scene.remove(patch); release(patch); });
@@ -95,7 +96,7 @@ export default function WorldScene(props: WorldProps) {
         if (terrain) departingPatches.push(terrain);
         terrain=null; terrainMaterial=null; terrainProfile=p.profile;
         if (p.profile) {
-          const site=p.analogs.find(a=>a.id===p.profile!.manifest.id);
+          const site=p.selectedAnalog.id===p.profile.manifest.id?p.selectedAnalog:undefined;
           if (site) {
             const patch = earthSurface(p.profile, site.lat, site.lon);
             terrainRelief = patch.relief;
@@ -114,12 +115,13 @@ export default function WorldScene(props: WorldProps) {
         const offset=new T.Vector3(2000,1300 + terrainRelief*.5,3200).applyQuaternion(terrain.quaternion).multiplyScalar(METRE_SCALE);
         fly(terrain.position.clone(),offset,new T.Vector3(0,1,0).applyQuaternion(terrain.quaternion),true);
       } else if(p.stage==='title') {
-        fly(new T.Vector3(0,.1,0),new T.Vector3(0,1.4,10));
+        fly(new T.Vector3(0,.1,0),new T.Vector3(0,1.4,10).multiplyScalar(Math.max(1,1.45/camera.aspect)));
       } else if(p.stage==='worlds') {
-        fly(p.hover?centres[p.hover].clone().multiplyScalar(.35):new T.Vector3(),new T.Vector3(0,2,p.hover?11:14));
+        fly(p.hover?centres[p.hover].clone().multiplyScalar(.35):new T.Vector3(),new T.Vector3(0,2,p.hover?11:14).multiplyScalar(Math.max(1,1.1/camera.aspect)));
       } else {
-        const selected=p.stage==='earth'?p.analogs.find(a=>a.id===p.analogId):p.targets.find(t=>t.id===p.targetId);
+        const selected=p.stage==='earth'?p.selectedAnalog:p.targets.find(t=>t.id===p.targetId);
         const offset=selected?globePoint(selected.lat*.8,selected.lon,p.stage==='earth'?5.5:3.8):new T.Vector3(0,1,4.5);
+        offset.multiplyScalar(Math.max(1,.85/camera.aspect));
         fly(centres[body].clone(),offset,new T.Vector3(0,1,0),p.stage==='earth');
       }
     }; update.current();
@@ -129,7 +131,7 @@ export default function WorldScene(props: WorldProps) {
     const pointerUp=(e:PointerEvent)=>{if(Math.hypot(e.clientX-down.x,e.clientY-down.y)>6)return;const obj=hit(e),p=live.current;if(p.stage==='worlds' && ['Moon','Mars'].includes(obj?.userData.body))p.onBody(obj!.userData.body);else if(obj?.userData.id){if(p.stage==='earth')p.onAnalog(obj.userData.id);else p.onTarget(obj.userData.id);}};
     const pointerMove=(e:PointerEvent)=>{const obj=hit(e);renderer.domElement.style.cursor=obj?.userData.id||['Moon','Mars'].includes(obj?.userData.body)?'pointer':'grab';if(live.current.stage==='worlds'&&['Moon','Mars'].includes(obj?.userData.body)&&live.current.hover!==obj?.userData.body)live.current.onHover(obj!.userData.body);};
     renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('pointermove',pointerMove);
-    const resize=new ResizeObserver(()=>{const w=host.clientWidth,h=host.clientHeight;if(w&&h){renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();}});resize.observe(host);
+    const resize=new ResizeObserver(()=>{const w=host.clientWidth,h=host.clientHeight;if(w&&h){renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();if(!surface)update.current();}});resize.observe(host);
     let frame=0,last=performance.now();
     const render=()=>{const now=performance.now(),dt=Math.min((now-last)/1000,.05);last=now;
       if (earthRoute) {
