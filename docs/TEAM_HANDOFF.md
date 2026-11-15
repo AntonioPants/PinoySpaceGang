@@ -5,9 +5,9 @@ it supersedes earlier allocations in planning notes and agent context.
 
 ## Shared player journey
 
-Title screen / Start Journey → three worlds together → choose Moon/Mars → choose a study region → transition to
+Title (a ship racing in; click anywhere) → flight in to the three worlds → choose Moon/Mars → choose a study region → transition to
 Earth → select a proposed matching site → fly continuously into its measured terrain
-→ Select Equipment → configure the lander using arrow controls → Launch Journey
+→ flag a landing point on it → Select Equipment → configure the lander using arrow controls → Launch Journey
 → Furgan's departure cinematics → Tim's playable character and ship controls
 → launch the landing experiment → Earth approach → live physics → landing outcome
 → Antonio's in-character report.
@@ -24,12 +24,15 @@ Earth matching presentation, a continuous globe-to-terrain camera, and transitio
 into the equipment bay. Preserve Antonio's catalog ordering/evidence.
 
 Current delivery: the opening is the default app. The prior engineering planner is
-retained at `?planner`. One Three.js scene stays mounted from worlds through Earth
-terrain; keyboard/touch-accessible controls duplicate raycast selections. Reduced
-motion snaps cameras instead of animating. Missing WebGL still permits setup.
+retained at `?engineering-planner`. Cesium streams Moon, Mars and Google Photorealistic
+3D Tiles for Earth reconnaissance when available; the original Three.js globe is the
+fallback. Screen-projected catalog markers remain clickable over each Cesium view.
+The measured Earth DEM is the default site approach and remains the authoritative
+simulation terrain; Google 3D imagery is available through a view toggle. Reduced motion snaps camera flights.
+Missing WebGL still permits setup through the site lists.
 
 The game occupies one fixed viewport at every stage, including cinematics and live
-descent. Start Journey requests browser fullscreen when supported; rejecting or exiting
+descent. Starting from the title requests browser fullscreen when supported; rejecting or exiting
 browser fullscreen must leave a fully playable viewport game. Do not restore page
 headers, max-width wrappers or aspect-ratio video windows around gameplay. Use compact
 HUD overlays and internally scrolling controls on small screens.
@@ -37,10 +40,10 @@ HUD overlays and internally scrolling controls on small screens.
 `earthSurface.ts` attaches the DEM to its geographic tangent frame on a curved Earth
 cap, using the globe's reference texture. DEM relief is 1:1 inside its footprint;
 the outer curved context is explicitly unmeasured and must never enter physics.
-`earthFlight` interpolates above the sphere, including interrupted flights and
-opposite-side site changes. Keep Earth visible throughout approach, and preserve the
-departing patch until the next approach finishes. Do not replace Earth with a detached
-rectangle or teleport to a second terrain scene.
+`earthFlight` interpolates above the sphere within the measured DEM view, including
+interrupted flights and opposite-side site changes. Keep Earth visible throughout that
+approach, and preserve the departing patch until the next approach finishes. Google
+imagery is visual context, not measured terrain or landing safety evidence.
 
 ## Yousef — equipment and landing gear
 
@@ -126,6 +129,11 @@ kept. Test bench: `?debrief-demo`. The planner still uses `components/FlightRepo
   registers modules. Add independent scene files rather than modifying the planner.
 - `GameSession` owns phase ordering, final mission and duplicate-callback guards.
 - Scene modules get the full mission; completion and skip share `onComplete`.
+- The landing point flagged on the terrain travels as `MissionConfig.earthAnalog.landingTargetM`
+  (x east, y north, metres from the patch centre; absent = centre). `flightSetup` in
+  `lib/simulation.ts` turns it into the sim's `target` and moves the approach start with it, so
+  the cutscenes, the descent and the report all follow it. `lib/landing.ts` keeps it 600 m inside
+  the patch; `GameSession` carries it through the console's relaunch.
 - Hardware IDs survive the console and report. The console's sensor change updates
   the final equipment sensor too. Physics remains single-source in `app/sim/`.
 - Fetch and merge the latest shared branch before work. Do not force-push or overwrite

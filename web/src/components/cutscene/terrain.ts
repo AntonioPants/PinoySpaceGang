@@ -21,9 +21,9 @@ function fbm(x: number, z: number, seed: number) {
 }
 const smooth = (a: number, b: number, x: number) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 
-export interface Terrain { group: THREE.Group; heightAt(x: number, z: number): number; }
+export interface Terrain { group: THREE.Group; measuredGround?: THREE.BufferGeometry; measuredMeshes?: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]; heightAt(x: number, z: number): number; }
 
-function colorize(geo: THREE.BufferGeometry, look: EnvLook, seed: number, plain?: (i: number) => boolean) {
+export function colorize(geo: THREE.BufferGeometry, look: Pick<EnvLook, "ground" | "groundDark">, seed: number, plain?: (i: number) => boolean) {
   geo.computeVertexNormals();
   const pos = geo.attributes.position as THREE.BufferAttribute, nor = geo.attributes.normal as THREE.BufferAttribute;
   const cA = new THREE.Color(look.ground), cB = new THREE.Color(look.groundDark), c = new THREE.Color();
@@ -235,7 +235,7 @@ export function buildTerrain(look: EnvLook, elevation: number[] | undefined, see
       patch = patchCache.get(key) ?? paintPack(field, style, L.x, L.z, PATCH, 768, seed, false);
       keepPatch(key, patch);
     }
-    group.add(new THREE.Mesh(fine, mat(patch ? toTexture(patch) : null)));
+    const fineMesh = new THREE.Mesh(fine, mat(patch ? toTexture(patch) : null)); group.add(fineMesh);
     // whole pack at source resolution, with an apron out to the horizon so the map has no visible edge
     const R = rows + 2, C = columns + 2;
     const pos = new Float32Array(R * C * 3), uv = new Float32Array(R * C * 2);
@@ -270,7 +270,7 @@ export function buildTerrain(look: EnvLook, elevation: number[] | undefined, see
       overview = overviewCache.get(key) ?? paintPack(field, style, W / 2, D / 2, W / 2, 1024, seed, true);
       overviewCache.set(key, overview);
     }
-    group.add(new THREE.Mesh(coarse, mat(overview ? toTexture(overview) : null)));
+    const coarseMesh = new THREE.Mesh(coarse, mat(overview ? toTexture(overview) : null)); group.add(coarseMesh);
 
     if (style) {
       // shrubs and basalt blocks near the landing point, placed by the same material rules as the paint
@@ -311,7 +311,7 @@ export function buildTerrain(look: EnvLook, elevation: number[] | undefined, see
       });
       group.add(mesh);
     }
-    return { group, heightAt };
+    return { group, measuredGround: coarse, measuredMeshes: [fineMesh, coarseMesh], heightAt };
   }
 
   let profile: number[] | null = null;

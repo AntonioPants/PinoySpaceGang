@@ -4,7 +4,7 @@ Find an Earth testbed for a Moon or Mars region, inspect what matches and what d
 
 **[Play Analog Atlas](https://analog.timhufnagel.org)** · [Submission](docs/SUBMISSION.md) · [Generated findings](docs/FINDINGS.md) · [Demo script](docs/DEMO_SCRIPT.md)
 
-**Judge it in two minutes:** Start Journey → Mars → Lucus Planum → Find Earth terrain. Read the percentages in the ten-site slider, select a discovered candidate and open More for evidence and limits. Compare the separate baseline landing result. Explore all 102 or use Atlas to change targets. Credits → Findings shows generated results and their limitations. Select Equipment and fly to inspect the real telemetry debrief; use `?planner` and the flat console if 3D is unavailable.
+**Judge it in two minutes:** Start Journey → Mars → Lucus Planum → Find Earth terrain. Read the percentages in the ten-site slider, select a discovered candidate and open More for evidence and limits. Compare the separate baseline landing result. Explore all 102 or use Atlas to change targets. Credits → Findings shows generated results and their limitations. Select Equipment and fly to inspect the real telemetry debrief; use `?engineering-planner` and the flat console if 3D is unavailable.
 
 # Planetary Analog Simulator
 
@@ -12,7 +12,7 @@ Find an Earth testbed for a Moon or Mars region, inspect what matches and what d
 
 The default app now opens the interactive three-world game sequence. See
 [team ownership and requirements](docs/TEAM_HANDOFF.md). The engineering planner
-is still accessible with `?planner`.
+is still accessible with `?engineering-planner`.
 
 Read [the agreed game journey](docs/GAME_VISION.md) and [AI guidance](AGENTS.md).
 The journey: title screen, choose Moon or Mars and a region, find an Earth test site, pick

@@ -52,6 +52,8 @@ export interface MissionConfig {
     id: string; name: string; terrainBaseUrl: string; elevationProfile: number[];
     sampleSpacingM: number; profileRow: number; verticalOffsetM: number;
     sourceSha256: string;
+    /** Where the player chose to land: x east, y north, metres from the patch centre. Absent = the centre. */
+    landingTargetM?: { x: number; y: number };
   };
   strategy: { mode: MissionSettings['mode']; hazardSensor: MissionSettings['hazardSensor']; thrusterForceN: number; fuelMassKg: number; dryMassKg: number; maxSlopeToleranceDeg: number };
   environment: { mode: MissionSettings['environment']; gravityMs2: number; windSpeedMs: number; atmosphereModel: 'none' | 'earth-standard' | 'mars-constant'; dust: number; glare: number; interferenceSource: 'site' | 'manual';

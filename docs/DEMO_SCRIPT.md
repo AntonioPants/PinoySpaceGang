@@ -18,6 +18,6 @@
 
 ## Fallback and video
 
-If the opening globe fails, keyboard-accessible site buttons still work. Open `/?planner` for the engineering interface. Use the bridge's flat-console fallback and the descent's 2D view. If rendering is unavailable altogether, `/findings.html` contains the generated results and method; never replace it with a fabricated flight.
+If the opening globe fails, keyboard-accessible site buttons still work. Open `/?engineering-planner` for the engineering interface. Use the bridge's flat-console fallback and the descent's 2D view. If rendering is unavailable altogether, `/findings.html` contains the generated results and method; never replace it with a fabricated flight.
 
 Record 1080p landscape screen capture and narration: 15 seconds mission selection, 25 seconds evidence/discoveries, 20 seconds settings, 50 seconds a real flight (time compression labelled), 35 seconds debrief/findings, 15 seconds limitations. Add source URLs and the live link to the video description. A recorded fallback must show its actual build and must not imply live telemetry.

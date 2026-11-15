@@ -3,7 +3,10 @@ import react from '@vitejs/plugin-react';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 export default defineConfig({
   define: { CESIUM_BASE_URL: JSON.stringify('/cesium/') },
-  plugins: [react(), viteStaticCopy({ targets: ['Workers', 'Assets', 'Widgets', 'ThirdParty'].map(dir => ({ src: `node_modules/cesium/Build/Cesium/${dir}`, dest: 'cesium' })) })],
+  plugins: [react(), viteStaticCopy({ targets: ['Workers', 'Assets', 'Widgets', 'ThirdParty'].map(dir => ({
+    // The plugin keeps the source path in the output; drop node_modules/cesium/Build/Cesium so the
+    // files land at /cesium/Assets, /cesium/Workers, ... where CESIUM_BASE_URL looks for them.
+    src: `node_modules/cesium/Build/Cesium/${dir}`, dest: 'cesium', rename: { stripBase: 4 } })) })],
   resolve: { dedupe: ['react', 'react-dom', 'three'] },
   server: { fs: { allow: ['..'] } },
   build: { rollupOptions: { output: { manualChunks(id) {

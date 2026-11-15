@@ -2,7 +2,7 @@
 
 Analog Atlas connects open planetary and Earth elevation data to a playable landing experiment. Choose a Moon or Mars region, inspect proposed Earth counterparts, read what matches and what does not, and fly one configured lander over real terrain. The Atlas includes curated locations and newly selected windows near known analog regions. It makes the limits of an Earth rehearsal visible alongside its practical value.
 
-Live game: https://analog.timhufnagel.org · Findings: /findings.html · Engineering planner: /?planner
+Live game: https://analog.timhufnagel.org · Findings: /findings.html · Engineering planner: /?engineering-planner
 
 ## Impact and relevance
 

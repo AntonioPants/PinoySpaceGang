@@ -3,6 +3,9 @@ import { FlightView, type CamMode, type FlightSetup } from '../../../app/flightl
 import { createManualPilot, createSim, keysToPilotInput } from '../../../app/sim/src/index';
 import type { FlightSummary, Sim, SimEvent, SimState } from '../../../app/sim/src/index';
 import { loadTerrainPack, peekTerrainPack, setSoundOn, simToPack, soundOn, type TerrainPack } from './cutscene';
+import { createEarthScenery } from "../lib/earthTileScenery";
+import { loadCatalog } from "../lib/catalog";
+import * as THREE from "three";
 import { sceneEnv } from '../game/scenes/sceneEnv';
 import { toSimInput } from '../lib/simulation';
 import type { DescentProps } from './Descent2D';
@@ -51,6 +54,19 @@ export default function Descent3D({ mission, profile, entry, weather, autoStart 
       const conditions = flight.telemetry().environment;
       view.current?.dispose();
       const scene = new FlightView(box.current, sceneEnv(mission).env, { terrain: pack, landing: simToPack(pack, target), letterbox: false, showSkip: false, muted, equipment: mission.equipment });
+      const host = box.current;
+      if (import.meta.env.VITE_CESIUM_ION_TOKEN) void loadCatalog().then(catalog => {
+        const site = catalog.analogs.find(a => a.id === pack.manifest.id);
+        if (!site) return;
+        const landing = simToPack(pack, target);
+        const { rows, columns, spacing_m } = pack.manifest.grid;
+        const width = (columns-1)*spacing_m, depth = (rows-1)*spacing_m;
+        const frame = new THREE.Matrix4().makeTranslation(-target.x, 0, target.y);
+        const height = mission.earthAnalog.verticalOffsetM + (pack.heightAt(landing.x, landing.z) ?? 0);
+        scene.attachEarthScenery((renderer, ground, meshes, look) => createEarthScenery(renderer, host, site.lat, site.lon,
+          height, frame, ground, {west:-landing.x,east:width-landing.x,north:-landing.z,south:depth-landing.z},
+          new THREE.Color(0xb9cad3), meshes, look));
+      }).catch(() => { /* The measured scene is available offline. */ });
       scene.speed = speed; scene.camMode = camera;
       const setup: FlightSetup = {
         target, refElevation: flight.terrain.baseHeightAt(target.x, target.y), gravity: flight.gravity, airDensity: flight.airDensity,
