@@ -10,6 +10,9 @@ export default defineConfig({
   resolve: { dedupe: ['react', 'react-dom', 'three'] },
   server: { fs: { allow: ['..'] } },
   build: { rollupOptions: { output: { manualChunks(id) {
+    // Vite's dynamic-import helper is shared by every lazy chunk. Left alone, Rollup put it inside the
+    // 4.2 MB Cesium chunk, so the entry imported all of Cesium before the title could paint.
+    if (id.includes('vite/preload-helper')) return 'preload';
     if (id.includes('/node_modules/three/') && !id.includes('/examples/')) return 'globe';
     // The site catalog is 2.6 MB of data; keep it out of the app code so a code change does not
     // make every player download it again.

@@ -110,6 +110,8 @@ export default function OpeningGame({catalog}:{catalog:Catalog}) {
   const inOpening=['worlds','destination','earth','equipment'].includes(stage);
   const selectAnalog=(id:string)=>{setAnalogId(id);setSurface(true);setMeasuredView(false);setSiteMenu(false);};
   const fullscreen=()=>{if(document.fullscreenElement)void document.exitFullscreen();else void document.documentElement.requestFullscreen?.().catch(()=>{});};
+  // Cesium (4.2 MB) is no longer part of the first load: fetch it once the worlds have settled, before a world is chosen.
+  useEffect(()=>{if(stage!=='worlds'||arriving)return;const timer=window.setTimeout(()=>void import('../../components/MoonGlobe').catch(()=>{}),600);return()=>clearTimeout(timer);},[stage,arriving]);
   // fetch the journey's code while the player is still choosing equipment, so Launch does not wait on it
   useEffect(()=>{if(stage==='equipment'){void import('../GameSession').catch(()=>{});preloadScenes();}},[stage]);
   // The whole title is the start control: a click, a tap, Enter or Space. The worlds' own text
