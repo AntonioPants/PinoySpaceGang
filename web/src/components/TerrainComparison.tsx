@@ -55,7 +55,7 @@ export function useTerrainComparison(targetId: string) {
 }
 export type TerrainComparisonState = ReturnType<typeof useTerrainComparison>;
 export function ComparisonToggle({ comparison }: { comparison: TerrainComparisonState }) {
-  return <button className="subtle-button" aria-pressed={comparison.enabled} onClick={comparison.toggle}>Terrain comparison: {comparison.enabled ? comparison.stereo ? 'stereo preview' : 'on' : 'off'}</button>;
+  return <button className="subtle-button" aria-pressed={comparison.enabled} onClick={comparison.toggle} title="Overlay the target's terrain and its landing as a hologram on the Earth site">Hologram mode: {comparison.enabled ? comparison.stereo ? 'stereo preview' : 'on' : 'off'}</button>;
 }
 export function ComparisonLegend({ comparison, targetName, earthName, earthSpacing }: {
   comparison: TerrainComparisonState; targetName: string; earthName: string; earthSpacing: number;

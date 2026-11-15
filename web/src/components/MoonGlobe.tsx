@@ -30,6 +30,9 @@ type Props = {
   onSurfacePick?: (point: { lat: number; lon: number }) => void;
   /** A pinned point to draw. */
   pin?: { lat: number; lon: number } | null;
+  /** The site under the pointer here or in a list beside the globe; its dot swells and is named. */
+  hovered?: string | null;
+  onHover?: (id: string | null) => void;
 };
 /** The game's Three.js camera: 42 degrees vertical. Cesium is matched to it in layered mode. */
 const GAME_FOV = Cesium.Math.toRadians(42);
@@ -58,7 +61,7 @@ function orbitCamera(view: OrbitView, ellipsoid: Cesium.Ellipsoid) {
 /** The game's globe frames a site from latitude x 0.8, further out on a portrait screen. */
 const siteOrbit = (point: Point, radii: number, aspect: number): OrbitView => ({ lat: point.lat * .8, lon: point.lon, radii: radii * Math.max(1, .85 / aspect) });
 
-export default function MoonGlobe({ points, selected, onSelect, body = 'Moon', surface = false, layered = false, orbitRadii, onReady, handle, paused = false, onSurfacePick, pin }: Props) {
+export default function MoonGlobe({ points, selected, onSelect, body = 'Moon', surface = false, layered = false, orbitRadii, onReady, handle, paused = false, onSurfacePick, pin, hovered = null, onHover }: Props) {
   const ellipsoid = body === 'Mars' ? Cesium.Ellipsoid.MARS : body === 'Earth' ? Cesium.Ellipsoid.WGS84 : Cesium.Ellipsoid.MOON;
   const host = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<Cesium.Viewer | null>(null);
@@ -197,5 +200,6 @@ export default function MoonGlobe({ points, selected, onSelect, body = 'Moon', s
   if (!online || failed) return layered ? null : <div className="moon-fallback"><Globe body={body} points={points} selected={selected} onSelect={onSelect} /><span className="moon-status" role="status">Using old offline {body} model · {!online ? 'No network connection' : renderStatus}<button onClick={() => { setOnline(navigator.onLine); setFailed(false); }}>Retry Cesium</button></span></div>;
   return <div className="globe-view"><div ref={host} className="globe-canvas" aria-label={`Cesium ${body}. Click a site dot to select it, or use the destination list. Drag to orbit.`} /><div className="cesium-site-layer">{markers.map(marker => marker.id === PIN_ID
     ? <span key={marker.id} className="cesium-pin" style={{ left: marker.x, top: marker.y }} aria-hidden="true" />
-    : <button key={marker.id} type="button" className="cesium-site-marker" aria-label={`Select ${marker.name}`} aria-pressed={selected === marker.id} title={marker.name} style={{ left: marker.x, top: marker.y }} onClick={() => selectRef.current(marker.id)}><span className="cesium-site-dot" />{selected === marker.id && <span className="cesium-site-name">{marker.name}</span>}</button>)}</div><span className="globe-disclaimer">{body === 'Earth' ? 'Google 3D imagery · Landing simulation uses the selected DEM' : `Cesium ${body}`} · Click a site dot to select{onSurfacePick ? ' · Click the surface to drop a pin' : ''} · Approximate study-area locators</span><span className="moon-status" role="status">{renderStatus}</span></div>;
+    : <button key={marker.id} type="button" className={`cesium-site-marker${hovered === marker.id ? ' is-hovered' : ''}`} aria-label={`Select ${marker.name}`} aria-pressed={selected === marker.id} title={marker.name} style={{ left: marker.x, top: marker.y }} onClick={() => selectRef.current(marker.id)}
+        onPointerEnter={() => onHover?.(marker.id)} onPointerLeave={() => onHover?.(null)} onFocus={() => onHover?.(marker.id)} onBlur={() => onHover?.(null)}><span className="cesium-site-dot" />{(selected === marker.id || hovered === marker.id) && <span className="cesium-site-name">{marker.name}</span>}</button>)}</div><span className="globe-disclaimer">{body === 'Earth' ? 'Google 3D imagery · Landing simulation uses the selected DEM' : `Cesium ${body}`} · Click a site dot to select{onSurfacePick ? ' · Click the surface to drop a pin' : ''} · Approximate study-area locators</span><span className="moon-status" role="status">{renderStatus}</span></div>;
 }

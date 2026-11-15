@@ -155,3 +155,24 @@ button.cabin-prompt:hover { border-color: #8a939c; }
 .monitor-screen:not(.cabin-sheet):not(.deb-screen) .mon-facts dd { font-size:17px; }
 .monitor-screen:not(.cabin-sheet):not(.deb-screen) .mon-facts dd small { font-size:12px; line-height:1.35; }
 .monitor-screen:not(.cabin-sheet):not(.deb-screen) .landing-evidence { margin:6px 0; }
+
+/* ---- The pilot seat menu as an eggshell card, like the site panel in the opening (opening.css, P3):
+   dark ink on warm paper, Inter for the heading and labels, DM Mono for the status, and the card's main
+   button the inverse of the page's. Status colours are darkened to stay readable on paper (all >= 4.5:1). */
+.launch-menu { --ink: var(--shell-ink); --dim: var(--shell-dim); --line: var(--shell-rule); --accent: var(--shell-ink);
+  --go: #2c6a44; --caution: #7a5408; --hold: var(--shell-alert);
+  color: var(--shell-ink); background: var(--shell); border: 0; border-radius: 4px; box-shadow: 0 24px 64px #000c, 0 2px 10px #0006; padding: 22px 24px; }
+.launch-menu header { border-bottom-color: var(--shell-rule); }
+.launch-menu h2 { font-family: var(--font-ui); font-size: 19px; font-weight: 600; letter-spacing: -.01em; color: var(--shell-ink); }
+.launch-menu .mon-light { font-family: var(--font-data); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.launch-menu .mon-checks li { border-bottom-color: var(--shell-rule); }
+.launch-menu .mon-checks strong { font-size: 14px; color: var(--shell-ink); }
+.launch-menu .mon-checks p, .launch-option small { color: var(--shell-dim); }
+.launch-lede { color: var(--shell-ink); font-size: 15px; }
+.launch-option { color: var(--shell-ink); }
+.launch-option input { accent-color: var(--shell-ink); }
+.launch-start { color: var(--shell); background: var(--shell-ink); border-radius: 3px; font-size: 16px; }
+.launch-start:hover { background: #2c2a24; }
+.launch-stand { color: var(--shell-ink); border-color: #14130f40; border-radius: 3px; }
+.launch-stand:hover { border-color: var(--shell-ink); background: var(--shell-wash); }
+.launch-menu :focus-visible { outline: 2px solid var(--shell-ink); outline-offset: 2px; }

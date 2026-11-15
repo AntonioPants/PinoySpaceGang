@@ -1,6 +1,6 @@
 import * as T from 'three';
 import { TilesRenderer } from '3d-tiles-renderer/three';
-import { CesiumIonAuthPlugin } from '3d-tiles-renderer/three/plugins';
+import { DisposableCesiumIonAuthPlugin as CesiumIonAuthPlugin } from './cesiumIonAuth';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import decoder from 'three/examples/jsm/libs/draco/gltf/draco_decoder.js?url';

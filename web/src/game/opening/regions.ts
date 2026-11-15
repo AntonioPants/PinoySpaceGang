@@ -4,59 +4,59 @@ import { globePoint } from './earthSurface';
 export type RegionState = 'idle' | 'hover' | 'selected';
 
 /**
- * A site's study area drawn on its globe: a north-up square (the catalog's footprints are
- * square local study areas) laid on the sphere, with a filled interior and a brighter rim.
- * Real footprints are a few kilometres across, far below a pixel from orbit, so the square
- * is drawn `halfAngleDeg` wide to be seen and selected. It marks where, not how large.
- * The group is centred on the globe's centre: add it at the planet's position.
+ * A site on its globe: a round dot that looks like the detailed Cesium globe's site dots (a light
+ * centre, a dark ring and a thin light edge), so the marker does not change shape when the detailed
+ * globe fades in over this one. Real study areas are a few kilometres across, far below a pixel from
+ * orbit, so the dot is drawn `halfAngleDeg` wide to be seen and selected: it marks where, not how large.
+ * The returned group is centred on the globe's centre: add it at the planet's position.
  */
 export function regionPatch(id: string, lat: number, lon: number, radius: number, halfAngleDeg: number): T.Group {
   const up = globePoint(lat, lon, 1), east = globePoint(0, lon + 90, 1), north = new T.Vector3().crossVectors(up, east);
-  const reach = Math.tan(T.MathUtils.degToRad(halfAngleDeg));
-  // u east, v north in [-1, 1]; lifted just clear of the surface.
-  const point = (u: number, v: number, lift: number) => up.clone().addScaledVector(east, u * reach).addScaledVector(north, v * reach).normalize().multiplyScalar(radius * lift);
-  const N = 6, fill: number[] = [], fillIndex: number[] = [];
-  for (let j = 0; j <= N; j++) for (let i = 0; i <= N; i++) {
-    fill.push(...point(i / N * 2 - 1, j / N * 2 - 1, 1.006).toArray());
-    if (i < N && j < N) { const a = j * (N + 1) + i; fillIndex.push(a, a + 1, a + N + 1, a + 1, a + N + 2, a + N + 1); }
-  }
-  // The rim: a band between the outline and a slightly smaller copy of it.
-  const rim: number[] = [], rimIndex: number[] = [], outline: [number, number][] = [];
-  for (let i = 0; i < N; i++) outline.push([i / N * 2 - 1, -1]);
-  for (let i = 0; i < N; i++) outline.push([1, i / N * 2 - 1]);
-  for (let i = 0; i < N; i++) outline.push([1 - i / N * 2, 1]);
-  for (let i = 0; i < N; i++) outline.push([-1, 1 - i / N * 2]);
-  outline.forEach(([u, v], k) => {
-    rim.push(...point(u, v, 1.008).toArray(), ...point(u * .9, v * .9, 1.008).toArray());
-    const a = k * 2, b = ((k + 1) % outline.length) * 2;
-    rimIndex.push(a, b, a + 1, b, b + 1, a + 1);
-  });
-  const mesh = (positions: number[], index: number[]) => {
-    const geometry = new T.BufferGeometry();
-    geometry.setAttribute('position', new T.Float32BufferAttribute(positions, 3)); geometry.setIndex(index);
-    const made = new T.Mesh(geometry, new T.MeshBasicMaterial({ transparent: true, depthWrite: false, side: T.DoubleSide }));
-    made.userData.id = id; return made;
+  const reach = Math.tan(T.MathUtils.degToRad(halfAngleDeg)), lift = 1.006;
+  // The dot's centre on the surface; its discs are laid on the sphere and stored relative to that centre,
+  // so scaling the dot (hover, selection) swells it in place.
+  const middle = up.clone().multiplyScalar(radius * lift);
+  const disc = (share: number, rise: number) => {
+    const flat = new T.CircleGeometry(share, 40), p = flat.getAttribute('position'), v = new T.Vector3();
+    for (let i = 0; i < p.count; i++) {
+      v.copy(up).addScaledVector(east, p.getX(i) * reach).addScaledVector(north, p.getY(i) * reach).normalize().multiplyScalar(radius * (lift + rise)).sub(middle);
+      p.setXYZ(i, v.x, v.y, v.z);
+    }
+    flat.computeBoundingSphere();
+    return flat;
   };
-  const group = new T.Group(); group.userData.id = id;
-  group.add(mesh(fill, fillIndex), mesh(rim, rimIndex));
+  const layer = (geometry: T.BufferGeometry, order: number) => {
+    const made = new T.Mesh(geometry, new T.MeshBasicMaterial({ transparent: true, depthWrite: false, side: T.DoubleSide }));
+    made.userData.id = id; made.renderOrder = order; return made;
+  };
+  const dot = new T.Group();
+  dot.add(
+    layer(disc(1, 0), 0),             // the light edge, and the hover / selected glow
+    layer(disc(.86, .0004), 1),       // the dark ring
+    layer(disc(.55, .0008), 2),       // the centre
+  );
+  dot.position.copy(middle);
+  dot.userData.id = id;
+  const group = new T.Group(); group.userData.id = id; group.add(dot);
   paintRegion(group, 'idle');
   return group;
 }
 
-const LOOK: Record<RegionState, { fill: number; fillOpacity: number; rim: number; rimOpacity: number; lift: number }> = {
-  idle: { fill: 0xffffff, fillOpacity: .1, rim: 0xffffff, rimOpacity: .7, lift: 1 },
-  hover: { fill: 0xf1d8a8, fillOpacity: .42, rim: 0xfff1cf, rimOpacity: 1, lift: 1.012 },
-  selected: { fill: 0xdfc28d, fillOpacity: .26, rim: 0xe9c78a, rimOpacity: 1, lift: 1.004 },
+const LOOK: Record<RegionState, { edge: number; edgeOpacity: number; ring: number; centre: number; scale: number }> = {
+  idle: { edge: 0xffffff, edgeOpacity: .9, ring: 0x171717, centre: 0xffffff, scale: 1 },
+  hover: { edge: 0xfff1cf, edgeOpacity: 1, ring: 0x171717, centre: 0xf1d8a8, scale: 1.4 },
+  selected: { edge: 0xe7c889, edgeOpacity: 1, ring: 0x171717, centre: 0xe7c889, scale: 1.3 },
 };
+/** Idle discovered scan windows have a cyan centre, so they read apart from curated sites at a glance. */
+const DISCOVERED = { ...LOOK.idle, edge: 0x65d6d1, centre: 0x65d6d1 };
 
-/** Idle regions are quiet white outlines; the hovered one fills gold and lifts; the selected one stays gold. */
-/** Idle discovered scan windows are cyan, so they read apart from curated sites at a glance. */
-const DISCOVERED = { ...LOOK.idle, fill: 0x65d6d1, rim: 0x65d6d1 };
-
+/** Idle sites are white dots; the hovered one swells and turns pale gold; the selected one is gold. */
 export function paintRegion(group: T.Object3D, state: RegionState) {
-  const look = state === 'idle' && String(group.userData.id ?? '').startsWith('scan-') ? DISCOVERED : LOOK[state], [fill, rim] = group.children as T.Mesh[];
-  const fillMaterial = fill.material as T.MeshBasicMaterial, rimMaterial = rim.material as T.MeshBasicMaterial;
-  fillMaterial.color.setHex(look.fill); fillMaterial.opacity = look.fillOpacity;
-  rimMaterial.color.setHex(look.rim); rimMaterial.opacity = look.rimOpacity;
-  group.scale.setScalar(look.lift); group.renderOrder = state === 'idle' ? 1 : 2;
+  const look = state === 'idle' && String(group.userData.id ?? '').startsWith('scan-') ? DISCOVERED : LOOK[state];
+  const dot = group.children[0] as T.Group, [edge, ring, centre] = dot.children as T.Mesh[];
+  const paint = (mesh: T.Mesh, colour: number, opacity = 1) => { const m = mesh.material as T.MeshBasicMaterial; m.color.setHex(colour); m.opacity = opacity; };
+  paint(edge, look.edge, look.edgeOpacity); paint(ring, look.ring, .95); paint(centre, look.centre);
+  dot.scale.setScalar(look.scale);
+  group.renderOrder = state === 'idle' ? 1 : 2;
+  dot.children.forEach((mesh, i) => { mesh.renderOrder = (state === 'idle' ? 10 : 20) + i; });
 }

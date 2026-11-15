@@ -53,8 +53,8 @@ export interface WorldProps {
 const centres = { Moon: new T.Vector3(-3.6, .4, 0), Earth: EARTH_CENTRE, Mars: new T.Vector3(5.4, .4, -5) };
 // Mars sits about twice as far from Earth as the Moon, and further back. Still staged, not to scale.
 const radii = { Moon: .85, Earth: 1.5, Mars: 1.18 };
-/** Half-width of a site's region outline, in degrees on its globe. Enlarged to be seen: see regions.ts. */
-const REGION_DEG = { Moon: 5.5, Mars: 5.5, Earth: 2.6 };
+/** Radius of a site's dot, in degrees on its globe: about the size of the detailed Cesium globe's site dots. See regions.ts. */
+const REGION_DEG = { Moon: 2, Mars: 2, Earth: 1.2 };
 /** Where the title's camera rides, far out and off to one side of the worlds, and how long the flight in takes. */
 const TITLE_POSITION = new T.Vector3(-26, 11, 66), ARRIVAL_SECONDS = 5.6;
 /** The title looks a little below the worlds, so their bright point sits above the ship and the lettering. */
@@ -359,6 +359,15 @@ export default function WorldScene(props: WorldProps) {
     renderer.setSize(Math.max(1,host.clientWidth),Math.max(1,host.clientHeight));camera.aspect=Math.max(1,host.clientWidth)/Math.max(1,host.clientHeight);camera.updateProjectionMatrix();
     let frame=0,last=performance.now(),paused=!!live.current.paused;
     const stageWorld=()=>{const p=live.current;return p.stage==='destination'?p.body:p.stage==='earth'?'Earth' as const:null;};
+    /**
+     * The camera has just been placed where the Cesium layer left it. If this scene had started a flight
+     * meanwhile (choosing a site again starts the flight down to it while the Cesium layer is still
+     * fading out), carry that flight on from here; cancelling it would leave the camera stranded.
+     */
+    const handedOver = (flying: boolean) => {
+      finishFlight();
+      if (flying) { framed = ''; update.current(); }
+    };
     if (props.handle) props.handle.current = {
       orbit() {
         const world = stageWorld(); if (!world) return null;
@@ -367,10 +376,11 @@ export default function WorldScene(props: WorldProps) {
       },
       setOrbit(view) {
         const world = stageWorld(); if (!world) return;
+        const flying = moving || !!route;
         const offset = globePoint(T.MathUtils.clamp(view.lat, -89, 89), view.lon, view.radii * radii[world]);
         goalTarget = centres[world].clone(); goalOffset = offset; goalUp = UP.clone(); surface = false;
         camera.position.copy(goalTarget).add(offset); camera.up.copy(UP); camera.lookAt(goalTarget);
-        finishFlight();
+        handedOver(flying);
       },
       surface() {
         if (!terrain || !terrainProfile) return null;
@@ -380,12 +390,13 @@ export default function WorldScene(props: WorldProps) {
       },
       setSurface(view) {
         if (!terrain) return;
+        const flying = moving || !!route;
         terrain.updateMatrixWorld();
         const world = ([e, n, u]: [number, number, number]) => terrain!.localToWorld(new T.Vector3(e, u, -n));
         const position = world(view.position), target = world(view.target), normal = UP.clone().applyQuaternion(terrain.quaternion);
         goalTarget = target; goalOffset = position.clone().sub(target); goalUp = normal; surface = true; lastSite = terrain.position.clone();
         camera.position.copy(position); camera.up.copy(normal); camera.lookAt(target);
-        finishFlight();
+        handedOver(flying);
         // Accept a pose lower over the horizon than this scene's own, so the hand-over does not snap.
         controls.maxPolarAngle = Math.min(Math.PI * .495, Math.max(controls.maxPolarAngle, goalOffset.angleTo(normal) + .01));
       },
