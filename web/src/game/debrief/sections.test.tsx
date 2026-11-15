@@ -10,7 +10,7 @@ import { toSimInput } from '../../lib/simulation';
 import { debriefFor } from '../../lib/debrief';
 import { evidenceFor } from '../../components/AnalogEvidence';
 import { runSim } from '../../../../app/sim/src/engine';
-import { buildReportExport, buildSections, stepIndex, surfaceOpsAssessment } from './sections';
+import { analogDimensions, buildReportExport, buildSections, stepIndex, surfaceOpsAssessment } from './sections';
 import { earthElevationFromMoonDeg } from './LanderSchematic';
 
 afterEach(() => vi.unstubAllGlobals());
@@ -38,8 +38,8 @@ it('leads with why the pair is an analog, then where it breaks down, then the re
   const analogEntry = catalogSites.find(s => s.id === profile.manifest.id), planetaryEntry = catalogSites.find(s => s.id === target.id);
   const input = { flight, mission, profile, match, evidence, fidelity: { status: 'done' as const, result: fidelity }, analogEntry, planetaryEntry };
   const sections = buildSections(input);
-  expect(sections.map(s => s.title)).toEqual(['Why this analog', 'Where the analogy breaks down', 'Terrain and geology', 'Environment and conditions',
-    'Landing behaviour on both terrains', 'This flight beside the rehearsals', 'Landing outcome', 'Touchdown against limits', 'Flight statistics', 'Post-landing and surface operations readiness']);
+  expect(sections.map(s => s.title)).toEqual(['Why this analog', 'What is similar, how similar, and what is not', 'Where the analogy breaks down', 'Terrain and geology', 'Environment and conditions',
+    'Landing behaviour on both terrains', 'This flight beside the rehearsals', 'Landing outcome', 'Touchdown against limits', 'Flight statistics', 'How this analog helps exploration']);
   const html = Object.fromEntries(sections.map(s => [s.id, renderToStaticMarkup(<>{s.content}</>)]));
   const summary = flight.summary!, a = debriefFor(flight, mission);
 
@@ -65,6 +65,17 @@ it('leads with why the pair is an analog, then where it breaks down, then the re
   expect(html.outcome).toContain('not engineering ratings');
   expect(html.limits).toContain('Roughness under legs');
   expect(html.statistics).toContain('Delta-v spent');
+  expect(html.why).toContain('Field test complete');
+  expect(html.why).not.toContain('Analog field test');
+
+  // The challenge's dimensions, each rated from data with its source; Earth's limits are always weak.
+  const dims = analogDimensions(input);
+  expect(dims.map(d => d.id)).toEqual(['terrain', 'geology', 'temperature', 'water', 'atmosphere', 'biology', 'subsurface', 'operations', 'limits']);
+  for (const d of dims) { expect(d.source).not.toBe(''); expect(html.dimensions).toContain(renderToStaticMarkup(<>{d.name}</>)); }
+  expect(dims.find(d => d.id === 'limits')!.fit).toBe('poor');
+  expect(dims.find(d => d.id === 'biology')!.fit).toBe('na');   // a lunar target
+  const t = match?.terrain_similarity_percent ?? null;
+  expect(dims.find(d => d.id === 'terrain')!.fit).toBe(t === null ? 'unknown' : t >= 70 ? 'strong' : t >= 50 ? 'partial' : 'poor');
 
   const all = Object.values(html).join('');
   // A reached target is never a raw "0.0 m", unknowns are never dressed up, and nothing claims microgravity.
@@ -77,6 +88,8 @@ it('leads with why the pair is an analog, then where it breaks down, then the re
   const file = buildReportExport(input);
   expect(file.pair.planetaryTarget.id).toBe(target.id);
   expect(file.whyThisAnalog.matches).toEqual(evidence.matches);
+  expect(file.analogyByDimension).toEqual(dims);
+  expect(file.terrainAndGeology.elevationSources.earth?.url).toMatch(/^https:/);
   expect(file.whyThisAnalog.analogScorePercent).toBe(match?.analog_score_percent ?? null);
   expect(file.whereItBreaksDown.earthCannotReproduce.gravity).toEqual({ targetMs2: mission.planetaryTarget.gravity, earthMs2: 9.81, flownMs2: mission.environment.gravityMs2 });
   expect(file.flight.touchdown).toBe(flight.summary);

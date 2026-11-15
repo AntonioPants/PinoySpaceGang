@@ -31,9 +31,9 @@ function Metadata({prepared}:{prepared:Prepared}){
   return <div className="tc3d-metadata"><strong>{d.name}</strong>
     {d.synthetic&&<span className="tc3d-synthetic">Synthesized from catalog DEM stats</span>}
     <span>{d.width.toFixed(0)} × {d.depth.toFixed(0)} m · Mean / P95 slope {f(d.meanSlope)}° / {f(d.p95Slope)}°</span>
-    <span>{d.synthetic?'Synthetic display grid':d.source} · {d.dx.toFixed(1)} × {d.dy.toFixed(1)} m grid{d.nativeResolution?` · source ≈ ${d.nativeResolution.toFixed(1)} m`:''}</span>
+    <span>{d.synthetic?'Synthetic display grid':<>Elevation data: {d.sourcePage?<a href={d.sourcePage} target="_blank" rel="noreferrer">{d.source}</a>:d.source}</>} · {d.dx.toFixed(1)} × {d.dy.toFixed(1)} m grid{d.nativeResolution?` · source ≈ ${d.nativeResolution.toFixed(1)} m`:''}</span>
     <span>Illustrative sun {d.sunElevation.toFixed(1)}° elevation, {d.sunAzimuth.toFixed(0)}° azimuth; tint is not mineral mapping.</span>
-    <details><summary>Data and resolution limits</summary><p>{d.note}</p><p>Relief {d.relief.toFixed(1)} m. Display-grid 3×3 RMS {d.roughness.toFixed(1)} m over {(d.dx*2).toFixed(0)} × {(d.dy*2).toFixed(0)} m sample-centre support. {d.missing} nodata samples; gaps are not filled. Slope statistics use valid grid derivatives at each site's own resolution; different resolutions are not directly comparable. Coarse DEMs do not resolve footpad hazards.</p>{d.sourceUrl&&/^https?:\/\//.test(d.sourceUrl)&&<a href={d.sourceUrl} target="_blank" rel="noreferrer">DEM source</a>}</details>
+    <details><summary>Data and resolution limits</summary><p>{d.note}</p><p>Relief {d.relief.toFixed(1)} m. Display-grid 3×3 RMS {d.roughness.toFixed(1)} m over {(d.dx*2).toFixed(0)} × {(d.dy*2).toFixed(0)} m sample-centre support. {d.missing} nodata samples; gaps are not filled. Slope statistics use valid grid derivatives at each site's own resolution; different resolutions are not directly comparable. Coarse DEMs do not resolve footpad hazards.</p>{d.sourceUrl&&/^https?:\/\//.test(d.sourceUrl)&&<p>Cut from the dataset's original elevation file, listed here for reproducibility: <code>{d.sourceUrl.split('/').pop()}</code>. The full file is also recorded in the downloadable report.</p>}</details>
   </div>;
 }
 /** One WebGL context, two scissored orthographic views, equal metres per pixel.
@@ -42,6 +42,9 @@ function Metadata({prepared}:{prepared:Prepared}){
 export default function TerrainComparison3D({earthProfile,targetProfile,catalogEntry,earthEntry,targetEntry,earthMetadata,targetMetadata,touchdown,rehearsalPoints=EMPTY_POINTS,className=''}:TerrainComparison3DProps){
   const earth=useMemo(()=>prepare(earthProfile,earthEntry??catalogEntry,earthMetadata,'earth'),[earthProfile,earthEntry,catalogEntry,earthMetadata]);
   const target=useMemo(()=>prepare(targetProfile,targetEntry,targetMetadata,'moon'),[targetProfile,targetEntry,targetMetadata]);
+  // The pane is named for the world the player picked: "Moon Landing Zone" or "Mars Landing Zone".
+  const world=String(target.data?.body??targetMetadata?.body??targetEntry?.body??targetProfile?.manifest.body??'').toLowerCase();
+  const worldName=world==='mars'?'Mars':world==='moon'?'Moon':'Target';
   const host=useRef<HTMLDivElement>(null),left=useRef<HTMLDivElement>(null),right=useRef<HTMLDivElement>(null);
   const command=useRef<(action:string)=>void>(()=>{});
   const [heatmap,setHeatmap]=useState(false),[wire,setWire]=useState(false),[error,setError]=useState(''),[retry,setRetry]=useState(0),[scale,setScale]=useState(0),[omitted,setOmitted]=useState(0);
@@ -95,8 +98,8 @@ export default function TerrainComparison3D({earthProfile,targetProfile,catalogE
   return <section className={`tc3d ${className}`} aria-label="Side-by-side terrain comparison">
     <div className="tc3d-toolbar" role="group" aria-label="Terrain visualization"><button aria-pressed={!heatmap} onClick={()=>setHeatmap(false)}>Natural / solar elevation</button><button aria-pressed={heatmap} onClick={()=>setHeatmap(true)}>Slope &amp; hazard heatmap</button><button aria-pressed={wire} onClick={()=>setWire(!wire)}>Wireframe</button><button onClick={()=>command.current('reset')}>Reset View</button><button aria-label="Zoom in both terrains" onClick={()=>command.current('in')}>+</button><button aria-label="Zoom out both terrains" onClick={()=>command.current('out')}>−</button></div>
     <div className="tc3d-view" ref={host}>
-      {[left,right].map((ref,i)=><div key={i} ref={ref} className={`tc3d-pane tc3d-pane-${i}`} tabIndex={0} role="group" aria-label={`${i?'Target Moon/Mars':'Earth analog'} terrain controls: drag to orbit, right-drag to pan, wheel to zoom`} onKeyDown={e=>{if(['+','=','-','0'].includes(e.key)){e.preventDefault();command.current(e.key==='0'?'reset':e.key==='-'?'out':'in');}}}>
-        <strong className="tc3d-title">{i?'Target Moon/Mars Landing Zone':'Earth Analog Landing Zone'}</strong>
+      {[left,right].map((ref,i)=><div key={i} ref={ref} className={`tc3d-pane tc3d-pane-${i}`} tabIndex={0} role="group" aria-label={`${i?worldName:'Earth analog'} terrain controls: drag to orbit, right-drag to pan, wheel to zoom`} onKeyDown={e=>{if(['+','=','-','0'].includes(e.key)){e.preventDefault();command.current(e.key==='0'?'reset':e.key==='-'?'out':'in');}}}>
+        <strong className="tc3d-title">{i?`${worldName} Landing Zone`:'Earth Analog Landing Zone'}</strong>
         <span className="tc3d-scale"><i/>{scale>0?`${scale.toFixed(scale<10?1:0)} m`:''} · view-plane scale</span>
         {!(i?target.data:earth.data)&&<span className="tc3d-unavailable">Terrain unavailable — see metadata</span>}
       </div>)}
