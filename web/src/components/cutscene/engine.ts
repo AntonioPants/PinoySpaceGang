@@ -561,7 +561,7 @@ export class CutsceneEngine {
     else if (t >= OP.boosters && t < OP.fairing) this.caption("Booster separation", "Strap-on thrusters jettisoned");
     else if (t >= OP.fairing && t < OP.release) this.caption("Fairing separation", "Exposing the lander");
     else if (t >= OP.release && t < OP.arrays + 1.6) this.caption("Lander deployed", "Landing gear extending");
-    else if (t > END - 2) this.caption("Descent simulation", `Altitude ${Math.round(sp.z)} m · you have control`);
+    else if (t > END - 2) this.caption("Descent simulation", `Altitude ${Math.round(sp.z)} m · ${this.env.control === "manual" ? "you have control" : this.env.control === "autonomous" ? "autopilot engaged" : "descent beginning"}`);
     else this.caption("", "");
     // no fade out: the live descent dissolves from this last frame on the same framing
   }

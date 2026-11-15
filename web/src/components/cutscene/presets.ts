@@ -25,6 +25,8 @@ export interface CutsceneEnv {
   look?: Partial<EnvLook>;      // override single colours
   elevation?: number[];         // metres along the landing slice (any length >= 2)
   seed?: number;
+  /** Who flies the descent that follows: the player, or the autonomous guidance. Sets the hand-over caption. */
+  control?: "manual" | "autonomous";
 }
 
 import type { FlightLike, StartState } from "./flight";
