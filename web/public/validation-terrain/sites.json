@@ -1,0 +1,50 @@
+{
+  "sites": [
+    {
+      "id": "validation-istok",
+      "name": "Istok gully fan reference window",
+      "body": "mars",
+      "role": "planetary_target",
+      "region": "Aonia Terra, Istok",
+      "latitude": -45.11,
+      "longitude": -85.8,
+      "morphology": "unclassified",
+      "substrate": "unreviewed",
+      "evidence_url": "https://www.nature.com/articles/ncomms8543",
+      "terrain": {
+        "manifest_url": "/terrain/validation-istok/manifest.json",
+        "rows": 33,
+        "columns": 33,
+        "spacing_m": 500.0,
+        "manifest_sha256": "b891afb1878ed53a70e9c27c6edf53e81845f6935fe1ac47e5196ad42ae4542d",
+        "elevation_sha256": "102bdcc043a174e919ab55b0d49292f2761083a82d5dad2788773b62a8905290",
+        "source_url": "https://asc-mars.s3.us-west-2.amazonaws.com/basemaps/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif",
+        "native_resolution_m_approx": 463.1
+      }
+    },
+    {
+      "id": "validation-hanaskogdalen",
+      "name": "Hanaskogdalen debris fan reference window",
+      "body": "earth",
+      "role": "earth_analog",
+      "region": "Spitsbergen, Svalbard",
+      "latitude": 78.285,
+      "longitude": 15.758,
+      "morphology": "unclassified",
+      "substrate": "sandstone_colluvium",
+      "evidence_url": "https://www.hou.usra.edu/meetings/lpsc2017/pdf/1132.pdf",
+      "terrain": {
+        "manifest_url": "/terrain/validation-hanaskogdalen/manifest.json",
+        "rows": 161,
+        "columns": 161,
+        "spacing_m": 30.0,
+        "manifest_sha256": "7e70e6ec4a064233497b1d1b7dbb98f6c3d24c57d50f1aeeecd095737d060381",
+        "elevation_sha256": "394b481c976c86477871a9c3baea5d5c49311e86276534063231602a93d5fb47",
+        "source_url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N78_00_E015_00_DEM/Copernicus_DSM_COG_10_N78_00_E015_00_DEM.tif",
+        "native_resolution_m_approx": 30.0
+      }
+    }
+  ],
+  "request_config_sha256": "9260e2f3dfaf603ecf6d1e631c49c91cea0c27b98c1493f3bfd5bd7408df25ae",
+  "purpose": "Reserved evaluation only; never a fitting or player-catalog input."
+}

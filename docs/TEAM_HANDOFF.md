@@ -127,16 +127,33 @@ Coordinate with Furgan: landing-outcome visuals finish before the character debr
 
 Current delivery: `web/src/game/debrief/DebriefScene.tsx` replaces the flat report in the
 game's `report` stage. The astronaut walks to the mission-control monitor, the camera
-pushes into its screen, and the analog report opens there as a nine-section carousel
+pushes into its screen, and the field test report opens there as an eleven-section carousel
 (`sections.tsx`) with left/right arrows, arrow keys and a burst of TV static between
 sections. It reuses Tim's cabin, astronaut and camera helpers read-only and shows only
 the flown telemetry. Reduced motion or missing WebGL opens the report directly; "Skip to
-report" is always available. The report leads with why the pair is an analog and where the
-analogy breaks down (the catalog's own pair evidence), then terrain, environment, landing
-behaviour and the flown flight. "Download report (JSON)" in the footer exports the same
+report" is always available. The report leads with why the pair is an analog, then rates it on
+each dimension the challenge names (terrain, geology, temperature, water/ice, dust and atmosphere,
+biology, subsurface, operations, Earth's limits) with what is similar, what is not and the source
+dataset (`analogDimensions`), then where the analogy breaks down, terrain, environment, landing
+behaviour, the flown flight, and how the analog helps exploration. It uses the bridge monitors' style
+(interior.css), its footer offers "Choose another site" (back to the worlds), and every page shrinks its type to fit the screen instead of scrolling (phones scroll).
+DEM credits link each dataset's description page, never the raw elevation file. "Download report (JSON)" in the footer exports the same
 content as data; retry is kept. Test bench: `?debrief-demo`. The planner still uses `components/FlightReport.tsx`.
 
 ## Shared boundaries and integration
+
+Comparison audit: `docs/COMPARISON_VALIDITY.md` documents the on-demand game panel,
+generated all-candidate ranking sensitivity, external-reference exclusion checks,
+and terrain-upgrade pilot gates. Regenerate `scripts.catalog.validity` after catalog
+changes. These diagnostics do not tune production scores or validate landing safety.
+Measured Phoenix/HiRISE and Apollo 16/LROC pilots can be previewed from this panel;
+they use separate `terrain-pilots` packs, check coverage/hashes, and retain quality
+warnings. `scripts.catalog.pilot_comparison` isolates source sensitivity at frozen
+analysis scales. The reserved Istok–Svalbard literature evaluation lives outside
+the game catalog in `validation-terrain`; `scripts.catalog.external_validation`
+checks the frozen protocol and keeps unresolved-scale/review exclusions explicit.
+Rebuild those reports after relevant inputs change. Neither pilot changes physics
+or production ranking. The reference pilot is consumed, not fresh data for tuning.
 
 - `game/contracts.ts` owns scene and control-center props; `game/integrations.ts`
   registers modules. Add independent scene files rather than modifying the planner.

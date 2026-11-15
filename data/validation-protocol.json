@@ -1,0 +1,1080 @@
+{
+  "version": "1.0.0",
+  "status": "frozen_before_new_reference_terrain_evaluation",
+  "method_base_commit": "d8978b32cb44481f163343f9be2187cc92beb6c6",
+  "method_sha256": {
+    "scripts/catalog/analog_score.py": "3fd81ed4a95062fc220777e8350fa4352ea3f6d81bc37b9566d064565d17832f",
+    "scripts/catalog/terrain_features.py": "6f1f53a3f9ad39b40d075d88f547e59975c6efee19907f7b15397eafe4f87646",
+    "data/terrain-scales.json": "a166026afe3836a375353480d7739ac345a92aff102e4c9f90d9c8077228cab7"
+  },
+  "development_catalog_sha256": "24bf4c7476b684e141def5b008a4c6d688a542871cb0052b1a9b7c2d94caab51",
+  "development_sites": [
+    {
+      "id": "meteor-crater",
+      "body": "earth",
+      "region": "Arizona, US",
+      "latitude": 35.027,
+      "longitude": -111.028
+    },
+    {
+      "id": "badwater",
+      "body": "earth",
+      "region": "California, US",
+      "latitude": 36.245,
+      "longitude": -116.825
+    },
+    {
+      "id": "barrow-observatory",
+      "body": "earth",
+      "region": "Alaska, US",
+      "latitude": 71.28,
+      "longitude": -156.6
+    },
+    {
+      "id": "phoenix",
+      "body": "mars",
+      "region": "Vastitas Borealis",
+      "latitude": 68.22,
+      "longitude": -125.75
+    },
+    {
+      "id": "kilbourne-hole-v1",
+      "body": "earth",
+      "region": "New Mexico, US",
+      "latitude": 31.972,
+      "longitude": -106.969
+    },
+    {
+      "id": "craters-moon",
+      "body": "earth",
+      "region": "Idaho, US",
+      "latitude": 43.42,
+      "longitude": -113.53
+    },
+    {
+      "id": "lava-beds",
+      "body": "earth",
+      "region": "California, US",
+      "latitude": 41.72,
+      "longitude": -121.51
+    },
+    {
+      "id": "amboy",
+      "body": "earth",
+      "region": "California, US",
+      "latitude": 34.55,
+      "longitude": -115.78
+    },
+    {
+      "id": "white-sands",
+      "body": "earth",
+      "region": "New Mexico, US",
+      "latitude": 32.82,
+      "longitude": -106.23
+    },
+    {
+      "id": "capitol-reef",
+      "body": "earth",
+      "region": "Utah, US",
+      "latitude": 38.28,
+      "longitude": -111.13
+    },
+    {
+      "id": "jezero",
+      "body": "mars",
+      "region": "Jezero crater",
+      "latitude": 18.45,
+      "longitude": 77.4
+    },
+    {
+      "id": "bagnold",
+      "body": "mars",
+      "region": "Gale crater",
+      "latitude": -4.69,
+      "longitude": 137.37
+    },
+    {
+      "id": "arsia-flank",
+      "body": "mars",
+      "region": "Tharsis",
+      "latitude": -9.0,
+      "longitude": -120.0
+    },
+    {
+      "id": "marius-hills",
+      "body": "moon",
+      "region": "Oceanus Procellarum",
+      "latitude": 14.1,
+      "longitude": -56.8
+    },
+    {
+      "id": "shackleton-rim",
+      "body": "moon",
+      "region": "Lunar south pole",
+      "latitude": -89.55,
+      "longitude": 0.0
+    },
+    {
+      "id": "haughton",
+      "body": "earth",
+      "region": "Devon Island, Nunavut, Canada",
+      "latitude": 75.37,
+      "longitude": -89.68
+    },
+    {
+      "id": "qaidam",
+      "body": "earth",
+      "region": "Qinghai, China",
+      "latitude": 38.66,
+      "longitude": 93.27
+    },
+    {
+      "id": "lucus-planum",
+      "body": "mars",
+      "region": "Medusae Fossae Formation",
+      "latitude": -1.61604,
+      "longitude": -172.773
+    },
+    {
+      "id": "malapert-massif",
+      "body": "moon",
+      "region": "Lunar south polar highlands",
+      "latitude": -85.9948,
+      "longitude": -0.23578
+    },
+    {
+      "id": "mons-mouton",
+      "body": "moon",
+      "region": "Lunar south polar highlands",
+      "latitude": -84.6,
+      "longitude": 31.0
+    },
+    {
+      "id": "cima-lava-field",
+      "body": "earth",
+      "region": "California, US",
+      "latitude": 35.216319,
+      "longitude": -115.751506
+    },
+    {
+      "id": "sunset-crater",
+      "body": "earth",
+      "region": "Arizona, US",
+      "latitude": 35.365,
+      "longitude": -111.52
+    },
+    {
+      "id": "great-sand-dunes",
+      "body": "earth",
+      "region": "Colorado, US",
+      "latitude": 37.75,
+      "longitude": -105.53
+    },
+    {
+      "id": "bisti-badlands",
+      "body": "earth",
+      "region": "New Mexico, US",
+      "latitude": 36.27,
+      "longitude": -108.25
+    },
+    {
+      "id": "lanzarote-timanfaya",
+      "body": "earth",
+      "region": "Canary Islands, Spain",
+      "latitude": 28.97,
+      "longitude": -13.75
+    },
+    {
+      "id": "askja-east",
+      "body": "earth",
+      "region": "Northern highlands, Iceland",
+      "latitude": 65.055,
+      "longitude": -16.6
+    },
+    {
+      "id": "atacama-yungay",
+      "body": "earth",
+      "region": "Antofagasta Region, Chile",
+      "latitude": -24.08,
+      "longitude": -69.86
+    },
+    {
+      "id": "sossusvlei-dunes",
+      "body": "earth",
+      "region": "Namib Sand Sea, Namibia",
+      "latitude": -24.77,
+      "longitude": 15.3
+    },
+    {
+      "id": "lonar-crater",
+      "body": "earth",
+      "region": "Maharashtra, India",
+      "latitude": 19.975,
+      "longitude": 76.51
+    },
+    {
+      "id": "wolfe-creek",
+      "body": "earth",
+      "region": "Western Australia, Australia",
+      "latitude": -19.171,
+      "longitude": 127.795
+    },
+    {
+      "id": "wadi-rum",
+      "body": "earth",
+      "region": "Aqaba Governorate, Jordan",
+      "latitude": 29.54,
+      "longitude": 35.44
+    },
+    {
+      "id": "richat-ridges",
+      "body": "earth",
+      "region": "Adrar, Mauritania",
+      "latitude": 21.16,
+      "longitude": -11.31
+    },
+    {
+      "id": "harrat-khaybar",
+      "body": "earth",
+      "region": "Al Madinah Region, Saudi Arabia",
+      "latitude": 25.67,
+      "longitude": 39.93
+    },
+    {
+      "id": "payun-matru",
+      "body": "earth",
+      "region": "Mendoza, Argentina",
+      "latitude": -36.4,
+      "longitude": -69.3
+    },
+    {
+      "id": "tongariro-west",
+      "body": "earth",
+      "region": "Central North Island, New Zealand",
+      "latitude": -39.15,
+      "longitude": 175.58
+    },
+    {
+      "id": "erg-chebbi",
+      "body": "earth",
+      "region": "Draa-Tafilalet, Morocco",
+      "latitude": 31.16,
+      "longitude": -3.96
+    },
+    {
+      "id": "teide-canadas",
+      "body": "earth",
+      "region": "Canary Islands, Spain",
+      "latitude": 28.25,
+      "longitude": -16.63
+    },
+    {
+      "id": "etna-east",
+      "body": "earth",
+      "region": "Sicily, Italy",
+      "latitude": 37.73,
+      "longitude": 15.04
+    },
+    {
+      "id": "fournaise-enclos",
+      "body": "earth",
+      "region": "Reunion, France",
+      "latitude": -21.24,
+      "longitude": 55.73
+    },
+    {
+      "id": "fogo-caldera",
+      "body": "earth",
+      "region": "Fogo Island, Cabo Verde",
+      "latitude": 14.95,
+      "longitude": -24.35
+    },
+    {
+      "id": "bromo-sandsea",
+      "body": "earth",
+      "region": "East Java, Indonesia",
+      "latitude": -7.94,
+      "longitude": 112.95
+    },
+    {
+      "id": "pinacate-elegante",
+      "body": "earth",
+      "region": "Sonora, Mexico",
+      "latitude": 31.77,
+      "longitude": -113.5
+    },
+    {
+      "id": "bardenas-blanca",
+      "body": "earth",
+      "region": "Navarra, Spain",
+      "latitude": 42.21,
+      "longitude": -1.49
+    },
+    {
+      "id": "tabernas-badlands",
+      "body": "earth",
+      "region": "Andalusia, Spain",
+      "latitude": 37.06,
+      "longitude": -2.46
+    },
+    {
+      "id": "ischigualasto",
+      "body": "earth",
+      "region": "San Juan, Argentina",
+      "latitude": -30.07,
+      "longitude": -67.95
+    },
+    {
+      "id": "talampaya-canyon",
+      "body": "earth",
+      "region": "La Rioja, Argentina",
+      "latitude": -29.79,
+      "longitude": -67.84
+    },
+    {
+      "id": "valle-luna-chile",
+      "body": "earth",
+      "region": "Antofagasta Region, Chile",
+      "latitude": -22.925,
+      "longitude": -68.285
+    },
+    {
+      "id": "uyuni-incahuasi",
+      "body": "earth",
+      "region": "Potosi, Bolivia",
+      "latitude": -20.24,
+      "longitude": -67.625
+    },
+    {
+      "id": "makgadikgadi-kubu",
+      "body": "earth",
+      "region": "Central District, Botswana",
+      "latitude": -20.89,
+      "longitude": 25.825
+    },
+    {
+      "id": "tsondab-dunes",
+      "body": "earth",
+      "region": "Namib Sand Sea, Namibia",
+      "latitude": -23.93,
+      "longitude": 15.32
+    },
+    {
+      "id": "rub-khali-oman",
+      "body": "earth",
+      "region": "Dhofar, Oman",
+      "latitude": 20.6,
+      "longitude": 54.1
+    },
+    {
+      "id": "badain-jaran",
+      "body": "earth",
+      "region": "Inner Mongolia, China",
+      "latitude": 39.83,
+      "longitude": 102.45
+    },
+    {
+      "id": "taklamakan-interior",
+      "body": "earth",
+      "region": "Xinjiang, China",
+      "latitude": 38.8,
+      "longitude": 83.2
+    },
+    {
+      "id": "lut-yardangs",
+      "body": "earth",
+      "region": "Kerman, Iran",
+      "latitude": 30.53,
+      "longitude": 57.83
+    },
+    {
+      "id": "dunhuang-yardangs",
+      "body": "earth",
+      "region": "Gansu, China",
+      "latitude": 40.5,
+      "longitude": 93.23
+    },
+    {
+      "id": "dallol",
+      "body": "earth",
+      "region": "Afar, Ethiopia",
+      "latitude": 14.24,
+      "longitude": 40.3
+    },
+    {
+      "id": "lake-abbe-margin",
+      "body": "earth",
+      "region": "Dikhil, Djibouti",
+      "latitude": 11.145,
+      "longitude": 41.84
+    },
+    {
+      "id": "hverir-namafjall",
+      "body": "earth",
+      "region": "Northern Region, Iceland",
+      "latitude": 65.64,
+      "longitude": -16.81
+    },
+    {
+      "id": "pingualuit",
+      "body": "earth",
+      "region": "Nunavik, Canada",
+      "latitude": 61.28,
+      "longitude": -73.66
+    },
+    {
+      "id": "scan-amboy-region-r1280-c240",
+      "body": "earth",
+      "region": "US",
+      "latitude": 35.0326064,
+      "longitude": -115.8969755
+    },
+    {
+      "id": "scan-amboy-region-r1600-c480",
+      "body": "earth",
+      "region": "US",
+      "latitude": 34.9453142,
+      "longitude": -115.8193012
+    },
+    {
+      "id": "scan-amboy-region-r1600-c880",
+      "body": "earth",
+      "region": "US",
+      "latitude": 34.943966,
+      "longitude": -115.6879163
+    },
+    {
+      "id": "scan-amboy-region-r1760-c400",
+      "body": "earth",
+      "region": "US",
+      "latitude": 34.9022913,
+      "longitude": -115.8461851
+    },
+    {
+      "id": "scan-amboy-region-r1920-c320",
+      "body": "earth",
+      "region": "US",
+      "latitude": 34.8592617,
+      "longitude": -115.8730406
+    },
+    {
+      "id": "scan-amboy-region-r2960-c1200",
+      "body": "earth",
+      "region": "US",
+      "latitude": 34.5749713,
+      "longitude": -115.5890873
+    },
+    {
+      "id": "scan-amboy-region-r3040-c80",
+      "body": "earth",
+      "region": "US",
+      "latitude": 34.5570161,
+      "longitude": -115.9556097
+    },
+    {
+      "id": "scan-amboy-region-r3120-c1120",
+      "body": "earth",
+      "region": "US",
+      "latitude": 34.5319967,
+      "longitude": -115.6159627
+    },
+    {
+      "id": "scan-amboy-region-r3120-c240",
+      "body": "earth",
+      "region": "US",
+      "latitude": 34.5349179,
+      "longitude": -115.9035815
+    },
+    {
+      "id": "scan-amboy-region-r3280-c1280",
+      "body": "earth",
+      "region": "US",
+      "latitude": 34.4881192,
+      "longitude": -115.5644155
+    },
+    {
+      "id": "scan-atacama-yungay-region-r240-c880",
+      "body": "earth",
+      "region": "Chile",
+      "latitude": -23.9857484,
+      "longitude": -69.7742
+    },
+    {
+      "id": "scan-atacama-yungay-region-r800-c720",
+      "body": "earth",
+      "region": "Chile",
+      "latitude": -24.1372286,
+      "longitude": -69.8223491
+    },
+    {
+      "id": "scan-atacama-yungay-region-r880-c880",
+      "body": "earth",
+      "region": "Chile",
+      "latitude": -24.1591508,
+      "longitude": -69.7752417
+    },
+    {
+      "id": "scan-badain-jaran-region-r1120-c320",
+      "body": "earth",
+      "region": "China",
+      "latitude": 39.6891753,
+      "longitude": 102.3547292
+    },
+    {
+      "id": "scan-badwater-region-r1040-c480",
+      "body": "earth",
+      "region": "US",
+      "latitude": 36.1227739,
+      "longitude": -116.8607033
+    },
+    {
+      "id": "scan-dallol-region-r1120-c320",
+      "body": "earth",
+      "region": "Ethiopia",
+      "latitude": 14.0968832,
+      "longitude": 40.2241013
+    },
+    {
+      "id": "scan-dallol-region-r560-c240",
+      "body": "earth",
+      "region": "Ethiopia",
+      "latitude": 14.2488648,
+      "longitude": 40.2026726
+    },
+    {
+      "id": "scan-dallol-region-r960-c400",
+      "body": "earth",
+      "region": "Ethiopia",
+      "latitude": 14.1401601,
+      "longitude": 40.2465655
+    },
+    {
+      "id": "scan-erg-chebbi-region-r320-c1040",
+      "body": "earth",
+      "region": "Morocco",
+      "latitude": 31.2348996,
+      "longitude": -3.8200434
+    },
+    {
+      "id": "scan-erg-chebbi-region-r480-c1120",
+      "body": "earth",
+      "region": "Morocco",
+      "latitude": 31.191752,
+      "longitude": -3.7944819
+    },
+    {
+      "id": "scan-erg-chebbi-region-r480-c400",
+      "body": "earth",
+      "region": "Morocco",
+      "latitude": 31.1901528,
+      "longitude": -4.0211647
+    },
+    {
+      "id": "scan-erg-chebbi-region-r640-c1120",
+      "body": "earth",
+      "region": "Morocco",
+      "latitude": 31.1484459,
+      "longitude": -3.7941205
+    },
+    {
+      "id": "scan-erg-chebbi-region-r80-c1120",
+      "body": "earth",
+      "region": "Morocco",
+      "latitude": 31.3000161,
+      "longitude": -3.7953888
+    },
+    {
+      "id": "scan-erg-chebbi-region-r800-c1120",
+      "body": "earth",
+      "region": "Morocco",
+      "latitude": 31.1051394,
+      "longitude": -3.7937599
+    },
+    {
+      "id": "scan-erg-chebbi-region-r960-c80",
+      "body": "earth",
+      "region": "Morocco",
+      "latitude": 31.059407,
+      "longitude": -4.1203788
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r1040-c80",
+      "body": "earth",
+      "region": "Saudi Arabia",
+      "latitude": 25.5494237,
+      "longitude": 39.7766905
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r1120-c320",
+      "body": "earth",
+      "region": "Saudi Arabia",
+      "latitude": 25.5273553,
+      "longitude": 39.8482036
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r160-c160",
+      "body": "earth",
+      "region": "Saudi Arabia",
+      "latitude": 25.7876708,
+      "longitude": 39.8021729
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r400-c320",
+      "body": "earth",
+      "region": "Saudi Arabia",
+      "latitude": 25.7223889,
+      "longitude": 39.8495821
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r480-c1040",
+      "body": "earth",
+      "region": "Saudi Arabia",
+      "latitude": 25.6993059,
+      "longitude": 40.0646865
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r640-c1120",
+      "body": "earth",
+      "region": "Saudi Arabia",
+      "latitude": 25.6557919,
+      "longitude": 40.0882094
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r640-c160",
+      "body": "earth",
+      "region": "Saudi Arabia",
+      "latitude": 25.6576486,
+      "longitude": 39.8013011
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r80-c880",
+      "body": "earth",
+      "region": "Saudi Arabia",
+      "latitude": 25.8079922,
+      "longitude": 40.0177759
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r960-c1040",
+      "body": "earth",
+      "region": "Saudi Arabia",
+      "latitude": 25.5692919,
+      "longitude": 40.063534
+    },
+    {
+      "id": "scan-harrat-khaybar-region-r960-c480",
+      "body": "earth",
+      "region": "Saudi Arabia",
+      "latitude": 25.5704117,
+      "longitude": 39.8962934
+    },
+    {
+      "id": "scan-ischigualasto-region-r1280-c1040",
+      "body": "earth",
+      "region": "Argentina",
+      "latitude": -29.9750514,
+      "longitude": -67.811561
+    },
+    {
+      "id": "scan-ischigualasto-region-r1440-c720",
+      "body": "earth",
+      "region": "Argentina",
+      "latitude": -30.0192219,
+      "longitude": -67.9105797
+    },
+    {
+      "id": "scan-ischigualasto-region-r1920-c800",
+      "body": "earth",
+      "region": "Argentina",
+      "latitude": -30.1489415,
+      "longitude": -67.8842379
+    },
+    {
+      "id": "scan-ischigualasto-region-r720-c80",
+      "body": "earth",
+      "region": "Argentina",
+      "latitude": -29.8258092,
+      "longitude": -68.1113943
+    },
+    {
+      "id": "scan-lake-abbe-margin-region-r320-c800",
+      "body": "earth",
+      "region": "Djibouti",
+      "latitude": 11.2186632,
+      "longitude": 41.897601
+    },
+    {
+      "id": "scan-lake-abbe-margin-region-r400-c1120",
+      "body": "earth",
+      "region": "Djibouti",
+      "latitude": 11.1961207,
+      "longitude": 41.985204
+    },
+    {
+      "id": "scan-lut-yardangs-region-r240-c400",
+      "body": "earth",
+      "region": "Iran",
+      "latitude": 30.6256122,
+      "longitude": 57.7712462
+    },
+    {
+      "id": "scan-lut-yardangs-region-r320-c240",
+      "body": "earth",
+      "region": "Iran",
+      "latitude": 30.6042443,
+      "longitude": 57.7210049
+    },
+    {
+      "id": "scan-lut-yardangs-region-r480-c240",
+      "body": "earth",
+      "region": "Iran",
+      "latitude": 30.5609334,
+      "longitude": 57.7206844
+    },
+    {
+      "id": "scan-lut-yardangs-region-r720-c240",
+      "body": "earth",
+      "region": "Iran",
+      "latitude": 30.4959666,
+      "longitude": 57.7202051
+    },
+    {
+      "id": "scan-lut-yardangs-region-r80-c320",
+      "body": "earth",
+      "region": "Iran",
+      "latitude": 30.6690684,
+      "longitude": 57.7465385
+    },
+    {
+      "id": "scan-lut-yardangs-region-r800-c400",
+      "body": "earth",
+      "region": "Iran",
+      "latitude": 30.4740252,
+      "longitude": 57.7700487
+    },
+    {
+      "id": "scan-lut-yardangs-region-r960-c400",
+      "body": "earth",
+      "region": "Iran",
+      "latitude": 30.430714,
+      "longitude": 57.7697083
+    },
+    {
+      "id": "scan-rub-khali-oman-region-r80-c720",
+      "body": "earth",
+      "region": "Oman",
+      "latitude": 20.7411996,
+      "longitude": 54.1318818
+    },
+    {
+      "id": "scan-sossusvlei-dunes-region-r400-c1040",
+      "body": "earth",
+      "region": "Namibia",
+      "latitude": -24.7189261,
+      "longitude": 15.4342057
+    },
+    {
+      "id": "scan-tongariro-west-region-r1040-c720",
+      "body": "earth",
+      "region": "New Zealand",
+      "latitude": -39.2706123,
+      "longitude": 175.61997
+    },
+    {
+      "id": "scan-tongariro-west-region-r1120-c800",
+      "body": "earth",
+      "region": "New Zealand",
+      "latitude": -39.2925588,
+      "longitude": 175.6473689
+    },
+    {
+      "id": "apollo-11-tranquillity",
+      "body": "moon",
+      "region": "Mare Tranquillitatis",
+      "latitude": 0.674,
+      "longitude": 23.473
+    },
+    {
+      "id": "apollo-12-procellarum",
+      "body": "moon",
+      "region": "Oceanus Procellarum",
+      "latitude": -3.012,
+      "longitude": -23.421
+    },
+    {
+      "id": "apollo-14-fra-mauro",
+      "body": "moon",
+      "region": "Fra Mauro Formation",
+      "latitude": -3.645,
+      "longitude": -17.471
+    },
+    {
+      "id": "apollo-15-hadley",
+      "body": "moon",
+      "region": "Hadley-Apennine",
+      "latitude": 26.132,
+      "longitude": 3.633
+    },
+    {
+      "id": "apollo-16-descartes",
+      "body": "moon",
+      "region": "Descartes Formation",
+      "latitude": -8.973,
+      "longitude": 15.501
+    },
+    {
+      "id": "apollo-17-taurus-littrow",
+      "body": "moon",
+      "region": "Taurus-Littrow",
+      "latitude": 20.188,
+      "longitude": 30.772
+    },
+    {
+      "id": "tycho-central-peak",
+      "body": "moon",
+      "region": "Tycho crater",
+      "latitude": -43.31,
+      "longitude": -11.36
+    },
+    {
+      "id": "aristarchus-plateau",
+      "body": "moon",
+      "region": "Aristarchus plateau",
+      "latitude": 23.7,
+      "longitude": -47.4
+    },
+    {
+      "id": "reiner-gamma",
+      "body": "moon",
+      "region": "Oceanus Procellarum",
+      "latitude": 7.5,
+      "longitude": -59.0
+    },
+    {
+      "id": "copernicus-peaks",
+      "body": "moon",
+      "region": "Copernicus crater",
+      "latitude": 9.7,
+      "longitude": -20.1
+    },
+    {
+      "id": "cabeus-rim",
+      "body": "moon",
+      "region": "Lunar south polar region",
+      "latitude": -84.9,
+      "longitude": -35.5
+    },
+    {
+      "id": "faustini-rim",
+      "body": "moon",
+      "region": "Lunar south polar region",
+      "latitude": -87.3,
+      "longitude": 77.0
+    },
+    {
+      "id": "haworth-rim",
+      "body": "moon",
+      "region": "Lunar south polar region",
+      "latitude": -87.5,
+      "longitude": -5.0
+    },
+    {
+      "id": "de-gerlache-rim",
+      "body": "moon",
+      "region": "Lunar south polar region",
+      "latitude": -88.5,
+      "longitude": -87.1
+    },
+    {
+      "id": "shoemaker-rim",
+      "body": "moon",
+      "region": "Lunar south polar region",
+      "latitude": -88.1,
+      "longitude": 44.9
+    },
+    {
+      "id": "peary-rim",
+      "body": "moon",
+      "region": "Lunar north polar region",
+      "latitude": 88.6,
+      "longitude": 33.0
+    },
+    {
+      "id": "von-karman-chang-e-4",
+      "body": "moon",
+      "region": "South Pole-Aitken basin",
+      "latitude": -45.5,
+      "longitude": 177.6
+    },
+    {
+      "id": "mons-rumker",
+      "body": "moon",
+      "region": "Oceanus Procellarum",
+      "latitude": 43.1,
+      "longitude": -51.9
+    },
+    {
+      "id": "chandrayaan-3-manzinus",
+      "body": "moon",
+      "region": "Lunar southern highlands",
+      "latitude": -69.37,
+      "longitude": 32.32
+    },
+    {
+      "id": "tranquillitatis-pit",
+      "body": "moon",
+      "region": "Mare Tranquillitatis",
+      "latitude": 8.335,
+      "longitude": 33.222
+    },
+    {
+      "id": "oxia-planum",
+      "body": "mars",
+      "region": "Oxia Planum",
+      "latitude": 18.2,
+      "longitude": -24.6
+    },
+    {
+      "id": "mawrth-vallis",
+      "body": "mars",
+      "region": "Mawrth Vallis",
+      "latitude": 24.0,
+      "longitude": -19.0
+    },
+    {
+      "id": "meridiani-planum",
+      "body": "mars",
+      "region": "Meridiani Planum",
+      "latitude": -1.95,
+      "longitude": -5.53
+    },
+    {
+      "id": "gusev-crater",
+      "body": "mars",
+      "region": "Gusev crater",
+      "latitude": -14.57,
+      "longitude": 175.47
+    },
+    {
+      "id": "elysium-planitia",
+      "body": "mars",
+      "region": "Elysium Planitia",
+      "latitude": 4.5,
+      "longitude": 135.62
+    },
+    {
+      "id": "isidis-planitia",
+      "body": "mars",
+      "region": "Isidis basin",
+      "latitude": 11.53,
+      "longitude": 90.43
+    },
+    {
+      "id": "utopia-planitia",
+      "body": "mars",
+      "region": "Utopia Planitia",
+      "latitude": 25.1,
+      "longitude": 109.9
+    },
+    {
+      "id": "chryse-planitia",
+      "body": "mars",
+      "region": "Chryse Planitia",
+      "latitude": 22.27,
+      "longitude": -47.95
+    },
+    {
+      "id": "ares-vallis",
+      "body": "mars",
+      "region": "Ares Vallis",
+      "latitude": 19.13,
+      "longitude": -33.25
+    },
+    {
+      "id": "melas-chasma",
+      "body": "mars",
+      "region": "Valles Marineris",
+      "latitude": -9.8,
+      "longitude": -69.0
+    },
+    {
+      "id": "olympus-mons-caldera",
+      "body": "mars",
+      "region": "Olympus Mons",
+      "latitude": 18.65,
+      "longitude": -133.8
+    },
+    {
+      "id": "hellas-planitia",
+      "body": "mars",
+      "region": "Hellas basin",
+      "latitude": -42.4,
+      "longitude": 70.0
+    },
+    {
+      "id": "syrtis-major",
+      "body": "mars",
+      "region": "Syrtis Major",
+      "latitude": 8.4,
+      "longitude": 69.5
+    },
+    {
+      "id": "nili-fossae",
+      "body": "mars",
+      "region": "Nili Fossae",
+      "latitude": 21.0,
+      "longitude": 77.5
+    },
+    {
+      "id": "eberswalde-delta",
+      "body": "mars",
+      "region": "Eberswalde crater",
+      "latitude": -24.3,
+      "longitude": -33.7
+    },
+    {
+      "id": "korolev-crater",
+      "body": "mars",
+      "region": "North polar region",
+      "latitude": 73.3,
+      "longitude": 165.4
+    },
+    {
+      "id": "noctis-labyrinthus",
+      "body": "mars",
+      "region": "Tharsis",
+      "latitude": -7.0,
+      "longitude": -95.5
+    },
+    {
+      "id": "argyre-planitia",
+      "body": "mars",
+      "region": "Argyre basin",
+      "latitude": -50.0,
+      "longitude": -44.0
+    },
+    {
+      "id": "candor-chasma",
+      "body": "mars",
+      "region": "Valles Marineris",
+      "latitude": -6.0,
+      "longitude": -76.0
+    },
+    {
+      "id": "athabasca-valles",
+      "body": "mars",
+      "region": "Elysium Planitia",
+      "latitude": 9.5,
+      "longitude": -155.6
+    }
+  ],
+  "rules": {
+    "regional_exclusion_km": 100,
+    "metric": "Positive-reference recall@10 in descending frozen combined-score order, no literature priority. Unlabelled candidates are not negatives.",
+    "ties": "Ascending site ID",
+    "window_m": 4000,
+    "earth_candidate_pool": "All frozen development Earth sites plus all complete reserved Earth sites, same pool for every reference.",
+    "review": "Report source-reviewed exploratory ranks separately; project-independent review, compatible spatial scope and documented held-out exposure are required for independent metrics.",
+    "no_tuning": "Any future change to rules/scales/weights consumes this pilot; reserve fresh regions for confirmation.",
+    "minimum_independent_regions_for_summary": 5
+  }
+}

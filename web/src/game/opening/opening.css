@@ -92,6 +92,7 @@
 .immersive-game-session .flight-3d .terrain-credit{bottom:155px!important;left:4%!important;right:4%!important;text-shadow:0 1px 6px #000}
 .immersive-game-session .model-assumptions{position:absolute;z-index:2;left:30px;top:100px;max-width:min(500px,80%);max-height:55%;overflow:auto;border:0;padding:10px;font-size:11px;background:#03040588;backdrop-filter:blur(10px)}
 .immersive-game-session .flight-result{position:absolute;z-index:3;left:50%;top:45%;transform:translate(-50%,-50%);width:min(600px,90%);background:#090b0de8;backdrop-filter:blur(16px);border:1px solid #c4ad794d;display:flex;flex-wrap:wrap;padding:28px}.immersive-game-session .flight-result h2{font-size:28px}
+.immersive-game-session .comparison-result-button{position:absolute;z-index:3;right:30px;bottom:150px;background:#090b0de8}
 .immersive-game-session .flight-workspace>.import-error{position:absolute;z-index:4;top:25%;left:5%;right:5%;background:#15110deb;padding:22px}
 .immersive-game-session .scene-skip,.immersive-game-session .scene-sound{top:24px;background:#05060799;backdrop-filter:blur(10px)}
 .immersive-game-session .scene-skip{right:26px}.immersive-game-session .scene-sound{left:26px}
@@ -258,12 +259,18 @@
 .terrain-info-close { float:right; padding:8px 14px; background:#17232f; border:1px solid #687583; color:#fff; cursor:pointer; }
 .terrain-bottom-controls { position:absolute; z-index:6; bottom:24px; left:4%; right:4%; display:flex; gap:14px; align-items:center; pointer-events:none; }
 .terrain-bottom-controls button { pointer-events:auto; background:#111b26; border:1px solid #657180; color:#fff; padding:12px 18px; min-height:44px; }
+.terrain-bottom-controls button:hover { background:#243445; border-color:#ddc493; color:#fff; }
 .terrain-bottom-controls .game-primary { position:static; min-width:0; }
 .terrain-flag-status { margin-left:auto; color:#fff; font-size:12px; text-shadow:0 1px 3px #000; }
 @media(max-width:760px) { .terrain-bottom-controls { left:12px; right:12px; bottom:28px; gap:8px; flex-wrap:wrap; } .terrain-bottom-controls button { font-size:11px; padding:10px; } .terrain-flag-status { order:3; width:100%; margin:0; } .surface-brief.terrain-info-sheet { bottom:125px; max-height:60vh; } }
 @media(prefers-reduced-motion:reduce) { .surface-brief.terrain-info-sheet { transition:none; } }
 
-.surface-brief.terrain-info-sheet { background:transparent; border:0; text-shadow:0 1px 4px #000; bottom:235px; max-height:calc(100vh - 330px); }
+.surface-brief.terrain-info-sheet { background:rgba(8,13,18,.82); border:0; border-top:1px solid #ddc49355; box-shadow:0 -8px 28px #0003; text-shadow:0 1px 2px #0008; bottom:235px; max-height:calc(100vh - 330px); }
+.terrain-info-sheet .analog-evidence details[open] { background:transparent; max-height:none; overflow:visible; padding:0; }
+.terrain-info-sheet .comparison-validity { border-top:1px solid #ddc49355; margin-top:8px; }
+.terrain-info-sheet .comparison-validity p,.terrain-info-sheet .comparison-validity li { color:#f0e9dc; line-height:1.6; }
+.terrain-info-sheet .comparison-validity small { font-size:11px; line-height:1.6; color:#f0e9dc; }
+.terrain-info-sheet .comparison-validity { text-shadow:0 1px 2px #000,0 0 4px #000; }
 .terrain-map-readout { position:absolute; z-index:4; left:4%; right:4%; bottom:85px; color:#eee6d5; text-shadow:0 1px 4px #000; pointer-events:none; font-size:12px; }
 .terrain-map-readout p { margin:6px 0; }
 .terrain-map-readout .landing-readout { display:flex; align-items:center; gap:8px; }
@@ -284,3 +291,9 @@
 .inspection-navigation .game-back:hover { color:#f1dfb6; }
 .inspection-navigation .game-back:focus-visible { outline:1px solid #d6b77c; outline-offset:4px; }
 @media(max-width:760px) { .game-topbar { gap:14px; } .game-topbar:has(.inspection-navigation) .game-wordmark span { display:none; } .game-topbar .game-tools { grid-column:-2; justify-self:end; } }
+/* The detailed Cesium globe is a layer over the always-mounted simple globe. It fades in once it has
+   tiles and the fly-in has finished, with the camera handed across, and fades out before leaving. */
+.opening-globe-layer{position:absolute;inset:0;z-index:-2;opacity:0;pointer-events:none;transition:opacity .4s ease}
+.opening-globe-layer.is-shown{opacity:1;pointer-events:auto;transition:opacity .6s ease}
+.opening-globe-layer:not(.is-shown) *{pointer-events:none!important}
+.opening-globe-layer .globe-view{min-height:0}

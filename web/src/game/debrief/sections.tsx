@@ -39,6 +39,7 @@ const PROPERTY_LABEL: Record<string, string> = { wind_speed_10m: 'Wind speed at 
 const outOf100 = (v: number | null) => (v === null ? '–' : `${v} / 100`);
 const reached = (m: number) => (m < 0.5 ? 'Reached' : `${m.toFixed(1)} m`);
 const words = (label: string | null | undefined) => (label ? label.replaceAll('_', ' ') : 'Unknown');
+const capital = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 const basis = (match: MatchCheck) => (match.evidence_status === 'literature_informed_proposal' ? 'Literature-informed proposal' : 'Terrain only, exploratory');
 const air = (body: string) => (body === 'Moon' ? 'a vacuum' : 'a thin carbon-dioxide atmosphere');
 
@@ -68,10 +69,12 @@ export function buildSections(input: SectionInput): DebriefSection[] {
   const planetaryGrid = body === 'Moon' ? 150 : 500;
   const subsystems = subsystemReadings({ flight, mission, assessment: a, fidelity: done, rehearsal, analogEntry, planetaryEntry });
   const surface = surfaceOpsAssessment(input);
+  const dimensions = analogDimensions(input);
+  const named = (fit: Fit) => dimensions.filter(d => d.fit === fit).map(d => d.short);
 
   return [
     { id: 'why', title: 'Why this analog', content: <>
-      <div className={`mon-banner ${result.outcome === 'success' ? 'go' : 'hold'}`}>{result.outcome === 'success' ? 'Analog field test complete' : `Field test ended · ${result.outcome}`}</div>
+      <div className={`deb-status ${result.outcome === 'success' ? 'go' : 'hold'}`}>{result.outcome === 'success' ? 'Field test complete' : `Field test ended · ${result.outcome}`}</div>
       <p className="deb-lede">{target.name} is a candidate {body === 'Moon' ? 'lunar' : 'Martian'} exploration site that cannot be rehearsed in place. {earth.name} is an Earth site proposed to stand in for it, so the same lander can be flown over measured ground before it flies there.</p>
       {match ? <Tiles items={[
         ['Analog match', percent(match.analog_score_percent), 'half landform type, half terrain shape'],
@@ -84,6 +87,20 @@ export function buildSections(input: SectionInput): DebriefSection[] {
       <h4>Why it matches</h4>
       <ul className="deb-list">{(evidence?.matches.length ? evidence.matches : ['No pair-specific match evidence has been reviewed; the comparison rests on terrain shape alone.']).map(text => <li key={text}>{text}</li>)}</ul>
       <p className="deb-note">The match score is an engineering similarity computed before the flight. It is not scientifically validated and is separate from the flight scores.{evidence?.source && <> <a href={evidence.source} target="_blank" rel="noreferrer">Supporting source</a></>}</p>
+    </> },
+
+    { id: 'dimensions', title: 'What is similar, how similar, and what is not', content: <>
+      <div className="deb-dims">{dimensions.map(d => <article key={d.id} className={`deb-dim ${d.fit}`}>
+        <header><h4>{d.name}</h4><span>{FIT_WORD[d.fit]}</span></header>
+        <p>{d.evidence}</p>
+        <small>{d.source}</small>
+      </article>)}</div>
+      <p className="deb-verdict">
+        {named('strong').length > 0 && <><b className="go">Rehearse here:</b> {named('strong').join(', ')}. </>}
+        {named('poor').length > 0 && <><b className="hold">Do not rely on it for:</b> {named('poor').join(', ')}. </>}
+        {named('unknown').length > 0 && <><b>Not established yet:</b> {named('unknown').join(', ')}.</>}
+      </p>
+      <p className="deb-note">Ratings sort the measured values into bands (terrain: 70% and above strong, 50–70% partial); they are not validated accuracy. No Earth site reproduces another world in every dimension.</p>
     </> },
 
     { id: 'breaks-down', title: 'Where the analogy breaks down', content: <>
@@ -213,7 +230,7 @@ export function buildSections(input: SectionInput): DebriefSection[] {
       ['Fuel exhausted', s.fuelOutAtS === null ? 'No' : `T+${s.fuelOutAtS.toFixed(1)} s, ${s.fuelOutAltitudeM!.toFixed(0)} m up`],
     ]} /> },
 
-    { id: 'surface-ops', title: 'Post-landing and surface operations readiness', content: <>
+    { id: 'surface-ops', title: 'How this analog helps exploration', content: <>
       <p className="deb-lede">After touchdown: how well does {earth.name} rehearse surface work at {target.name}, and can this landing support it?</p>
       <div className="deb-ops">{surface.map(item => <article key={item.id} className={`deb-op ${item.level}`}>
         <header><h4>{item.title}</h4><span>{OPS_LEVEL[item.level]}</span></header>
@@ -225,6 +242,75 @@ export function buildSections(input: SectionInput): DebriefSection[] {
       </article>)}</div>
       <p className="deb-note">From catalog labels, resource indicators and thermal records plus the touchdown state. No drill, rover, regolith-depth or biosignature data is ingested: readiness indicators, not measurements.</p>
     </> },
+  ];
+}
+
+/* ---- the analogy, dimension by dimension: the challenge's own list of what an analog can share */
+export type Fit = 'strong' | 'partial' | 'poor' | 'unknown' | 'na';
+const FIT_WORD: Record<Fit, string> = { strong: 'Strong analog', partial: 'Partial analog', poor: 'Weak analog', unknown: 'Not established', na: 'Not applicable' };
+export interface AnalogDimension { id: string; name: string; short: string; fit: Fit; evidence: string; source: string }
+const FROM_OPS: Record<OpsLevel, Fit> = { supported: 'strong', limited: 'partial', not_established: 'unknown', not_applicable: 'na' };
+
+/** Rates the pair on each dimension from catalog values, the flight and the rehearsals; unknowns stay unknown. */
+export function analogDimensions(input: SectionInput): AnalogDimension[] {
+  const { flight, mission, match, fidelity, analogEntry, planetaryEntry } = input;
+  const target = mission.planetaryTarget, earth = mission.earthAnalog, body = target.body;
+  const num = (site: CatalogSite | undefined, key: string) => { const v = (site?.conditions?.[key] as { value?: unknown } | undefined)?.value; return typeof v === 'number' && Number.isFinite(v) ? v : null; };
+  const ops = Object.fromEntries(surfaceOpsAssessment(input).map(o => [o.id, o])) as Record<SurfaceOpsItem['id'], SurfaceOpsItem>;
+  const done = fidelity.status === 'done' ? fidelity.result : null;
+  const dem = body === 'Moon' ? 'LRO LOLA DEM' : 'MGS MOLA DEM';
+
+  // terrain
+  const t = match?.terrain_similarity_percent ?? null;
+  const tp95 = num(planetaryEntry, 'slope_p95'), ap95 = num(analogEntry, 'slope_p95');
+  const terrainFit: Fit = t === null ? 'unknown' : t >= 70 ? 'strong' : t >= 50 ? 'partial' : 'poor';
+  // geology
+  const relation = match?.landform?.relation ?? 'unknown';
+  const sameRock = !!match && match.geology.earth_substrate === match.geology.planetary_substrate;
+  const geologyFit: Fit = relation === 'same_family' ? (sameRock ? 'strong' : 'partial') : relation === 'related_family' ? 'partial' : relation === 'different_family' ? 'poor' : 'unknown';
+  // temperature
+  const tMin = num(planetaryEntry, 'bolometric_temperature_min'), tMax = num(planetaryEntry, 'bolometric_temperature_max'), earthT = num(analogEntry, 'surface_temperature');
+  const c = (k: number) => `${(k - 273.15).toFixed(0)} °C`;
+  const tempFit: Fit = tMin === null || tMax === null || earthT === null ? 'unknown' : earthT + 273.15 >= tMin && earthT + 273.15 <= tMax ? 'partial' : 'poor';
+  // atmosphere and dust
+  const wind = num(analogEntry, 'wind_speed_10m');
+  // landing operations: do blind landings find landable ground about as often on both terrains?
+  const gap = done ? Math.abs(done.stress.planetary.successRate - done.stress.analog.successRate) * 100 : null;
+  const opsFit: Fit = gap === null ? 'unknown' : gap <= 10 ? 'strong' : gap <= 25 ? 'partial' : 'poor';
+
+  return [
+    { id: 'terrain', name: 'Terrain and topography', short: 'terrain and slopes', fit: terrainFit,
+      evidence: `${t === null ? 'No terrain match recorded' : `${t.toFixed(1)}% terrain-shape match (slope, roughness, relief)`}.${tp95 !== null && ap95 !== null ? ` 95% of ground below ${tp95.toFixed(1)}° at ${target.name} vs ${ap95.toFixed(1)}° here.` : ''}`,
+      source: `${dem} · Copernicus DEM GLO-30` },
+    { id: 'geology', name: 'Geology and surface materials', short: 'landform and geology', fit: geologyFit,
+      evidence: match ? `${capital(words(match.geology.earth_morphology))} in ${words(match.geology.earth_substrate)} here; ${words(match.geology.planetary_morphology)} in ${words(match.geology.planetary_substrate)} at ${target.name}.${sameRock ? '' : ' Same shape, different material.'}` : 'No catalog pairing, so landform and material are not compared.',
+      source: 'Catalog landform and substrate labels' },
+    { id: 'temperature', name: 'Temperature and illumination', short: 'temperature', fit: tempFit,
+      evidence: tMin !== null && tMax !== null
+        ? `${target.name}: ${c(tMin)} to ${c(tMax)} at the surface. ${earth.name}: ${earthT !== null ? `${earthT.toFixed(0)} °C mean` : 'not recorded'}${tempFit === 'poor' ? ', outside that range' : ''}.`
+        : `No surface temperature record for ${target.name} in the catalog${earthT !== null ? `; ${earth.name} averages ${earthT.toFixed(0)} °C` : ''}.`,
+      source: body === 'Moon' ? 'LRO Diviner · NASA POWER' : 'NASA POWER (Earth only)' },
+    { id: 'water', name: 'Water, ice and resources', short: 'water and ice', fit: FROM_OPS[ops['water-isru'].level],
+      evidence: `${target.name}: ${ops['water-isru'].target[0]} ${earth.name}: ${ops['water-isru'].analog[0]}`,
+      source: body === 'Moon' ? 'Catalog resource indicators · LRO Diviner' : 'Catalog resource indicators' },
+    { id: 'atmosphere', name: 'Dust, wind and atmosphere', short: 'dust and atmosphere', fit: body === 'Moon' ? 'poor' : 'partial',
+      evidence: body === 'Moon'
+        ? `The Moon is airless: dust moves only when the plume throws it. ${earth.name} has air${wind !== null ? ` and ${wind.toFixed(1)} m/s mean wind` : ''}.`
+        : `Wind moves dust at both sites, but Mars has a thin carbon-dioxide atmosphere${wind !== null ? `; ${earth.name} averages ${wind.toFixed(1)} m/s wind in Earth air` : ''}.`,
+      source: `NASA Science · NASA POWER` },
+    { id: 'biology', name: 'Biology and habitability', short: 'habitability', fit: FROM_OPS[ops.habitability.level],
+      evidence: ops.habitability.applies ? `${ops.habitability.target[0]} ${ops.habitability.landed[0]}` : ops.habitability.target[0],
+      source: 'Catalog landform and substrate labels' },
+    { id: 'subsurface', name: 'Caves and subsurface', short: 'caves and subsurface', fit: FROM_OPS[ops.subsurface.level],
+      evidence: `${target.name}: ${ops.subsurface.target[0]} ${earth.name}: ${ops.subsurface.analog[0]}`,
+      source: 'Catalog site descriptions' },
+    { id: 'operations', name: 'Landing and robotic operations', short: 'landing operations', fit: opsFit,
+      evidence: done ? `Blind landings found landable ground ${Math.round(done.stress.planetary.successRate * 100)}% of the time on ${body} terrain and ${Math.round(done.stress.analog.successRate * 100)}% here, with the same lander in ${body} gravity.`
+        : fidelity.status === 'working' ? 'Rehearsal flights over both terrains are still running.' : 'No rehearsal comparison is available.',
+      source: `Simulated rehearsal flights over both DEMs` },
+    { id: 'limits', name: 'Gravity, vacuum and radiation', short: 'gravity, air and radiation', fit: 'poor',
+      evidence: `${target.name}: ${target.gravity} m/s² and ${air(body)}, no global magnetic shielding. Earth: 9.81 m/s², dense air and shielding. This flight changed gravity and air in simulation only (${flight.environment.gravity} m/s²).`,
+      source: 'Physical constants · NASA Science' },
   ];
 }
 
@@ -336,7 +422,9 @@ export function buildReportExport(input: SectionInput) {
       },
       dataLimits: { earthGridSpacingM: profile.sampleSpacingM, planetaryGridSpacingM: body === 'Moon' ? 150 : 500, rocksGenerated: env.rocksGenerated, rockAbundance: env.rockAbundance },
     },
-    terrainAndGeology: { earthStatistics: profile.manifest.statistics ?? null, geology: match?.geology ?? null },
+    terrainAndGeology: { earthStatistics: profile.manifest.statistics ?? null, geology: match?.geology ?? null,
+      // the original elevation files the two grids were cut from, for anyone reproducing the comparison
+      elevationSources: { earth: profile.manifest.source ?? null, target: input.targetProfile?.manifest.source ?? null } },
     environment: {
       flown: { gravityMs2: env.gravity, airDensityKgM3: env.airDensity, wind: env.wind, interference: env.interference, sources: env.sources },
       comparison: { environmentSimilarityPercent: match?.environment_similarity_percent ?? null, totalSimilarityPercent: match?.total_similarity_percent ?? null,
@@ -351,6 +439,7 @@ export function buildReportExport(input: SectionInput) {
     },
     subsystems: subsystemReadings({ flight, mission, assessment: a, fidelity: done, rehearsal: done ? rehearsalRows(flight, done.guided) : null, analogEntry, planetaryEntry }),
     surfaceOperations: surfaceOpsAssessment(input),
+    analogyByDimension: analogDimensions(input),
   };
 }
 

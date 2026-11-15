@@ -9,6 +9,7 @@ import type { AnalogMatching } from './matching';
 
 export interface CatalogEntry extends PhysicsCatalogSite {
   region: string; description: string; evidence_url: string; study_status?: string; limitations?: string[];
+  terrain: (NonNullable<PhysicsCatalogSite['terrain']> & { elevation_sha256?: string }) | null;
 }
 export interface Pairing {
   earth_id: string; planetary_id: string; terrain_score: number | null; combined_score: number | null;

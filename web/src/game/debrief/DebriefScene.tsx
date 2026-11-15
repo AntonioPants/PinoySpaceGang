@@ -8,7 +8,7 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import type { FlightTelemetry } from '../../../../app/sim/src/types';
 import type { CatalogSite } from '../../../../app/sim/src/catalog';
 import type { MissionConfig, TerrainProfile } from '../../lib/types';
@@ -75,6 +75,8 @@ function startStatic() {
 }
 const stopStatic = (fadeMs: number) => playing?.stop(fadeMs);
 
+/** Smallest share of the page's normal type size used to fit a page on the screen without scrolling. */
+const MIN_FIT = 0.55;
 /** Longest the static will wait for the 3D terrain before showing the page anyway. */
 const TERRAIN_WAIT_MS = 12000;
 
@@ -88,9 +90,9 @@ function screenTexture(): THREE.CanvasTexture {
   const canvas = document.createElement('canvas'); canvas.width = 840; canvas.height = 490;
   const g = canvas.getContext('2d')!;
   g.fillStyle = '#0a0c0f'; g.fillRect(0, 0, 840, 490);
-  g.fillStyle = '#f2f4f6'; g.font = '500 44px "Inter Variable", sans-serif'; g.fillText('Analog report', 44, 86);
+  g.fillStyle = '#f2f4f6'; g.font = '500 44px "Inter Variable", sans-serif'; g.fillText('Field test report', 44, 86);
   g.fillStyle = '#343a42'; g.fillRect(44, 112, 752, 2);
-  g.fillStyle = '#5fc48a'; g.font = '600 26px "Inter Variable", sans-serif'; g.fillText('Analog characterisation received', 44, 170);
+  g.fillStyle = '#5fc48a'; g.font = '600 26px "Inter Variable", sans-serif'; g.fillText('Report finished', 44, 170);
   g.fillStyle = '#23282e'; for (let i = 0; i < 5; i++) g.fillRect(44, 210 + i * 46, 752 - (i % 3) * 150, 18);
   const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
   return texture;
@@ -124,11 +126,15 @@ function StaticNoise({ active, phase }: { active: boolean; phase: Phase }) {
   return <canvas ref={ref} className={`deb-static${active ? ` on ${phase}` : ''}`} width={320} height={180} aria-hidden="true" />;
 }
 
-export default function DebriefScene({ flight, mission, profile, analogEntry, planetaryEntry, planetaryProfile, match, evidence, reducedMotion, onRetry }: {
+export default function DebriefScene({ flight, mission, profile, analogEntry, planetaryEntry, planetaryProfile, match, evidence, reducedMotion, onRetry, onNewSite }: {
   /** The terrain of a pinned point (not in the catalog), for the comparison flights. */
   planetaryProfile?: TerrainProfile;
   flight: FlightTelemetry; mission: MissionConfig; profile: TerrainProfile; match?: MatchCheck; evidence?: PairEvidence;
-  analogEntry?: CatalogSite; planetaryEntry?: CatalogSite; reducedMotion: boolean; onRetry: () => void;
+  analogEntry?: CatalogSite; planetaryEntry?: CatalogSite; reducedMotion: boolean;
+  /** Fly again from the equipment bay, same site. */
+  onRetry: () => void;
+  /** Leave the report and pick a different world and site. */
+  onNewSite?: () => void;
 }) {
   const [stage, setStage] = useState<Stage>(reducedMotion ? 'screen' : 'walk');
   const [index, setIndex] = useState(0);
@@ -313,34 +319,63 @@ export default function DebriefScene({ flight, mission, profile, analogEntry, pl
   }, [stage, go]);
   useEffect(() => { if (stage === 'screen') heading.current?.focus({ preventScroll: true }); }, [stage]);
 
+  // ---- every page fits the screen: shrink the page's type just enough that nothing scrolls.
+  // Phones keep scrolling instead, where shrinking would make the text unreadable.
+  const content = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const box = content.current;
+    if (stage !== 'screen' || !box) return;
+    let raf = 0, scale = 1, reset = false, width = 0, height = 0;
+    const overflowing = () => box.scrollHeight > box.clientHeight + 1 || box.scrollWidth > box.clientWidth + 1;
+    // A new page or a resized window starts again from full size; content arriving later only ever
+    // shrinks the type further, so a view that redraws itself (the 3D terrain) cannot make it oscillate.
+    const fit = () => {
+      raf = 0;
+      if (reset) { scale = 1; reset = false; box.style.setProperty('--fit', '1'); }
+      if (window.innerWidth <= 760) { scale = 1; box.style.setProperty('--fit', '1'); return; }
+      while (overflowing() && scale > MIN_FIT) { scale = Math.max(MIN_FIT, scale - 0.03); box.style.setProperty('--fit', scale.toFixed(2)); }
+    };
+    const later = () => { if (!raf) raf = requestAnimationFrame(fit); };
+    reset = true; fit();
+    const resized = new ResizeObserver(() => {
+      if (box.clientWidth === width && box.clientHeight === height) return;
+      width = box.clientWidth; height = box.clientHeight; reset = true; later();
+    });
+    resized.observe(box);
+    // late content: the 3D view, the rehearsal results, an opened details box
+    const changed = new MutationObserver(later); changed.observe(box, { childList: true, subtree: true });
+    box.addEventListener('toggle', later, true);
+    return () => { cancelAnimationFrame(raf); resized.disconnect(); changed.disconnect(); box.removeEventListener('toggle', later, true); };
+  }, [stage, index, sections]);
+
   const section = sections[Math.min(index, sections.length - 1)];
   if (stage === 'walk') return <section className="debrief-scene" aria-label="Debrief">
     <div ref={mount} className="deb-view" />
-    <p className="deb-sr" role="status">The analog report is coming in on the mission-control monitor.</p>
+    <p className="deb-sr" role="status">Report finished. Opening it on the mission-control monitor.</p>
     <button type="button" className="deb-skip" onClick={openScreen}>Skip to report</button>
   </section>;
   return <section className="debrief-scene" aria-label="Landing report">
     <div ref={screenRef} className={`deb-screen monitor-screen${phase === 'idle' ? '' : ` tuning phase-${phase}`}`} style={{ ['--half' as string]: `${STATIC_MS / 2}ms` }}>
       {phase === 'hold' && <p className="deb-sr" role="status">Loading the 3D terrain comparison…</p>}
       <header>
-        <h2 ref={heading} tabIndex={-1}>Analog report</h2>
-        <span className="mon-link"><i aria-hidden="true" /><i aria-hidden="true" /><i aria-hidden="true" />{mission.planetaryTarget.name} → {mission.earthAnalog.name}</span>
+        <h2 ref={heading} tabIndex={-1}>Field test report</h2>
+        <span className="deb-route"><span>{mission.planetaryTarget.body} → Earth</span>{mission.planetaryTarget.name} → {mission.earthAnalog.name}</span>
       </header>
       <div className="deb-page" role="group" aria-roledescription="slide" aria-label={`${section.title}, ${index + 1} of ${sections.length}`} aria-live="polite">
         <h3>{String(index + 1).padStart(2, '0')} <span>{section.title}</span></h3>
-        <div className="deb-content" key={section.id}>{section.content}</div>
+        <div className="deb-content" ref={content} key={section.id}>{section.content}</div>
       </div>
       <footer>
         <div className="deb-dots" role="tablist" aria-label="Report sections">{sections.map((s, i) =>
           <button key={s.id} type="button" role="tab" aria-selected={i === index} aria-label={s.title} title={s.title} onClick={() => go(i - index)} />)}</div>
-        <span className="deb-count">{index + 1} / {sections.length}</span>
-        <button type="button" className="deb-download" onClick={download}><Download size={16} aria-hidden="true" /> Download report (JSON)</button>
-        <button type="button" className="deb-retry" onClick={onRetry}>Configure another flight</button>
+        <span className="deb-count">{String(index + 1).padStart(2, '0')} / {String(sections.length).padStart(2, '0')}</span>
+        <button type="button" className="deb-download" onClick={download}><Download size={15} aria-hidden="true" /> Download report (JSON)</button>
+        {onNewSite && <button type="button" className="deb-download" onClick={onNewSite}>Choose another site</button>}
+        <button type="button" className="deb-retry" onClick={onRetry}>Configure another flight <ArrowRight size={17} aria-hidden="true" /></button>
       </footer>
       <StaticNoise active={phase !== 'idle'} phase={phase} />
-      <div className="deb-scanlines" aria-hidden="true" />
     </div>
-    <button type="button" className="deb-arrow left" aria-label="Previous section" onClick={() => go(-1)}><ChevronLeft size={34} /></button>
-    <button type="button" className="deb-arrow right" aria-label="Next section" onClick={() => go(1)}><ChevronRight size={34} /></button>
+    <button type="button" className="deb-arrow left" aria-label="Previous section" onClick={() => go(-1)}><ChevronLeft size={22} /></button>
+    <button type="button" className="deb-arrow right" aria-label="Next section" onClick={() => go(1)}><ChevronRight size={22} /></button>
   </section>;
 }
