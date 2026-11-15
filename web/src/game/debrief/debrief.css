@@ -2,7 +2,7 @@
 .debrief-scene { position: absolute; inset: 0; background: #02040b; overflow: hidden; }
 .deb-view { position: absolute; inset: 0; }
 .deb-canvas { width: 100%; height: 100%; display: block; }
-.deb-caption { position: absolute; left: 50%; bottom: 34px; transform: translateX(-50%); margin: 0; padding: 9px 16px; border: 1px solid #4a525b; border-radius: 4px; background: #0e1114e6; color: #e4e7ea; font-size: 14px; text-align: center; max-width: calc(100% - 40px); }
+.deb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .deb-skip { position: absolute; right: 26px; top: 96px; font: inherit; font-size: 12px; padding: 9px 13px; color: #e4e7ea; background: #05060799; border: 1px solid #4a525b; border-radius: 4px; cursor: pointer; backdrop-filter: blur(10px); }
 .deb-skip:hover { border-color: #8a939c; }
 
@@ -63,8 +63,14 @@
 .deb-dots button { width: 26px; height: 6px; padding: 0; border: 0; border-radius: 3px; background: #343a42; cursor: pointer; }
 .deb-dots button[aria-selected=true] { background: var(--accent); }
 .deb-count { font-size: .85em; color: var(--dim); font-variant-numeric: tabular-nums; }
-.deb-retry { margin-left: auto; font: inherit; font-size: .9em; font-weight: 600; padding: .6em 1em; color: #0a0c0f; background: #e9ecef; border: 0; border-radius: 4px; cursor: pointer; }
+/* the report as a file: always at the bottom of the screen, on every page */
+.deb-download { margin-left: auto; display: inline-flex; align-items: center; gap: .5em; font: inherit; font-size: .9em; padding: .6em 1em; color: var(--ink); background: #161a1f; border: 1px solid #3d444d; border-radius: 4px; cursor: pointer; }
+.deb-download:hover { border-color: #8a939c; }
+.deb-download:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.deb-content a { color: var(--accent); }
+.deb-retry { font: inherit; font-size: .9em; font-weight: 600; padding: .6em 1em; color: #0a0c0f; background: #e9ecef; border: 0; border-radius: 4px; cursor: pointer; }
 .deb-retry:hover { background: #fff; }
+
 
 /* arrows on the left and right edges of the screen */
 .deb-arrow { position: absolute; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 54px; height: 96px; color: #dfe3e7; background: #161a1fcc; border: 1px solid #3d444d; border-radius: 4px; cursor: pointer; z-index: 4; }
@@ -75,8 +81,20 @@
 /* ---- TV static: snow over the picture while it jumps and loses colour, then it locks back in */
 .deb-static { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; opacity: 0; image-rendering: pixelated; mix-blend-mode: screen; transition: opacity .09s linear; }
 .deb-static.on { opacity: .92; }
+/* a page change: the static fades in while the old page fades out, then fades out while the new page fades in */
+.deb-static.on.out { animation: deb-static-rise var(--half) ease-in forwards; }
+.deb-static.on.in { animation: deb-static-clear var(--half) ease-out forwards; }
+/* holding on the static while the terrain page's 3D view loads: full static, page hidden but mounted so it can build */
+.deb-static.on.hold { opacity: .92; animation: none; }
+.deb-screen.phase-hold > header, .deb-screen.phase-hold > .deb-page, .deb-screen.phase-hold > footer { opacity: 0; animation: none; }
+.deb-screen.phase-out > header, .deb-screen.phase-out > .deb-page, .deb-screen.phase-out > footer { animation: deb-page-out var(--half) ease-in forwards; }
+.deb-screen.phase-in > header, .deb-screen.phase-in > .deb-page, .deb-screen.phase-in > footer { animation: deb-page-in var(--half) ease-out both; }
+@keyframes deb-static-rise { from { opacity: 0; } to { opacity: .92; } }
+@keyframes deb-static-clear { from { opacity: .92; } to { opacity: 0; } }
+@keyframes deb-page-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes deb-page-in { from { opacity: 0; } to { opacity: 1; } }
 .deb-scanlines { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: repeating-linear-gradient(#0000 0 2px, #0000001f 2px 3px); }
-.deb-screen.tuning > header, .deb-screen.tuning > .deb-page, .deb-screen.tuning > footer { animation: deb-jitter .14s steps(2) infinite; filter: saturate(.2) contrast(1.5) brightness(1.25); }
+.deb-screen.tuning > header, .deb-screen.tuning > .deb-page, .deb-screen.tuning > footer { filter: saturate(.2) contrast(1.5) brightness(1.25); }
 @keyframes deb-jitter {
   0% { transform: translate(-7px, 2px) skewX(-1.5deg); }
   50% { transform: translate(9px, -3px) skewX(2deg); }
@@ -98,3 +116,82 @@
   .deb-table { font-size: .85em; } .deb-table th, .deb-table td { padding: .5em .4em; }
 }
 @media (prefers-reduced-motion: reduce) { .deb-screen, .deb-screen.tuning > * { animation: none; } }
+
+/* ---- lander schematic (LanderSchematic.tsx): drawing on the left, the selected part's readings on the right */
+.lsc { --part: #8a939c; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 1em; align-items: start; margin-bottom: .8em; }
+.lsc-drawing { width: 100%; height: auto; max-height: 46vh; border: 1px solid #23282e; border-radius: 3px; background: #0b0d10; }
+.lsc-gridline { stroke: #161a1f; stroke-width: 1; }
+.lsc-part { fill: #12161a; stroke: var(--part); stroke-width: 1.6; cursor: pointer; transition: stroke .15s, fill .15s; }
+.lsc-part .lsc-pad, .lsc-part .lsc-plume { fill: none; stroke-width: 3; }
+.lsc-part .lsc-plume { stroke-dasharray: 3 3; }
+.lsc-part.on { fill: #172019; stroke-width: 2.4; }
+.lsc-part.nominal.on { stroke: var(--go); } .lsc-part.caution.on { stroke: var(--caution); } .lsc-part.exceeded.on { stroke: var(--hold); } .lsc-part.not_modelled.on { stroke: var(--ink); }
+.lsc-callout { cursor: pointer; outline: none; }
+.lsc-leader { fill: none; stroke: #3d444d; stroke-width: 1.2; }
+.lsc-dot { fill: #3d444d; }
+.lsc-label { fill: var(--dim); font: 600 11px 'IBM Plex Sans', sans-serif; letter-spacing: .04em; text-transform: uppercase; }
+.lsc-light { fill: var(--dim); }
+.lsc-callout.nominal .lsc-light { fill: var(--go); } .lsc-callout.caution .lsc-light { fill: var(--caution); } .lsc-callout.exceeded .lsc-light { fill: var(--hold); }
+.lsc-callout.on .lsc-leader, .lsc-callout:focus-visible .lsc-leader { stroke: var(--ink); stroke-width: 1.8; }
+.lsc-callout.on .lsc-dot { fill: var(--ink); } .lsc-callout.on .lsc-label, .lsc-callout:focus-visible .lsc-label { fill: var(--ink); }
+.lsc-callout:focus-visible .lsc-label { text-decoration: underline; }
+.lsc-detail { border: 1px solid #23282e; border-left: 3px solid var(--dim); border-radius: 3px; background: #0e1114; padding: .8em 1em; font-size: .9em; }
+.lsc-detail.nominal { border-left-color: var(--go); } .lsc-detail.caution { border-left-color: var(--caution); } .lsc-detail.exceeded { border-left-color: var(--hold); }
+.lsc-detail header { display: flex; justify-content: space-between; align-items: baseline; gap: 1em; margin: 0; padding: 0; border: 0; }
+.lsc-detail h4 { margin: 0; font-size: 1.1em; color: var(--ink); }
+.lsc-badge { font-size: .8em; color: var(--dim); white-space: nowrap; }
+.lsc-detail.nominal .lsc-badge { color: var(--go); } .lsc-detail.caution .lsc-badge { color: var(--caution); } .lsc-detail.exceeded .lsc-badge { color: var(--hold); }
+.lsc-headline { margin: .3em 0 .5em; font-size: 1.15em; font-variant-numeric: tabular-nums; }
+.lsc-detail h5 { margin: .7em 0 .2em; font-size: .8em; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.lsc-detail ul { margin: 0; padding-left: 1.1em; } .lsc-detail li { margin-bottom: .2em; }
+
+/* ---- section 10: post-landing and surface operations */
+.deb-ops { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7em; margin-bottom: .8em; }
+.deb-op { border: 1px solid #23282e; border-left: 3px solid var(--dim); border-radius: 3px; background: #0e1114; padding: .7em .9em; font-size: .88em; }
+.deb-op.supported { border-left-color: var(--go); } .deb-op.limited { border-left-color: var(--caution); }
+.deb-op header { display: flex; justify-content: space-between; align-items: baseline; gap: 1em; margin: 0 0 .3em; padding: 0; border: 0; }
+.deb-op h4 { margin: 0; font-size: 1.05em; color: var(--ink); }
+.deb-op header span { font-size: .85em; color: var(--dim); white-space: nowrap; }
+.deb-op.supported header span { color: var(--go); } .deb-op.limited header span { color: var(--caution); }
+.deb-op p { margin: 0 0 .35em; } .deb-op strong { color: var(--ink); font-weight: 600; }
+.deb-terrain3d { margin: 0 0 .8em; }
+
+@media (max-width: 760px) {
+  .lsc, .deb-ops { grid-template-columns: 1fr; }
+  .lsc-drawing { max-height: 38vh; }
+}
+
+/* compact tile row and geology line on the terrain page, so the 3D view has room */
+.deb-tiles.cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.deb-content > .deb-tiles.compact { flex: none; }
+.deb-tiles.compact > div { padding: .45em .7em; }
+.deb-tiles.compact dt { font-size: .75em; } .deb-tiles.compact dd { font-size: 1.15em; } .deb-tiles.compact small { font-size: .7em; }
+.deb-geology { margin: 0 0 .6em; font-size: .88em; color: var(--dim); } .deb-geology strong { color: var(--ink); font-weight: 600; }
+/* limit bars under the schematic */
+.deb-content > .deb-margins.compact { flex: none; }
+.deb-margins.compact li { flex: none; min-height: 0; padding: .25em 0; font-size: .95em; }
+@media (max-width: 760px) { .deb-tiles.cols-6 { grid-template-columns: repeat(2, 1fr); } }
+/* fit the 3D comparison and the surface-ops cards on one screen */
+.deb-terrain3d .tc3d-view { height: clamp(160px, 21vh, 280px); }
+.deb-op { font-size: .8em; line-height: 1.38; padding: .55em .8em; }
+.deb-ops { gap: .55em; }
+.deb-op p { margin-bottom: .25em; }
+.lsc-hit { fill: transparent; }
+.lsc-callout.on .lsc-hit { fill: #ffffff08; }
+.lsc-detail { max-height: 46vh; overflow: auto; scrollbar-color: #3d444d transparent; }
+@media (max-width: 760px) { .lsc-detail { max-height: none; } }
+
+/* schematic page: drawing and limit bars on the left, the selected part's full readings on the right (no inner scroll) */
+.lsc { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: stretch; margin-bottom: 0; }
+.lsc-left { display: flex; flex-direction: column; gap: .5em; min-width: 0; }
+.lsc-drawing { max-height: 44vh; }
+.lsc-detail { max-height: none; overflow: visible; font-size: .84em; line-height: 1.35; }
+.lsc-left .deb-margins.compact { margin: 0; } .lsc-left .deb-margins.compact li { font-size: .82em; gap: .6em; grid-template-columns: minmax(110px, 1fr) 2fr auto auto; }
+.lsc-part .thin { stroke-width: 1; } .lsc-part .far { opacity: .45; }
+.lsc-part .lsc-hull { fill: color-mix(in srgb, var(--hull) 22%, #12161a); }
+.lsc-part .lsc-glass { fill: #102d40; }
+.lsc-part .lsc-tank { fill: #1a1f24; stroke-width: 1.4; }
+.lsc-wings path { fill: #10233d; stroke: #3d5a7a; stroke-width: 1.2; }
+.lsc-ground { stroke: #3d444d; stroke-width: 1; stroke-dasharray: 2 4; }
+.lsc-caption { fill: var(--dim); font: 10px 'IBM Plex Sans', sans-serif; text-anchor: middle; }
+@media (max-width: 760px) { .lsc-detail { font-size: .9em; } }
