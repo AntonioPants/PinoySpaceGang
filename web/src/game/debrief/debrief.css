@@ -1,82 +1,111 @@
-/* The in-character debrief (web/src/game/debrief). Uses the bridge monitor's colours from interior.css. */
-.debrief-scene { position: absolute; inset: 0; background: #02040b; overflow: hidden; }
+/* The in-character debrief (web/src/game/debrief), in the bridge monitors' style (interior.css, as on the
+   Equipment and Flight screens): near-black glass, Inter, grey text, one blue accent for what is selected,
+   grey buttons, and green / amber / red only for status. The colour tokens come from .monitor-screen. */
+.debrief-scene { position: absolute; inset: 0; background: #02040b; overflow: hidden; font-family: var(--font-ui); }
 .deb-view { position: absolute; inset: 0; }
 .deb-canvas { width: 100%; height: 100%; display: block; }
 .deb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.deb-skip { position: absolute; right: 26px; top: 96px; font: inherit; font-size: 12px; padding: 9px 13px; color: #e4e7ea; background: #05060799; border: 1px solid #4a525b; border-radius: 4px; cursor: pointer; backdrop-filter: blur(10px); }
+.deb-skip { position: absolute; right: 26px; top: 96px; font: inherit; font-size: 13px; padding: 9px 13px; color: #e4e7ea; background: #0e1114e6; border: 1px solid #4a525b; border-radius: 4px; cursor: pointer; backdrop-filter: blur(10px); }
 .deb-skip:hover { border-color: #8a939c; }
 
-/* ---- the monitor, filling the view */
-/* Type scales with the window, and each page stretches its tiles, bars and rows to fill the screen. */
-.deb-screen { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 84px clamp(76px, 7vw, 140px) 22px; font-size: clamp(16px, calc(.7vw + .95vh), 28px); user-select: text; animation: deb-on .5s ease-out both; }
-.deb-screen h2 { font-size: 1.75em; }
-.deb-screen .mon-link { font-size: .85em; }
-.deb-screen > header { flex: none; }
+/* ---- the report, filling the view */
+.deb-screen { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 84px clamp(84px, 7vw, 140px) 20px; font-size: clamp(14px, calc(.55vw + .75vh), 22px); line-height: 1.4; user-select: text; animation: deb-on .5s ease-out both; }
+.deb-screen > header { flex: none; display: flex; justify-content: space-between; align-items: center; gap: 1em; margin: 0 0 .9em; padding: 0 0 .7em; border-bottom: 1px solid var(--line); }
+.deb-screen h2 { margin: 0; font-size: 1.75em; font-weight: 500; color: #f2f4f6; }
 .deb-screen h2:focus { outline: none; }
-.deb-screen .mon-link { text-align: right; }
+.deb-route { display: flex; flex-direction: column; align-items: flex-end; gap: .15em; font-size: .88em; color: var(--ink); text-align: right; }
+.deb-route span { font-size: .85em; color: var(--dim); }
 .deb-page { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-.deb-page > h3 { flex: none; margin: 0 0 .8em; font-size: .9em; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
-.deb-page > h3 span { color: var(--ink); margin-left: 10px; }
-.deb-content { flex: 1; min-height: 0; overflow: auto; padding-right: 8px; display: flex; flex-direction: column; scrollbar-color: #3d444d transparent; }
+.deb-page > h3 { flex: none; margin: 0 0 .8em; font-size: .9em; font-weight: 600; color: var(--accent); }
+.deb-page > h3 span { color: var(--ink); margin-left: .2em; }
+
+/* The page's content. --fit (set by DebriefScene) shrinks the type until the page needs no scrolling. */
+.deb-content { --fit: 1; flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; font-size: calc(1em * var(--fit)); scrollbar-color: #3d444d transparent; }
 .deb-content > * { flex: none; }
-.deb-content > .deb-tiles, .deb-content > .deb-margins, .deb-content > .deb-table { flex: 1 1 auto; }
-.deb-content h4 { margin: 1em 0 .45em; font-size: .9em; font-weight: 600; color: var(--dim); }
-.deb-content p { margin: 0 0 .7em; }
-.deb-lede { font-size: 1.1em; }
-.deb-note, .deb-pending { font-size: .88em; color: var(--dim); }
+.deb-content h4 { margin: .9em 0 .4em; font-size: .9em; font-weight: 600; color: var(--dim); }
+.deb-content p { margin: 0 0 .65em; }
+.deb-content a { color: var(--accent); }
+.deb-content strong { font-weight: 600; color: var(--ink); }
+.deb-lede { font-size: 1.08em; max-width: 64em; }
+.deb-note, .deb-pending { font-size: .82em; color: var(--dim); }
 .deb-pending { padding: 1.1em; border: 1px dashed var(--line); border-radius: 3px; }
-.deb-content .mon-banner { margin-bottom: .8em; font-size: 1.25em; padding: .5em; }
 
-.deb-tiles { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: minmax(min-content, 1fr); gap: .6em; margin: 0 0 .8em; }
-.deb-tiles.cols-4 { grid-template-columns: repeat(4, 1fr); }
-.deb-tiles > div { display: flex; flex-direction: column; justify-content: center; padding: .7em .9em; border: 1px solid #23282e; border-radius: 3px; background: #0e1114; }
-.deb-tiles dt { font-size: .85em; color: var(--dim); }
-.deb-tiles dd { margin: .2em 0 0; font-size: 1.55em; font-variant-numeric: tabular-nums; }
-.deb-tiles small { display: block; margin-top: .2em; font-size: .78em; color: var(--dim); }
-/* a single row of headline scores: large type rather than tall empty boxes */
-.deb-tiles.hero > div { align-items: center; text-align: center; }
-.deb-tiles.hero dt { font-size: 1.2em; }
-.deb-tiles.hero dd { font-size: clamp(1.6em, 3.4vw, 2.7em); margin-top: .25em; white-space: nowrap; }
-.deb-tiles.hero small { font-size: 1em; margin-top: .6em; }
+/* outcome line at the top of the first page, as the monitors' status banner */
+.deb-status { align-self: flex-start; display: flex; align-items: center; gap: .55em; margin: 0 0 .7em; padding: .35em .9em; border: 1px solid; border-radius: 3px; font-size: 1em; font-weight: 600; }
+.deb-status::before { content: ''; width: .55em; height: .55em; border-radius: 50%; background: currentColor; }
+.deb-status.go { color: var(--go); background: #5fc48a14; } .deb-status.hold { color: var(--hold); background: #e0685a1a; }
+
+/* ---- statistic tiles: label over value, like the monitors' live figures */
+.deb-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5em; margin: 0 0 .8em; }
+.deb-tiles.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.deb-tiles.cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.deb-tiles > div { display: flex; flex-direction: column; justify-content: center; padding: .5em .8em; border: 1px solid #23282e; border-radius: 3px; background: #0e1114; }
+.deb-tiles dt { font-size: .76em; color: var(--dim); }
+.deb-tiles dd { margin: .15em 0 0; font-size: 1.2em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.deb-tiles small { display: block; margin-top: .15em; font-size: .72em; color: var(--dim); }
+.deb-tiles.hero > div { align-items: center; text-align: center; padding: .7em .8em; }
+.deb-tiles.hero dt { font-size: .9em; }
+.deb-tiles.hero dd { font-size: 1.8em; white-space: nowrap; }
+.deb-tiles.hero small { font-size: .78em; margin-top: .35em; }
+.deb-tiles.compact > div { padding: .4em .7em; }
+.deb-tiles.compact dd { font-size: 1.05em; }
+.deb-grade { color: var(--go); font-weight: 600; margin-right: .2em; }
+.deb-geology { margin: 0 0 .6em; font-size: .86em; color: var(--dim); }
+
+.deb-list { margin: 0 0 .65em; padding-left: 1.15em; }
+.deb-list li { margin-bottom: .3em; }
+.deb-content .landing-evidence { margin-bottom: .8em; font-size: .92em; }
 .deb-content .landing-evidence strong, .deb-content .landing-evidence small { display: block; }
-.deb-content .landing-evidence strong { font-size: 1.15em; margin-bottom: .2em; }
-.deb-content .landing-evidence { margin-bottom: .8em; }
-.deb-grade { color: var(--go); font-size: 1.35em; font-weight: 600; margin-right: 8px; }
+.deb-content .landing-evidence strong { font-size: 1.1em; margin-bottom: .2em; }
 
-.deb-list { margin: 0 0 .7em; padding-left: 1.2em; }
-.deb-list li { margin-bottom: 5px; }
+/* ---- touchdown margins */
 .deb-margins { list-style: none; margin: 0 0 .4em; padding: 0; display: flex; flex-direction: column; }
-.deb-margins li { display: grid; grid-template-columns: minmax(130px, 1.1fr) 3fr minmax(120px, auto) minmax(110px, auto); gap: .9em; align-items: center; flex: 1; min-height: 2.6em; padding: .4em 0; border-bottom: 1px solid #23282e; font-size: 1.15em; }
+.deb-margins li { display: grid; grid-template-columns: minmax(8em, 1fr) 2.2fr auto minmax(5em, auto); gap: .8em; align-items: center; padding: .3em 0; border-bottom: 1px solid #23282e; font-size: .88em; }
 .deb-margins b { font-weight: 500; font-variant-numeric: tabular-nums; }
-.deb-margins em { font-style: normal; font-size: .8em; color: var(--dim); }
-.deb-track { height: .55em; border-radius: 4px; background: #23282e; overflow: hidden; }
+.deb-margins em { font-style: normal; font-size: .82em; color: var(--dim); }
+.deb-track { height: .45em; border-radius: 3px; background: #2a3038; overflow: hidden; }
 .deb-track i { display: block; height: 100%; background: var(--go); }
 .deb-margins .marginal .deb-track i { background: var(--caution); } .deb-margins .marginal em { color: var(--caution); }
 .deb-margins .exceeded .deb-track i { background: var(--hold); } .deb-margins .exceeded em { color: var(--hold); }
-.deb-table { width: 100%; border-collapse: collapse; margin-bottom: .8em; font-size: 1.15em; font-variant-numeric: tabular-nums; }
+
+.deb-table { width: 100%; border-collapse: collapse; margin-bottom: .8em; font-variant-numeric: tabular-nums; }
 .deb-table th, .deb-table td { padding: .5em .7em; text-align: left; border-bottom: 1px solid #23282e; }
 .deb-table thead th { font-size: .8em; font-weight: 600; color: var(--dim); }
 .deb-table tbody th { font-weight: 500; }
 
-.deb-screen > footer { flex: none; display: flex; align-items: center; gap: 18px; padding-top: .8em; margin-top: .6em; border-top: 1px solid var(--line); }
-.deb-dots { display: flex; gap: 8px; }
-.deb-dots button { width: 26px; height: 6px; padding: 0; border: 0; border-radius: 3px; background: #343a42; cursor: pointer; }
+/* ---- the analogy by dimension: one card per dimension the challenge names */
+.deb-dims { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5em; margin: 0 0 .7em; }
+.deb-dim { display: flex; flex-direction: column; padding: .55em .8em; border: 1px solid #23282e; border-left: 3px solid var(--dim); border-radius: 3px; background: #0e1114; font-size: .86em; }
+.deb-dim header { display: flex; justify-content: space-between; align-items: baseline; gap: .8em; margin: 0 0 .3em; padding: 0; border: 0; }
+.deb-dim h4 { margin: 0; font-size: 1em; font-weight: 600; color: var(--ink); }
+.deb-dim header span { font-size: .8em; white-space: nowrap; color: var(--dim); }
+.deb-dim p { flex: 1; margin: 0 0 .35em; line-height: 1.38; }
+.deb-dim small { font-size: .76em; color: var(--dim); }
+.deb-dim.strong { border-left-color: var(--go); } .deb-dim.strong header span { color: var(--go); }
+.deb-dim.partial { border-left-color: var(--caution); } .deb-dim.partial header span { color: var(--caution); }
+.deb-dim.poor { border-left-color: var(--hold); } .deb-dim.poor header span { color: var(--hold); }
+.deb-verdict { font-size: .95em; }
+.deb-verdict b { font-weight: 600; } .deb-verdict b.go { color: var(--go); } .deb-verdict b.hold { color: var(--hold); }
+
+/* ---- footer: section dots, count, the report as a file, and the next flight */
+.deb-screen > footer { flex: none; display: flex; align-items: center; gap: 18px; padding-top: .7em; margin-top: .6em; border-top: 1px solid var(--line); }
+.deb-dots { display: flex; gap: 7px; }
+.deb-dots button { width: 22px; height: 5px; padding: 0; border: 0; border-radius: 3px; background: #343a42; cursor: pointer; }
+.deb-dots button:hover { background: #5a636d; }
 .deb-dots button[aria-selected=true] { background: var(--accent); }
-.deb-count { font-size: .85em; color: var(--dim); font-variant-numeric: tabular-nums; }
-/* the report as a file: always at the bottom of the screen, on every page */
-.deb-download { margin-left: auto; display: inline-flex; align-items: center; gap: .5em; font: inherit; font-size: .9em; padding: .6em 1em; color: var(--ink); background: #161a1f; border: 1px solid #3d444d; border-radius: 4px; cursor: pointer; }
+.deb-count { font-size: .8em; color: var(--dim); font-variant-numeric: tabular-nums; }
+.deb-download { margin-left: auto; display: inline-flex; align-items: center; gap: .5em; font: inherit; font-size: 14px; padding: 10px 14px; color: var(--ink); background: #161a1f; border: 1px solid #3d444d; border-radius: 3px; cursor: pointer; }
 .deb-download:hover { border-color: #8a939c; }
-.deb-download:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-.deb-content a { color: var(--accent); }
-.deb-retry { font: inherit; font-size: .9em; font-weight: 600; padding: .6em 1em; color: #0a0c0f; background: #e9ecef; border: 0; border-radius: 4px; cursor: pointer; }
+.deb-download + .deb-download { margin-left: 0; }
+.deb-retry { display: inline-flex; align-items: center; gap: 14px; padding: 10px 16px; font: inherit; font-size: 15px; font-weight: 600; color: #0a0c0f; background: #e9ecef; border: 0; border-radius: 4px; cursor: pointer; }
 .deb-retry:hover { background: #fff; }
 
-
 /* arrows on the left and right edges of the screen */
-.deb-arrow { position: absolute; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 54px; height: 96px; color: #dfe3e7; background: #161a1fcc; border: 1px solid #3d444d; border-radius: 4px; cursor: pointer; z-index: 4; }
-.deb-arrow.left { left: 12px; } .deb-arrow.right { right: 12px; }
+.deb-arrow { position: absolute; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 46px; height: 84px; padding: 0; color: var(--ink); background: #161a1fcc; border: 1px solid #3d444d; border-radius: 4px; cursor: pointer; z-index: 4; }
+.deb-arrow.left { left: 18px; } .deb-arrow.right { right: 18px; }
 .deb-arrow:hover { border-color: #8a939c; background: #1d2228; }
-.deb-arrow:focus-visible, .deb-skip:focus-visible, .deb-retry:focus-visible, .deb-dots button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.deb-arrow:focus-visible, .deb-skip:focus-visible, .deb-retry:focus-visible, .deb-download:focus-visible, .deb-dots button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.debrief-scene .deb-arrow { --ink: #dfe3e7; }
 
 /* ---- TV static: snow over the picture while it jumps and loses colour, then it locks back in */
 .deb-static { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; opacity: 0; image-rendering: pixelated; mix-blend-mode: screen; transition: opacity .09s linear; }
@@ -93,105 +122,141 @@
 @keyframes deb-static-clear { from { opacity: .92; } to { opacity: 0; } }
 @keyframes deb-page-out { from { opacity: 1; } to { opacity: 0; } }
 @keyframes deb-page-in { from { opacity: 0; } to { opacity: 1; } }
-.deb-scanlines { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: repeating-linear-gradient(#0000 0 2px, #0000001f 2px 3px); }
 .deb-screen.tuning > header, .deb-screen.tuning > .deb-page, .deb-screen.tuning > footer { filter: saturate(.2) contrast(1.5) brightness(1.25); }
-@keyframes deb-jitter {
-  0% { transform: translate(-7px, 2px) skewX(-1.5deg); }
-  50% { transform: translate(9px, -3px) skewX(2deg); }
-  100% { transform: translate(-3px, 1px) skewX(-.5deg); }
-}
 @keyframes deb-on { from { opacity: 0; filter: brightness(2.2); } to { opacity: 1; filter: none; } }
 
-@media (max-width: 760px) {
-  .deb-screen { padding: 84px 16px 74px; font-size: 15px; }
-  .deb-screen .mon-link { display: none; }
-  .deb-tiles, .deb-tiles.cols-4 { grid-template-columns: repeat(2, 1fr); } .deb-tiles dd { font-size: 1.2em; }
-  .deb-margins li { font-size: 1em; }
-  .deb-tiles.hero dd { font-size: 1.8em; }
-  .deb-margins li { grid-template-columns: 1fr auto; gap: 6px 12px; } .deb-margins .deb-track { grid-column: 1 / -1; grid-row: 2; }
-  .deb-screen > footer { flex-wrap: wrap; gap: 10px; padding-right: 0; } .deb-dots button { width: 16px; }
-  .deb-arrow { top: auto; bottom: 14px; transform: none; width: 46px; height: 46px; }
-  .deb-arrow.left { left: 16px; } .deb-arrow.right { left: 70px; right: auto; }
-  .deb-retry { margin-right: 56px; }
-  .deb-table { font-size: .85em; } .deb-table th, .deb-table td { padding: .5em .4em; }
-}
-@media (prefers-reduced-motion: reduce) { .deb-screen, .deb-screen.tuning > * { animation: none; } }
-
-/* ---- lander schematic (LanderSchematic.tsx): drawing on the left, the selected part's readings on the right */
-.lsc { --part: #8a939c; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 1em; align-items: start; margin-bottom: .8em; }
-.lsc-drawing { width: 100%; height: auto; max-height: 46vh; border: 1px solid #23282e; border-radius: 3px; background: #0b0d10; }
+/* ---- lander schematic (LanderSchematic.tsx): the drawing fills the page's free height, readings on the right */
+.deb-content > .lsc { flex: 1 1 auto; min-height: 0; }
+.lsc { --part: #8a939c; display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 1em; align-items: stretch; }
+.lsc-left { display: flex; flex-direction: column; gap: .5em; min-width: 0; min-height: 0; }
+.lsc-drawing { flex: 1 1 0; width: 100%; height: 100%; min-height: 12em; border: 1px solid #23282e; border-radius: 3px; background: #0b0d10; }
 .lsc-gridline { stroke: #161a1f; stroke-width: 1; }
 .lsc-part { fill: #12161a; stroke: var(--part); stroke-width: 1.6; cursor: pointer; transition: stroke .15s, fill .15s; }
 .lsc-part .lsc-pad, .lsc-part .lsc-plume { fill: none; stroke-width: 3; }
 .lsc-part .lsc-plume { stroke-dasharray: 3 3; }
 .lsc-part.on { fill: #172019; stroke-width: 2.4; }
 .lsc-part.nominal.on { stroke: var(--go); } .lsc-part.caution.on { stroke: var(--caution); } .lsc-part.exceeded.on { stroke: var(--hold); } .lsc-part.not_modelled.on { stroke: var(--ink); }
-.lsc-callout { cursor: pointer; outline: none; }
-.lsc-leader { fill: none; stroke: #3d444d; stroke-width: 1.2; }
-.lsc-dot { fill: #3d444d; }
-.lsc-label { fill: var(--dim); font: 600 11px 'Inter Variable', sans-serif; letter-spacing: .04em; text-transform: uppercase; }
-.lsc-light { fill: var(--dim); }
-.lsc-callout.nominal .lsc-light { fill: var(--go); } .lsc-callout.caution .lsc-light { fill: var(--caution); } .lsc-callout.exceeded .lsc-light { fill: var(--hold); }
-.lsc-callout.on .lsc-leader, .lsc-callout:focus-visible .lsc-leader { stroke: var(--ink); stroke-width: 1.8; }
-.lsc-callout.on .lsc-dot { fill: var(--ink); } .lsc-callout.on .lsc-label, .lsc-callout:focus-visible .lsc-label { fill: var(--ink); }
-.lsc-callout:focus-visible .lsc-label { text-decoration: underline; }
-.lsc-detail { border: 1px solid #23282e; border-left: 3px solid var(--dim); border-radius: 3px; background: #0e1114; padding: .8em 1em; font-size: .9em; }
-.lsc-detail.nominal { border-left-color: var(--go); } .lsc-detail.caution { border-left-color: var(--caution); } .lsc-detail.exceeded { border-left-color: var(--hold); }
-.lsc-detail header { display: flex; justify-content: space-between; align-items: baseline; gap: 1em; margin: 0; padding: 0; border: 0; }
-.lsc-detail h4 { margin: 0; font-size: 1.1em; color: var(--ink); }
-.lsc-badge { font-size: .8em; color: var(--dim); white-space: nowrap; }
-.lsc-detail.nominal .lsc-badge { color: var(--go); } .lsc-detail.caution .lsc-badge { color: var(--caution); } .lsc-detail.exceeded .lsc-badge { color: var(--hold); }
-.lsc-headline { margin: .3em 0 .5em; font-size: 1.15em; font-variant-numeric: tabular-nums; }
-.lsc-detail h5 { margin: .7em 0 .2em; font-size: .8em; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
-.lsc-detail ul { margin: 0; padding-left: 1.1em; } .lsc-detail li { margin-bottom: .2em; }
-
-/* ---- section 10: post-landing and surface operations */
-.deb-ops { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7em; margin-bottom: .8em; }
-.deb-op { border: 1px solid #23282e; border-left: 3px solid var(--dim); border-radius: 3px; background: #0e1114; padding: .7em .9em; font-size: .88em; }
-.deb-op.supported { border-left-color: var(--go); } .deb-op.limited { border-left-color: var(--caution); }
-.deb-op header { display: flex; justify-content: space-between; align-items: baseline; gap: 1em; margin: 0 0 .3em; padding: 0; border: 0; }
-.deb-op h4 { margin: 0; font-size: 1.05em; color: var(--ink); }
-.deb-op header span { font-size: .85em; color: var(--dim); white-space: nowrap; }
-.deb-op.supported header span { color: var(--go); } .deb-op.limited header span { color: var(--caution); }
-.deb-op p { margin: 0 0 .35em; } .deb-op strong { color: var(--ink); font-weight: 600; }
-.deb-terrain3d { margin: 0 0 .8em; }
-
-@media (max-width: 760px) {
-  .lsc, .deb-ops { grid-template-columns: 1fr; }
-  .lsc-drawing { max-height: 38vh; }
-}
-
-/* compact tile row and geology line on the terrain page, so the 3D view has room */
-.deb-tiles.cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-.deb-content > .deb-tiles.compact { flex: none; }
-.deb-tiles.compact > div { padding: .45em .7em; }
-.deb-tiles.compact dt { font-size: .75em; } .deb-tiles.compact dd { font-size: 1.15em; } .deb-tiles.compact small { font-size: .7em; }
-.deb-geology { margin: 0 0 .6em; font-size: .88em; color: var(--dim); } .deb-geology strong { color: var(--ink); font-weight: 600; }
-/* limit bars under the schematic */
-.deb-content > .deb-margins.compact { flex: none; }
-.deb-margins.compact li { flex: none; min-height: 0; padding: .25em 0; font-size: .95em; }
-@media (max-width: 760px) { .deb-tiles.cols-6 { grid-template-columns: repeat(2, 1fr); } }
-/* fit the 3D comparison and the surface-ops cards on one screen */
-.deb-terrain3d .tc3d-view { height: clamp(160px, 21vh, 280px); }
-.deb-op { font-size: .8em; line-height: 1.38; padding: .55em .8em; }
-.deb-ops { gap: .55em; }
-.deb-op p { margin-bottom: .25em; }
-.lsc-hit { fill: transparent; }
-.lsc-callout.on .lsc-hit { fill: #ffffff08; }
-.lsc-detail { max-height: 46vh; overflow: auto; scrollbar-color: #3d444d transparent; }
-@media (max-width: 760px) { .lsc-detail { max-height: none; } }
-
-/* schematic page: drawing and limit bars on the left, the selected part's full readings on the right (no inner scroll) */
-.lsc { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: stretch; margin-bottom: 0; }
-.lsc-left { display: flex; flex-direction: column; gap: .5em; min-width: 0; }
-.lsc-drawing { max-height: 44vh; }
-.lsc-detail { max-height: none; overflow: visible; font-size: .84em; line-height: 1.35; }
-.lsc-left .deb-margins.compact { margin: 0; } .lsc-left .deb-margins.compact li { font-size: .82em; gap: .6em; grid-template-columns: minmax(110px, 1fr) 2fr auto auto; }
 .lsc-part .thin { stroke-width: 1; } .lsc-part .far { opacity: .45; }
 .lsc-part .lsc-hull { fill: color-mix(in srgb, var(--hull) 22%, #12161a); }
 .lsc-part .lsc-glass { fill: #102d40; }
 .lsc-part .lsc-tank { fill: #1a1f24; stroke-width: 1.4; }
 .lsc-wings path { fill: #10233d; stroke: #3d5a7a; stroke-width: 1.2; }
 .lsc-ground { stroke: #3d444d; stroke-width: 1; stroke-dasharray: 2 4; }
+.lsc-caption { fill: var(--dim); font: 400 10px var(--font-ui); text-anchor: middle; }
+.lsc-callout { cursor: pointer; outline: none; }
+.lsc-leader { fill: none; stroke: #3d444d; stroke-width: 1.2; }
+.lsc-dot { fill: #3d444d; }
+.lsc-label { fill: var(--dim); font: 600 12px var(--font-ui); letter-spacing: .04em; text-transform: uppercase; }
+.lsc-light { fill: var(--dim); }
+.lsc-hit { fill: transparent; }
+.lsc-callout.nominal .lsc-light { fill: var(--go); } .lsc-callout.caution .lsc-light { fill: var(--caution); } .lsc-callout.exceeded .lsc-light { fill: var(--hold); }
+.lsc-callout.on .lsc-hit { fill: #ffffff08; }
+.lsc-callout.on .lsc-leader, .lsc-callout:focus-visible .lsc-leader { stroke: var(--ink); stroke-width: 1.8; }
+.lsc-callout.on .lsc-dot { fill: var(--ink); } .lsc-callout.on .lsc-label, .lsc-callout:focus-visible .lsc-label { fill: var(--ink); }
+.lsc-callout:focus-visible .lsc-label { text-decoration: underline; }
+.lsc-left .deb-margins { flex: none; margin: 0; }
+.lsc-left .deb-margins li { font-size: .8em; gap: .6em; }
+.lsc-left > .deb-note { margin: 0; }
+.lsc-detail { min-width: 0; padding: .8em 1em; border: 1px solid #23282e; border-left: 3px solid var(--dim); border-radius: 3px; background: #0e1114; font-size: .86em; line-height: 1.38; }
+.lsc-detail.nominal { border-left-color: var(--go); } .lsc-detail.caution { border-left-color: var(--caution); } .lsc-detail.exceeded { border-left-color: var(--hold); }
+.lsc-detail header { display: flex; justify-content: space-between; align-items: baseline; gap: 1em; margin: 0; padding: 0; border: 0; }
+.lsc-detail h4 { margin: 0; font-size: 1.1em; font-weight: 600; color: var(--ink); }
+.lsc-badge { font-size: .8em; color: var(--dim); white-space: nowrap; }
+.lsc-detail.nominal .lsc-badge { color: var(--go); } .lsc-detail.caution .lsc-badge { color: var(--caution); } .lsc-detail.exceeded .lsc-badge { color: var(--hold); }
+.lsc-headline { margin: .3em 0 .5em; font-size: 1.1em; font-variant-numeric: tabular-nums; }
+.lsc-detail h5 { margin: .7em 0 .2em; font-size: .8em; font-weight: 600; color: var(--accent); }
+.lsc-detail ul { margin: 0; padding-left: 1.1em; } .lsc-detail li { margin-bottom: .2em; }
+
+/* ---- surface operations */
+.deb-ops { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55em; margin-bottom: .7em; }
+.deb-op { border: 1px solid #23282e; border-left: 3px solid var(--dim); border-radius: 3px; background: #0e1114; padding: .55em .85em; font-size: .82em; line-height: 1.38; }
+.deb-op.supported { border-left-color: var(--go); } .deb-op.limited { border-left-color: var(--caution); }
+.deb-op header { display: flex; justify-content: space-between; align-items: baseline; gap: 1em; margin: 0 0 .3em; padding: 0; border: 0; }
+.deb-op h4 { margin: 0; font-size: 1.05em; font-weight: 600; color: var(--ink); }
+.deb-op header span { font-size: .85em; color: var(--dim); white-space: nowrap; }
+.deb-op.supported header span { color: var(--go); } .deb-op.limited header span { color: var(--caution); }
+.deb-op p { margin: 0 0 .25em; }
+
+/* ---- the side-by-side 3D terrain (terrain3d/) in the monitors' style; the view takes the free height */
+.deb-content > .deb-terrain3d { flex: 1 1 auto; min-height: 0; display: flex; margin: 0 0 .6em; }
+.deb-terrain3d .tc3d { display: flex; flex-direction: column; min-height: 0; font-family: var(--font-ui); font-size: .8em; color: var(--ink); background: #0a0c0f; border: 1px solid #23282e; border-radius: 3px; }
+.deb-terrain3d .tc3d-view { flex: 1 1 auto; height: auto; min-height: 9em; }
+.deb-terrain3d .tc3d-toolbar, .deb-terrain3d .tc3d-footers, .deb-terrain3d .tc3d-note { flex: none; }
+.deb-terrain3d .tc3d-toolbar { gap: .4em; padding: .5em; border-color: #23282e; }
+.deb-terrain3d .tc3d button { font: inherit; font-size: 1em; min-height: 0; padding: .45em .9em; color: var(--ink); background: #161a1f; border: 1px solid #3d444d; border-radius: 3px; }
+.deb-terrain3d .tc3d button:hover { border-color: #8a939c; }
+.deb-terrain3d .tc3d button[aria-pressed=true] { color: #0a0c0f; background: var(--accent); border-color: var(--accent); font-weight: 600; }
+.deb-terrain3d .tc3d button:focus-visible, .deb-terrain3d .tc3d-pane:focus-visible, .deb-terrain3d .tc3d summary:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
+.deb-terrain3d .tc3d-pane-1, .deb-terrain3d .tc3d-footers, .deb-terrain3d .tc3d-metadata + div { border-color: #23282e; }
+.deb-terrain3d .tc3d-title { font-size: 1.05em; font-weight: 600; color: #f2f4f6; }
+.deb-terrain3d .tc3d-scale { font: inherit; font-size: .9em; color: var(--ink); }
+.deb-terrain3d .tc3d-scale i { border-color: var(--ink); }
+.deb-terrain3d .tc3d-note { font-size: .9em; color: var(--dim); }
+.deb-terrain3d .tc3d-metadata { font-size: .95em; padding: .6em .8em; gap: .3em; }
+.deb-terrain3d .tc3d-metadata > span, .deb-terrain3d .tc3d-metadata p { color: var(--dim); }
+.deb-terrain3d .tc3d-metadata strong { font-weight: 600; font-size: 1.05em; color: var(--ink); }
+.deb-terrain3d .tc3d-metadata a { color: var(--accent); }
+.deb-terrain3d .tc3d-metadata code { font-family: inherit; color: var(--ink); overflow-wrap: anywhere; }
+.deb-terrain3d .tc3d summary { cursor: pointer; color: var(--dim); }
+.deb-terrain3d .tc3d-synthetic { color: var(--caution); border-color: #6b5427; }
+
+/* ---- phones: content scrolls instead of shrinking */
+@media (max-width: 760px) {
+  .deb-screen { padding: 84px 16px 74px; font-size: 15px; }
+  .deb-route { display: none; }
+  .deb-tiles, .deb-tiles.cols-4, .deb-tiles.cols-6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .deb-dims, .lsc, .deb-ops { grid-template-columns: 1fr; }
+  .lsc-drawing { flex: none; height: auto; min-height: 0; max-height: 40vh; }
+  .deb-margins li { grid-template-columns: 1fr auto; gap: 6px 12px; } .deb-margins .deb-track { grid-column: 1 / -1; grid-row: 2; }
+  .deb-screen > footer { flex-wrap: wrap; gap: 10px; } .deb-dots button { width: 14px; }
+  .deb-arrow { top: auto; bottom: 14px; transform: none; width: 46px; height: 46px; }
+  .deb-arrow.left { left: 16px; } .deb-arrow.right { left: 70px; right: auto; }
+  .deb-retry { margin-right: 56px; }
+  .deb-content > .deb-terrain3d { flex: none; } .deb-terrain3d .tc3d-view { height: 240px; flex: none; }
+}
+@media (prefers-reduced-motion: reduce) { .deb-screen, .deb-screen.tuning > * { animation: none; } }
+
 .lsc-caption { fill: var(--dim); font: 10px 'Inter Variable', sans-serif; text-anchor: middle; }
 @media (max-width: 760px) { .lsc-detail { font-size: .9em; } }
+
+/* Match the rest of the game: flexible text tracks and one readable spacing rhythm. */
+.deb-screen { font-family:var(--font-ui); line-height:1.5; }
+.deb-screen > header { gap:16px; }
+.deb-screen > header > * { min-width:0; }
+.deb-screen .mon-link { max-width:55%; flex-wrap:wrap; justify-content:flex-end; overflow-wrap:anywhere; }
+.deb-tiles { grid-template-columns:repeat(3, minmax(0, 1fr)); }
+.deb-tiles.cols-4 { grid-template-columns:repeat(4, minmax(0, 1fr)); }
+.deb-tiles > div, .deb-ops > *, .lsc > * { min-width:0; }
+.deb-tiles dd { overflow-wrap:anywhere; line-height:1.3; }
+.deb-op header, .lsc-detail header { flex-wrap:wrap; gap:8px; }
+.deb-screen > footer { flex-wrap:wrap; gap:12px; }
+.deb-dots { flex-wrap:wrap; max-width:100%; }
+.deb-download, .deb-retry { line-height:1.5; }
+.deb-margins li { grid-template-columns:minmax(110px, 1fr) minmax(40px, 2fr) minmax(0, auto) minmax(0, auto); }
+.deb-margins li > * { min-width:0; overflow-wrap:anywhere; }
+.deb-table { table-layout:fixed; }
+.deb-table th, .deb-table td { overflow-wrap:anywhere; vertical-align:top; }
+.opening-report .debrief-stage { position:absolute; inset:76px 0 38px; padding:0; width:100%; max-width:none; }
+.opening-report .deb-screen { padding-top:16px; }
+.opening-report .game-close { top:18px; bottom:auto; right:16px; z-index:7; }
+.opening-report .game-tools { margin-right:32px; }
+@media(max-width:760px) {
+  .deb-screen .mon-link { display:none; }
+  .deb-tiles, .deb-tiles.cols-4 { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  .deb-screen > footer { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:8px; }
+  .deb-download, .deb-retry { width:100%; margin:0; padding:10px; font-size:12px; }
+  .deb-retry { grid-column:1 / -1; }
+  .deb-tiles.hero dd { white-space:normal; }
+  .lsc { grid-template-columns:minmax(0, 1fr); }
+  .deb-margins li, .lsc-left .deb-margins.compact li { grid-template-columns:minmax(0, 1fr) auto; gap:6px 12px; }
+  .deb-margins .deb-track { grid-column:1 / -1; grid-row:2; }
+}
+@media(max-width:480px) {
+  .deb-tiles.cols-6 { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  .deb-dots { gap:6px; }
+  .deb-dots button { width:14px; }
+}
+.deb-tiles.hero dd { white-space:normal; }
+@media(max-width:1100px) {
+  .deb-tiles.hero.cols-4 { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+}

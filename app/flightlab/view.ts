@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { CutsceneEngine, V, lerp, clamp01, TAIL, type Track } from "../../web/src/components/cutscene/engine";
 import type { Controls, FlightSummary, Sim, SimEvent, TelemetrySample } from "../sim/src/index.ts";
 import { buildOverlay, buildSiteMarker, OVERLAY_STYLE, overlayStep, type OverlayStyle, type SensorOverlay } from "./sensorOverlay.ts";
+import { buildLander, type LanderSpec } from "../../web/src/components/cutscene/lander";
 
 export type CamMode = "auto" | "chase" | "orbit" | "ground" | "top";
 
@@ -23,6 +24,8 @@ export interface FlightSetup {
    */
   hazardScan: boolean; scanAltitudeM: number; divertRadiusM: number;
   legRadiusM: number; maxSlopeDeg: number; maxRoughnessM: number;
+  /** Manual flight, when the flight is driven from outside (no controls hook): shows the player's scan overlay. */
+  manual?: boolean;
 }
 
 export interface FlightHooks {
@@ -51,6 +54,7 @@ export class FlightView extends CutsceneEngine {
   private cam = { az: 0.9, el: 0.3, dist: 34, lead: V(), vAz: 0, vEl: 0, vDist: 0, vLead: V() };   // camera orbit round the lander, on springs
   private chaseAz = 0.9;
   private cut = true;                     // next frame places the camera without easing
+  externallyDriven = false;
   private simAcc = 0;                     // simulated time not yet stepped, s
   private path: THREE.Line; private trail: THREE.Line; private trailN = 0; private trailT = -1;
   private overlay: SensorOverlay | null = null;
@@ -61,6 +65,10 @@ export class FlightView extends CutsceneEngine {
   private cone: THREE.Mesh; private divert: THREE.Line | null = null;
   /** Manual flight: show the hazard sensor's scan overlay (the player's toggle). */
   scanOverlay = true;
+  private comparisonFlight: Sim | null = null;
+  private comparisonTime = 0;
+  private comparisonLander: THREE.Group | null = null;
+  private comparisonTrail: THREE.Line | null = null;
 
   constructor(...args: ConstructorParameters<typeof CutsceneEngine>) {
     super(...args);
@@ -83,6 +91,25 @@ export class FlightView extends CutsceneEngine {
 
   /** Attach a render-only terrain reference; it never enters the simulator. Caller owns removal. */
   addComparisonSurface(surface: THREE.Group) { this.scene.add(surface); }
+
+  /** A separate autonomous planetary run; it never supplies the mission outcome. */
+  setComparisonFlight(flight: Sim | null, equipment?: LanderSpec) {
+    if (this.comparisonLander) {
+      this.scene.remove(this.comparisonLander);
+      this.comparisonLander.traverse(o => { if (o instanceof THREE.Mesh) { o.geometry.dispose(); (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.dispose()); } });
+    }
+    if (this.comparisonTrail) { this.scene.remove(this.comparisonTrail); this.comparisonTrail.geometry.dispose(); (this.comparisonTrail.material as THREE.Material).dispose(); }
+    this.comparisonFlight = flight; this.comparisonTime = 0; this.comparisonLander = null; this.comparisonTrail = null;
+    if (!flight) return;
+    const lander = buildLander(equipment); lander.flame.visible = false;
+    lander.group.traverse(o => { if (o instanceof THREE.Mesh) {
+      (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.dispose());
+      o.material = new THREE.MeshBasicMaterial({color:0x65e7ff,transparent:true,opacity:.55,depthWrite:false,wireframe:true});
+    } });
+    this.comparisonLander = lander.group; this.scene.add(lander.group);
+    this.comparisonTrail = new THREE.Line(new THREE.BufferGeometry(),new THREE.LineBasicMaterial({color:0x65e7ff,transparent:true,opacity:.8,depthWrite:false}));
+    this.comparisonTrail.frustumCulled=false; this.scene.add(this.comparisonTrail);
+  }
 
   /** Sim coordinates (x east, y north, z elevation) -> scene (x east, y up, z south), target at the origin. */
   toScene(x: number, y: number, z: number) { return V(x - this.setup.target.x, z - this.setup.refElevation, -(y - this.setup.target.y)); }
@@ -112,7 +139,7 @@ export class FlightView extends CutsceneEngine {
   /** Flies `sim` live. The same seed and settings as the prediction give the same flight. */
   fly(sim: Sim, s: FlightSetup, hooks: FlightHooks = {}) {
     this.applySetup(s); this.finish?.(); this.resetScene(); this.clearFlightVisuals();
-    this.audio.start();
+    this.audio.start();this.beginHandoff();
     this.sim = sim; this.hooks = hooks; this.seen = 0; this.scanned = false; this.scanT = -1;
     this.kind = "live"; this.t = 0; this.camEase = 0; this.track = null; this.cut = true; this.simAcc = 0;
     this.ui.fade.style.opacity = "0";
@@ -165,7 +192,7 @@ export class FlightView extends CutsceneEngine {
 
     if (!sim) {                                             // idle overview
       L.visible = true; L.position.copy(this.idleStart); this.orient(V(1, 0, 0), 0); this.thrust(0, dt);
-      this.idleClock += dt;
+      if(!this.paused)this.idleClock += dt;
       const mid = this.idleStart.clone().multiplyScalar(0.4), r = Math.max(260, this.idleStart.length() * 1.05) * this.zoom;
       const a = this.idleClock * 0.07 + this.az + 0.9;
       this.camEase = this.cut ? 0 : 2.5; this.cut = false;
@@ -177,13 +204,16 @@ export class FlightView extends CutsceneEngine {
     // lander that fraction of a step ahead: otherwise frames carry uneven numbers of steps and the
     // ground stutters past the camera.
     const H = 1 / 120;
-    if (!this.paused) {
+    if (!this.paused && !this.externallyDriven) {
       this.simAcc += Math.min(dt, 0.1) * this.speed;
       const controls = this.hooks.controls?.(dt * this.speed);
       while (this.simAcc >= H && !sim.state.done) { sim.step(controls); this.simAcc -= H; }
     }
     while (this.seen < sim.events.length) this.onSimEvent(sim.events[this.seen++]);
     const st = sim.state, ahead = st.done || this.paused ? 0 : Math.min(this.simAcc, H);
+    this.comparisonTime = Math.max(this.comparisonTime, st.t);
+    this.updateComparison(this.comparisonTime);
+    /* The comparison may continue during the real flight's ending. */
     const P = this.toScene(st.position.x + st.velocity.x * ahead, st.position.y + st.velocity.y * ahead, st.position.z + st.velocity.z * ahead);
     // near the ground follow the drawn surface, which carries about a metre of added detail
     const drawn = this.terrain.heightAt(P.x, P.z), w = clamp01(1 - st.altitudeAGL / 60);
@@ -201,10 +231,11 @@ export class FlightView extends CutsceneEngine {
     }
     // The autopilot's scan is drawn when the sim reports it (onSimEvent). In manual flight the
     // player's overlay comes up inside the sensor's scan height, round the target, on their toggle.
-    if (this.hooks.controls && sim.sensor.profile.map && !this.scanned && this.scanOverlay && st.altitudeAGL <= this.setup.scanAltitudeM) {
+    const manual = this.setup.manual ?? !!this.hooks.controls;
+    if (manual && sim.sensor.profile.map && !this.scanned && this.scanOverlay && st.altitudeAGL <= this.setup.scanAltitudeM) {
       this.scanned = true; this.startScan(sim.aim);
     }
-    if (this.overlay && this.hooks.controls) this.overlay.root.visible = this.scanOverlay;
+    if (this.overlay && manual) this.overlay.root.visible = this.scanOverlay;
     this.updateScan(P);
     if (this.siteChosen) {
       this.marker.group.visible = true;
@@ -213,6 +244,29 @@ export class FlightView extends CutsceneEngine {
     // On the frame the flight ends the lander stops dead. The camera must not stop with it: it
     // lets go and coasts on its spring into the ending shot.
     if (st.done) this.enterEnding(P, lean, ang); else this.liveCamera(P, aimS, st.altitudeAGL, dt);
+  }
+
+  protected step(dt: number) {
+    const wasEnding=this.kind === 'ending';
+    super.step(dt);
+    if (wasEnding && !this.paused && this.comparisonFlight && !this.comparisonFlight.state.done) {
+      this.comparisonTime += dt * this.speed;
+      this.updateComparison(this.comparisonTime);
+    }
+  }
+
+  private updateComparison(time: number) {
+    const ghost=this.comparisonFlight;
+    if (ghost && this.comparisonLander && this.comparisonTrail) {
+      while (!ghost.state.done && ghost.state.t + 1/120 <= time + 1e-9) ghost.step();
+      const p=ghost.state.position;
+      const bounds=ghost.terrain.grid.bounds();
+      this.comparisonLander.visible=p.x>=bounds.minX && p.x<=bounds.maxX && p.y>=bounds.minY && p.y<=bounds.maxY;
+      this.comparisonLander.position.copy(this.toScene(p.x,p.y,p.z));
+      this.comparisonLander.rotation.set(ghost.state.tiltY,0,ghost.state.tiltX);
+      const points=ghost.telemetry().samples.map(s=>this.toScene(s.x,s.y,s.z));
+      this.comparisonTrail.geometry.dispose(); this.comparisonTrail.geometry=new THREE.BufferGeometry().setFromPoints(points);
+    }
   }
 
   private onSimEvent(e: SimEvent) {

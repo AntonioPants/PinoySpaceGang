@@ -3,21 +3,22 @@ import type { FlightTelemetry } from '../../../app/sim/src/types';
 import type { CatalogSite } from '../../../app/sim/src/catalog';
 import type { MissionConfig, TerrainProfile } from '../lib/types';
 import { computeFidelity, type FidelityReport } from '../lib/fidelity';
+import { computeCustomFidelity } from '../lib/fidelityCustom';
 import type { MatchCheck } from '../lib/matching';
 import LandingEvidence from './LandingEvidence';
 import FlightDebrief from './FlightDebrief';
 type FidelityState = { status: 'working' } | { status: 'done'; result: FidelityReport } | { status: 'unavailable'; reason: string };
-export default function FlightReport({flight,mission,profile,analogEntry,planetaryEntry,match,onRetry}:{match?:MatchCheck;flight:FlightTelemetry;mission:MissionConfig;profile:TerrainProfile;analogEntry?:CatalogSite;planetaryEntry?:CatalogSite;onRetry:()=>void}) {
+export default function FlightReport({flight,mission,profile,analogEntry,planetaryEntry,planetaryProfile,match,onRetry}:{planetaryProfile?:TerrainProfile;match?:MatchCheck;flight:FlightTelemetry;mission:MissionConfig;profile:TerrainProfile;analogEntry?:CatalogSite;planetaryEntry?:CatalogSite;onRetry:()=>void}) {
   const result=flight.summary!;
   const env=flight.environment;
   const [fidelity,setFidelity]=useState<FidelityState>({status:'working'});
   useEffect(()=>{
     const abort=new AbortController(); setFidelity({status:'working'});
-    computeFidelity(mission,profile,analogEntry,planetaryEntry,abort.signal)
+    (planetaryProfile ? computeCustomFidelity(mission, profile, planetaryProfile, analogEntry, abort.signal) : computeFidelity(mission, profile, analogEntry, planetaryEntry, abort.signal))
       .then(r=>{ if(!abort.signal.aborted) setFidelity({status:'done',result:r}); })
       .catch(e=>{ if(!abort.signal.aborted) setFidelity({status:'unavailable',reason:e instanceof Error?e.message:'Could not compute the score.'}); });
     return ()=>abort.abort();
-  },[mission,profile,analogEntry,planetaryEntry]);
+  },[mission,profile,analogEntry,planetaryEntry, planetaryProfile]);
   const sources=Object.entries(env.sources);
   return <section className="report-panel"><div className="section-heading"><div><span className="badge ready">Simulation result · {result.outcome}</span><h2>{result.outcome==='success'?'Touchdown complete.':'Flight ended.'}</h2></div><button className="primary-button" onClick={onRetry}>Configure another flight</button></div><p>{mission.environment.mode === 'earth' ? 'Earth field test' : `${mission.planetaryTarget.body} physics scenario`} on {mission.earthAnalog.name}, comparing with {mission.planetaryTarget.name}. This is a simulated outcome, not an engineering certification.</p>
     <div className="report-metrics">{[['Vertical contact speed',`${result.verticalSpeedMps.toFixed(2)} m/s`],['Lateral contact speed',`${result.horizontalSpeedMps.toFixed(2)} m/s`],['Ground slope',`${result.slopeDeg.toFixed(2)}°`],['Vehicle tilt',`${result.tiltDeg.toFixed(2)}°`],['Fuel remaining',`${result.fuelRemainingKg.toFixed(1)} kg`],['Distance from target',result.distanceFromTargetM<0.5?'Reached':`${result.distanceFromTargetM.toFixed(1)} m`]].map(([name,value])=><div key={name}><span>{name}</span><strong>{result.outcome==='timeout' && /contact|slope/.test(name)?'No touchdown':value}</strong></div>)}</div>

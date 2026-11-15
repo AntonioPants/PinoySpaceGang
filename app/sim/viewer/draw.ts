@@ -144,13 +144,15 @@ interface Particle {
 }
 
 /** Side-on chase view. Keeps its own camera, particles and effects state per flight. */
-export interface ComparisonProfile { heightAt(x: number, north: number): number | null }
+export interface ComparisonProfile { heightAt(x: number, north: number): number | null; createFlight?: (input: SimInput) => Sim; speed?: () => number }
 export function createSideRenderer() {
   let current: Sim | undefined;
   let particles: Particle[] = [];
   let shake = 0;
   let landedAt = 0;
   let crashed = false;
+  let ghost: Sim | null = null, ghostInput: SimInput | null = null, ghostComparison: ComparisonProfile | null = null;
+  let ghostTime = 0;
   const cam = { x: 0, zBottom: 0, viewH: 1200, init: false };
 
   const reset = (sim: Sim) => {
@@ -160,6 +162,7 @@ export function createSideRenderer() {
     landedAt = 0;
     crashed = false;
     cam.init = false;
+    ghost = null; ghostInput = null; ghostComparison = null; ghostTime = 0;
   };
 
   return function draw(ctx: CanvasRenderingContext2D, sim: Sim | null, input: SimInput | null, dtReal: number, paused: boolean, comparison?: ComparisonProfile | null) {
@@ -179,6 +182,15 @@ export function createSideRenderer() {
       return;
     }
     if (sim !== current) reset(sim);
+    if (comparison !== ghostComparison || input !== ghostInput) {
+      ghost = null; ghostComparison = comparison ?? null; ghostInput = input; ghostTime = 0;
+      if (comparison?.createFlight) { try { ghost = comparison.createFlight(input); } catch { /* terrain does not cover this approach */ } }
+    }
+    if (ghost && !paused && !ghost.state.done) {
+      ghostTime = Math.max(ghostTime, sim.state.t);
+      if (sim.state.done) ghostTime += dtReal * (comparison?.speed?.() ?? 1);
+      while (!ghost.state.done && ghost.state.t + 1/120 <= ghostTime + 1e-9) ghost.step();
+    }
 
     const s = sim.state;
     if (s.done && !landedAt) landedAt = performance.now();
@@ -237,7 +249,7 @@ export function createSideRenderer() {
       ctx.stroke(); ctx.setLineDash([]);
     }
     const { aim, target } = aimFromEvents(sim, input);
-    const mark = (x: number, color: string, label: string) => {
+    const mark = (x: number, color: string, label: string, labelY = 16) => {
       ctx.strokeStyle = color;
       ctx.setLineDash([6 * dpr, 6 * dpr]);
       ctx.beginPath();
@@ -247,16 +259,28 @@ export function createSideRenderer() {
       ctx.setLineDash([]);
       ctx.fillStyle = color;
       ctx.font = `${11 * dpr}px ${MONO}`;
-      ctx.fillText(label, X(x) + 4 * dpr, 16 * dpr);
+      const labelX = Math.max(4 * dpr, Math.min(W - ctx.measureText(label).width - 4 * dpr, X(x) + 4 * dpr));
+      ctx.fillText(label, labelX, labelY * dpr);
     };
     mark(target.x, 'rgba(255,255,255,0.5)', 'target');
-    if (aim.x !== target.x) mark(aim.x, 'rgba(76,209,138,0.8)', 'divert');
+    if (aim.x !== target.x) mark(aim.x, 'rgba(76,209,138,0.8)', 'divert', Math.abs(X(aim.x) - X(target.x)) < 80 * dpr ? 32 : 16);
 
     ctx.strokeStyle = 'rgba(255,179,71,0.5)';
     ctx.lineWidth = 1.5 * dpr;
     ctx.beginPath();
     sim.telemetry().samples.forEach((p, i) => (i ? ctx.lineTo(X(p.x), Z(p.z)) : ctx.moveTo(X(p.x), Z(p.z))));
     ctx.stroke();
+
+    if (ghost && comparison) {
+      ctx.strokeStyle = '#65e7ff'; ctx.lineWidth = 2 * dpr; ctx.setLineDash([5*dpr,4*dpr]);
+      ctx.beginPath(); ghost.telemetry().samples.forEach((p,i) => i ? ctx.lineTo(X(p.x), Z(p.z)) : ctx.moveTo(X(p.x), Z(p.z)));
+      ctx.stroke(); ctx.setLineDash([]);
+      const p=ghost.state.position;
+      if (comparison.heightAt(p.x,p.y) !== null) {
+        ctx.save(); ctx.globalAlpha=.7; ctx.filter='brightness(0) saturate(100%) invert(86%) sepia(42%) saturate(1214%) hue-rotate(152deg)';
+        drawLander(ctx,ghost,X(p.x),Z(p.z),Math.max(scale,3.2*dpr),0,dpr); ctx.restore();
+      }
+    }
 
     // particles
     const g = sim.gravity;

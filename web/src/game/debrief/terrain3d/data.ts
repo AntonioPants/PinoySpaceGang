@@ -14,9 +14,22 @@ export interface TerrainData {
   name:string; body:string; rows:number; columns:number; dx:number; dy:number;
   width:number; depth:number; heights:Float32Array; slopes:Float32Array;
   mean:number; meanSlope:number|null; p95Slope:number|null; relief:number; roughness:number;
-  synthetic:boolean; note:string; source:string; sourceUrl?:string; nativeResolution?:number;
+  synthetic:boolean; note:string; source:string;
+  /** The raw elevation file the grid was cut from (provenance; often a multi-gigabyte GeoTIFF). */
+  sourceUrl?:string;
+  /** A page describing the elevation dataset, for people to read. */
+  sourcePage?:string; nativeResolution?:number;
   sunElevation:number; sunAzimuth:number; tint:string; missing:number;
 }
+/** The open elevation datasets the terrain packs are cut from: a readable name and the product's description page. */
+const DATASETS:Array<{match:RegExp;name:string;page:string}>=[
+  {match:/copernicus-dem|COP-DEM/i,name:'Copernicus DEM GLO-30 (ESA)',page:'https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM'},
+  {match:/LOLA/i,name:'LRO LOLA global DEM, 118 m (NASA / USGS)',page:'https://astrogeology.usgs.gov/search/map/moon_lro_lola_dem_118m'},
+  {match:/MOLA/i,name:'MGS MOLA global DEM, 463 m (NASA / USGS)',page:'https://astrogeology.usgs.gov/search/map/mars_mgs_mola_dem_463m'},
+];
+/** A link people can open: never a raw data file, which a browser would start downloading. */
+const readablePage=(url?:string)=>url&&/^https?:\/\//.test(url)&&!/\.(tif{1,2}|img|f32|zip|gz|nc|h5)(\?|$)/i.test(url)?url:undefined;
+export const datasetOf=(url?:string)=>url?DATASETS.find(d=>d.match.test(url)):undefined;
 const finite = (v:unknown):v is number => typeof v==='number'&&Number.isFinite(v);
 const positive = (v:unknown):v is number => finite(v)&&v>0;
 export function slopeGrid(h:Float32Array,rows:number,cols:number,dx:number,dy:number):Float32Array {
@@ -100,7 +113,9 @@ export function prepareTerrain(profile:TerrainProfile|null|undefined,entry:Catal
   }
   const source=manifest?.source as (NonNullable<typeof manifest>['source']&{native_spacing_m_approx?:number})|undefined;
   return {name:meta.name??entry?.name??manifest?.name??'Unnamed site',body,rows,columns,dx,dy,width,depth,heights,...stats(heights,rows,columns,dx,dy),synthetic,note,
-    source:meta.source??source?.dataset??(body==='moon'?'Lunar DEM':body==='mars'?'Martian DEM':'Earth DEM'),sourceUrl:meta.sourceUrl??source?.url??source?.catalog,
+    // A known dataset's own name and description page first: the loader fills generic names and copies the raw file into `catalog`.
+    source:meta.source??datasetOf(meta.sourceUrl??source?.url)?.name??source?.dataset??(body==='moon'?'Lunar DEM':body==='mars'?'Martian DEM':'Earth DEM'),sourceUrl:meta.sourceUrl??source?.url??source?.catalog,
+    sourcePage:datasetOf(meta.sourceUrl??source?.url)?.page??readablePage(source?.catalog),
     nativeResolution:meta.nativeResolutionM??source?.native_spacing_m_approx,
     sunElevation:finite(meta.solarElevationDeg)?Math.max(.5,Math.min(90,meta.solarElevationDeg)):body==='moon'&&Math.abs(meta.latitude??entry?.latitude??0)>75?5:body==='earth'?45:30,
     sunAzimuth:finite(meta.solarAzimuthDeg)?meta.solarAzimuthDeg:315,tint:meta.tint??(body==='moon'?'#999b9b':body==='mars'?'#b18b71':'#a7a088')};

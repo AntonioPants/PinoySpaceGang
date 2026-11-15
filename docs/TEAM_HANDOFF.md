@@ -127,16 +127,33 @@ Coordinate with Furgan: landing-outcome visuals finish before the character debr
 
 Current delivery: `web/src/game/debrief/DebriefScene.tsx` replaces the flat report in the
 game's `report` stage. The astronaut walks to the mission-control monitor, the camera
-pushes into its screen, and the analog report opens there as a nine-section carousel
+pushes into its screen, and the field test report opens there as an eleven-section carousel
 (`sections.tsx`) with left/right arrows, arrow keys and a burst of TV static between
 sections. It reuses Tim's cabin, astronaut and camera helpers read-only and shows only
 the flown telemetry. Reduced motion or missing WebGL opens the report directly; "Skip to
-report" is always available. The report leads with why the pair is an analog and where the
-analogy breaks down (the catalog's own pair evidence), then terrain, environment, landing
-behaviour and the flown flight. "Download report (JSON)" in the footer exports the same
+report" is always available. The report leads with why the pair is an analog, then rates it on
+each dimension the challenge names (terrain, geology, temperature, water/ice, dust and atmosphere,
+biology, subsurface, operations, Earth's limits) with what is similar, what is not and the source
+dataset (`analogDimensions`), then where the analogy breaks down, terrain, environment, landing
+behaviour, the flown flight, and how the analog helps exploration. It uses the bridge monitors' style
+(interior.css), its footer offers "Choose another site" (back to the worlds), and every page shrinks its type to fit the screen instead of scrolling (phones scroll).
+DEM credits link each dataset's description page, never the raw elevation file. "Download report (JSON)" in the footer exports the same
 content as data; retry is kept. Test bench: `?debrief-demo`. The planner still uses `components/FlightReport.tsx`.
 
 ## Shared boundaries and integration
+
+Comparison audit: `docs/COMPARISON_VALIDITY.md` documents the on-demand game panel,
+generated all-candidate ranking sensitivity, external-reference exclusion checks,
+and terrain-upgrade pilot gates. Regenerate `scripts.catalog.validity` after catalog
+changes. These diagnostics do not tune production scores or validate landing safety.
+Measured Phoenix/HiRISE and Apollo 16/LROC pilots can be previewed from this panel;
+they use separate `terrain-pilots` packs, check coverage/hashes, and retain quality
+warnings. `scripts.catalog.pilot_comparison` isolates source sensitivity at frozen
+analysis scales. The reserved Istok–Svalbard literature evaluation lives outside
+the game catalog in `validation-terrain`; `scripts.catalog.external_validation`
+checks the frozen protocol and keeps unresolved-scale/review exclusions explicit.
+Rebuild those reports after relevant inputs change. Neither pilot changes physics
+or production ranking. The reference pilot is consumed, not fresh data for tuning.
 
 - `game/contracts.ts` owns scene and control-center props; `game/integrations.ts`
   registers modules. Add independent scene files rather than modifying the planner.
@@ -203,3 +220,99 @@ lighting its engine for the unchanged hand-over to the live descent (now 13 s; l
 12-mesh budget. Tests check every hardware/appearance combination fits the fairing
 folded and returns to the same footprint deployed. The test bench (`?cutscene-demo`)
 has Liftoff and a Custom lander toggle. Illustrative only: no rocket physics.
+
+## Polish, click anywhere and first-load (15 November 2026, branch `feature/quest`)
+
+New seams. Nothing in `game/contracts.ts`, `MissionConfig` or the scene registry changed.
+
+- **`WorldScene` is always mounted** from the title to the terrain (Eyad). The Cesium globe
+  (`components/MoonGlobe.tsx`, `layered` mode) is a layer above it (`.opening-globe-layer`) that
+  fades in once its first tile is visible and the fly-in has finished. `OpeningGame.handCamera`
+  passes the camera across through two small handles (`WorldHandle`, `GlobeHandle`): an orbit
+  (direction from the world's centre, distance in radii) or a pose over the site (east-north-up
+  metres). `WorldScene` takes `paused` and stops drawing while Cesium covers it; `leave()` fades
+  Cesium out before a stage change. The Google/measured toggle is the same hand-over, so no
+  descent replays. A new site list or pin no longer restarts a camera flight (`framed` key in
+  `WorldScene`) or rebuilds the Cesium viewer (points are read through a ref). If Cesium fails
+  the player stays on the simple globe; the old offline model is only used by the planner.
+- **The site panel is an eggshell card** (`--shell*` tokens in `styles.css`; `opening/DESIGN.md`).
+- **A pinned point as a target** (Eyad's opening; Antonio's evidence). `lib/analogClick.ts` calls
+  the matching service and builds a synthetic `PlanetarySite` (id `custom-<body>-<lat>-<lon>`).
+  In `OpeningGame`, `pin` holds the point and its state; when `pinActive`, `target`, `ranked`
+  and `topTen` come from the server's answer, `pairingOf`/`matchOf` are skipped, and
+  `AnalogEvidence`, `LandingEvidence`, `MissionControlScreen` and the debrief's match section
+  show pinned-point copy (they detect the `custom-` id). The debrief's comparison flights for a pin
+  run in `lib/fidelityCustom.ts` on the terrain the service returned: no catalog lookup, no pack
+  download, no cached baseline. `lib/fidelity.ts` is deliberately untouched, because it is part of
+  the landing baseline's engine fingerprint; `DebriefScene`, `FlightReport` and `FlightReportNHB`
+  take an optional `planetaryProfile` and choose between the two. The debrief's side-by-side 3D
+  terrain view is skipped for a pin. The mission carries the pin's terrain match as
+  `evidence.quantitativeSimilarityScore` with status `unvalidated-pair`.
+- **The server** (`supabase/`, new; Antonio's method, Tim's project). One edge function, a cache
+  table, the geologic maps and gazetteer in PostGIS. `supabase/README.md` says what is deployed,
+  how to verify (`node supabase/verify.ts`) and how to redeploy. Env keys: `VITE_SUPABASE_URL`,
+  `VITE_SUPABASE_ANON_KEY` in `web/.env` (public values only). Free-tier projects pause after a
+  week idle: restore it in the dashboard before a demo.
+- **Pipeline additions** (Antonio): `scripts/catalog/export_click_vectors.py`,
+  `scripts/supabase/load_reference.py`, both additive. `web/public/sites.json` is untouched.
+- **First load** (Furgan): `vite.config.ts` keeps Vite's preload helper out of the Cesium chunk,
+  so the title no longer downloads Cesium; `OpeningGame` fetches it once the worlds settle.
+
+Who should review what: Eyad the opening (`OpeningGame.tsx`, `WorldScene.tsx`, `opening.css`,
+`MoonGlobe.tsx`); Antonio the scoring port, the unit-to-family table, the evidence copy and
+`docs/ANALOG_MATCHING.md`; Tim `lib/fidelityCustom.ts` and the Supabase project; Furgan `vite.config.ts`.
+The rest of the performance pass (quality tiers, hidden-tab pause, lost-context recovery,
+renderer audit, GPU warm-up, a lazy catalog) was not done: see the pull request.
+
+
+## Scene preparation (15 November 2026, `codex/background-scene-loading`)
+
+The welcome screen now prepares Moon/Mars ion tiles in the same Three.js renderer
+that reveals all three worlds and flies to regions (`lib/planetTiles.ts`). The overview
+and initial region cameras are registered before departure; an offscreen draw uploads
+those materials. Start stays on the welcome screen until these are ready. The bundled
+NASA reference maps are the offline fallback; online tile failure offers Retry rather
+than revealing the reference Moon/Mars. Earth keeps its NASA overview and its Cesium
+inspection layer is mounted invisibly from the welcome screen. The worlds stay mounted, paused and hidden during equipment, the journey and the report,
+so returning to world selection reuses the same tiles. The game no longer
+swaps from a reference Moon/Mars sphere to a new Cesium viewer after selection.
+
+`SceneProps.warming` and `onPrepared` are optional lifecycle seams. The registered
+liftoff and approach honor them: build/paint/compile/render behind the bridge, without
+playing, audio or completion. They retain their engines through activation. The bridge
+also mounts `Descent` invisibly. An early Start mission request stays in the bridge
+until the three prepared views are ready; settings edits cancel that queued request
+and update the preview. The mission is still validated and locked on actual departure.
+A failed cinematic retains its skip path; unavailable 3D falls back to the playable 2D.
+
+The landing horizon loads with the measured scene's broad overhead camera, waits for
+tile requests and the joining collar to settle, and then keeps that tile selection fixed
+through flight (`earthTileScenery.ts`). `prepareView` compiles and draws before readiness.
+Hidden ready engines stop drawing. The warmed engines read the *latest* preceding
+frame when activated, rather than the handoff that existed when they were constructed.
+
+`Descent` owns one `useLanderSim` playback. `FlightView.externallyDriven` draws that
+simulation without stepping it again; the separate flight-lab continues to step its own
+sim as before. 2D/3D switching retains the same renderer, terrain, playback, pause,
+time, fuel and outcome. The hidden 3D view is silent and stops drawing in 2D. Terrain
+packs share pending and completed loads; aborting a consumer cannot cancel another
+scene's download (`sharedAsset.ts`). Procedural texture paint is also coalesced. Engines
+and GPU resources are disposed when the owning descent/session unmounts. This is
+resident caching for the selected flight, not a promise to keep every planetary LOD
+or every previously visited site in GPU memory forever. Arbitrary new globe viewpoints
+still use the tile service; no offline stand-in is substituted while online.
+
+
+Validation in this checkout: production build, 408 tests (49 pre-existing skips), and
+catalog consumer checks pass. Browser: detailed three-world reveal and Moon/Mars
+region selection; Moon/Kilbourne bridge → launch → approach → live descent → touchdown
+→ debrief; Mars/Badwater hidden warm-up; refitting gear invalidates readiness and an early
+launch waits in the bridge. At a paused 33.1 s, switching 3D → 2D → 3D retained renderer
+id 3 and exactly the same altitude (444.2 m) and fuel (324.9 kg). The lobby HUD stayed at
+0.0 s with both cinematics prepared. Temporary QA entry pages verified offline + reduced
+motion and an online tile-service outage; those fixtures were removed. The outage kept
+welcome + Retry, including after Start, with no reference-globe substitution. Browser
+viewport override did not take effect in this environment; phone layout and a hardware
+performance matrix are not claimed by these checks. Tile cache budgets are bounded
+(64 MiB per planetary renderer, 96 MiB per Earth scenery renderer), with download/parse
+concurrency capped at six/two. These are budgets, not measured total process/GPU usage.

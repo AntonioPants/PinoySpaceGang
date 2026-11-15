@@ -1,4 +1,4 @@
-import { Component, lazy, startTransition, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Component, lazy, startTransition, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { EnvironmentProfile } from '../../../app/lib/environment.mjs';
 import type { FlightTelemetry } from '../../../app/sim/src/types';
 import type { CatalogSite } from '../../../app/sim/src/catalog';
@@ -11,9 +11,10 @@ import { loadoutFor } from './equipment';
 import SystemsConsole from './SystemsConsole';
 
 const Descent = lazy(() => import('../components/Descent'));
-class SceneBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { failed: boolean }> {
+class SceneBoundary extends Component<{ children: ReactNode; fallback: ReactNode; onFailure?: () => void }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
+  componentDidCatch(){this.props.onFailure?.();}
   render() { return this.state.failed ? this.props.fallback : this.props.children; }
 }
 export default function GameSession({ initialMission, settings: initialSettings, target, entry, profile, weather, weatherAvailable, onReport, onExit, immersive = false }: {
@@ -29,6 +30,9 @@ export default function GameSession({ initialMission, settings: initialSettings,
   const [flight, setFlight] = useState<FlightTelemetry | null>(null), [error, setError] = useState('');
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const reported = useRef(false);
+  const [liftoffReady,setLiftoffReady]=useState(!gameIntegrations.liftoff),[approachReady,setApproachReady]=useState(!gameIntegrations.earthApproach);
+  const [descentReady,setDescentReady]=useState(false),[launchRequested,setLaunchRequested]=useState(false);
+  const readyChanged=useCallback((ready:boolean)=>setDescentReady(ready),[]);
   useEffect(() => {
     window.scrollTo(0, 0);
     document.getElementById('mission-title')?.focus({ preventScroll: true });
@@ -56,32 +60,49 @@ export default function GameSession({ initialMission, settings: initialSettings,
   // scene change never passes through a loading message or an empty screen.
   const complete = (expected: GamePhase) => startTransition(() => setPhase(current => completePhase(current, expected, gameIntegrations)));
   const sceneProps = { mission, reducedMotion, immersive, onExit: exit, onComplete: () => complete(phase) };
-  function launch() {
-    try {
+  function lockedMission() {
       const errors = validateSettings(settings); if (errors.length) throw new Error(errors.join(' '));
       if (settings.environment === 'earth' && settings.realWeatherMonth > 0 && !weatherAvailable) throw new Error('This site has no weather profile. Select manual wind.');
       const locked = buildMission(target, profile, settings, { terrainBase: mission.earthAnalog.terrainBaseUrl, analogName: mission.earthAnalog.name, terrainScore: mission.evidence.quantitativeSimilarityScore, weatherAvailable, landingTarget: mission.earthAnalog.landingTargetM });
       if (mission.equipment) locked.equipment = { ...mission.equipment, vehicleId: loadoutFor(settings) ?? mission.equipment.vehicleId, hazardSensor: settings.hazardSensor,
         // the bridge can refit the gear: the settings hold the one that flies
         landingGearId: settings.landingGearId ?? mission.equipment.landingGearId, gearPhysics: locked.strategy.landingGear ? 'model' : mission.equipment.gearPhysics };
-      toSimInput(locked, profile, entry, weather); // Validate the complete handoff before any departure scene.
-      setMission(locked); setError(''); complete('controlCenter');
-    } catch (e) { setError(e instanceof Error ? e.message : 'Could not prepare the mission.'); }
+      toSimInput(locked, profile, entry, weather);
+      return locked;
   }
-  const consoleProps = { ...sceneProps, settings, onSettingsChange: (next: MissionSettings) => { setSettings(next); setError(''); }, onLaunch: launch, error, weatherAvailable, weather };
+  // The bridge remains editable. Only changes to rendered assets rebuild the hidden view;
+  // the final environment and vehicle settings are locked again on the explicit launch action.
+  const previewMission=useMemo(()=>{try{return lockedMission();}catch{return mission;}},[settings,mission,target,profile,entry,weather,weatherAvailable]);
+  function launch() {
+    try {
+      const locked=lockedMission();
+      if(!descentReady||!liftoffReady||!approachReady){setLaunchRequested(true);setError('Preparing the landing view in the background. Launch will begin when it is ready.');return;}
+      setLaunchRequested(false);setMission(locked);setError('');complete('controlCenter');
+    } catch(e){setLaunchRequested(false);setError(e instanceof Error?e.message:'Could not prepare the mission.');}
+  }
+  useEffect(()=>{if(launchRequested&&descentReady&&liftoffReady&&approachReady&&phase==='controlCenter')launch();},[launchRequested,descentReady,liftoffReady,approachReady,phase]);
+  const consoleProps = { ...sceneProps, settings, onSettingsChange: (next: MissionSettings) => { setLaunchRequested(false); setSettings(next); setError(''); }, onLaunch: launch, error, weatherAvailable, weather };
   const ControlCenter = gameIntegrations.controlCenter;
   const cinematic = phase === 'planetaryArrival' || phase === 'liftoff' || phase === 'earthApproach' ? gameIntegrations[phase] : null;
-  const Cinematic = cinematic;
-  const warmingDescent = phase === 'liftoff' || phase === 'earthApproach';
+  const Cinematic = phase==='planetaryArrival'?cinematic:null;
+  const warmingDescent = phase === 'controlCenter' || phase === 'planetaryArrival' || phase === 'liftoff' || phase === 'earthApproach';
   const Outcome = gameIntegrations.outcome;
   const fallback = <section className="systems-console"><h2>Scene unavailable</h2><p>The cinematic could not be displayed. Your mission is preserved.</p><button className="primary-button" onClick={sceneProps.onComplete}>Continue mission</button><button className="text-button" onClick={exit}>Return to equipment</button></section>;
   return <div className={`game-session${immersive ? ' immersive-game-session' : ''}`} data-phase={phase}>
     <Suspense fallback={<p role="status" className="late-status">Loading mission systems…</p>}>
       {phase === 'controlCenter' && <SceneBoundary fallback={<SystemsConsole {...consoleProps} />}><ControlCenter {...consoleProps} /></SceneBoundary>}
       {Cinematic && <SceneBoundary key={phase} fallback={fallback}><Cinematic {...sceneProps} /><button className="subtle-button scene-skip" onClick={sceneProps.onComplete}>Skip cinematic</button></SceneBoundary>}
+      {(['liftoff','earthApproach'] as const).map(slot=>{
+        const Scene=gameIntegrations[slot];
+        const active=phase===slot;
+        const keep=phase==='controlCenter'||phase==='planetaryArrival'||phase==='liftoff'||slot==='earthApproach'&&phase==='earthApproach';
+        return Scene&&keep&&<div key={slot} inert={!active} style={!active?{position:'absolute',inset:0,visibility:'hidden',pointerEvents:'none'}:{display:'contents'}}>
+          <SceneBoundary fallback={fallback} onFailure={()=>slot==='liftoff'?setLiftoffReady(true):setApproachReady(true)}><Scene {...sceneProps} mission={phase==='controlCenter'?previewMission:mission} warming={!active} onPrepared={slot==='liftoff'?setLiftoffReady:setApproachReady} onComplete={()=>complete(slot)}/>{active&&<button className="subtle-button scene-skip" onClick={()=>complete(slot)}>Skip cinematic</button>}</SceneBoundary>
+        </div>;
+      })}
       {(warmingDescent || phase === 'descent') && <div inert={warmingDescent} style={warmingDescent ? { position: 'absolute', inset: 0, visibility: 'hidden', pointerEvents: 'none' } : { display: 'contents' }}>
         <Suspense fallback={warmingDescent ? null : <p role="status">Preparing descent…</p>}>
-          <Descent warming={warmingDescent} mission={mission} profile={profile} entry={entry} weather={weather} autoStart onExit={exit} onReport={report => { setFlight(report); complete('descent'); }} />
+          <Descent warming={warmingDescent} onReady={readyChanged} mission={phase==='controlCenter'?previewMission:mission} profile={profile} entry={entry} weather={weather} autoStart onExit={exit} onReport={report => { setFlight(report); complete('descent'); }} />
         </Suspense>
       </div>}
       {phase === 'outcome' && flight && Outcome && <SceneBoundary key="outcome" fallback={fallback}><Outcome {...sceneProps} flight={flight} /><button className="subtle-button scene-skip" onClick={sceneProps.onComplete}>Skip cinematic</button></SceneBoundary>}

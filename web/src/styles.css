@@ -3,6 +3,8 @@
   --font-ui: 'Inter Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-data: 'DM Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
   --font-display: 'Michroma', 'Inter Variable', 'Helvetica Neue', Arial, sans-serif;
+  --space-xs: 4px; --space-sm: 8px; --space-md: 16px; --space-lg: 24px;
+  line-height: 1.5;
   font-family: var(--font-ui);
   color: #f2f1ed; background: #000; color-scheme: dark;
   font-synthesis: none; font-weight: 400;
@@ -12,6 +14,10 @@
   /* Buttons are neutral: paper on black for the main action, a paper outline for the rest.
      Gold is kept for what is selected or marked, not for every control. */
   --btn: #f2f1ed; --btn-hover: #ffffff; --btn-ink: #0b0c0e; --btn-line: #f2f1ed66; --btn-wash: #f2f1ed14;
+  /* The eggshell card (the site panel in the opening): dark ink on warm paper. Every text colour on it
+     reaches 4.5:1; --shell-score, --shell-found and --shell-alert are the gold, cyan and red of the dark UI, darkened. */
+  --shell: #efe9dc; --shell-ink: #14130f; --shell-dim: #5b574d; --shell-rule: #14130f24; --shell-wash: #14130f12;
+  --shell-score: #6a4a0c; --shell-found: #0f5f5c; --shell-alert: #8a1f11;
 }
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; }
@@ -460,6 +466,9 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
 .scene-sound { position: absolute; top: 16px; left: 16px; background: #111c; z-index: 5; }
 .flight-stage-3d { height: min(70vh, 620px); background: #000; }
 .flight-3d { position: absolute; inset: 0; }
+/* The player's own pin on a Cesium globe. */
+.cesium-pin { position: absolute; width: 22px; height: 22px; transform: translate(-50%, -50%); border: 2px solid #e9c78a; border-radius: 50%; box-shadow: 0 0 0 1px #000a, 0 0 14px #e9c78a99; pointer-events: none; }
+.cesium-pin::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: #fff1cf; }
 
 /* Compact terrain reference HUD. */
 .terrain-comparison-legend { position:absolute; z-index:4; left:14px; bottom:14px; max-width:min(540px,calc(100% - 28px)); padding:10px 12px; background:rgba(8,17,25,.88); border:1px solid #375967; border-radius:6px; color:#e4edf0; font-size:12px; }
@@ -471,3 +480,59 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
 .comparison-planet { color:#65e7ff; margin-left:10px; }
 .surface-brief .terrain-comparison-legend { position:static; max-width:100%; margin:8px 0; }
 @media(max-width:600px) { .terrain-comparison-legend { font-size:10px; left:8px; bottom:8px; max-width:calc(100% - 16px); padding:7px; } }
+/* The player's own pin on a Cesium globe. */
+.cesium-pin { position: absolute; width: 22px; height: 22px; transform: translate(-50%, -50%); border: 2px solid #e9c78a; border-radius: 50%; box-shadow: 0 0 0 1px #000a, 0 0 14px #e9c78a99; pointer-events: none; }
+.cesium-pin::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: #fff1cf; }
+
+
+/* Text must be allowed to shrink and wrap inside flex/grid tracks. */
+:where(.workspace, .section-heading, .panel-topline, .panel-actions, .flight-toolbar,
+  .flight-hud, .console-layout, .console-controls, .mission-summary, .report-metrics,
+  .terrain-stats, .comparison-metrics, .strategy-options) > * { min-width: 0; }
+:where(h1, h2, h3, h4, p, dd, button, summary, .badge) { overflow-wrap: anywhere; }
+button, summary, label, small { line-height: 1.5; }
+.segmented { flex-wrap: wrap; max-width: 100%; }
+.badge { white-space: normal; }
+.section-heading, .panel-topline, .panel-actions, .coordinates, .terrain-chart figcaption,
+.config-footer, .import-actions { flex-wrap: wrap; }
+.app-header { height: auto; min-height: 84px; flex-wrap: wrap; padding-block: 16px; }
+.header-right { gap: var(--space-md); }
+.workspace, .slider-grid, .console-controls, .report-metrics, .terrain-stats { min-width: 0; }
+.strategy-options, .slider-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.terrain-stats strong { font-size: clamp(18px, 2.4vw, 27px); overflow-wrap: anywhere; }
+.dialog-head { gap: var(--space-md); }
+.dialog-head .icon-button { flex: 0 0 32px; }
+.source-content > p + p { margin-top: var(--space-md); }
+.source-content a { overflow-wrap: anywhere; }
+.flight-toolbar > div:first-child { flex: 1 1 240px; }
+.flight-toolbar > div + div { flex: 1 1 480px; }
+.flight-toolbar label { display: inline-flex; align-items: center; flex-wrap: wrap; gap: var(--space-sm); }
+.flight-toolbar select { margin-left: 0; max-width: 100%; }
+.flight-hud { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.flight-hud strong { display: block; font-size: clamp(16px, 2vw, 24px); }
+.flight-result { flex-wrap: wrap; }
+.flight-result > div { flex: 1 1 100%; }
+.comparison-result-button { margin: var(--space-md); }
+.model-assumptions ul { padding-left: 20px; line-height: 1.6; }
+.terrain-footnote, .terrain-comparison-legend { overflow-wrap: anywhere; }
+.globe-caption { max-width: calc(100% - 32px); white-space: normal; text-align: center; }
+.console-loadout dd { text-align: right; overflow-wrap: anywhere; }
+@media (max-width: 480px) {
+  .app-header { gap: 12px; padding-inline: 16px; }
+  .app-header > a:first-child { flex-basis: 65%; font-size: 12px; }
+  .header-right { margin-left: auto; }
+  .strategy-options, .slider-grid, .comparison-metrics { grid-template-columns: minmax(0, 1fr); }
+  .terrain-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .flight-hud { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .import-preview > .text-button { margin: 12px 0 0; }
+  .terrain-readout { position: relative; inset: auto; padding: 88px 12px 12px; }
+  .terrain-footnote { position: relative; inset: auto; margin: 0 12px 12px; }
+}
+.flight-toolbar .flight-view-notice { flex-basis:100%; margin:0; order:1; }
+.planet-top { align-items:flex-start; }
+.planet-top .segmented { flex-wrap:nowrap; flex-shrink:0; }
+.planet-top .segmented button { padding-inline:10px; }
+@media(max-width:760px) {
+  .stepper { display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:8px; }
+  .stepper button { min-width:0; width:100%; justify-content:flex-start; text-align:center; }
+}

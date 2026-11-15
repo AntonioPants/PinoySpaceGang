@@ -11,6 +11,9 @@ the same accent with icons and explicit text to convey meaning.
   nasa.gov, and Michroma for the wordmark. Variables `--font-ui`, `--font-data`, `--font-display`.
 - Buttons are neutral paper on black (`--btn*`): solid for the main action, a paper outline
   for the rest. Gold marks what is selected or flagged, not every control.
+- The opening's site panel is an eggshell card with dark text (`--shell`, `--shell-ink`,
+  `--shell-dim`, `--shell-rule`, `--shell-wash`, `--shell-score`, `--shell-found`, `--shell-alert`):
+  the one light surface. Its selected row and main button are inverted. See `src/game/opening/DESIGN.md`.
 - Left-aligned content. Large globe next to a compact location list; configuration
   has a quiet route summary and a wider control panel. Telemetry uses tabular numbers.
 - Short stage fades, selected-state feedback, continuous camera motion. No ambient

@@ -1,0 +1,61 @@
+{
+  "site_id": "phoenix",
+  "product_id": "DTEPC_008591_2485_008644_2485_U01",
+  "product_config_sha256": "db91a002167a4d7f276d002a11facae9bc0fb95db87e16cfe0257a7c8b172f84",
+  "catalog_elevation_sha256": "c03eec6c3f70ba00234c7c3a4b0d57b8f34a8948ccf1870120a3115b6dc1865b",
+  "pilot_elevation_sha256": "5044c4df7fa2bf74a6bd2b1f988451c7351ee7b11d00a3e60c8e8528cff3e98b",
+  "manifest_url": "/terrain-pilots/phoenix/manifest.json",
+  "manifest_sha256": "9cec4ba45ec54924d834abdf602f99fa9d33e6977a195a846dcc750f1a178811",
+  "source_receipt": {
+    "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/PSP_008591_2485_PSP_008644_2485/DTEPC_008591_2485_008644_2485_U01.tif",
+    "subset_sha256": "951979bc3cb2b80195a841f7e145ce25888f1d814d95e7c3f82f1aba8d8b7580",
+    "source_window": [
+      4101,
+      3323,
+      6587,
+      6587
+    ],
+    "source_crs_wkt": "PROJCS[\"Mars (2015) - Sphere / Ocentric / North Polar\",GEOGCS[\"Mars (2015) - Sphere / Ocentric\",DATUM[\"Mars (2015) - Sphere\",SPHEROID[\"Mars (2015) - Sphere\",3396190,0]],PRIMEM[\"Reference Meridian\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]]],PROJECTION[\"Polar_Stereographic\"],PARAMETER[\"latitude_of_origin\",90],PARAMETER[\"central_meridian\",0],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1],AXIS[\"Easting\",SOUTH],AXIS[\"Northing\",SOUTH]]",
+    "scale": 1.0,
+    "offset": 0.0,
+    "source_tags": {
+      "DATA_SET_ID": "\"MRO-M-HIRISE-5-DTM-V1.0\"",
+      "INSTRUMENT_ID": "\"HIRISE\"",
+      "INSTRUMENT_NAME": "\"HIGH RESOLUTION IMAGING SCIENCE EXPERIMENT\"",
+      "PRODUCER_INSTITUTION_NAME": "\"UNIVERSITY OF ARIZONA\"",
+      "PRODUCT_ID": "\"DTEPC_008591_2485_008644_2485_U01\"",
+      "TARGET_NAME": "\"MARS\"",
+      "AREA_OR_POINT": "Area"
+    },
+    "source_shape": [
+      12615,
+      13203
+    ],
+    "source_spacing": [
+      0.996514980811846,
+      0.996514980811846
+    ],
+    "finite_source_fraction": 0.9210616741013053
+  },
+  "metadata": [
+    {
+      "name": "pds-label",
+      "url": "https://www.uahirise.org/PDS/DTM/PSP/ORB_008500_008599/PSP_008591_2485_PSP_008644_2485/DTEPC_008591_2485_008644_2485_U01.IMG",
+      "resolved_url": "https://www.uahirise.org/PDS/DTM/PSP/ORB_008500_008599/PSP_008591_2485_PSP_008644_2485/DTEPC_008591_2485_008644_2485_U01.IMG",
+      "sha256": "55b5e3ad1c35598dc23532431ec21c8ce7ccc1ab5faa44682aace616460d1ec2"
+    }
+  ],
+  "quality": null,
+  "centre_latitude": 68.22,
+  "centre_longitude": -125.75,
+  "output_spacing_m": 30,
+  "window_m": 4530,
+  "minimum_cell_valid_fraction": 1.0,
+  "relative_vertical_error_m": null,
+  "error_definition": null,
+  "expert_review": "pending",
+  "status": "measured_subset_staged",
+  "production_changed": false,
+  "generator_sha256": "b125dac494f4fdaf832576a4558ef443d740a58ff1859c63a17c556da3e200ff",
+  "reproduction_command": "python -m scripts.catalog.ingest_pilot phoenix --offline"
+}

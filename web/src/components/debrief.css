@@ -32,3 +32,15 @@
   .debrief-scores > div:nth-child(n+3) { border-top: 1px solid var(--debrief-line); }
   .debrief-margins li { grid-template-columns: 1fr 1fr; }
 }
+
+.debrief-margins li > *, .debrief-stats > div { min-width:0; overflow-wrap:anywhere; }
+.debrief-table { table-layout:fixed; }
+.debrief-table th, .debrief-table td { overflow-wrap:anywhere; vertical-align:top; }
+@media (max-width:1000px) {
+  .debrief-margins li { grid-template-columns:minmax(0, 1fr) minmax(40px, 1fr) minmax(0, 1fr) minmax(0, 1fr); }
+}
+@media (max-width:760px) {
+  .debrief-margins li { grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); }
+  .debrief-margins .debrief-track { grid-column:1 / -1; grid-row:2; }
+  .debrief-stats dd { overflow-wrap:anywhere; }
+}

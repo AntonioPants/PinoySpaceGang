@@ -92,6 +92,7 @@
 .immersive-game-session .flight-3d .terrain-credit{bottom:155px!important;left:4%!important;right:4%!important;text-shadow:0 1px 6px #000}
 .immersive-game-session .model-assumptions{position:absolute;z-index:2;left:30px;top:100px;max-width:min(500px,80%);max-height:55%;overflow:auto;border:0;padding:10px;font-size:11px;background:#03040588;backdrop-filter:blur(10px)}
 .immersive-game-session .flight-result{position:absolute;z-index:3;left:50%;top:45%;transform:translate(-50%,-50%);width:min(600px,90%);background:#090b0de8;backdrop-filter:blur(16px);border:1px solid #c4ad794d;display:flex;flex-wrap:wrap;padding:28px}.immersive-game-session .flight-result h2{font-size:28px}
+.immersive-game-session .comparison-result-button{position:absolute;z-index:3;right:30px;bottom:150px;background:#090b0de8}
 .immersive-game-session .flight-workspace>.import-error{position:absolute;z-index:4;top:25%;left:5%;right:5%;background:#15110deb;padding:22px}
 .immersive-game-session .scene-skip,.immersive-game-session .scene-sound{top:24px;background:#05060799;backdrop-filter:blur(10px)}
 .immersive-game-session .scene-skip{right:26px}.immersive-game-session .scene-sound{left:26px}
@@ -167,6 +168,81 @@
 .equipment-tabs button{color:#c9c7c0}.equipment-tabs button[aria-pressed=true]{background:var(--btn);color:var(--btn-ink);font-weight:600;box-shadow:none}
 .equipment-reset,.title-atlas{color:var(--btn)}.equipment-view-tools button{border-color:var(--btn-line);color:var(--btn)}.equipment-view-tools button:hover:not(:disabled){background:var(--btn-wash);border-color:var(--btn)}
 .equipment-rails button:focus-visible,.equipment-view-tools button:focus-visible{outline-color:var(--btn)}
+/* The detailed Cesium globe is a layer over the always-mounted simple globe. It fades in once it has
+   tiles and the fly-in has finished, with the camera handed across, and fades out before leaving. */
+.opening-globe-layer{position:absolute;inset:0;z-index:-2;opacity:0;pointer-events:none;transition:opacity .4s ease}
+.opening-globe-layer.is-shown{opacity:1;pointer-events:auto;transition:opacity .6s ease}
+.opening-globe-layer:not(.is-shown) *{pointer-events:none!important}
+.opening-globe-layer .globe-view{min-height:0}
+
+/* ---- The site panel on the Moon, Mars and Earth screens: a solid eggshell card with dark text.
+   Tokens (--shell*) are beside the button tokens in styles.css. Inter for names, DM Mono for
+   indices, regions, scores and labels. The selected row is inverted; gold only marks selection.
+   Contrast on the card (WCAG): ink 15.4, dim 5.9 (5.2 on a hovered row), score 6.7, discovered 6.2;
+   on the selected row: text 15.4, small 11.2, score 11.5, discovered 12.3. */
+.game-selector{background:var(--shell);color:var(--shell-ink);backdrop-filter:none;border:0;border-radius:4px;padding:24px 24px 22px;box-shadow:0 24px 64px #000c,0 2px 10px #0006}
+.game-selector h2{font-family:var(--font-ui);font-size:18px;font-weight:600;letter-spacing:-.01em;color:var(--shell-ink);margin-bottom:14px}
+.game-selector .game-site-list{border-top:1px solid var(--shell-rule);scrollbar-color:#8d877a transparent}
+.game-selector .game-site-list button{border-bottom:1px solid var(--shell-rule);color:var(--shell-ink);padding:14px 10px}
+.game-selector .game-site-list button::before{background:var(--shell-ink)}
+.game-selector .game-site-list button:hover,.game-selector .game-site-list button.is-hovered,.game-selector .game-site-list button:focus-visible{background:var(--shell-wash);padding-left:18px}
+.game-selector .game-site-list strong,.game-selector .game-site-list button:hover strong,.game-selector .game-site-list button.is-hovered strong{font-family:var(--font-ui);font-size:14px;font-weight:600;letter-spacing:-.005em;color:var(--shell-ink)}
+.game-selector .game-site-list small{font-family:var(--font-data);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--shell-dim);margin-top:6px}
+.game-selector .game-site-list>button>span{font-family:var(--font-data);font-size:11px;color:var(--shell-dim)}
+.game-selector .site-signal{background:var(--shell-ink)}
+.game-selector .game-site-list i{background:#8d877a}
+.game-selector .game-site-list button:hover i,.game-selector .game-site-list button.is-hovered i{background:var(--shell-ink)}
+.game-selector .game-site-list button>svg{color:var(--shell-dim)}
+.game-selector .game-site-list button:hover>svg,.game-selector .game-site-list button.is-hovered>svg{color:var(--shell-ink)}
+.game-selector .game-site-list .analog-score{color:var(--shell-score);font-size:11px;letter-spacing:.02em;text-transform:none}
+.game-selector .game-site-list .scan-label{color:var(--shell-found);letter-spacing:.02em;text-transform:none}
+.game-selector .scan-heading{font-family:var(--font-data);font-size:10.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--shell-found);margin:18px 0 8px}
+/* Selected: inverted. */
+.game-selector .game-site-list button[aria-pressed=true],.game-selector .game-site-list button[aria-pressed=true]:hover,.game-selector .game-site-list button[aria-pressed=true].is-hovered{background:var(--shell-ink);color:var(--shell)}
+.game-selector .game-site-list button[aria-pressed=true] strong{color:var(--shell)}
+.game-selector .game-site-list button[aria-pressed=true] small,.game-selector .game-site-list>button[aria-pressed=true]>span{color:#cfc8b8}
+.game-selector .game-site-list button[aria-pressed=true] .analog-score{color:#e7c889}
+.game-selector .game-site-list button[aria-pressed=true] .scan-label{color:#8fe0db}
+.game-selector .game-site-list button[aria-pressed=true] .site-signal,.game-selector .game-site-list button[aria-pressed=true] i{background:#e7c889;box-shadow:none}
+.game-selector .game-site-list button[aria-pressed=true]>svg{color:var(--shell)}
+.game-selector .game-site-list button[aria-pressed=true]::before{background:#e7c889;transform:scaleY(1)}
+.game-selector .game-site-list button:focus-visible,.game-selector .game-primary:focus-visible,.game-selector .game-text:focus-visible,.game-selector select:focus-visible,.game-selector .site-menu-close:focus-visible{outline:2px solid var(--shell-ink);outline-offset:2px}
+.game-selector .site-description{color:var(--shell-dim);font-size:11.5px;line-height:1.6;margin:16px 0}
+.game-selector .game-primary{background:var(--shell-ink);color:var(--shell);border-color:var(--shell-ink);box-shadow:none}
+.game-selector .game-primary:hover{background:#2c2a24;border-color:#2c2a24}
+.game-selector .game-primary:disabled{background:var(--shell-ink);opacity:1;color:#cfc8b8}
+.game-selector .game-text{color:var(--shell-ink);text-decoration-color:#14130f66}
+.game-selector .game-text:hover{color:#000;text-decoration-color:#000}
+.game-selector .site-menu-close{color:var(--shell-ink)}.game-selector .site-menu-close:hover{color:#000}
+.game-selector label{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;font-family:var(--font-data);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--shell-dim)}
+.game-selector select{background:#e3dccc;color:var(--shell-ink);border:1px solid #14130f66;border-radius:3px;padding:8px;font-family:var(--font-ui);font-size:13px;letter-spacing:0;text-transform:none;color-scheme:light}
+.game-selector [role=alert],.game-selector .pin-failed{color:var(--shell-alert)}
+@media(max-height:750px) and (min-width:761px){.game-selector{padding:18px 20px}.game-selector .game-site-list button{padding:10px 10px}.game-selector .site-description{margin:10px 0}}
+/* Phone: the card stays readable and scrolls inside itself; the page never scrolls. */
+@media(max-width:760px){.game-selector{padding:16px;max-height:46%;overflow-y:auto;overscroll-behavior:contain}.game-selector h2{font-size:15px;margin-bottom:10px}.game-selector .game-site-list{min-height:96px}.game-selector .game-site-list button{padding:10px 8px}.game-selector .game-site-list small{margin-top:3px}.game-selector .site-description{margin:10px 0;font-size:11px}}
+.game-selector .game-site-list button>svg{margin-left:auto;flex-shrink:0}
+.game-selector .site-description,.game-selector h2,.game-selector .game-primary,.game-selector .game-text,.game-selector label{flex-shrink:0}
+@media(max-width:760px){.game-selector{bottom:42px}}
+/* Click anywhere: the player's own pin sits above the marked regions in the card. */
+.game-selector .pin-hint{display:flex;align-items:center;gap:7px;margin:0 0 12px;font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;color:var(--shell-dim);flex-shrink:0}
+.game-selector .pin-row{flex-shrink:0;margin:0 0 14px;padding:12px;border:1px solid var(--shell-rule);border-radius:3px;background:#14130f0a}
+.game-selector .pin-site{width:100%;display:flex;gap:11px;align-items:flex-start;text-align:left;color:var(--shell-ink);padding:4px;border-radius:2px}
+.game-selector .pin-site:disabled{cursor:default}
+.game-selector .pin-site svg{flex-shrink:0;margin-top:2px;color:var(--shell-score)}
+.game-selector .pin-site span{display:block;font-family:var(--font-data);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--shell-dim)}
+.game-selector .pin-site strong{display:block;font-size:14px;font-weight:600;margin-top:3px}
+.game-selector .pin-site small{display:block;font-family:var(--font-data);font-size:10.5px;letter-spacing:.04em;color:var(--shell-dim);margin-top:4px}
+.game-selector .pin-site[aria-pressed=true]{background:var(--shell-ink);color:var(--shell);padding:8px}
+.game-selector .pin-site[aria-pressed=true] span,.game-selector .pin-site[aria-pressed=true] small{color:#cfc8b8}.game-selector .pin-site[aria-pressed=true] svg{color:#e7c889}
+.game-selector .pin-site:not(:disabled):not([aria-pressed=true]):hover{background:var(--shell-wash)}
+.game-selector .pin-site:focus-visible{outline:2px solid var(--shell-ink);outline-offset:2px}
+.game-selector .pin-row p{margin:8px 4px 0;font-size:11.5px;line-height:1.5;color:var(--shell-dim)}
+.game-selector .pin-row .game-text{padding:8px 4px 2px;font-weight:600}
+.game-selector .pin-row.is-analysing p::before{content:'';display:inline-block;width:9px;height:9px;margin-right:7px;border:2px solid var(--shell-dim);border-top-color:transparent;border-radius:50%;vertical-align:-1px;animation:pin-spin .8s linear infinite}
+@keyframes pin-spin{to{transform:rotate(360deg)}}
+@media(max-width:760px){.game-selector .pin-row{padding:8px;margin-bottom:8px}.game-selector .pin-hint{margin-bottom:8px}}
+/* With a pin and its description in the card, the list of marked regions keeps room for two rows. */
+@media(min-width:761px){.game-selector .game-site-list{min-height:132px}.game-selector .site-description{flex-shrink:1;min-height:38px}}
 
 /* Keep comparison and assumptions clear of flight telemetry and wrapping toolbars. */
 .immersive-game-session .terrain-comparison-legend { left:30px; bottom:182px; max-width:min(540px,65%); max-height:28vh; overflow:auto; }
@@ -183,12 +259,18 @@
 .terrain-info-close { float:right; padding:8px 14px; background:#17232f; border:1px solid #687583; color:#fff; cursor:pointer; }
 .terrain-bottom-controls { position:absolute; z-index:6; bottom:24px; left:4%; right:4%; display:flex; gap:14px; align-items:center; pointer-events:none; }
 .terrain-bottom-controls button { pointer-events:auto; background:#111b26; border:1px solid #657180; color:#fff; padding:12px 18px; min-height:44px; }
+.terrain-bottom-controls button:hover { background:#243445; border-color:#ddc493; color:#fff; }
 .terrain-bottom-controls .game-primary { position:static; min-width:0; }
 .terrain-flag-status { margin-left:auto; color:#fff; font-size:12px; text-shadow:0 1px 3px #000; }
 @media(max-width:760px) { .terrain-bottom-controls { left:12px; right:12px; bottom:28px; gap:8px; flex-wrap:wrap; } .terrain-bottom-controls button { font-size:11px; padding:10px; } .terrain-flag-status { order:3; width:100%; margin:0; } .surface-brief.terrain-info-sheet { bottom:125px; max-height:60vh; } }
 @media(prefers-reduced-motion:reduce) { .surface-brief.terrain-info-sheet { transition:none; } }
 
-.surface-brief.terrain-info-sheet { background:transparent; border:0; text-shadow:0 1px 4px #000; bottom:235px; max-height:calc(100vh - 330px); }
+.surface-brief.terrain-info-sheet { background:rgba(8,13,18,.82); border:0; border-top:1px solid #ddc49355; box-shadow:0 -8px 28px #0003; text-shadow:0 1px 2px #0008; bottom:235px; max-height:calc(100vh - 330px); }
+.terrain-info-sheet .analog-evidence details[open] { background:transparent; max-height:none; overflow:visible; padding:0; }
+.terrain-info-sheet .comparison-validity { border-top:1px solid #ddc49355; margin-top:8px; }
+.terrain-info-sheet .comparison-validity p,.terrain-info-sheet .comparison-validity li { color:#f0e9dc; line-height:1.6; }
+.terrain-info-sheet .comparison-validity small { font-size:11px; line-height:1.6; color:#f0e9dc; }
+.terrain-info-sheet .comparison-validity { text-shadow:0 1px 2px #000,0 0 4px #000; }
 .terrain-map-readout { position:absolute; z-index:4; left:4%; right:4%; bottom:85px; color:#eee6d5; text-shadow:0 1px 4px #000; pointer-events:none; font-size:12px; }
 .terrain-map-readout p { margin:6px 0; }
 .terrain-map-readout .landing-readout { display:flex; align-items:center; gap:8px; }
@@ -209,3 +291,174 @@
 .inspection-navigation .game-back:hover { color:#f1dfb6; }
 .inspection-navigation .game-back:focus-visible { outline:1px solid #d6b77c; outline-offset:4px; }
 @media(max-width:760px) { .game-topbar { gap:14px; } .game-topbar:has(.inspection-navigation) .game-wordmark span { display:none; } .game-topbar .game-tools { grid-column:-2; justify-self:end; } }
+/* The detailed Cesium globe is a layer over the always-mounted simple globe. It fades in once it has
+   tiles and the fly-in has finished, with the camera handed across, and fades out before leaving. */
+.opening-globe-layer{position:absolute;inset:0;z-index:-2;opacity:0;pointer-events:none;transition:opacity .4s ease}
+.opening-globe-layer.is-shown{opacity:1;pointer-events:auto;transition:opacity .6s ease}
+.opening-globe-layer:not(.is-shown) *{pointer-events:none!important}
+.opening-globe-layer .globe-view{min-height:0}
+
+.title-screen .world-preparation { font: .7rem 'DM Mono', monospace; color: #bdb6a8; margin-top: 1rem; }
+.world-preparation button { margin-left: .5rem; color: #e9c78a; background: transparent; border: 1px solid #81745c; border-radius: 4px; padding: .3rem .6rem; }
+
+.world-tile-credits { position: absolute; bottom: 1.2rem; left: 50%; transform: translateX(-50%); max-width: 65%; color: #aaa69d; font: 9px sans-serif; pointer-events: none; text-align: center; }
+
+/* Reserve layout space for text instead of stacking fixed bottom offsets. */
+.opening-game { --game-gutter: clamp(16px, 4vw, 56px); --game-footer: 38px; }
+.opening-game .game-topbar { padding:16px var(--game-gutter); gap:16px; min-width:0; }
+.game-topbar > * { min-width:0; }
+.opening-game .game-wordmark { gap:8px; }
+.opening-game .game-tools { gap:8px; }
+.opening-game .game-chapter { text-align:center; }
+.opening-game .game-network-status { bottom:6px; left:var(--game-gutter); font-size:10px; line-height:1.4; max-width:calc(100% - 2 * var(--game-gutter)); }
+.opening-journey .game-network-status { max-width:calc(100% - 130px); }
+.opening-game .game-bottom-note { bottom:calc(var(--game-footer) + 12px); gap:12px; }
+.opening-game .world-labels { bottom:calc(var(--game-footer) + 100px); }
+.opening-game .game-heading { left:var(--game-gutter); top:100px; width:min(500px, calc(100% - 420px)); }
+.opening-game .game-selector { top:110px; bottom:calc(var(--game-footer) + 12px); max-height:none; right:var(--game-gutter); }
+.game-selector > :not(.game-site-list) { flex-shrink:0; }
+.opening-game .game-site-list { min-height:0; max-height:none; }
+.game-site-list button > div { min-width:0; }
+.game-site-list button strong, .game-site-list button small { display:block; line-height:1.5; }
+.game-site-list button small + small { margin-top:4px; }
+.game-site-list button > span, .game-site-list button > svg { flex-shrink:0; }
+.game-selector label { display:grid; gap:8px; margin-bottom:16px; }
+.game-selector select { width:100%; min-width:0; padding:8px; }
+.opening-game .site-description { line-height:1.6; margin:12px 0; }
+.opening-game .game-primary { gap:16px; }
+.opening-game .game-primary svg { flex-shrink:0; }
+.title-screen .title-prompt { max-width:100%; letter-spacing:.2em; }
+.title-prompt::before, .title-prompt::after { flex-shrink:1; }
+
+/* The map, information sheet, readout and actions each have their own row. */
+.opening-earth.on-surface { display:grid; grid-template-rows:auto minmax(0, 1fr) auto auto var(--game-footer); }
+.on-surface > .game-topbar { grid-row:1; }
+.opening-earth.on-surface .terrain-map-readout { position:relative; inset:auto; grid-row:3; margin:0 var(--game-gutter); padding:8px 0; font-size:12px; }
+.terrain-map-readout .landing-readout { flex-wrap:wrap; }
+.terrain-map-readout .landing-readout svg { flex:0 0 14px; }
+.opening-earth.on-surface .terrain-bottom-controls { position:relative; inset:auto; grid-row:4; margin:0 var(--game-gutter); padding:8px 0; display:flex; flex-wrap:wrap; gap:8px; }
+.opening-earth.on-surface .terrain-bottom-controls button { flex:1 1 150px; margin:0; padding:10px 14px; font-size:12px; line-height:1.5; }
+.opening-earth.on-surface .terrain-info-sheet { grid-row:2; position:relative; inset:auto; align-self:end; min-height:0; max-height:100%; margin:0; padding:16px var(--game-gutter); width:100%; transform:none; display:none; }
+.opening-earth.on-surface .terrain-info-sheet.is-open { display:block; }
+.terrain-info-sheet .surface-nav { flex-wrap:wrap; gap:8px 24px; padding-right:84px; min-height:44px; }
+.terrain-info-sheet .surface-nav button { margin:0; }
+.terrain-info-sheet .terrain-info-close { position:absolute; top:16px; right:var(--game-gutter); float:none; }
+.terrain-info-sheet h2 { margin:12px 0; }
+.terrain-info-sheet .analog-evidence .evidence-line { font-family:var(--font-ui); line-height:1.6; margin:8px 0; }
+.terrain-info-sheet .landing-evidence { line-height:1.6; }
+.terrain-info-sheet .landing-evidence small { margin-top:4px; }
+
+/* Hardware controls and the mission summary cannot grow over one another. */
+.opening-equipment { display:grid; grid-template-columns:minmax(0, 1fr) clamp(280px, 27vw, 360px); grid-template-rows:auto minmax(0, 1fr) auto var(--game-footer); column-gap:32px; padding-inline:var(--game-gutter); }
+.opening-equipment > .game-topbar { grid-column:1 / -1; margin-inline:calc(-1 * var(--game-gutter)); }
+.opening-equipment .game-heading { top:100px; width:calc(100% - clamp(280px, 27vw, 360px) - 3 * var(--game-gutter)); }
+.opening-equipment .equipment-rails { position:relative; inset:auto; grid-column:2; grid-row:2; min-height:0; max-height:none; width:auto; margin:16px 0; padding:0 8px 8px 0; }
+.opening-equipment .hangar-manifest { position:relative; inset:auto; grid-column:1 / -1; grid-row:3; min-width:0; gap:8px 24px; padding:16px 0 8px; border-top:1px solid #ffffff25; }
+.hangar-manifest > * { min-width:0; }
+.hangar-manifest > p { line-height:1.6; }
+.opening-equipment .hangar-manifest > .game-primary { min-width:0; max-width:100%; }
+.opening-equipment .equipment-scene { top:180px; bottom:185px; right:calc(clamp(280px, 27vw, 360px) + 2 * var(--game-gutter)); }
+.opening-equipment .equipment-view-tools { left:var(--game-gutter); bottom:185px; flex-wrap:wrap; gap:8px 16px; max-width:calc(100% - 420px); }
+.equipment-rail .rail-choice { display:grid; grid-template-columns:38px minmax(0, 1fr) 38px; gap:12px; }
+.rail-choice strong { line-height:1.4; }
+.rail-heading { gap:12px; }
+.rail-heading > :last-child { flex-shrink:0; }
+.livery-swatches { flex-wrap:wrap; }
+
+/* The journey footer is separate from the bridge hints and flight help. */
+.opening-game .journey-content { bottom:var(--game-footer); }
+.immersive-game-session .ship-interior { display:flex; flex-direction:column; }
+.immersive-game-session .cabin-toolbar { position:relative; inset:auto; flex:none; max-height:30%; overflow:auto; padding:12px 20px; background:#080b0fe8; }
+.immersive-game-session .cabin-view { position:relative; inset:auto; height:auto; flex:1; min-height:0; }
+.immersive-game-session .cabin-hint { position:relative; inset:auto; flex:none; max-height:15%; overflow:auto; padding:10px 20px; font-size:11px; background:#080b0fe8; }
+.immersive-game-session .flight-workspace { display:grid; grid-template-rows:auto minmax(80px, 1fr) auto auto auto; }
+.immersive-game-session .flight-toolbar { position:relative; inset:auto; grid-row:1; max-height:28vh; overflow:auto; padding:12px 20px; gap:12px; align-items:center; background:#080b0fe8; }
+.immersive-game-session .flight-toolbar strong { max-width:none; }
+.immersive-game-session .flight-toolbar > div + div { justify-content:flex-end; }
+.immersive-game-session .flight-stage { position:relative; inset:auto; grid-row:2; min-height:0; height:auto; }
+.immersive-game-session .flight-hud { position:relative; inset:auto; grid-row:3; padding:12px 20px; gap:12px; background:#080b0fe8; }
+.immersive-game-session .flight-hud strong { font-size:clamp(16px, 2vw, 28px); }
+.immersive-game-session .flight-hud span { font-size:10px; letter-spacing:0; margin-bottom:4px; }
+.immersive-game-session .flight-help { position:relative; inset:auto; grid-row:4; max-height:4.5em; overflow:auto; padding:0 20px 8px; font-size:11px; background:#080b0fe8; }
+.immersive-game-session .model-assumptions { position:relative; inset:auto; grid-row:5; max-width:none; max-height:20vh; margin:0; padding:8px 20px; background:#080b0fe8; }
+.immersive-game-session .terrain-comparison-legend { left:12px; bottom:12px; max-width:min(540px, calc(100% - 24px)); max-height:35%; font-size:11px; }
+.immersive-game-session .flight-3d .terrain-credit { top:8px!important; bottom:auto!important; left:12px!important; right:12px!important; max-height:18%; overflow:auto; font-size:10px; }
+.immersive-game-session .comparison-result-button { right:20px; bottom:auto; top:30%; margin:0; max-width:calc(100% - 40px); }
+.immersive-game-session .flight-result { top:50%; max-height:65%; overflow:auto; padding:24px; gap:16px; }
+
+@media(max-width:1000px) {
+  .opening-game .game-chapter { display:none; }
+  .opening-game .game-topbar { grid-template-columns:auto auto minmax(0, 1fr); }
+  .opening-game .game-topbar:not(:has(.inspection-navigation)) { grid-template-columns:auto minmax(0, 1fr); }
+  .opening-game .game-tools { grid-column:-2; justify-self:end; }
+}
+@media(max-width:760px) {
+  .opening-game .game-heading { top:86px; width:calc(100% - 2 * var(--game-gutter)); }
+  .opening-game .game-selector { top:auto; bottom:calc(var(--game-footer) + 8px); left:var(--game-gutter); right:var(--game-gutter); max-height:55%; padding:16px; }
+  .opening-earth.on-surface .terrain-map-readout { font-size:11px; }
+  .opening-earth.on-surface .terrain-map-readout small { font-size:10px; }
+  .opening-earth.on-surface .terrain-bottom-controls button { flex-basis:130px; font-size:11px; }
+  .opening-equipment { grid-template-columns:minmax(0, 1fr); grid-template-rows:auto auto minmax(60px, 1fr) minmax(110px, 30%) auto var(--game-footer); gap:0; }
+  .opening-equipment .game-heading { position:relative; inset:auto; width:auto; grid-row:2; padding:4px 0 12px; }
+  .opening-equipment .game-heading h1 { font-size:28px; }
+  .opening-equipment .equipment-scene { top:130px; bottom:48%; right:0; }
+  .opening-equipment .equipment-rails { grid-column:1; grid-row:4; margin:8px 0; }
+  .opening-equipment .equipment-view-tools { position:relative; inset:auto; align-self:end; grid-row:3; padding:8px 0; max-width:none; font-size:10px; }
+  .opening-equipment .hangar-manifest { grid-row:5; grid-template-columns:minmax(0, 1fr); padding-top:12px; gap:4px; }
+  .opening-equipment .hangar-manifest > .game-primary { grid-column:1; grid-row:auto; margin-top:8px; min-height:44px; }
+  .immersive-game-session .flight-toolbar { padding:10px 16px; }
+  .immersive-game-session .flight-toolbar > div + div { justify-content:flex-start; }
+  .immersive-game-session .flight-hud { grid-template-columns:repeat(3, minmax(0, 1fr)); padding:10px 16px; gap:8px 12px; }
+  .immersive-game-session .flight-help, .immersive-game-session .model-assumptions { padding-inline:16px; }
+}
+@media(max-height:540px) {
+  .opening-game .game-heading { top:76px; }
+  .opening-game .game-heading h1 { font-size:26px; }
+  .opening-game .game-heading p { display:none; }
+  .opening-game .game-selector { top:76px; max-height:none; }
+  .opening-game .game-selector h2 { margin-bottom:8px; }
+  .opening-game .site-description { max-height:42px; font-size:10px; }
+  .opening-earth.on-surface .terrain-map-readout { max-height:23vh; overflow:auto; pointer-events:auto; }
+  .opening-equipment { grid-template-columns:minmax(0, 1fr) minmax(260px, 42%); grid-template-rows:auto minmax(0, 1fr) auto var(--game-footer); column-gap:20px; }
+  .opening-equipment .game-heading { position:absolute; width:45%; }
+  .opening-equipment .equipment-rails { grid-column:2; grid-row:2; }
+  .opening-equipment .equipment-scene { top:100px; bottom:140px; right:45%; }
+  .opening-equipment .equipment-view-tools { position:absolute; left:var(--game-gutter); bottom:145px; max-width:45%; }
+  .opening-equipment .hangar-manifest { grid-row:3; grid-template-columns:minmax(0, 1fr) auto; }
+  .opening-equipment .hangar-manifest > .game-primary { grid-column:2; grid-row:1 / 4; }
+  .immersive-game-session .flight-hud { grid-template-columns:repeat(5, minmax(0, 1fr)); }
+  .immersive-game-session .flight-help { max-height:3em; }
+}
+.opening-world-scene > p[role=status] { position:absolute; top:45%; left:var(--game-gutter); right:var(--game-gutter); text-align:center; font-size:12px; color:var(--muted); }
+.opening-game .lunar-destination .globe-disclaimer { left:var(--game-gutter); top:76px; max-width:calc(100% - 2 * var(--game-gutter)); line-height:1.5; }
+@media(min-width:761px) {
+  .opening-game .lunar-destination .moon-status { max-width:calc(100% - 420px); }
+}
+@media(max-width:760px) {
+  .opening-game .lunar-destination .moon-status { bottom:auto; top:160px; max-height:10vh; overflow:auto; max-width:calc(100% - 32px); }
+  .opening-game .lunar-destination .globe-disclaimer { top:125px; font-size:10px; }
+}
+/* Header actions keep their labels intact, including the title and report headers. */
+.opening-game .game-tools { flex-shrink:0; }
+.opening-game .game-tools button { white-space:nowrap; flex-shrink:0; }
+.opening-title .game-topbar { display:flex; justify-content:flex-end; }
+.opening-title .game-topbar .game-wordmark, .opening-title .game-topbar .game-chapter { display:none; }
+.opening-game .scene-unavailable { top:180px; left:var(--game-gutter); max-width:min(400px, calc(100% - 2 * var(--game-gutter))); font-size:12px; line-height:1.6; }
+.opening-title .scene-unavailable { top:90px; right:var(--game-gutter); max-width:none; text-align:center; }
+.immersive-game-session .flight-help { pointer-events:auto; }
+@media(max-width:480px) {
+  .opening-game .game-wordmark span { display:none; }
+}
+@media(max-height:540px) {
+  .opening-game .scene-unavailable { top:110px; font-size:11px; }
+  .opening-title .title-screen { justify-content:center; padding:68px 20px 58px; }
+  .opening-title .title-eyebrow { margin-bottom:8px; }
+  .opening-title .title-screen h1 { font-size:clamp(28px, 6vw, 58px); }
+  .opening-title .title-screen p { margin:12px 0; }
+  .opening-title .title-prompt { padding:8px; font-size:11px; }
+  .opening-title .title-atlas { margin-top:4px; padding:6px; }
+  .opening-title .scene-unavailable { top:72px; font-size:10px; }
+  .opening-game .world-labels { bottom:calc(var(--game-footer) + 62px); }
+}
+.opening-earth.on-surface .game-selector { position:relative; inset:auto; grid-column:1; grid-row:2; justify-self:end; align-self:stretch; width:min(340px, calc(100% - 2 * var(--game-gutter))); margin:8px var(--game-gutter); max-height:none; overflow:hidden; z-index:6; }
+.opening-earth.on-surface .terrain-info-sheet { grid-column:1; }

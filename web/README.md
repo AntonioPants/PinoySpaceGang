@@ -80,3 +80,13 @@ images and typography are presentation assets, not scientific evidence; see
 `public/textures/ATTRIBUTION.md`. Inter, DM Mono and Michroma are self-hosted via Fontsource under
 the SIL Open Font License; all terrain and globe textures are served locally.
 See `DESIGN.md` for the black, warm-white and gold interface system.
+
+## Environment keys
+
+`web/.env` (public values only; never a service-role key):
+
+- `VITE_CESIUM_ION_TOKEN`: Cesium ion token for the detailed Moon, Mars and Google 3D Earth.
+  Without it the game stays on its own simple globes.
+- `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`: the click-anywhere matching service
+  (`../supabase/README.md`). Without them a pinned point says the matching service is
+  unavailable and the nine marked regions work as before.

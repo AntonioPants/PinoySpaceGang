@@ -8,15 +8,16 @@ import { setSoundOn, soundOn } from '../../components/cutscene/audio';
  * cinematics" choice made at the pilot seat overrides both ways. Sound starts on; the player's
  * choice is remembered and shared by every cinematic and the descent.
  */
-export function SceneFrame({ title, detail, reducedMotion, onComplete, children }: {
-  title: string; detail: string; reducedMotion: boolean; onComplete: () => void;
+export function SceneFrame({ warming = false, title, detail, reducedMotion, onComplete, children }: {
+  warming?: boolean; title: string; detail: string; reducedMotion: boolean; onComplete: () => void;
   children: (muted: boolean) => ReactNode;
 }) {
   const [muted, setMuted] = useState(() => !soundOn());
   // The player's choice at the pilot seat wins: 'on' plays even with reduced motion, 'off' skips.
   const [choice] = useState(cinematicsChoice);
   const [playAnyway, setPlayAnyway] = useState(choice === 'on');
-  useEffect(() => { if (choice === 'off') onComplete(); }, [choice, onComplete]);
+  useEffect(() => { if (!warming && choice === 'off') onComplete(); }, [warming, choice, onComplete]);
+  if(warming)return <section className="scene-frame" aria-hidden="true">{children(true)}</section>;
   if (choice === 'off') return null;
   if (reducedMotion && !playAnyway) return <section className="systems-console" aria-label={title}>
     <h2>{title}</h2><p>{detail}</p>

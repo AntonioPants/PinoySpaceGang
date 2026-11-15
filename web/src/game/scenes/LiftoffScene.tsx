@@ -15,7 +15,7 @@ import { sceneEnv } from './sceneEnv';
  * While it plays, the Earth analog's terrain is loaded and painted in the background, so the
  * Earth approach that follows starts without a freeze.
  */
-export default function LiftoffScene({ mission, reducedMotion, onComplete, immersive }: SceneProps) {
+export default function LiftoffScene({ warming, onPrepared, mission, reducedMotion, onComplete, immersive }: SceneProps) {
   const env = { name: 'Earth test range', subtitle: `Test flight to ${mission.earthAnalog.name}`, preset: sceneEnv(mission).env.preset };
 
   useEffect(() => {
@@ -28,8 +28,8 @@ export default function LiftoffScene({ mission, reducedMotion, onComplete, immer
     return () => ctl.abort();
   }, [mission]);
 
-  return <SceneFrame title="Liftoff from Earth" reducedMotion={reducedMotion} onComplete={onComplete}
+  return <SceneFrame warming={warming} title="Liftoff from Earth" reducedMotion={reducedMotion} onComplete={onComplete}
     detail={`A rocket carrying your lander lifts off from Earth on its test flight to ${mission.earthAnalog.name}.`}>
-    {muted => <Cutscene fullscreen={immersive} kind="liftoff" env={env} equipment={mission.equipment} muted={muted} showSkip={false} onDone={onComplete} />}
+    {muted => <Cutscene warming={warming} onPrepared={onPrepared} fullscreen={immersive} kind="liftoff" env={env} equipment={mission.equipment} muted={muted} showSkip={false} onDone={onComplete} />}
   </SceneFrame>;
 }
