@@ -167,3 +167,9 @@
 .equipment-tabs button{color:#c9c7c0}.equipment-tabs button[aria-pressed=true]{background:var(--btn);color:var(--btn-ink);font-weight:600;box-shadow:none}
 .equipment-reset,.title-atlas{color:var(--btn)}.equipment-view-tools button{border-color:var(--btn-line);color:var(--btn)}.equipment-view-tools button:hover:not(:disabled){background:var(--btn-wash);border-color:var(--btn)}
 .equipment-rails button:focus-visible,.equipment-view-tools button:focus-visible{outline-color:var(--btn)}
+/* The detailed Cesium globe is a layer over the always-mounted simple globe. It fades in once it has
+   tiles and the fly-in has finished, with the camera handed across, and fades out before leaving. */
+.opening-globe-layer{position:absolute;inset:0;z-index:-2;opacity:0;pointer-events:none;transition:opacity .4s ease}
+.opening-globe-layer.is-shown{opacity:1;pointer-events:auto;transition:opacity .6s ease}
+.opening-globe-layer:not(.is-shown) *{pointer-events:none!important}
+.opening-globe-layer .globe-view{min-height:0}

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type MutableRefObject } from 'react';
 import * as T from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import type { AnalogSite, Body, PlanetarySite, TerrainProfile } from '../../lib/types';
@@ -8,6 +8,17 @@ import { paintRegion, regionPatch } from './regions';
 import { buildLandingPicker, type LandingPicker } from './landingPick';
 import { buildTitleFlight } from './titleFlight';
 import { createEarthScenery, type EarthScenery } from '../../lib/earthTileScenery';
+import type { OrbitView, SurfaceView } from '../../components/MoonGlobe';
+
+/** Lets the game hand the camera between this scene and the Cesium layer above it without moving the picture. */
+export interface WorldHandle {
+  /** Where the camera sits around the world it is looking at (the stage's world), or null on the title and the three-world view. */
+  orbit(): OrbitView | null;
+  setOrbit(view: OrbitView): void;
+  /** The camera over the measured patch, in the site's east-north-up frame, with the patch's base height; null without a patch. */
+  surface(): { view: SurfaceView; height: number; id: string } | null;
+  setSurface(view: SurfaceView): void;
+}
 
 export interface WorldProps {
   stage: 'title' | 'worlds' | 'destination' | 'earth'; body: Body; hover: Body | null;
@@ -21,6 +32,15 @@ export interface WorldProps {
   onBody: (body: Body) => void; onHover: (body: Body | null) => void;
   onTarget: (id: string) => void; onAnalog: (id: string) => void;
   onHoverSite: (id: string | null) => void; onLanding: (point: LandingPoint) => void;
+  /** Stops drawing while another view covers this one. The scene stays mounted and keeps its state. */
+  paused?: boolean;
+  handle?: MutableRefObject<WorldHandle | null>;
+  /** True when the camera has arrived and the player has control; false while it is flying. */
+  onSettled?: (settled: boolean) => void;
+  /** A click on bare Moon or Mars surface in the region view: latitude and east longitude, degrees. */
+  onSurfacePick?: (point: { lat: number; lon: number }) => void;
+  /** A pinned point on the stage's world. */
+  pin?: { lat: number; lon: number } | null;
 }
 const centres = { Moon: new T.Vector3(-3.6, .4, 0), Earth: EARTH_CENTRE, Mars: new T.Vector3(5.4, .4, -5) };
 // Mars sits about twice as far from Earth as the Moon, and further back. Still staged, not to scale.
@@ -43,7 +63,7 @@ type Route =
 /** One renderer and coordinate system from the title's flight to the three worlds to a measured Earth patch. */
 export default function WorldScene(props: WorldProps) {
   const mount = useRef<HTMLDivElement>(null), live = useRef(props), update = useRef<() => void>(() => {});
-  const paint = useRef<() => void>(() => {}), plant = useRef<() => void>(() => {});
+  const paint = useRef<() => void>(() => {}), plant = useRef<() => void>(() => {}), pause = useRef<(paused: boolean) => void>(() => {});
   const [error, setError] = useState(false); live.current = props;
   useEffect(() => {
     const host = mount.current!; let renderer: T.WebGLRenderer;
@@ -88,13 +108,16 @@ export default function WorldScene(props: WorldProps) {
     let picker: LandingPicker | null = null, lastSite: T.Vector3 | null = null;
     const departingPatches: T.Group[] = [];
     let scenery: EarthScenery | undefined;
-    let terrainRelief = 0, route: Route | null = null, stage: WorldProps['stage'] | null = null;
+    let framed = '';
+    let terrainRelief = 0, terrainBase = 0, route: Route | null = null, stage: WorldProps['stage'] | null = null;
     let goalTarget = new T.Vector3(), goalOffset = camera.position.clone(), goalUp = UP.clone(), moving = true, surface = false;
     /** 0 while the worlds are still out of sight on the title, 1 once they are in view. */
     let reveal = 0, hoverSite: string | null = null;
     const glow = { Moon: 0, Mars: 0 };
     const pose = (): CameraPose => ({ position: camera.position.clone(), target: controls.target.clone(), up: camera.up.clone().normalize() });
-    const aim = (target: T.Vector3, offset: T.Vector3, up: T.Vector3) => { goalTarget = target; goalOffset = offset; goalUp = up; moving = true; controls.enabled = false; };
+    let settled = false;
+    const settle = (value: boolean) => { if (value !== settled) { settled = value; live.current.onSettled?.(value); } };
+    const aim = (target: T.Vector3, offset: T.Vector3, up: T.Vector3) => { goalTarget = target; goalOffset = offset; goalUp = up; moving = true; controls.enabled = false; settle(false); };
     /** Ease towards a pose: used between the worlds and for the globes. */
     const fly = (target: T.Vector3, offset: T.Vector3, up = UP.clone()) => { aim(target, offset, up); route = null; };
     /** Fly over Earth to a pose, staying above the sphere. A straight trip takes 2.6 s; one to the far side up to 4 s. */
@@ -113,7 +136,7 @@ export default function WorldScene(props: WorldProps) {
     const limits = () => {
       const reach = goalOffset.length();
       // A tall landscape must not push the camera back out once it has arrived.
-      controls.minDistance = surface ? Math.min(Math.max(900, terrainRelief * 3) * METRE_SCALE, reach * .6) : 2;
+      controls.minDistance = surface ? Math.min(Math.max(900, terrainRelief * 3) * METRE_SCALE, reach * .6) : Math.min(2, reach);
       controls.maxDistance = surface ? Math.max(.004, reach * 1.2) : Math.max(22, reach * 1.1);
       controls.maxPolarAngle = surface ? Math.PI * .42 : Math.PI;
     };
@@ -128,10 +151,12 @@ export default function WorldScene(props: WorldProps) {
       limits();
       controls.enabled = !['worlds','title'].includes(live.current.stage);
       departingPatches.splice(0).forEach(patch => { scene.remove(patch); release(patch); });
+      settle(!['worlds','title'].includes(live.current.stage));
     };
     paint.current = () => {
       const p = live.current, chosen = p.stage === 'earth' ? p.analogId : p.targetId;
       for (const region of markers.children) {
+        if (region.userData.pin) continue;
         const id = region.userData.id;
         paintRegion(region, id === hoverSite || id === p.hoverSite ? 'hover' : id === chosen ? 'selected' : 'idle');
       }
@@ -147,6 +172,13 @@ export default function WorldScene(props: WorldProps) {
         const region = regionPatch(point.id, point.lat, point.lon, radii[body], REGION_DEG[body]);
         region.position.copy(centres[body]); markers.add(region);
       }
+      if (p.pin && p.stage === 'destination') {
+        // The player's own pin: a gold ring with a bright centre, standing just off the surface.
+        const pin = new T.Group(), at = globePoint(p.pin.lat, p.pin.lon, radii[body] * 1.012);
+        const ring = new T.Mesh(new T.RingGeometry(radii[body] * .028, radii[body] * .04, 32), new T.MeshBasicMaterial({ color: 0xe9c78a, side: T.DoubleSide, transparent: true, depthWrite: false }));
+        const dot = new T.Mesh(new T.CircleGeometry(radii[body] * .012, 20), new T.MeshBasicMaterial({ color: 0xfff1cf, side: T.DoubleSide, transparent: true, depthWrite: false }));
+        pin.add(ring, dot); pin.position.copy(at).add(centres[body]); pin.lookAt(at.clone().multiplyScalar(2).add(centres[body])); pin.userData.pin = true; markers.add(pin);
+      }
       if (hoverSite && !points.some(point => point.id === hoverSite)) { hoverSite = null; p.onHoverSite(null); }
       paint.current();
       if (p.profile && p.profile !== terrainProfile) {
@@ -158,7 +190,7 @@ export default function WorldScene(props: WorldProps) {
         const site=p.selectedAnalog.id===p.profile.manifest.id?p.selectedAnalog:undefined;
         if (site) {
           const patch = earthSurface(p.profile, site.lat, site.lon);
-          terrainRelief = patch.relief;
+          terrainRelief = patch.relief; terrainBase = patch.baseHeight;
           terrainMaterial = new T.MeshStandardMaterial({ color: '#e2dfd4', roughness: 1, vertexColors: true, map: (planets.get('Earth')!.material as T.MeshStandardMaterial).map });
           const measuredMesh = new T.Mesh(patch.geometry, terrainMaterial);
           terrain=new T.Group(); terrain.add(measuredMesh);
@@ -184,6 +216,10 @@ export default function WorldScene(props: WorldProps) {
         } else { controls.target.set(0, 0, 0); camera.position.set(0, 2, 14); }
         camera.lookAt(controls.target);
       }
+      // Only a change of what the camera should frame starts a flight: a new pin or a re-sorted list must not.
+      const framing = [p.stage, p.body, p.hover, p.targetId, p.analogId, p.surface, surface, terrainProfile?.manifest.id, camera.aspect.toFixed(3)].join('|');
+      if (framing === framed) return;
+      framed = framing;
       const worldsView = () => ({ target: p.hover ? centres[p.hover].clone().multiplyScalar(.35) : new T.Vector3(), offset: new T.Vector3(0, 2, p.hover ? 11 : 14).multiplyScalar(Math.max(1, 1.1 / camera.aspect)) });
       if(surface && terrain) {
         // Down to the measured ground. From above the site this is one unbroken swing; from
@@ -228,7 +264,7 @@ export default function WorldScene(props: WorldProps) {
     }; update.current();
     const ray=new T.Raycaster(); let down={x:0,y:0};
     const cast=(e:PointerEvent)=>{const rect=renderer.domElement.getBoundingClientRect();ray.setFromCamera(new T.Vector2((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1),camera);};
-    const hit=(e:PointerEvent) => {cast(e);return ray.intersectObjects([...planets.values(),...markers.children],true)[0]?.object;};
+    const hit=(e:PointerEvent) => {cast(e);return ray.intersectObjects([...planets.values(),...markers.children.filter(m=>!m.userData.pin)],true)[0]?.object;};
     /** The measured ground under the pointer, in the patch's frame, when it is inside the selectable area. */
     const ground=(e:PointerEvent) => {
       if (!surface || moving || !terrain || !picker) return null;
@@ -246,6 +282,11 @@ export default function WorldScene(props: WorldProps) {
       const obj=hit(e);
       if(p.stage==='worlds' && ['Moon','Mars'].includes(obj?.userData.body))p.onBody(obj!.userData.body);
       else if(obj?.userData.id){if(p.stage==='earth')p.onAnalog(obj.userData.id);else p.onTarget(obj.userData.id);}
+      else if(p.stage==='destination'&&p.onSurfacePick&&obj?.userData.body===p.body&&!moving){
+        // Bare surface: where the pointer's ray meets the globe, turned back into latitude and longitude (globePoint's inverse).
+        const at=ray.intersectObject(planets.get(p.body)!)[0]?.point.sub(centres[p.body]).normalize();
+        if(at)p.onSurfacePick({lat:T.MathUtils.radToDeg(Math.asin(T.MathUtils.clamp(at.y,-1,1))),lon:T.MathUtils.radToDeg(Math.atan2(-at.z,at.x))});
+      }
     };
     const pointerMove=(e:PointerEvent)=>{
       if(route?.kind==='arrival')return;
@@ -258,8 +299,40 @@ export default function WorldScene(props: WorldProps) {
     const pointerLeave=()=>{overSite(null);picker?.setHover(null);};
     renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerleave',pointerLeave);
     const resize=new ResizeObserver(()=>{const w=host.clientWidth,h=host.clientHeight;if(w&&h){renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();if(!surface)update.current();}});resize.observe(host);
-    let frame=0,last=performance.now();
-    const render=()=>{const now=performance.now(),dt=Math.min((now-last)/1000,.05);last=now;
+    let frame=0,last=performance.now(),paused=!!live.current.paused;
+    const stageWorld=()=>{const p=live.current;return p.stage==='destination'?p.body:p.stage==='earth'?'Earth' as const:null;};
+    if (props.handle) props.handle.current = {
+      orbit() {
+        const world = stageWorld(); if (!world) return null;
+        const from = camera.position.clone().sub(centres[world]), r = from.length();
+        return { lat: T.MathUtils.radToDeg(Math.asin(T.MathUtils.clamp(from.y / r, -1, 1))), lon: T.MathUtils.radToDeg(Math.atan2(-from.z, from.x)), radii: r / radii[world] };
+      },
+      setOrbit(view) {
+        const world = stageWorld(); if (!world) return;
+        const offset = globePoint(T.MathUtils.clamp(view.lat, -89, 89), view.lon, view.radii * radii[world]);
+        goalTarget = centres[world].clone(); goalOffset = offset; goalUp = UP.clone(); surface = false;
+        camera.position.copy(goalTarget).add(offset); camera.up.copy(UP); camera.lookAt(goalTarget);
+        finishFlight();
+      },
+      surface() {
+        if (!terrain || !terrainProfile) return null;
+        terrain.updateMatrixWorld();
+        const enu = (world: T.Vector3): [number, number, number] => { const local = terrain!.worldToLocal(world.clone()); return [local.x, -local.z, local.y]; };
+        return { view: { position: enu(camera.position), target: enu(controls.target) }, height: terrainBase, id: terrainProfile.manifest.id };
+      },
+      setSurface(view) {
+        if (!terrain) return;
+        terrain.updateMatrixWorld();
+        const world = ([e, n, u]: [number, number, number]) => terrain!.localToWorld(new T.Vector3(e, u, -n));
+        const position = world(view.position), target = world(view.target), normal = UP.clone().applyQuaternion(terrain.quaternion);
+        goalTarget = target; goalOffset = position.clone().sub(target); goalUp = normal; surface = true; lastSite = terrain.position.clone();
+        camera.position.copy(position); camera.up.copy(normal); camera.lookAt(target);
+        finishFlight();
+        // Accept a pose lower over the horizon than this scene's own, so the hand-over does not snap.
+        controls.maxPolarAngle = Math.min(Math.PI * .495, Math.max(controls.maxPolarAngle, goalOffset.angleTo(normal) + .01));
+      },
+    };
+    const render=()=>{if(paused){frame=0;return;}const now=performance.now(),dt=Math.min((now-last)/1000,.05);last=now;
       let arrival: number | null = null;
       if (route) {
         route.elapsed += dt;
@@ -303,9 +376,11 @@ export default function WorldScene(props: WorldProps) {
       const streamed = surface && scenery?.draw(camera);
       if (streamed) { planets.get('Earth')!.visible = false; scene.background = null; renderer.autoClear = false; }
       renderer.render(scene,camera); renderer.autoClear = true;frame=requestAnimationFrame(render);};render();
-    return()=>{disposed=true;scenery?.dispose();cancelAnimationFrame(frame);resize.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',pointerDown);renderer.domElement.removeEventListener('pointerup',pointerUp);renderer.domElement.removeEventListener('pointermove',pointerMove);renderer.domElement.removeEventListener('pointerleave',pointerLeave);textures.forEach(t=>t.dispose());release(scene);renderer.dispose();renderer.domElement.remove();flash.remove();update.current=()=>{};paint.current=()=>{};plant.current=()=>{};};
+    pause.current=(next:boolean)=>{if(next===paused)return;paused=next;if(!paused&&!frame){last=performance.now();render();}};
+    return()=>{disposed=true;scenery?.dispose();cancelAnimationFrame(frame);resize.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',pointerDown);renderer.domElement.removeEventListener('pointerup',pointerUp);renderer.domElement.removeEventListener('pointermove',pointerMove);renderer.domElement.removeEventListener('pointerleave',pointerLeave);textures.forEach(t=>t.dispose());release(scene);renderer.dispose();renderer.domElement.remove();flash.remove();update.current=()=>{};paint.current=()=>{};plant.current=()=>{};pause.current=()=>{};if(props.handle)props.handle.current=null;};
   },[]);
-  useEffect(()=>update.current(),[props.stage,props.body,props.hover,props.targetId,props.analogId,props.profile,props.surface,props.analogs,props.targets]);
+  useEffect(()=>update.current(),[props.stage,props.body,props.hover,props.targetId,props.analogId,props.profile,props.surface,props.analogs,props.targets,props.pin]);
+  useEffect(()=>pause.current(!!props.paused),[props.paused]);
   useEffect(()=>paint.current(),[props.hoverSite]);
   useEffect(()=>plant.current(),[props.landing]);
   return <div className="opening-world-scene" ref={mount}>{error&&<p className="scene-unavailable">3D graphics are unavailable. Use the destination and site controls to continue.</p>}</div>;
