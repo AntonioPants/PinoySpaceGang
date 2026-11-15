@@ -27,8 +27,8 @@ Current delivery: the opening is the default app. The prior engineering planner 
 retained at `?engineering-planner`. Cesium streams Moon, Mars and Google Photorealistic
 3D Tiles for Earth reconnaissance when available; the original Three.js globe is the
 fallback. Screen-projected catalog markers remain clickable over each Cesium view.
-The measured Earth DEM is available from the site approach as a separate view and
-remains the authoritative simulation terrain. Reduced motion snaps camera flights.
+The measured Earth DEM is the default site approach and remains the authoritative
+simulation terrain; Google 3D imagery is available through a view toggle. Reduced motion snaps camera flights.
 Missing WebGL still permits setup through the site lists.
 
 The game occupies one fixed viewport at every stage, including cinematics and live

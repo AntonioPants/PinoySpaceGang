@@ -10,6 +10,7 @@ import type { TerrainPack } from "./terrainPack";
 /** "ending" replays `params.flight`; "success" and "crash" are stand-ins for when there is no flight yet. */
 /** "liftoff" is the departure: ignition, dust blast, climb, in the gravity and air of the env's preset. */
 export type CutsceneKind = "opening" | "liftoff" | "ending" | "success" | "crash";
+import type { EarthScenery } from "../../lib/earthTileScenery";
 export interface EngineOptions {
   muted?: boolean; showSkip?: boolean;
   letterbox?: boolean;                   // cinema bars top and bottom (default true)
@@ -269,9 +270,17 @@ export class CutsceneEngine {
   }
   setMuted(m: boolean) { this.audio.setMuted(m); }
 
+  private scenery?: EarthScenery;
+  attachEarthScenery(create: (renderer: THREE.WebGLRenderer, ground: THREE.BufferGeometry, meshes: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[], look: EnvLook) => EarthScenery) {
+    if (this.disposed || !this.terrain.measuredGround) return;
+    this.scenery = create(this.renderer, this.terrain.measuredGround, this.terrain.measuredMeshes!, this.look);
+    this.camera.far = 120000;
+    this.camera.updateProjectionMatrix();
+  }
+
   dispose() {
     if (this.disposed) return; this.disposed = true;
-    cancelAnimationFrame(this.raf); this.finish?.(); this.ro.disconnect(); this.audio.stop();
+    this.scenery?.dispose(); cancelAnimationFrame(this.raf); this.finish?.(); this.ro.disconnect(); this.audio.stop();
     this.scene.traverse((o) => {
       const m = o as THREE.Mesh;
       m.geometry?.dispose?.();
@@ -350,7 +359,14 @@ export class CutsceneEngine {
     this.shadow.position.set(sx, this.terrain.heightAt(sx, sz) + 0.08, sz);
     (this.shadow.material as THREE.MeshBasicMaterial).opacity = this.lander.group.visible ? 0.45 * clamp01(1 - alt / 500) : 0;
     this.shadow.scale.setScalar(1 + alt / 70);
+    if (this.scenery) fog.far = Math.max(fog.far, 20000);
+    const streamed = this.scenery?.draw(this.camera, fog);
+    if (streamed) {
+      fog.far = Math.max(fog.far, 20000);
+      this.sky.visible = false; this.renderer.autoClear = false;
+    }
     this.renderer.render(this.scene, this.camera);
+    this.sky.visible = true; this.renderer.autoClear = true;
   }
 
   /**

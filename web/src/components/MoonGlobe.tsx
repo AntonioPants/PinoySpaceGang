@@ -7,12 +7,25 @@ import 'cesium/Build/Cesium/Widgets/widgets.css';
 type Point = { id: string; name: string; lat: number; lon: number };
 type Props = { body?: 'Moon' | 'Mars' | 'Earth'; points: Point[]; selected: string; onSelect: (id: string) => void; surface?: boolean };
 
+function siteCamera(point: Point, ellipsoid: Cesium.Ellipsoid, surface: boolean) {
+  const center = Cesium.Cartesian3.fromDegrees(point.lon, point.lat, 0, ellipsoid);
+  const offset = surface
+    ? new Cesium.Cartesian3(0, -7000, 8500)
+    : new Cesium.Cartesian3(0, 0, ellipsoid.maximumRadius * 2.6);
+  const frame = Cesium.Transforms.eastNorthUpToFixedFrame(center, ellipsoid);
+  return {
+    destination: Cesium.Matrix4.multiplyByPoint(frame, offset, new Cesium.Cartesian3()),
+    orientation: { heading: 0, pitch: surface ? -Math.atan2(offset.z, -offset.y) : -Math.PI / 2, roll: 0 },
+  };
+}
+
 export default function MoonGlobe({ points, selected, onSelect, body = 'Moon', surface = false }: Props) {
   const ellipsoid = body === 'Mars' ? Cesium.Ellipsoid.MARS : body === 'Earth' ? Cesium.Ellipsoid.WGS84 : Cesium.Ellipsoid.MOON;
-  const cameraHeight = body === 'Earth' && surface ? 25_000 : ellipsoid.maximumRadius * 2.6;
   const host = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<Cesium.Viewer | null>(null);
   const selectedRef = useRef(selected);
+  const surfaceRef = useRef(surface);
+  surfaceRef.current = surface;
   const selectRef = useRef(onSelect);
   selectedRef.current = selected; selectRef.current = onSelect;
   const [online, setOnline] = useState(navigator.onLine);
@@ -53,9 +66,9 @@ export default function MoonGlobe({ points, selected, onSelect, body = 'Moon', s
         tileset.tileVisible.addEventListener(() => { if (!disposed && !firstTile) { firstTile = true; window.clearTimeout(timeout); setRenderStatus(body === 'Earth' ? 'Google Photorealistic 3D Tiles · visual context' : `Detailed Cesium ${body} · live terrain`); } });
         viewer.scene.primitives.add(tileset);
         const point = points.find(p => p.id === selectedRef.current) ?? points[0];
-        if (point) viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(point.lon, point.lat, cameraHeight, ellipsoid) });
+        if (point) viewer.camera.setView(siteCamera(point, ellipsoid, surfaceRef.current));
         const updateMarkers = () => {
-          const next = projectSiteMarkers(points, viewer!.scene, ellipsoid);
+          const next = projectSiteMarkers(points, viewer!.scene, ellipsoid, body === 'Earth' ? tileset : undefined);
           setMarkers(previous => previous.length === next.length && previous.every((marker, index) =>
             marker.id === next[index].id && Math.abs(marker.x - next[index].x) < 0.5 &&
             Math.abs(marker.y - next[index].y) < 0.5) ? previous : next);
@@ -70,8 +83,8 @@ export default function MoonGlobe({ points, selected, onSelect, body = 'Moon', s
   useEffect(() => {
     const viewer = viewerRef.current, point = points.find(p => p.id === selected);
     if (!viewer || viewer.isDestroyed() || !point) return;
-    viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(point.lon, point.lat, cameraHeight, ellipsoid), duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : body === 'Earth' && surface ? 4 : 1.2 });
-  }, [selected, points, ellipsoid, cameraHeight, body, surface]);
+    viewer.camera.flyTo({ ...siteCamera(point, ellipsoid, surface), duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : body === 'Earth' && surface ? 4 : 1.2 });
+  }, [selected, points, ellipsoid, body, surface]);
   if (!online || failed) return <div className="moon-fallback"><Globe body={body} points={points} selected={selected} onSelect={onSelect} /><span className="moon-status" role="status">Using old offline {body} model · {!online ? 'No network connection' : renderStatus}<button onClick={() => { setOnline(navigator.onLine); setFailed(false); }}>Retry Cesium</button></span></div>;
   return <div className="globe-view"><div ref={host} className="globe-canvas" aria-label={`Cesium ${body}. Click a site dot to select it, or use the destination list. Drag to orbit.`} /><div className="cesium-site-layer">{markers.map(marker => <button key={marker.id} type="button" className="cesium-site-marker" aria-label={`Select ${marker.name}`} aria-pressed={selected === marker.id} title={marker.name} style={{ left: marker.x, top: marker.y }} onClick={() => selectRef.current(marker.id)}><span className="cesium-site-dot" />{selected === marker.id && <span className="cesium-site-name">{marker.name}</span>}</button>)}</div><span className="globe-disclaimer">{body === 'Earth' ? 'Google 3D imagery · Landing simulation uses the selected DEM' : `Cesium ${body}`} · Click a site dot to select · Approximate study-area locators</span><span className="moon-status" role="status">{renderStatus}</span></div>;
 }

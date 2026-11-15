@@ -20,6 +20,8 @@ function release(root: T.Object3D) {
 }
 
 /** One renderer and coordinate system from the three-world overview to a measured Earth patch. */
+import { createEarthScenery, type EarthScenery } from "../../lib/earthTileScenery";
+
 export default function WorldScene(props: WorldProps) {
   const mount = useRef<HTMLDivElement>(null), live = useRef(props), update = useRef<() => void>(() => {});
   const [error, setError] = useState(false); live.current = props;
@@ -72,7 +74,8 @@ export default function WorldScene(props: WorldProps) {
     const markers = new T.Group(); scene.add(markers);
     let terrain: T.Group | null = null, terrainProfile: TerrainProfile | null = null, terrainMaterial: T.MeshStandardMaterial | null = null;
     const departingPatches: T.Group[] = [];
-    let terrainRelief = 0, earthRoute: { from: CameraPose; to: CameraPose; elapsed: number; seconds: number } | null = null;
+    let scenery: EarthScenery | undefined;
+    let terrainRelief = 0, earthRoute: { from: CameraPose; to: CameraPose; elapsed: number } | null = null;
     let goalTarget = new T.Vector3(), goalOffset = camera.position.clone(), goalUp = new T.Vector3(0,1,0), moving = true, surface = false;
     const fly = (target: T.Vector3, offset: T.Vector3, up = new T.Vector3(0,1,0), onEarth = false) => {
       goalTarget=target; goalOffset=offset; goalUp=up; moving=true; controls.enabled=false;
@@ -110,6 +113,7 @@ export default function WorldScene(props: WorldProps) {
       if (p.profile && p.profile !== terrainProfile) {
         // Keep the departing ground under the camera until the next site flight
         // finishes. Replacing a pack must not reveal the coarse sphere beneath it.
+        scenery?.dispose(); scenery = undefined;
         if (terrain) departingPatches.push(terrain);
         terrain=null; terrainMaterial=null; terrainProfile=p.profile;
         if (p.profile) {
@@ -118,8 +122,16 @@ export default function WorldScene(props: WorldProps) {
             const patch = earthSurface(p.profile, site.lat, site.lon);
             terrainRelief = patch.relief;
             terrainMaterial = new T.MeshStandardMaterial({ color: '#e2dfd4', roughness: 1, vertexColors: true, map: (planets.get('Earth')!.material as T.MeshStandardMaterial).map });
-            terrain=new T.Group(); terrain.add(new T.Mesh(patch.geometry, terrainMaterial));
+            const measuredMesh = new T.Mesh(patch.geometry, terrainMaterial);
+            terrain=new T.Group(); terrain.add(measuredMesh);
             terrain.quaternion.copy(patch.frame); terrain.position.copy(globePoint(site.lat,site.lon,1.5).add(centres.Earth));terrain.scale.setScalar(METRE_SCALE);scene.add(terrain);
+            if (import.meta.env.VITE_CESIUM_ION_TOKEN) {
+              const { rows, columns, spacing_m } = p.profile.manifest.grid;
+              const w = (columns-1)*spacing_m/2, d = (rows-1)*spacing_m/2;
+              terrain.updateMatrixWorld();
+              scenery = createEarthScenery(renderer, host, site.lat, site.lon, patch.baseHeight,
+                terrain.matrixWorld, patch.geometry, { west:-w,east:w,north:-d,south:d }, haze.color, [measuredMesh]);
+            }
           }
         }
       }
@@ -182,8 +194,11 @@ export default function WorldScene(props: WorldProps) {
         const localSun = new T.Vector3(-4000,5000,1500).applyQuaternion(terrain.quaternion).multiplyScalar(METRE_SCALE).add(terrain.position);
         sun.position.set(-5,5,8).lerp(localSun, nearGround); sun.target.position.set(0,0,0).lerp(terrain.position, nearGround);
       }
-      if(!moving)controls.update();renderer.render(scene,camera);frame=requestAnimationFrame(render);};render();
-    return()=>{disposed=true;cancelAnimationFrame(frame);resize.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',pointerDown);renderer.domElement.removeEventListener('pointerup',pointerUp);renderer.domElement.removeEventListener('pointermove',pointerMove);textures.forEach(t=>t.dispose());release(scene);renderer.dispose();renderer.domElement.remove();update.current=()=>{};};
+      if(!moving)controls.update();
+      const streamed = surface && scenery?.draw(camera);
+      if (streamed) { planets.get('Earth')!.visible = false; scene.background = null; renderer.autoClear = false; }
+      renderer.render(scene,camera); renderer.autoClear = true;frame=requestAnimationFrame(render);};render();
+    return()=>{disposed=true;scenery?.dispose();cancelAnimationFrame(frame);resize.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',pointerDown);renderer.domElement.removeEventListener('pointerup',pointerUp);renderer.domElement.removeEventListener('pointermove',pointerMove);textures.forEach(t=>t.dispose());release(scene);renderer.dispose();renderer.domElement.remove();update.current=()=>{};};
   },[]);
   useEffect(()=>update.current(),[props.stage,props.body,props.hover,props.targetId,props.analogId,props.profile,props.surface,props.analogs,props.targets]);
   return <div className="opening-world-scene" ref={mount}>{error&&<p className="scene-unavailable">3D graphics are unavailable. Use the destination and site controls to continue.</p>}</div>;
