@@ -1,0 +1,489 @@
+{
+ "note": "Translation of geologic map unit codes to the game's landform families, for points clicked on the Moon or Mars. Reviewed by nobody: written from the unit names during the quest run of 2026-11-15, not checked by a geologist. Only units whose name clearly supports a family are mapped; the rest are null, which makes the ranking terrain-only. A mapped family is scored at 75% (unreviewed). A geologic crater unit includes the crater's ejecta and floor, not only its bowl.",
+ "families": [
+  "volcanic",
+  "crater",
+  "aeolian",
+  "sedimentary",
+  "desert",
+  "periglacial",
+  "massif"
+ ],
+ "Mars": {
+  "source": "USGS SIM 3292, 1:20M",
+  "citation": "Tanaka, K.L., and others, 2014, Geologic map of Mars: U.S. Geological Survey Scientific Investigations Map 3292, scale 1:20,000,000.",
+  "units": {
+   "AHi": {
+    "unit_name": "Amazonian and Hesperian impact unit",
+    "family": "crater",
+    "why": "Impact unit: crater rims, floors and ejecta of large craters."
+   },
+   "AHtu": {
+    "unit_name": "Amazonian and Hesperian transition undivided unit",
+    "family": null,
+    "why": "Transition unit: mixed highland-lowland boundary materials."
+   },
+   "AHv": {
+    "unit_name": "Amazonian and Hesperian volcanic",
+    "family": "volcanic",
+    "why": "Volcanic unit: lava flows and plains."
+   },
+   "ANa": {
+    "unit_name": "Amazonian and Noachian apron unit",
+    "family": null,
+    "why": "Apron unit: ice-rich debris and mass-wasting deposits; no clear family."
+   },
+   "Aa": {
+    "unit_name": "Amazonian apron unit",
+    "family": null,
+    "why": "Apron unit: ice-rich debris and mass-wasting deposits; no clear family."
+   },
+   "Ap": {
+    "unit_name": "Amazonian polar unit",
+    "family": null,
+    "why": "Polar ice and layered deposits; not one of the game families (not patterned periglacial ground by description)."
+   },
+   "Apu": {
+    "unit_name": "Amazonian polar undivided unit",
+    "family": null,
+    "why": "Polar ice and layered deposits; not one of the game families (not patterned periglacial ground by description)."
+   },
+   "Av": {
+    "unit_name": "Amazonian volcanic unit",
+    "family": "volcanic",
+    "why": "Volcanic unit: lava flows and plains."
+   },
+   "Ave": {
+    "unit_name": "Amazonian volcanic edifice",
+    "family": "volcanic",
+    "why": "Volcanic edifice unit: shields and constructs."
+   },
+   "HNb": {
+    "unit_name": "Hesperian and Noachian basin unit",
+    "family": null,
+    "why": "Basin unit: mixed sedimentary, volcanic and impact fill; origin not single."
+   },
+   "HNhu": {
+    "unit_name": "Hesperian and Noachian highland undivided unit",
+    "family": null,
+    "why": "Highland unit: undifferentiated ancient cratered crust of mixed origin."
+   },
+   "HNt": {
+    "unit_name": "Hesperian and Noachian transition unit",
+    "family": null,
+    "why": "Transition unit: mixed highland-lowland boundary materials."
+   },
+   "Hp": {
+    "unit_name": "Hesperian polar unit",
+    "family": null,
+    "why": "Polar ice and layered deposits; not one of the game families (not patterned periglacial ground by description)."
+   },
+   "Hpe": {
+    "unit_name": "Hesperian polar edifice unit",
+    "family": null,
+    "why": "Polar edifice unit: origin (volcanic or other) not settled by the unit name alone."
+   },
+   "Hpu": {
+    "unit_name": "Hesperian polar undivided unit",
+    "family": null,
+    "why": "Polar ice and layered deposits; not one of the game families (not patterned periglacial ground by description)."
+   },
+   "Ht": {
+    "unit_name": "Hesperian transition unit",
+    "family": null,
+    "why": "Transition unit: mixed highland-lowland boundary materials."
+   },
+   "Hto": {
+    "unit_name": "Hesperian transition outflow unit",
+    "family": null,
+    "why": "Outflow unit: flood-carved and flood-deposited ground; erosional and depositional mixed."
+   },
+   "Htu": {
+    "unit_name": "Hesperian transition undivided unit",
+    "family": null,
+    "why": "Transition unit: mixed highland-lowland boundary materials."
+   },
+   "Hve": {
+    "unit_name": "Hesperian volcanic edifice unit",
+    "family": "volcanic",
+    "why": "Volcanic edifice unit: shields and constructs."
+   },
+   "Nhe": {
+    "unit_name": "Noachian highland edifice unit",
+    "family": null,
+    "why": "Highland edifice unit: probable volcanic constructs, but not stated plainly enough to map."
+   },
+   "Nhu": {
+    "unit_name": "Noachian highland undivided unit",
+    "family": null,
+    "why": "Highland unit: undifferentiated ancient cratered crust of mixed origin."
+   },
+   "Nve": {
+    "unit_name": "Noachian volcanic edifice unit",
+    "family": "volcanic",
+    "why": "Volcanic edifice unit: shields and constructs."
+   },
+   "eAb": {
+    "unit_name": "Early Amazonian basin unit",
+    "family": null,
+    "why": "Basin unit: mixed sedimentary, volcanic and impact fill; origin not single."
+   },
+   "eHb": {
+    "unit_name": "Early Hesperian basin unit",
+    "family": null,
+    "why": "Basin unit: mixed sedimentary, volcanic and impact fill; origin not single."
+   },
+   "eHh": {
+    "unit_name": "Early Hesperian highland unit",
+    "family": null,
+    "why": "Highland unit: undifferentiated ancient cratered crust of mixed origin."
+   },
+   "eHt": {
+    "unit_name": "Early Hesperian transition unit",
+    "family": null,
+    "why": "Transition unit: mixed highland-lowland boundary materials."
+   },
+   "eHv": {
+    "unit_name": "Early Hesperian volcanic unit",
+    "family": "volcanic",
+    "why": "Volcanic unit: lava flows and plains."
+   },
+   "eNh": {
+    "unit_name": "Early Noachian highland unit",
+    "family": null,
+    "why": "Highland unit: undifferentiated ancient cratered crust of mixed origin."
+   },
+   "eNhm": {
+    "unit_name": "Early Noachian highland massif unit",
+    "family": "massif",
+    "why": "Highland massif unit: basin-rim and isolated mountain massifs."
+   },
+   "lAa": {
+    "unit_name": "Late Amazonian apron unit",
+    "family": null,
+    "why": "Apron unit: ice-rich debris and mass-wasting deposits; no clear family."
+   },
+   "lApc": {
+    "unit_name": "Late Amazonian polar cap unit",
+    "family": null,
+    "why": "Polar ice and layered deposits; not one of the game families (not patterned periglacial ground by description)."
+   },
+   "lApd": {
+    "unit_name": "Late Amazonian polar dunes unit",
+    "family": "aeolian",
+    "why": "Polar dunes unit: the circumpolar dune fields."
+   },
+   "lAv": {
+    "unit_name": "Late Amazonian volcanic unit",
+    "family": "volcanic",
+    "why": "Volcanic unit: lava flows and plains."
+   },
+   "lAvf": {
+    "unit_name": "Late Amazonian volcanic field unit",
+    "family": "volcanic",
+    "why": "Volcanic field unit: clustered small vents and flows."
+   },
+   "lHb": {
+    "unit_name": "Late Hesperian basin unit",
+    "family": null,
+    "why": "Basin unit: mixed sedimentary, volcanic and impact fill; origin not single."
+   },
+   "lHl": {
+    "unit_name": "Late Hesperian lowland unit",
+    "family": null,
+    "why": "Lowland unit: plains of mixed or debated sedimentary and volcanic origin."
+   },
+   "lHt": {
+    "unit_name": "Late Hesperian transition unit",
+    "family": null,
+    "why": "Transition unit: mixed highland-lowland boundary materials."
+   },
+   "lHv": {
+    "unit_name": "Late Hesperian volcanic unit",
+    "family": "volcanic",
+    "why": "Volcanic unit: lava flows and plains."
+   },
+   "lHvf": {
+    "unit_name": "Late Hesperian volcanic field unit",
+    "family": "volcanic",
+    "why": "Volcanic field unit: clustered small vents and flows."
+   },
+   "lNh": {
+    "unit_name": "Late Noachian highland unit",
+    "family": null,
+    "why": "Highland unit: undifferentiated ancient cratered crust of mixed origin."
+   },
+   "lNv": {
+    "unit_name": "Late Noachian volcanic unit",
+    "family": "volcanic",
+    "why": "Volcanic unit: lava flows and plains."
+   },
+   "mAl": {
+    "unit_name": "Middle Amazonian lowland unit",
+    "family": null,
+    "why": "Lowland unit: plains of mixed or debated sedimentary and volcanic origin."
+   },
+   "mNh": {
+    "unit_name": "Middle Noachian highland unit",
+    "family": null,
+    "why": "Highland unit: undifferentiated ancient cratered crust of mixed origin."
+   },
+   "mNhm": {
+    "unit_name": "Middle Noachian highland massif unit",
+    "family": "massif",
+    "why": "Highland massif unit: basin-rim and isolated mountain massifs."
+   }
+  }
+ },
+ "Moon": {
+  "source": "USGS Unified Geologic Map of the Moon, 1:5M (2020)",
+  "citation": "Fortezzo, C.M., Spudis, P.D., and Harrel, S.L., 2020, Release of the digital Unified Global Geologic Map of the Moon at 1:5,000,000 scale: 51st Lunar and Planetary Science Conference, abstract 2760.",
+  "units": {
+   "Cc": {
+    "unit_name": "Copernican Crater Unit",
+    "family": "crater",
+    "why": "Crater unit: rim, wall, floor and ejecta of individual impact craters."
+   },
+   "Ccc": {
+    "unit_name": "Copernican Crater Cluster Unit",
+    "family": "crater",
+    "why": "Crater cluster or secondary crater unit: fields of impact craters."
+   },
+   "Csc": {
+    "unit_name": "Copernican Secondary Crater Unit",
+    "family": "crater",
+    "why": "Crater cluster or secondary crater unit: fields of impact craters."
+   },
+   "EIp": {
+    "unit_name": "Eratosthenian-Imbrian Plateau Unit",
+    "family": null,
+    "why": "Light plains or plateau unit: origin debated (basin ejecta or volcanic)."
+   },
+   "Ec": {
+    "unit_name": "Eratosthenian Crater Unit",
+    "family": "crater",
+    "why": "Crater unit: rim, wall, floor and ejecta of individual impact craters."
+   },
+   "Ecc": {
+    "unit_name": "Eratosthenian Crater Cluster Unit",
+    "family": "crater",
+    "why": "Crater cluster or secondary crater unit: fields of impact craters."
+   },
+   "Em": {
+    "unit_name": "Eratosthenian Mare Unit",
+    "family": "volcanic",
+    "why": "Mare unit: basaltic lava plains."
+   },
+   "Esc": {
+    "unit_name": "Eratosthenian Secondary Crater Unit",
+    "family": "crater",
+    "why": "Crater cluster or secondary crater unit: fields of impact craters."
+   },
+   "INp": {
+    "unit_name": "Imbrian-Nectarian Plains Unit",
+    "family": null,
+    "why": "Light plains or plateau unit: origin debated (basin ejecta or volcanic)."
+   },
+   "INt": {
+    "unit_name": "Imbrian-Nectarian Terra Unit",
+    "family": null,
+    "why": "Terra unit: undifferentiated highland crust."
+   },
+   "Ib": {
+    "unit_name": "Imbrian Basin Undivided Unit",
+    "family": null,
+    "why": "Basin unit: undivided or lineated impact-basin materials; too broad for one family."
+   },
+   "Ibm": {
+    "unit_name": "Imbrian Basin Massif Unit",
+    "family": "massif",
+    "why": "Basin massif unit: mountain blocks of basin rings."
+   },
+   "Ic": {
+    "unit_name": "Imbrian Crater Undivided Unit",
+    "family": "crater",
+    "why": "Crater unit: rim, wall, floor and ejecta of individual impact craters."
+   },
+   "Ic1": {
+    "unit_name": "Imbrian Lower Crater Unit",
+    "family": "crater",
+    "why": "Crater unit: rim, wall, floor and ejecta of individual impact craters."
+   },
+   "Ic2": {
+    "unit_name": "Imbrian Upper Crater Unit",
+    "family": "crater",
+    "why": "Crater unit: rim, wall, floor and ejecta of individual impact craters."
+   },
+   "Icc": {
+    "unit_name": "Imbrian Crater Cluster Unit",
+    "family": "crater",
+    "why": "Crater cluster or secondary crater unit: fields of impact craters."
+   },
+   "Icf": {
+    "unit_name": "Imbrian Crater Fracture Floor Unit",
+    "family": "crater",
+    "why": "Crater fracture floor unit: floors of impact craters, later fractured."
+   },
+   "Id": {
+    "unit_name": "Imbrian Dark Mantling Unit",
+    "family": "volcanic",
+    "why": "Dark mantling unit: pyroclastic deposits."
+   },
+   "Ig": {
+    "unit_name": "Imbrian Grooved Terrain Unit",
+    "family": null,
+    "why": "Terra unit: undifferentiated highland crust."
+   },
+   "Iia": {
+    "unit_name": "Imbrian Imbrium Alpes Formation Unit",
+    "family": null,
+    "why": "Basin ejecta or basin formation facies: impact-basin deposits, not a single crater or another family."
+   },
+   "Iiap": {
+    "unit_name": "Imbrian Imbrium Apenninus Formation Unit",
+    "family": null,
+    "why": "Basin ejecta or basin formation facies: impact-basin deposits, not a single crater or another family."
+   },
+   "Iic": {
+    "unit_name": "Imbrian Imbrium Crater Unit",
+    "family": "crater",
+    "why": "Crater unit: rim, wall, floor and ejecta of individual impact craters."
+   },
+   "Iif": {
+    "unit_name": "Imbrian Imbrium Fra Mauro Formation Unit",
+    "family": null,
+    "why": "Basin ejecta or basin formation facies: impact-basin deposits, not a single crater or another family."
+   },
+   "Im1": {
+    "unit_name": "Imbrian Lower Mare Unit",
+    "family": "volcanic",
+    "why": "Mare unit: basaltic lava plains."
+   },
+   "Im2": {
+    "unit_name": "Imbrian Upper Mare Unit",
+    "family": "volcanic",
+    "why": "Mare unit: basaltic lava plains."
+   },
+   "Imd": {
+    "unit_name": "Imbrian Mare Dome Unit",
+    "family": "volcanic",
+    "why": "Mare dome unit: volcanic domes in the maria."
+   },
+   "Iohi": {
+    "unit_name": "Imbrian Orientale Hevelius Formation, Inner Facies Unit",
+    "family": null,
+    "why": "Basin ejecta or basin formation facies: impact-basin deposits, not a single crater or another family."
+   },
+   "Ioho": {
+    "unit_name": "Imbrian Orientale Hevelius Formation, Inner Facies Unit",
+    "family": null,
+    "why": "Basin ejecta or basin formation facies: impact-basin deposits, not a single crater or another family."
+   },
+   "Iohs": {
+    "unit_name": "Imbrian Orientale Hevelius Formation, Secondary Crater Facies Unit",
+    "family": null,
+    "why": "Basin ejecta or basin formation facies: impact-basin deposits, not a single crater or another family."
+   },
+   "Iom": {
+    "unit_name": "Imbrian Orientale Maunder Formation Unit",
+    "family": null,
+    "why": "Basin ejecta or basin formation facies: impact-basin deposits, not a single crater or another family."
+   },
+   "Iork": {
+    "unit_name": "Imbrian Orientale Montes Rook Formation, Knobby Facies Unit",
+    "family": null,
+    "why": "Basin ejecta or basin formation facies: impact-basin deposits, not a single crater or another family."
+   },
+   "Iorm": {
+    "unit_name": "Imbrian Orientale Montes Rook Formation, Massif Facies Unit",
+    "family": "massif",
+    "why": "Montes Rook Formation, massif facies: mountain blocks of the Orientale ring."
+   },
+   "Ip": {
+    "unit_name": "Imbrian Plains Unit",
+    "family": null,
+    "why": "Light plains or plateau unit: origin debated (basin ejecta or volcanic)."
+   },
+   "Isc": {
+    "unit_name": "Imbrian Secondary Crater Unit",
+    "family": "crater",
+    "why": "Crater cluster or secondary crater unit: fields of impact craters."
+   },
+   "It": {
+    "unit_name": "Imbrian Terra Unit",
+    "family": null,
+    "why": "Terra unit: undifferentiated highland crust."
+   },
+   "Itd": {
+    "unit_name": "Imbrian Terra Dome Unit",
+    "family": null,
+    "why": "Terra dome unit: possibly volcanic, but the origin is not established."
+   },
+   "Nb": {
+    "unit_name": "Nectarian Basin Undivided Unit",
+    "family": null,
+    "why": "Basin unit: undivided or lineated impact-basin materials; too broad for one family."
+   },
+   "Nbl": {
+    "unit_name": "Nectarian Basin Lineated Unit",
+    "family": null,
+    "why": "Basin unit: undivided or lineated impact-basin materials; too broad for one family."
+   },
+   "Nbm": {
+    "unit_name": "Nectarian Basin Massif Unit",
+    "family": "massif",
+    "why": "Basin massif unit: mountain blocks of basin rings."
+   },
+   "Nbsc": {
+    "unit_name": "Nectarian Basin Secondary Crater Unit",
+    "family": "crater",
+    "why": "Crater cluster or secondary crater unit: fields of impact craters."
+   },
+   "Nc": {
+    "unit_name": "Nectarian Crater Unit",
+    "family": "crater",
+    "why": "Crater unit: rim, wall, floor and ejecta of individual impact craters."
+   },
+   "Nnj": {
+    "unit_name": "Nectarian Nectaris Janssen Formation Unit",
+    "family": null,
+    "why": "Basin ejecta or basin formation facies: impact-basin deposits, not a single crater or another family."
+   },
+   "Np": {
+    "unit_name": "Nectarian Plains Unit",
+    "family": null,
+    "why": "Light plains or plateau unit: origin debated (basin ejecta or volcanic)."
+   },
+   "Nt": {
+    "unit_name": "Nectarian Terra Unit",
+    "family": null,
+    "why": "Terra unit: undifferentiated highland crust."
+   },
+   "Ntp": {
+    "unit_name": "Nectarian Plains and Mantling, Terra Unit",
+    "family": null,
+    "why": "Terra unit: undifferentiated highland crust."
+   },
+   "pNb": {
+    "unit_name": "Pre-Nectarian Basin Undivided Unit",
+    "family": null,
+    "why": "Basin unit: undivided or lineated impact-basin materials; too broad for one family."
+   },
+   "pNbm": {
+    "unit_name": "Pre-Nectarian Basin Massif Unit",
+    "family": "massif",
+    "why": "Basin massif unit: mountain blocks of basin rings."
+   },
+   "pNc": {
+    "unit_name": "Pre-Nectarian Crater Unit",
+    "family": "crater",
+    "why": "Crater unit: rim, wall, floor and ejecta of individual impact craters."
+   },
+   "pNt": {
+    "unit_name": "Pre-Nectarian Terra Unit",
+    "family": null,
+    "why": "Terra unit: undifferentiated highland crust."
+   }
+  }
+ }
+}

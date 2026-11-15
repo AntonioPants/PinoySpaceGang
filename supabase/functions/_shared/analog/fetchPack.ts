@@ -2,7 +2,6 @@
 // the Moon or Mars, in the same local azimuthal-equidistant frame as the Python pack builder
 // (scripts/catalog/build.py), read from the public global mosaics with HTTP range requests only.
 // No dependencies: global fetch, DecompressionStream and typed arrays (Deno and Node 18+).
-import { MARS_TILE_COUNTS, MARS_TILE_OFFSETS } from './marsTiles.ts';
 
 export type ClickBody = 'Moon' | 'Mars';
 export type PackErrorCode = 'out_of_range' | 'no_data' | 'upstream_unreachable';
@@ -39,7 +38,9 @@ export const SOURCES: Record<ClickBody, Source> = {
 const MOON_FIRST_STRIP = 738233, MOON_ROW_BYTES = 184320;
 const MARS_TILE = 512, MARS_TILES_ACROSS = 90;
 
-export interface FetchOptions { fetch?: typeof fetch; signal?: AbortSignal; retries?: number; /** false: plain bilinear point sampling (for comparison only). */ widenKernel?: boolean }
+/** TileOffsets and TileByteCounts of the MOLA mosaic's full-resolution image (marsTiles.ts, or the copy the server keeps). */
+export interface MarsTiles { offsets: ArrayLike<number>; counts: ArrayLike<number> }
+export interface FetchOptions { /** Required for Mars. */ marsTiles?: MarsTiles; fetch?: typeof fetch; signal?: AbortSignal; retries?: number; /** false: plain bilinear point sampling (for comparison only). */ widenKernel?: boolean }
 export interface Pack {
   body: ClickBody; lat: number; lon: number; rows: number; columns: number; spacingM: number;
   /** North-first, west-first elevations in metres above the source's datum. */
@@ -149,7 +150,8 @@ type Lookup = (row: number, col: number) => number;
 
 /** Mars: tiled 512 x 512, deflate, horizontal predictor. Fetch and decode only the tiles touched. */
 async function marsLookup(geometry: Geometry, options: FetchOptions, counter: { requests: number; bytes: number }): Promise<Lookup> {
-  const s = SOURCES.Mars, needed = new Set<number>();
+  const s = SOURCES.Mars, needed = new Set<number>(), table = options.marsTiles;
+  if (!table || table.offsets.length !== 4050 || table.counts.length !== 4050) throw new Error('The Mars tile table was not provided.');
   for (const sample of geometry.samples) {
     const f = footprint(sample, geometry.kx, geometry.ky);
     if (f.c1 - f.c0 >= s.width) throw tooPolar('Mars');
@@ -161,7 +163,7 @@ async function marsLookup(geometry: Geometry, options: FetchOptions, counter: { 
   if (needed.size > 24) throw tooPolar('Mars');
   const tiles = new Map<number, Int16Array>();
   await pool([...needed].map(index => async () => {
-    const raw = await inflate(await rangeRead(SOURCES.Mars.url, MARS_TILE_OFFSETS[index], MARS_TILE_COUNTS[index], options, counter));
+    const raw = await inflate(await rangeRead(SOURCES.Mars.url, table.offsets[index], table.counts[index], options, counter));
     if (raw.length !== MARS_TILE * MARS_TILE * 2) throw new PackError('upstream_unreachable', 'The Mars elevation archive returned an unexpected tile.');
     const view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength), tile = new Int16Array(MARS_TILE * MARS_TILE);
     // Undo the horizontal predictor: each sample is stored as the difference from its left neighbour.

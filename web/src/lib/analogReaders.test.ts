@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { fetchPack, inverseAeqd, packBase64, packManifest, PackError, sampleGeometry, SOURCES, taps } from '../../../supabase/functions/_shared/analog/fetchPack.ts';
+import { MARS_TILE_COUNTS, MARS_TILE_OFFSETS } from '../../../supabase/functions/_shared/analog/marsTiles.ts';
 import { packFeatures } from '../../../supabase/functions/_shared/analog/describe.ts';
 import { rank, type EarthVectors } from '../../../supabase/functions/_shared/analog/score.ts';
 import { FAMILIES } from '../../../supabase/functions/_shared/analog/landform.ts';
@@ -98,7 +99,7 @@ describe.skipIf(!network)('terrain window readers against the public archives', 
   for (const [id, target] of Object.entries(fixtures.targets)) {
     it(`${id}: grid within 2 m RMS of the committed pack, scores within 1.0 point`, async () => {
       const site = sites.sites.find(s => s.id === id)!, body = target.body === 'mars' ? 'Mars' : 'Moon';
-      const started = Date.now(), pack = await fetchPack(body, site.latitude, site.longitude);
+      const started = Date.now(), pack = await fetchPack(body, site.latitude, site.longitude, { marsTiles: { offsets: MARS_TILE_OFFSETS, counts: MARS_TILE_COUNTS } });
       const raw = readFileSync(resolve(__dirname, `../../public/terrain/${id}/elevation.f32`));
       const committed = new Float32Array(raw.buffer.slice(raw.byteOffset, raw.byteOffset + raw.byteLength));
       let sum = 0, worst = 0;
