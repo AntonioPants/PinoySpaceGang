@@ -263,3 +263,56 @@ Who should review what: Eyad the opening (`OpeningGame.tsx`, `WorldScene.tsx`, `
 `docs/ANALOG_MATCHING.md`; Tim `lib/fidelityCustom.ts` and the Supabase project; Furgan `vite.config.ts`.
 The rest of the performance pass (quality tiers, hidden-tab pause, lost-context recovery,
 renderer audit, GPU warm-up, a lazy catalog) was not done: see the pull request.
+
+
+## Scene preparation (15 November 2026, `codex/background-scene-loading`)
+
+The welcome screen now prepares Moon/Mars ion tiles in the same Three.js renderer
+that reveals all three worlds and flies to regions (`lib/planetTiles.ts`). The overview
+and initial region cameras are registered before departure; an offscreen draw uploads
+those materials. Start stays on the welcome screen until these are ready. The bundled
+NASA reference maps are the offline fallback; online tile failure offers Retry rather
+than revealing the reference Moon/Mars. Earth keeps its NASA overview and its Cesium
+inspection layer is mounted invisibly from the welcome screen. The worlds stay mounted, paused and hidden during equipment, the journey and the report,
+so returning to world selection reuses the same tiles. The game no longer
+swaps from a reference Moon/Mars sphere to a new Cesium viewer after selection.
+
+`SceneProps.warming` and `onPrepared` are optional lifecycle seams. The registered
+liftoff and approach honor them: build/paint/compile/render behind the bridge, without
+playing, audio or completion. They retain their engines through activation. The bridge
+also mounts `Descent` invisibly. An early Start mission request stays in the bridge
+until the three prepared views are ready; settings edits cancel that queued request
+and update the preview. The mission is still validated and locked on actual departure.
+A failed cinematic retains its skip path; unavailable 3D falls back to the playable 2D.
+
+The landing horizon loads with the measured scene's broad overhead camera, waits for
+tile requests and the joining collar to settle, and then keeps that tile selection fixed
+through flight (`earthTileScenery.ts`). `prepareView` compiles and draws before readiness.
+Hidden ready engines stop drawing. The warmed engines read the *latest* preceding
+frame when activated, rather than the handoff that existed when they were constructed.
+
+`Descent` owns one `useLanderSim` playback. `FlightView.externallyDriven` draws that
+simulation without stepping it again; the separate flight-lab continues to step its own
+sim as before. 2D/3D switching retains the same renderer, terrain, playback, pause,
+time, fuel and outcome. The hidden 3D view is silent and stops drawing in 2D. Terrain
+packs share pending and completed loads; aborting a consumer cannot cancel another
+scene's download (`sharedAsset.ts`). Procedural texture paint is also coalesced. Engines
+and GPU resources are disposed when the owning descent/session unmounts. This is
+resident caching for the selected flight, not a promise to keep every planetary LOD
+or every previously visited site in GPU memory forever. Arbitrary new globe viewpoints
+still use the tile service; no offline stand-in is substituted while online.
+
+
+Validation in this checkout: production build, 408 tests (49 pre-existing skips), and
+catalog consumer checks pass. Browser: detailed three-world reveal and Moon/Mars
+region selection; Moon/Kilbourne bridge → launch → approach → live descent → touchdown
+→ debrief; Mars/Badwater hidden warm-up; refitting gear invalidates readiness and an early
+launch waits in the bridge. At a paused 33.1 s, switching 3D → 2D → 3D retained renderer
+id 3 and exactly the same altitude (444.2 m) and fuel (324.9 kg). The lobby HUD stayed at
+0.0 s with both cinematics prepared. Temporary QA entry pages verified offline + reduced
+motion and an online tile-service outage; those fixtures were removed. The outage kept
+welcome + Retry, including after Start, with no reference-globe substitution. Browser
+viewport override did not take effect in this environment; phone layout and a hardware
+performance matrix are not claimed by these checks. Tile cache budgets are bounded
+(64 MiB per planetary renderer, 96 MiB per Earth scenery renderer), with download/parse
+concurrency capped at six/two. These are budgets, not measured total process/GPU usage.

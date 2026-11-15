@@ -176,7 +176,7 @@ const keepPatch = (key: string, c: HTMLCanvasElement) => {
  * builds it starts at once instead of freezing for seconds. Call it while an earlier scene plays.
  * `landing` is in pack metres, as for buildTerrain; the seed must match the scene's (7 by default).
  */
-export async function prepareTerrain(pack: TerrainPack, landing: { x: number; z: number }, seed = 7, signal?: AbortSignal) {
+async function paintTerrain(pack: TerrainPack, landing: { x: number; z: number }, seed = 7, signal?: AbortSignal) {
   const style = styleOf(pack);
   if (!style) return;                              // only painted sites are slow to build
   const field = fieldOf(pack), { rows, columns, spacing_m: step } = pack.manifest.grid;
@@ -195,6 +195,17 @@ export async function prepareTerrain(pack: TerrainPack, landing: { x: number; z:
   if (!overviewCache.has(oKey)) { const c = await run(paintPackSteps(field, style, W / 2, D / 2, W / 2, 1024, seed, true)); if (c) overviewCache.set(oKey, c); else return; }
   const pKey = patchKey(pack, seed, landing);
   if (!patchCache.has(pKey)) { const c = await run(paintPackSteps(field, style, landing.x, landing.z, 400, 768, seed, false)); if (c) keepPatch(pKey, c); }
+}
+
+const painting=new Map<string,Promise<void>>();
+/** Coalesce the bridge, approach and descent's background paint. Each caller can leave
+ * independently; the finished canvases remain cached for the other resident views. */
+export async function prepareTerrain(pack:TerrainPack,landing:{x:number;z:number},seed=7,signal?:AbortSignal){
+  if(signal?.aborted)return;
+  const key=patchKey(pack,seed,landing);
+  let work=painting.get(key);
+  if(!work){work=paintTerrain(pack,landing,seed).finally(()=>painting.delete(key));painting.set(key,work);}
+  await work;
 }
 
 /**

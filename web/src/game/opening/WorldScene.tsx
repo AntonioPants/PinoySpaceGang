@@ -1,3 +1,4 @@
+import { createPlanetTiles } from '../../lib/planetTiles';
 import type { TerrainPack } from '../../components/cutscene/terrainPack';
 import { comparisonEarth } from '../../lib/terrainComparison';
 import { buildTerrainHologram, disposeHologram } from '../../lib/terrainComparison3D';
@@ -46,6 +47,8 @@ export interface WorldProps {
   pin?: { lat: number; lon: number } | null;
   /** The flight in from the title has settled enough for the world screen's text to appear. */
   onArrived?: () => void;
+  onPrepared?: (ready: boolean) => void;
+  onPreparationError?: (message: string) => void;
 }
 const centres = { Moon: new T.Vector3(-3.6, .4, 0), Earth: EARTH_CENTRE, Mars: new T.Vector3(5.4, .4, -5) };
 // Mars sits about twice as far from Earth as the Moon, and further back. Still staged, not to scale.
@@ -101,7 +104,7 @@ export default function WorldScene(props: WorldProps) {
   const [error, setError] = useState(false); live.current = props;
   useEffect(() => {
     const host = mount.current!; let renderer: T.WebGLRenderer;
-    try { renderer = new T.WebGLRenderer({ antialias: true, alpha: true, logarithmicDepthBuffer: true }); } catch { setError(true); return; }
+    try { renderer = new T.WebGLRenderer({ antialias: true, alpha: true, logarithmicDepthBuffer: true }); } catch { setError(true); props.onPrepared?.(true); return; }
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6)); host.append(renderer.domElement);
     renderer.domElement.setAttribute('aria-label', 'Mission worlds. Select a destination or site using the scene or the adjacent buttons.');
     renderer.domElement.setAttribute('role', 'img');
@@ -115,23 +118,29 @@ export default function WorldScene(props: WorldProps) {
     const haze = new T.FogExp2(0x7b8990, 0), sky = new T.Color(0x030405); scene.fog = haze;
     const sun = new T.DirectionalLight(0xffe3b3, 3); sun.position.set(-5, 5, 8); scene.add(sun, sun.target);
     const planets = new Map<Body | 'Earth', T.Mesh>(), atmospheres = new Map<Body | 'Earth', T.Mesh>(), textures: T.Texture[] = []; let disposed = false;
+    let prepared=false, preparationFailed=false, earthReady=false; let referenceCount=0;
+    const tileWorlds=new Map<Body,ReturnType<typeof createPlanetTiles>>();
+    const regionCameras=new Map<Body,T.PerspectiveCamera>();
+    const overviewCamera=new T.PerspectiveCamera(42,1,.000001,300); overviewCamera.position.set(0,2,14);overviewCamera.lookAt(0,0,0);
+    const warmTarget=new T.WebGLRenderTarget(4,4);
+    const credit=document.createElement('small');credit.className='world-tile-credits';host.append(credit);
+    let prepareStarted=performance.now(),wasOnline=navigator.onLine;
     for (const body of ['Moon', 'Earth', 'Mars'] as const) {
       // The emissive map is the surface itself: raising its intensity brightens a hovered world evenly.
       const mat = new T.MeshStandardMaterial({ color: body === 'Mars' ? '#b77050' : '#e2dfd4', roughness: 1, emissive: 0xffffff, emissiveIntensity: 0 });
       const globe = new T.Mesh(new T.SphereGeometry(radii[body], 96, 64), mat); globe.position.copy(centres[body]); globe.userData.body = body;
       if (body !== 'Moon') { const air = atmosphere(radii[body], body === 'Earth' ? 0x6fb4ff : 0xe8a070, body === 'Earth' ? .75 : .55); globe.add(air); atmospheres.set(body, air); }
       scene.add(globe); planets.set(body, globe);
-      if (body !== 'Mars') new T.TextureLoader().load(`/textures/${body.toLowerCase()}.jpg`, texture => {
+      new T.TextureLoader().load(`/textures/bridge/${body.toLowerCase()}.jpg`, texture => {
         if (disposed) { texture.dispose(); return; } texture.colorSpace = T.SRGBColorSpace; texture.wrapS = T.RepeatWrapping; textures.push(texture); mat.map = texture; mat.emissiveMap = texture; mat.needsUpdate = true;
+        referenceCount++;if(body==='Earth')earthReady=true;
         if (body === 'Earth' && terrainMaterial) { terrainMaterial.map = texture; terrainMaterial.needsUpdate = true; }
-      });
-      else {
-        const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 512; const ctx = canvas.getContext('2d')!;
-        ctx.fillStyle = '#ac7457'; ctx.fillRect(0,0,1024,512); let seed = 91;
-        const random = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
-        for (let i=0;i<7000;i++) { ctx.fillStyle = `rgba(${i%2 ? '42,23,18' : '223,177,128'},${random()*.15})`; ctx.beginPath(); ctx.ellipse(random()*1024,random()*512,random()*24+1,random()*9+1,0,0,Math.PI*2); ctx.fill(); }
-        const texture = new T.CanvasTexture(canvas); texture.colorSpace = T.SRGBColorSpace; mat.map = texture; mat.emissiveMap = texture; textures.push(texture);
+      },undefined,()=>{if(!prepared){preparationFailed=true;live.current.onPreparationError?.('World imagery could not load. Check your connection and retry.');}});
+      if(body!=='Earth' && import.meta.env.VITE_CESIUM_ION_TOKEN) {
+        const detail=createPlanetTiles(body,radii[body],renderer);tileWorlds.set(body,detail);globe.add(detail.group);
+        mat.visible=false;
       }
+
     }
     const stars = new Float32Array(1200*3);
     for (let i=0;i<1200;i++) { const a=i*2.39996, z=1-2*(i+.5)/1200, r=Math.sqrt(1-z*z)*90; stars.set([Math.cos(a)*r,z*90,Math.sin(a)*r],i*3); }
@@ -310,7 +319,7 @@ export default function WorldScene(props: WorldProps) {
     }; update.current();
     const ray=new T.Raycaster(); let down={x:0,y:0};
     const cast=(e:PointerEvent)=>{const rect=renderer.domElement.getBoundingClientRect();ray.setFromCamera(new T.Vector2((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1),camera);};
-    const hit=(e:PointerEvent) => {cast(e);return ray.intersectObjects([...planets.values(),...markers.children.filter(m=>!m.userData.pin)],true)[0]?.object;};
+    const hit=(e:PointerEvent) => {cast(e);let object:T.Object3D|null=ray.intersectObjects([...planets.values(),...markers.children.filter(m=>!m.userData.pin)],true)[0]?.object??null;while(object&&!object.userData.body&&!object.userData.id)object=object.parent;return object;};
     /** The measured ground under the pointer, in the patch's frame, when it is inside the selectable area. */
     const ground=(e:PointerEvent) => {
       if (!surface || moving || !terrain || !picker) return null;
@@ -347,6 +356,7 @@ export default function WorldScene(props: WorldProps) {
     const pointerLeave=()=>{overSite(null);picker?.setHover(null);};
     renderer.domElement.addEventListener('pointerdown',pointerDown);renderer.domElement.addEventListener('pointerup',pointerUp);renderer.domElement.addEventListener('pointermove',pointerMove);renderer.domElement.addEventListener('pointerleave',pointerLeave);
     const resize=new ResizeObserver(()=>{const w=host.clientWidth,h=host.clientHeight;if(w&&h){renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();if(!surface)update.current();}});resize.observe(host);
+    renderer.setSize(Math.max(1,host.clientWidth),Math.max(1,host.clientHeight));camera.aspect=Math.max(1,host.clientWidth)/Math.max(1,host.clientHeight);camera.updateProjectionMatrix();
     let frame=0,last=performance.now(),paused=!!live.current.paused;
     const stageWorld=()=>{const p=live.current;return p.stage==='destination'?p.body:p.stage==='earth'?'Earth' as const:null;};
     if (props.handle) props.handle.current = {
@@ -402,6 +412,39 @@ export default function WorldScene(props: WorldProps) {
         if (progress === 1) { const next = route.kind === 'arrival' ? undefined : route.next; if (next) next(); else finishFlight(); }
       } else if(moving){const a=reduced.matches?1:1-Math.exp(-4*dt);controls.target.lerp(goalTarget,a);camera.up.lerp(goalUp,a).normalize();const off=camera.position.clone().sub(controls.target);const distance=Math.exp(T.MathUtils.lerp(Math.log(Math.max(off.length(),.000001)),Math.log(goalOffset.length()),a));off.normalize().lerp(goalOffset.clone().normalize(),a).normalize().multiplyScalar(distance);camera.position.copy(controls.target).add(off);camera.lookAt(controls.target);if(camera.position.distanceTo(goalTarget.clone().add(goalOffset))<goalOffset.length()*.002){camera.position.copy(goalTarget).add(goalOffset);controls.target.copy(goalTarget);finishFlight();}}
       const current = live.current;
+      overviewCamera.aspect=camera.aspect;overviewCamera.position.set(0,2,14*Math.max(1,1.1/camera.aspect));overviewCamera.lookAt(0,0,0);overviewCamera.updateProjectionMatrix();
+      for(const [body,detail] of tileWorlds){
+        // Register the overview even during the title so its tiles survive a later zoom.
+        const mesh=planets.get(body)!;const visible=mesh.visible,scale=mesh.scale.clone(),rotation=mesh.rotation.clone();
+        mesh.visible=true;mesh.scale.setScalar(1);mesh.rotation.set(0,0,0);scene.updateMatrixWorld(true);
+        let region=regionCameras.get(body);
+        if(!region){region=new T.PerspectiveCamera(42,camera.aspect,.000001,300);regionCameras.set(body,region);}
+        const selected=current.targets.find(t=>t.body===body&&t.id===current.targetId)??current.targets.find(t=>t.body===body);
+        if(selected){region.aspect=camera.aspect;region.updateProjectionMatrix();region.position.copy(centres[body]).add(globePoint(selected.lat*.8,selected.lon,3.8*Math.max(1,.85/camera.aspect)));region.lookAt(centres[body]);}
+        if(navigator.onLine)detail.update(current.stage==='title'?[overviewCamera,region]:[overviewCamera,region,camera]);
+        mesh.visible=visible;mesh.scale.copy(scale);mesh.rotation.copy(rotation);
+      }
+      if(wasOnline!==navigator.onLine){wasOnline=navigator.onLine;if(wasOnline){prepared=false;preparationFailed=false;prepareStarted=performance.now();live.current.onPrepared?.(false);}}
+      if(!navigator.onLine)preparationFailed=false;
+      for(const detail of tileWorlds.values())detail.group.visible=navigator.onLine;
+      credit.textContent=current.stage==='title'?'':navigator.onLine?['Cesium ion',...Array.from(tileWorlds.values(),detail=>detail.credits()),'Earth imagery: NASA'].filter(Boolean).join(' · '):'Offline reference imagery: NASA';
+      if(!prepared&&!preparationFailed){
+        const detailed=!navigator.onLine&&referenceCount===3||tileWorlds.size===2&&[...tileWorlds.values()].every(d=>d.ready);
+        if(earthReady&&detailed){
+          // Upload and compile the actual overview offscreen before allowing the title to leave.
+          const states=[...planets.values()].map(mesh=>({mesh,visible:mesh.visible,scale:mesh.scale.clone(),rotation:mesh.rotation.clone()}));
+          for(const {mesh} of states){mesh.visible=true;mesh.scale.setScalar(1);mesh.rotation.set(0,0,0);}
+          const previous=renderer.getRenderTarget();renderer.setRenderTarget(warmTarget);renderer.render(scene,overviewCamera);for(const region of regionCameras.values())renderer.render(scene,region);renderer.setRenderTarget(previous);
+          for(const state of states){state.mesh.visible=state.visible;state.mesh.scale.copy(state.scale);state.mesh.rotation.copy(state.rotation);}
+          prepared=true;live.current.onPrepared?.(true);
+        }else if([...tileWorlds.values()].some(d=>d.failed)||performance.now()-prepareStarted>60000){
+          preparationFailed=true;live.current.onPreparationError?.('Detailed worlds could not load. Check your connection and retry.');
+        }
+      }
+      // Losing connectivity explicitly permits the bundled reference worlds. Online failure
+      // keeps the player on the welcome screen instead of exposing the coarse stand-ins.
+      for(const [body,mesh] of planets)if(body!=='Earth')(mesh.material as T.Material).visible=!navigator.onLine;
+
       // The worlds come out of the arrival's burst of light; on the title they are a single bright point.
       if (arrival !== null) reveal = T.MathUtils.smoothstep(arrival, .3, .5);
       else reveal += ((current.stage === 'title' ? 0 : 1) - reveal) * (1 - Math.exp(-3 * dt));
@@ -441,7 +484,7 @@ export default function WorldScene(props: WorldProps) {
       if (streamed) { planets.get('Earth')!.visible = false; scene.background = null; renderer.autoClear = false; }
       renderer.render(scene,camera); renderer.autoClear = true;frame=requestAnimationFrame(render);};render();
     pause.current=(next:boolean)=>{if(next===paused)return;paused=next;if(!paused&&!frame){last=performance.now();render();}};
-    return()=>{disposed=true;scenery?.dispose();cancelAnimationFrame(frame);resize.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',pointerDown);renderer.domElement.removeEventListener('pointerup',pointerUp);renderer.domElement.removeEventListener('pointermove',pointerMove);renderer.domElement.removeEventListener('pointerleave',pointerLeave);textures.forEach(t=>t.dispose());release(scene);renderer.dispose();renderer.domElement.remove();flash.remove();update.current=()=>{};paint.current=()=>{};plant.current=()=>{};pause.current=()=>{};compare.current=()=>{};if(props.handle)props.handle.current=null;};
+    return()=>{disposed=true;credit.remove();warmTarget.dispose();tileWorlds.forEach(detail=>{detail.group.removeFromParent();detail.dispose();});scenery?.dispose();cancelAnimationFrame(frame);resize.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',pointerDown);renderer.domElement.removeEventListener('pointerup',pointerUp);renderer.domElement.removeEventListener('pointermove',pointerMove);renderer.domElement.removeEventListener('pointerleave',pointerLeave);textures.forEach(t=>t.dispose());release(scene);renderer.dispose();renderer.domElement.remove();flash.remove();update.current=()=>{};paint.current=()=>{};plant.current=()=>{};pause.current=()=>{};compare.current=()=>{};if(props.handle)props.handle.current=null;};
   },[]);
   useEffect(()=>update.current(),[props.stage,props.body,props.hover,props.targetId,props.analogId,props.profile,props.surface,props.analogs,props.targets,props.pin]);
   useEffect(()=>pause.current(!!props.paused),[props.paused]);

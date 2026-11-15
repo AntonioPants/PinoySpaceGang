@@ -47,6 +47,7 @@ export class FlightView extends CutsceneEngine {
   private cam = { az: 0.9, el: 0.3, dist: 34, lead: V(), vAz: 0, vEl: 0, vDist: 0, vLead: V() };   // camera orbit round the lander, on springs
   private chaseAz = 0.9;
   private cut = true;                     // next frame places the camera without easing
+  externallyDriven = false;
   private simAcc = 0;                     // simulated time not yet stepped, s
   private path: THREE.Line; private trail: THREE.Line; private trailN = 0; private trailT = -1;
   private scan: THREE.Points | null = null; private scanCount = 0;
@@ -125,7 +126,7 @@ export class FlightView extends CutsceneEngine {
   /** Flies `sim` live. The same seed and settings as the prediction give the same flight. */
   fly(sim: Sim, s: FlightSetup, hooks: FlightHooks = {}) {
     this.applySetup(s); this.finish?.(); this.resetScene(); this.clearFlightVisuals();
-    this.audio.start();
+    this.audio.start();this.beginHandoff();
     this.sim = sim; this.hooks = hooks; this.seen = 0; this.scanned = false; this.scanT = -1;
     this.kind = "live"; this.t = 0; this.camEase = 0; this.track = null; this.cut = true; this.simAcc = 0;
     this.ui.fade.style.opacity = "0";
@@ -170,7 +171,7 @@ export class FlightView extends CutsceneEngine {
 
     if (!sim) {                                             // idle overview
       L.visible = true; L.position.copy(this.idleStart); this.orient(V(1, 0, 0), 0); this.thrust(0, dt);
-      this.idleClock += dt;
+      if(!this.paused)this.idleClock += dt;
       const mid = this.idleStart.clone().multiplyScalar(0.4), r = Math.max(260, this.idleStart.length() * 1.05) * this.zoom;
       const a = this.idleClock * 0.07 + this.az + 0.9;
       this.camEase = this.cut ? 0 : 2.5; this.cut = false;
@@ -182,7 +183,7 @@ export class FlightView extends CutsceneEngine {
     // lander that fraction of a step ahead: otherwise frames carry uneven numbers of steps and the
     // ground stutters past the camera.
     const H = 1 / 120;
-    if (!this.paused) {
+    if (!this.paused && !this.externallyDriven) {
       this.simAcc += Math.min(dt, 0.1) * this.speed;
       const controls = this.hooks.controls?.(dt * this.speed);
       while (this.simAcc >= H && !sim.state.done) { sim.step(controls); this.simAcc -= H; }

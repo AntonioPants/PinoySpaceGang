@@ -14,7 +14,13 @@ describe('continuous terrain surroundings', () => {
     far.rotation.x=-Math.PI/2; far.position.y=100; far.updateMatrixWorld(true);
     const surroundings=terrainSurroundings(ground,{west:-30,east:30,north:-30,south:30},
       new T.Matrix4(),far,PRESETS.crater);
+    expect(surroundings.ready).toBe(false);
     for(let i=0;i<1000;i++) surroundings.update();
+    expect(surroundings.ready).toBe(true);
+    surroundings.refresh();
+    expect(surroundings.ready).toBe(false);
+    for(let i=0;i<1000;i++) surroundings.update();
+    expect(surroundings.ready).toBe(true);
     const geometry=surroundings.mesh.geometry;
     const p=geometry.getAttribute('position'), index=geometry.index!;
     for(let i=0;i<p.count;i++) {

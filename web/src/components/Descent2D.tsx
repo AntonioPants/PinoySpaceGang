@@ -2,7 +2,7 @@ import { ComparisonToggle, ComparisonLegend, useTerrainComparison } from './Terr
 import { comparisonEarth, comparisonHeight } from '../lib/terrainComparison';
 import { createPlanetaryFlight } from '../lib/planetaryFlight';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { useLanderSim } from '../../../app/sim/react/useLanderSim';
+import type { useLanderSim } from '../../../app/sim/react/useLanderSim';
 import { SideView } from '../../../app/sim/viewer/components/SideView';
 import type { FlightTelemetry } from '../../../app/sim/src/types';
 import type { MissionConfig, TerrainProfile } from '../lib/types';
@@ -11,9 +11,9 @@ import type { CatalogSite } from '../../../app/sim/src/catalog';
 import type { EnvironmentProfile } from '../../../app/lib/environment.mjs';
 export interface DescentProps {mission:MissionConfig;profile:TerrainProfile;entry?:CatalogSite;weather?:EnvironmentProfile|null;autoStart?:boolean;onReport:(flight:FlightTelemetry)=>void;onExit:()=>void;
   /** Extra toolbar control, e.g. the 2D/3D view switch. */
-  toolbarExtra?:ReactNode}
+  toolbarExtra?:ReactNode; playback: ReturnType<typeof useLanderSim>}
 /** The 2D side-view descent. The default view is the 3D one in Descent3D.tsx. */
-export default function Descent2D({ mission, profile, entry, weather, autoStart = false, onReport, onExit, toolbarExtra }: DescentProps) {
+export default function Descent2D({ mission, profile, entry, weather, onReport, onExit, toolbarExtra, playback: lander }: DescentProps) {
   const comparison = useTerrainComparison(mission.planetaryTarget.id);
   const earth = useMemo(() => comparisonEarth(profile), [profile]);
   const playbackSpeed = useRef(1);
@@ -22,14 +22,12 @@ export default function Descent2D({ mission, profile, entry, weather, autoStart 
     createFlight: (input: Parameters<typeof createPlanetaryFlight>[0]) => createPlanetaryFlight({...input, strategy:'autonomous'}, comparison.pack!, earth, mission.planetaryTarget.body === 'Moon' ? 'moon' : 'mars'),
     speed: () => playbackSpeed.current,
   } : null, [comparison.pack, earth, mission.planetaryTarget.body]);
-  const lander = useLanderSim({speed:1,keyboard:mission.strategy.mode==='MANUAL_CONTROL'});
   playbackSpeed.current = lander.speed;
-  const [error,setError]=useState(''), [started,setStarted]=useState(false);
+  const [error,setError]=useState('');
+  const started=!!lander.sim;
   const [showResult,setShowResult]=useState(true);
   const outside=useRef(false);
-  const launch = useCallback(() => { try { outside.current=false; setError(''); setShowResult(true); lander.launch(toSimInput(mission,profile,entry,weather)); setStarted(true); } catch(e) {setError(e instanceof Error?e.message:'Could not launch.');} }, [lander.launch, mission, profile, entry, weather]);
-  const autoStarted = useRef(false);
-  useEffect(() => { if (autoStart && !autoStarted.current) { autoStarted.current = true; launch(); } }, [autoStart, launch]);
+  const launch = useCallback(() => { try { outside.current=false; setError(''); setShowResult(true); lander.launch(toSimInput(mission,profile,entry,weather)); } catch(e) {setError(e instanceof Error?e.message:'Could not launch.');} }, [lander.launch, mission, profile, entry, weather]);
   useEffect(()=>lander.onFrame(sim=>{
     const boundX=(profile.manifest.grid.columns-1)*profile.sampleSpacingM/2;
     const boundY=(profile.manifest.grid.rows-1)*profile.sampleSpacingM/2;

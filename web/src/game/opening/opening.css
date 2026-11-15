@@ -297,3 +297,8 @@
 .opening-globe-layer.is-shown{opacity:1;pointer-events:auto;transition:opacity .6s ease}
 .opening-globe-layer:not(.is-shown) *{pointer-events:none!important}
 .opening-globe-layer .globe-view{min-height:0}
+
+.title-screen .world-preparation { font: .7rem 'DM Mono', monospace; color: #bdb6a8; margin-top: 1rem; }
+.world-preparation button { margin-left: .5rem; color: #e9c78a; background: transparent; border: 1px solid #81745c; border-radius: 4px; padding: .3rem .6rem; }
+
+.world-tile-credits { position: absolute; bottom: 1.2rem; left: 50%; transform: translateX(-50%); max-width: 65%; color: #aaa69d; font: 9px sans-serif; pointer-events: none; text-align: center; }
