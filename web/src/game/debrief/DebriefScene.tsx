@@ -15,6 +15,7 @@ import type { MissionConfig, TerrainProfile } from '../../lib/types';
 import { computeFidelity } from '../../lib/fidelity';
 import { computeCustomFidelity } from '../../lib/fidelityCustom';
 import { loadProfile } from '../../lib/mission';
+import { loadMinerals, type MineralState } from '../../lib/minerals';
 import { downloadJson } from '../../lib/importSettings';
 import type { MatchCheck } from '../../lib/matching';
 import { buildAstronaut } from '../interior/astronaut';
@@ -170,8 +171,16 @@ export default function DebriefScene({ flight, mission, profile, analogEntry, pl
     return () => abort.abort();
   }, [planetaryEntry]);
 
-  const input = useMemo(() => ({ flight, mission, profile, match, evidence, fidelity, analogEntry, planetaryEntry, targetProfile }),
-    [flight, mission, profile, match, evidence, fidelity, analogEntry, planetaryEntry, targetProfile]);
+  // Measured mineral abundance at the target (Kaguya for the Moon, TES for Mars), for the mineral map. Optional.
+  const [targetMinerals, setTargetMinerals] = useState<MineralState | undefined>();
+  useEffect(() => {
+    const abort = new AbortController(); setTargetMinerals(undefined);
+    void loadMinerals(mission.planetaryTarget.id, abort.signal).then(state => { if (!abort.signal.aborted) setTargetMinerals(state); });
+    return () => abort.abort();
+  }, [mission.planetaryTarget.id]);
+
+  const input = useMemo(() => ({ flight, mission, profile, match, evidence, fidelity, analogEntry, planetaryEntry, targetProfile, targetMinerals }),
+    [flight, mission, profile, match, evidence, fidelity, analogEntry, planetaryEntry, targetProfile, targetMinerals]);
   const sections = useMemo(() => buildSections(input), [input]);
   const sectionIds = useRef<string[]>([]); sectionIds.current = sections.map(sec => sec.id);
   const indexRef = useRef(0); indexRef.current = index;

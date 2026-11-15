@@ -2,7 +2,7 @@ import {describe,it,expect} from 'vitest';
 import {renderToStaticMarkup} from 'react-dom/server';
 import type {TerrainProfile} from '../../../lib/types';
 import TerrainComparison3D from '../TerrainComparison3D';
-import {prepareTerrain,heightAt,slopeGrid,datasetOf} from './data';
+import {prepareTerrain,heightAt,slopeGrid,datasetOf,cropTerrain} from './data';
 import {makeTerrainScene} from './scene';
 
 function profile(values:number[],rows=3,columns=3):TerrainProfile{
@@ -70,6 +70,21 @@ describe('terrain comparison data and geometry',()=>{
     expect(a.width).toBe(2400);expect(a.note).toContain('Fit is approximate');
     expect(prepareTerrain(null,undefined,{...meta,id:'different'}).heights).not.toEqual(a.heights);
     expect(slopeGrid(new Float32Array(9),3,3,10,10)).toEqual(new Float32Array(9));
+  });
+  it('shows a larger patch over the same ground area as the smaller one, from measured samples only',()=>{
+    // a 16 km Mars-like pack (33 x 33 at 500 m) rising 1 m per metre east, beside a 4.8 km Earth patch
+    const n=33,values=Array.from({length:n*n},(_,i)=>(i%n)*500);
+    const base=profile(values,n,n);
+    const mars=prepareTerrain({...base,sampleSpacingM:500,manifest:{...base.manifest,body:'mars',grid:{...base.manifest.grid,spacing_m:500,width_m:16000,depth_m:16000}}},undefined);
+    expect(mars.width).toBe(16000);
+    const cut=cropTerrain(mars,4800,4800);
+    expect(cut.width).toBe(4800);expect(cut.depth).toBe(4800);
+    expect(cut.dx).toBeCloseTo(480);expect(cut.columns).toBe(11);
+    expect(cut.relief).toBeCloseTo(4800,3);          // the plane's rise across the window, not across the whole pack
+    expect(cut.missing).toBe(0);
+    expect(heightAt(cut,0,0)).toBeCloseTo(heightAt(mars,0,0)!+mars.mean-cut.mean-mars.mean,3);
+    expect(cut.note).toContain('central 4800 × 4800 m');
+    expect(cropTerrain(cut,4800,4800)).toBe(cut);    // already that size: untouched
   });
   it('names the target pane for the world picked: Moon or Mars, never both',()=>{
     const earth=profile([0,1,2,3,4,5,6,7,8]);

@@ -44,6 +44,21 @@ export function makeTerrainScene(data:TerrainData,markers:TerrainMarker[]){
     const beacon=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(marker.x,y,-marker.y),new THREE.Vector3(marker.x,y+span*.08,-marker.y)]),new THREE.LineBasicMaterial({color:'#22c55e',transparent:true,opacity:.8}));scene.add(beacon);
     const dot=new THREE.Mesh(new THREE.SphereGeometry(span/500,8,6),new THREE.MeshBasicMaterial({color:'#22c55e'}));dot.position.set(marker.x,y+span*.08,-marker.y);scene.add(dot);
   }
-  return {scene,omitted,setMode(heatmap:boolean,wireframe:boolean){mesh.material=heatmap?flat:lit;geometry.setAttribute('color',new THREE.BufferAttribute(heatmap?heat:natural,3));wire.visible=wireframe;},
+  // A third colouring: a value sampled at every vertex (the mineral map). Null leaves the terrain as it was.
+  let ore:Float32Array|null=null,shownHeat=false;
+  const paint=()=>{mesh.material=ore||shownHeat?flat:lit;geometry.setAttribute('color',new THREE.BufferAttribute(ore??(shownHeat?heat:natural),3));};
+  return {scene,omitted,setMode(heatmap:boolean,wireframe:boolean){shownHeat=heatmap;paint();wire.visible=wireframe;},
+    /** Colour by `colourAt(x east, north)` in metres from the centre; where it returns null the vertex is neutral grey. */
+    setOverlay(colourAt:((x:number,north:number)=>[number,number,number]|null)|null){
+      if(!colourAt)ore=null;
+      else{
+        ore=new Float32Array(positions.length);
+        for(let r=0;r<data.rows;r++)for(let c=0;c<data.columns;c++){
+          const i=r*data.columns+c,colour=colourAt(c*data.dx-data.width/2,data.depth/2-r*data.dy);
+          if(colour)ore.set(colour,3*i);else unknown.toArray(ore,3*i);
+        }
+      }
+      paint();
+    },
     dispose(){scene.traverse(object=>{const drawable=object as THREE.Mesh;if(drawable.geometry)drawable.geometry.dispose();if(drawable.material)(Array.isArray(drawable.material)?drawable.material:[drawable.material]).forEach(m=>m.dispose());});lit.dispose();flat.dispose();sun.shadow.map?.dispose();sun.shadow.mapPass?.dispose();scene.clear();}};
 }

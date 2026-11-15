@@ -129,3 +129,18 @@ export function heightAt(data:TerrainData,x:number,north:number):number|null{
   if(!h.every(Number.isFinite))return null;
   return (h[0]*(1-u)+h[1]*u)*(1-v)+(h[2]*(1-u)+h[3]*u)*v-data.mean;
 }
+/**
+ * The central width x depth of a larger patch, resampled bilinearly at about its own spacing, so two
+ * sites are drawn over the same ground area. Mars packs are 16 km wide and Earth and Moon packs 4.8 km:
+ * side by side at one scale the Mars patch would be over three times the size. No data is invented:
+ * every sample is interpolated inside the measured grid, and the statistics are recomputed for the window.
+ */
+export function cropTerrain(data:TerrainData,width:number,depth:number):TerrainData{
+  if(!positive(width)||!positive(depth)||(data.width<=width*1.02&&data.depth<=depth*1.02))return data;
+  const w=Math.min(width,data.width),d=Math.min(depth,data.depth);
+  const columns=Math.max(2,Math.round(w/data.dx))+1,rows=Math.max(2,Math.round(d/data.dy))+1,dx=w/(columns-1),dy=d/(rows-1);
+  const heights=new Float32Array(rows*columns);
+  for(let r=0;r<rows;r++)for(let c=0;c<columns;c++)heights[r*columns+c]=heightAt(data,c*dx-w/2,d/2-r*dy)??NaN;
+  return {...data,rows,columns,dx,dy,width:w,depth:d,heights,...stats(heights,rows,columns,dx,dy),
+    note:`${data.note} Showing the central ${w.toFixed(0)} × ${d.toFixed(0)} m of the ${data.width.toFixed(0)} × ${data.depth.toFixed(0)} m measured patch, the same ground area as the other site.`};
+}
