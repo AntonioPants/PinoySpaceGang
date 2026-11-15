@@ -1,6 +1,7 @@
 import { ComparisonToggle, ComparisonLegend, useTerrainComparison } from './TerrainComparison';
 import { buildTerrainHologram, disposeHologram } from '../lib/terrainComparison3D';
 import { sampleTerrain } from '../lib/terrainComparison';
+import { createPlanetaryFlight } from '../lib/planetaryFlight';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FlightView, type CamMode, type FlightSetup } from '../../../app/flightlab/view';
 import { createManualPilot, createSim, keysToPilotInput } from '../../../app/sim/src/index';
@@ -35,6 +36,7 @@ export default function Descent3D({ mission, profile, entry, weather, warming = 
   const [speed, setSpeed] = useState(1), [camera, setCamera] = useState<CamMode>('auto'), [muted, setMuted] = useState(() => !soundOn());
   const [hud, setHud] = useState<SimState | null>(null), [summary, setSummary] = useState<FlightSummary | null>(null);
   const [events, setEvents] = useState<SimEvent[]>([]), [error, setError] = useState('');
+  const [showResult,setShowResult] = useState(true);
   const manual = mission.strategy.mode === 'MANUAL_CONTROL';
   const unavailable = useRef(onUnavailable); unavailable.current = onUnavailable;
 
@@ -76,7 +78,7 @@ export default function Descent3D({ mission, profile, entry, weather, warming = 
         onEnd: s => setSummary(s),
       });
       view.current = scene; sim.current = flight; setGeneration(g => g+1);
-      setStarted(true); setPaused(false); setSummary(null); setEvents([]); setError(''); setHud(snapshot(flight.state));
+      setStarted(true); setPaused(false); setSummary(null); setShowResult(true); setEvents([]); setError(''); setHud(snapshot(flight.state));
     } catch (e) {
       // most likely WebGL is not available: fall back to the 2D view
       unavailable.current(e instanceof Error ? e.message : 'the 3D scene could not start');
@@ -91,8 +93,12 @@ export default function Descent3D({ mission, profile, entry, weather, warming = 
     const target = mission.earthAnalog.landingTargetM ?? {x:0,y:0};
     const hologram = buildTerrainHologram(pack, comparison.pack, { target, elevation: sampleTerrain(pack,target.x,target.y)! });
     scene.addComparisonSurface(hologram);
-    return () => disposeHologram(hologram);
-  }, [comparison.pack, pack, mission, generation]);
+    try {
+      const input=toSimInput(mission,profile,entry,weather);
+      scene.setComparisonFlight(createPlanetaryFlight({...input,strategy:'autonomous'},comparison.pack,pack,mission.planetaryTarget.body==='Moon'?'moon':'mars'),mission.equipment);
+    } catch { scene.setComparisonFlight(null); }
+    return () => { scene.setComparisonFlight(null); disposeHologram(hologram); };
+  }, [comparison.pack, pack, mission, profile, entry, weather, generation]);
 
   const autoStarted = useRef(false);
   // before the first paint, so the descent opens on the dissolve from the cutscene, not on the launch card
@@ -149,8 +155,8 @@ export default function Descent3D({ mission, profile, entry, weather, warming = 
     </div>
     {error && <p role="alert" className="import-error">{error}</p>}
     <div className="flight-hud">{[['Elapsed', `${(hud?.t ?? 0).toFixed(1)} s`], ['Altitude AGL', `${(hud?.altitudeAGL ?? 1000).toFixed(1)} m`], ['Vertical velocity', `${(hud?.velocity.z ?? -20).toFixed(2)} m/s`], ['Fuel', `${(hud?.fuelKg ?? mission.strategy.fuelMassKg).toFixed(1)} kg`], ['Throttle', `${((hud?.throttle ?? 0) * 100).toFixed(0)}%`]].map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</div>
-    <p className="flight-help">{manual ? 'Keyboard: hold W/S to raise/lower throttle; arrow keys steer; X cuts the engine.' : 'Autonomous hazard-avoidance guidance is active after launch.'} Physics runs at a fixed 1/120 s timestep. Terrain does not resolve footpad-scale hazards; surface colours, small rocks and fine relief in the 3D view are illustrative.</p>
-    {summary && !error && <div className="flight-result" role="status"><div><h2>{summary.outcome === 'success' ? 'Touchdown complete' : `Flight ended: ${summary.outcome}`}</h2><p>{summary.failureReasons.join(' · ') || 'Landing stayed within the configured model limits.'}</p></div><button className="primary-button" onClick={() => { if (sim.current) onReport(sim.current.telemetry()); }}>View flight report</button></div>}
+    <p className="flight-help">{manual ? 'Keyboard: hold W/S to raise/lower throttle; arrow keys steer; X cuts the engine.' : 'Autonomous hazard-avoidance guidance is active after launch.'} The cyan shuttle is a separate autonomous planetary simulation. Physics runs at a fixed 1/120 s timestep. Terrain does not resolve footpad-scale hazards; surface colours, small rocks and fine relief in the 3D view are illustrative.</p>
+    {summary && !error && (showResult ? <div className="flight-result" role="status"><div><h2>{summary.outcome === 'success' ? 'Touchdown complete' : `Flight ended: ${summary.outcome}`}</h2><p>{summary.failureReasons.join(' · ') || 'Landing stayed within the configured model limits.'}</p></div><button className="subtle-button" onClick={()=>setShowResult(false)}>Watch comparison</button><button className="primary-button" onClick={() => { if (sim.current) onReport(sim.current.telemetry()); }}>View flight report</button></div> : <button className="comparison-result-button subtle-button" onClick={()=>setShowResult(true)}>Show flight result</button>)}
     <details className="model-assumptions"><summary>Model assumptions & recent events</summary><p>Selected modelled weather supplies wind and air density when enabled; otherwise the model uses Earth 1.225 kg/m³, Mars 0.02, or lunar vacuum. Engine defaults: 311 s Isp, drag coefficient 1.2, reference area 15 m², leg radius 2.5 m and a velocimeter. Hazard sensor: {mission.strategy.hazardSensor}. These are simulation assumptions, not measured site conditions. The 3D scene shows the Earth site with Earth sky even under Moon or Mars gravity; camera and vehicle appearance are illustrative.</p><ul>{events.slice(-8).map((e, i) => <li key={i}>{e.t.toFixed(1)} s — {e.type}</li>)}</ul></details>
   </section>;
 }
