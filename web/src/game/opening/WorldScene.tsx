@@ -75,7 +75,7 @@ export default function WorldScene(props: WorldProps) {
     let terrain: T.Group | null = null, terrainProfile: TerrainProfile | null = null, terrainMaterial: T.MeshStandardMaterial | null = null;
     const departingPatches: T.Group[] = [];
     let scenery: EarthScenery | undefined;
-    let terrainRelief = 0, earthRoute: { from: CameraPose; to: CameraPose; elapsed: number } | null = null;
+    let terrainRelief = 0, earthRoute: { from: CameraPose; to: CameraPose; elapsed: number; seconds: number } | null = null;
     let goalTarget = new T.Vector3(), goalOffset = camera.position.clone(), goalUp = new T.Vector3(0,1,0), moving = true, surface = false;
     const fly = (target: T.Vector3, offset: T.Vector3, up = new T.Vector3(0,1,0), onEarth = false) => {
       goalTarget=target; goalOffset=offset; goalUp=up; moving=true; controls.enabled=false;
