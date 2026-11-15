@@ -11,6 +11,22 @@ export function debriefFor(flight: FlightTelemetry, mission: MissionConfig): Fli
   return assessFlight(flight, { sensors: { hazard: mission.strategy.hazardSensor } });
 }
 
+/**
+ * How the landing gear fared, for the flight statistics: stroke used, how close the vehicle came
+ * to going over, and what the gear was good for. Empty when the lander had no gear model or
+ * never reached the ground.
+ */
+export function gearRows(flight: FlightTelemetry): Array<[string, string]> {
+  const g = flight.summary?.gear;
+  if (!g || flight.summary!.outcome === 'timeout') return [];
+  const used = Math.round(Math.min(g.strokeRatio, 1) * 100);
+  return [
+    ['Shock compression', g.strokeRatio > 1 ? `${g.strokeM.toFixed(2)} m of ${g.strokeM.toFixed(2)} m (bottomed out: needed ${(g.strokeRatio * g.strokeM).toFixed(2)} m)` : `${g.strokeUsedM.toFixed(2)} m of ${g.strokeM.toFixed(2)} m (${used}% of stroke)`],
+    ['Tip margin', g.tipped ? `Went over (tips at ${g.staticTipDeg.toFixed(1)}°)` : `${g.tipMarginDeg.toFixed(1)}° from overturn (leaned ${g.peakLeanDeg.toFixed(1)}° of ${g.staticTipDeg.toFixed(1)}°)`],
+    ['Gear absorbs up to', `${g.maxSinkMps.toFixed(2)} m/s sink rate`],
+  ];
+}
+
 export interface RehearsalRow { label: string; unit: string; digits: number; flown: number; planetary: number; analog: number }
 
 /**

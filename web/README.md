@@ -77,6 +77,6 @@ terrain scores and flight fidelity remain scientifically unvalidated model outpu
 
 Terrain remains under its supplied Copernicus licence and attribution. Globe
 images and typography are presentation assets, not scientific evidence; see
-`public/textures/ATTRIBUTION.md`. IBM Plex Sans is self-hosted via Fontsource under
+`public/textures/ATTRIBUTION.md`. Inter, DM Mono and Michroma are self-hosted via Fontsource under
 the SIL Open Font License; all terrain and globe textures are served locally.
 See `DESIGN.md` for the black, warm-white and gold interface system.

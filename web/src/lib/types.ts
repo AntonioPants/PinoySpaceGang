@@ -41,11 +41,16 @@ export interface MissionSettings {
   /** Earth field test only: 0 = manual wind; 1–12 = use the real weather profile for that month. */
   realWeatherMonth: number;
   weatherScenario: 'typical' | 'high_wind';
+  /** Landing gear fitted (a preset id from lib/gear.ts). Absent = no gear model: the fixed touchdown limits apply. */
+  landingGearId?: string;
+  /** Trim of the fitted gear's shock-absorber stroke (m) and damping (0..1). Absent = the preset's own. */
+  gearStrokeM?: number;
+  gearDampingRatio?: number;
 }
 /** Proposed frontend handoff v1. Coordinate and unit conventions are explicit. */
 export interface MissionConfig {
   /** Selected hardware. 'footprint' = the gear's drawn foot circle is used by the physics and nothing else about it is. */
-  equipment?: { vehicleId: string; landingGearId: string; hazardSensor: MissionSettings['hazardSensor']; gearPhysics: 'pending' | 'footprint' };
+  equipment?: { vehicleId: string; landingGearId: string; hazardSensor: MissionSettings['hazardSensor']; gearPhysics: 'pending' | 'footprint' | 'model' };
   schemaVersion: '1.0.0'; createdAt: string;
   planetaryTarget: { id: string; name: string; body: Body; gravity: number };
   earthAnalog: {
@@ -55,7 +60,9 @@ export interface MissionConfig {
     /** Where the player chose to land: x east, y north, metres from the patch centre. Absent = the centre. */
     landingTargetM?: { x: number; y: number };
   };
-  strategy: { mode: MissionSettings['mode']; hazardSensor: MissionSettings['hazardSensor']; thrusterForceN: number; fuelMassKg: number; dryMassKg: number; maxSlopeToleranceDeg: number };
+  /** dryMassKg is the vehicle without its landing gear; landingGear (when fitted) adds its own mass in the simulation. */
+  strategy: { mode: MissionSettings['mode']; hazardSensor: MissionSettings['hazardSensor']; thrusterForceN: number; fuelMassKg: number; dryMassKg: number; maxSlopeToleranceDeg: number;
+    landingGear?: import('../../../app/sim/src/types').LandingGearConfig };
   environment: { mode: MissionSettings['environment']; gravityMs2: number; windSpeedMs: number; atmosphereModel: 'none' | 'earth-standard' | 'mars-constant'; dust: number; glare: number; interferenceSource: 'site' | 'manual';
     /** Set when an Earth field test uses a real modelled hour instead of the manual wind. */
     realWeather: { month: number; scenario: 'typical' | 'high_wind' } | null };

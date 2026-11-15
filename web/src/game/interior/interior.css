@@ -5,7 +5,7 @@
 .cabin-toolbar small { display: block; color: var(--muted); font-size: 11px; margin-top: 5px; }
 .cabin-toolbar > div + div { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .cabin-toolbar .subtle-button { padding: 8px 11px; font-size: 12px; }
-.cabin-toolbar .subtle-button[aria-pressed=true] { border-color: #f1d9ab; color: #f1d9ab; }
+.cabin-toolbar .subtle-button[aria-pressed=true] { background: var(--btn); border-color: var(--btn); color: var(--btn-ink); }
 .ship-interior kbd { display: inline-block; min-width: 18px; padding: 1px 5px; border: 1px solid #6a7480; border-radius: 3px; font: inherit; font-size: 11px; text-align: center; }
 .cabin-view { position: relative; height: min(74vh, 700px); background: #02040b; overflow: hidden; overflow: clip; cursor: grab; touch-action: none; }
 .cabin-view:active { cursor: grabbing; }
@@ -69,6 +69,13 @@
 .mon-cards button { padding: 11px 14px; text-align: left; }
 .mon-cards strong { display: block; font-size: 19px; font-weight: 600; }
 .mon-cards span { font-size: 14px; opacity: .85; }
+
+/* live figures: a compact two-by-two of label over value */
+.mon-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; margin: 0; }
+.mon-stats > div { padding: 3px 10px 4px; border: 1px solid #23282e; border-radius: 3px; }
+.mon-stats dt { font-size: 12px; color: var(--dim); }
+.mon-stats dd { margin: 0; font-size: 17px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.mon-stats dd small { font-size: 13px; color: var(--dim); }
 
 /* facts and checks */
 .mon-facts { margin: 0; }

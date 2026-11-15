@@ -23,14 +23,16 @@ export function analogSite(mission: MissionConfig, profile: TerrainProfile, entr
 
 /** Lander, sensors and interference shared by the flown descent and the fidelity comparison. */
 export function flightSetup(mission: MissionConfig): Pick<SimInput, 'strategy' | 'lander' | 'sensors' | 'interference' | 'start' | 'target' | 'maxTimeS'> {
-  const legRadiusM = gearFootprintM(mission);
+  // A gear model sets the foot circle itself; a mission that only names a gear still flies its drawn footprint.
+  const gear = mission.strategy.landingGear;
+  const legRadiusM = gear ? undefined : gearFootprintM(mission);
   // The player's flag, else the patch centre. The approach starts 400 m west of it, 1000 m up, as before.
   const target = mission.earthAnalog?.landingTargetM ?? { x: 0, y: 0 };
   return {
     strategy: mission.strategy.mode === 'MANUAL_CONTROL' ? 'manual' : 'autonomous',
     lander: { name:'Configured experimental lander', dryMassKg:mission.strategy.dryMassKg, fuelKg:mission.strategy.fuelMassKg,
       maxThrustN:mission.strategy.thrusterForceN, limits:{maxSlopeDeg:mission.strategy.maxSlopeToleranceDeg},
-      ...(legRadiusM ? { legRadiusM } : {}) },
+      ...(gear ? { gear } : legRadiusM ? { legRadiusM } : {}) },
     sensors:{hazard:mission.strategy.hazardSensor,velocimeter:true},
     // 'site': leave unset so the engine derives dust and glare from the site's surface data.
     interference: mission.environment.interferenceSource === 'site' ? undefined : {dust:mission.environment.dust,glare:mission.environment.glare},

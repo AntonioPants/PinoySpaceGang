@@ -8,7 +8,7 @@ import { SCORING } from '../../../app/sim/src/assessment';
 import type { MissionConfig } from '../lib/types';
 import type { FidelityReport } from '../lib/fidelity';
 import { LANDFORM_RELATION, percent, type MatchCheck } from '../lib/matching';
-import { debriefFor, rehearsalRows } from '../lib/debrief';
+import { debriefFor, gearRows, rehearsalRows } from '../lib/debrief';
 import './debrief.css';
 
 const score = (v: number | null) => (v === null ? '–' : `${v} / 100`);
@@ -36,6 +36,7 @@ export default function FlightDebrief({ flight, mission, fidelity, match }: { fl
     ['Diverts', s.diverts ? `${s.diverts}, ${s.divertDistanceM.toFixed(0)} m` : 'None'],
     ['Miss from aim point', miss(s.distanceFromAimM)],
     ['Fuel exhausted', s.fuelOutAtS === null ? 'No' : `T+${s.fuelOutAtS.toFixed(1)} s, ${s.fuelOutAltitudeM!.toFixed(0)} m up`],
+    ...gearRows(flight),
   ];
   return <section className="debrief" aria-label="Landing assessment">
     <h3>Landing assessment</h3>

@@ -66,6 +66,15 @@ describe('landing point picker', () => {
     expect(point.distanceTo(aim)).toBeLessThan(40);
     expect(picker.inArea(point)).toBe(true);
   });
+  it('marks only the cells steeper than the standard gear rating', () => {
+    // 1 m per 30 m column is under 2 degrees: nothing to mark
+    expect(picker.steepCells).toBe(0);
+    // a cliff down the middle: 40 m in one cell is over 30 degrees across the two columns beside it
+    const stepped = new Float32Array(161 * 161);
+    for (let r = 0; r < 161; r++) for (let c = 0; c < 161; c++) stepped[r * 161 + c] = c < 80 ? 0 : 40;
+    const cliff = buildLandingPicker({ buffer: stepped.buffer, manifest: { grid: { rows: 161, columns: 161, spacing_m: 30 } } } as TerrainProfile);
+    expect(cliff.steepCells).toBe(2 * 159);
+  });
   it('ignores rays that miss the patch and points outside the selectable area', () => {
     expect(picker.pick(new T.Vector3(0, 3000, 9000), new T.Vector3(0, 0, 1))).toBeNull();
     expect(picker.inArea({ x: 2000, z: 0 })).toBe(false);
