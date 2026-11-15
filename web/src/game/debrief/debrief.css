@@ -260,3 +260,34 @@
 @media(max-width:1100px) {
   .deb-tiles.hero.cols-4 { grid-template-columns:repeat(2, minmax(0, 1fr)); }
 }
+
+/* ---- the mineral map in the 3D comparison: mineral picker, colour scale and each site's abundances */
+.deb-terrain3d .tc3d-mineral-pick { display: inline-flex; align-items: center; gap: .5em; color: var(--dim); }
+.deb-terrain3d .tc3d-mineral-pick select { font: inherit; padding: .35em .5em; color: var(--ink); background: #161a1f; border: 1px solid #3d444d; border-radius: 3px; color-scheme: dark; }
+.deb-terrain3d .tc3d-minerals { flex: none; display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid #23282e; }
+.deb-terrain3d .tc3d-mineral { min-width: 0; display: flex; flex-direction: column; gap: .35em; padding: .55em .8em; }
+.deb-terrain3d .tc3d-mineral + .tc3d-mineral { border-left: 1px solid #23282e; }
+.deb-terrain3d .tc3d-mineral strong { font-weight: 600; color: var(--ink); }
+.deb-terrain3d .tc3d-mineral.none span, .deb-terrain3d .tc3d-mineral small { color: var(--dim); }
+.deb-terrain3d .tc3d-mineral small a { color: var(--accent); }
+.deb-terrain3d .tc3d-ramp { display: grid; grid-template-columns: auto minmax(60px, 180px) auto 1fr; align-items: center; gap: .6em; font-variant-numeric: tabular-nums; }
+.deb-terrain3d .tc3d-ramp i { height: .6em; border-radius: 2px; }
+.deb-terrain3d .tc3d-ramp b { font-weight: 500; }
+.deb-terrain3d .tc3d-ramp em { font-style: normal; color: var(--ink); }
+.deb-terrain3d .tc3d-mineral ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .3em .5em; }
+.deb-terrain3d .tc3d-mineral li { display: inline-flex; align-items: baseline; gap: .4em; padding: .15em .5em; border: 1px solid #23282e; border-radius: 3px; }
+.deb-terrain3d .tc3d-mineral li.on { border-color: var(--accent); }
+.deb-terrain3d .tc3d-mineral li button { all: unset; cursor: pointer; color: var(--dim); }
+.deb-terrain3d .tc3d-mineral li.on button, .deb-terrain3d .tc3d-mineral li button:hover { color: var(--ink); }
+.deb-terrain3d .tc3d-mineral li button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.deb-terrain3d .tc3d-mineral li b { font-weight: 600; font-variant-numeric: tabular-nums; }
+@media (max-width: 760px) { .deb-terrain3d .tc3d-minerals { grid-template-columns: 1fr; } .deb-terrain3d .tc3d-mineral + .tc3d-mineral { border-left: 0; border-top: 1px solid #23282e; } }
+/* While the mineral map is on, its legend takes the place of the general notes and data footers. */
+.deb-terrain3d .tc3d.minerals-on .tc3d-note, .deb-terrain3d .tc3d.minerals-on .tc3d-footers { display: none; }
+.deb-terrain3d .tc3d.minerals-on .tc3d-view { min-height: 11em; }
+/* The 3D block never shrinks below its toolbar, minimum view and legend: if the page is too full, the fit step
+   shrinks the type instead of the legend being cut off or spilling over the text below. */
+.deb-content > .deb-terrain3d { flex: 1 0 auto; }
+.deb-terrain3d .tc3d { min-height: auto; }
+.deb-terrain3d .tc3d-view { overflow: hidden; }
+@media (max-width: 760px) { .deb-content > .deb-terrain3d { flex: none; } }

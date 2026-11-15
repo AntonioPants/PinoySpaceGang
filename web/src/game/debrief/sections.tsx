@@ -19,6 +19,7 @@ import type { FidelityReport } from '../../lib/fidelity';
 import { LANDFORM_RELATION, percent, type MatchCheck } from '../../lib/matching';
 import { debriefFor, gearRows, rehearsalRows } from '../../lib/debrief';
 import LandingEvidence from '../../components/LandingEvidence';
+import { formatMineral, type MineralState } from '../../lib/minerals';
 import LanderSchematic, { subsystemReadings } from './LanderSchematic';
 
 // Side-by-side 3D view of both terrains (Codex's module); loaded with the page that shows it.
@@ -32,6 +33,8 @@ export interface SectionInput {
   flight: FlightTelemetry; mission: MissionConfig; profile: TerrainProfile; match?: MatchCheck; evidence?: PairEvidence; fidelity: FidelityState;
   /** Catalog records of both sites and the target's own terrain, when loaded. */
   analogEntry?: CatalogSite; planetaryEntry?: CatalogSite; targetProfile?: TerrainProfile;
+  /** Measured mineral abundance at the target, or why there is none; undefined while loading. */
+  targetMinerals?: MineralState;
 }
 
 const SOURCE_LABEL: Record<string, string> = { soilType: 'Surface material', albedo: 'Albedo', sunElevationDeg: 'Sun elevation', wind_speed_10m: 'Wind speed', wind: 'Wind', airDensity: 'Air density', rock_abundance: 'Rock abundance' };
@@ -56,7 +59,7 @@ function Pending({ fidelity, body }: { fidelity: FidelityState; body: string }) 
 }
 
 export function buildSections(input: SectionInput): DebriefSection[] {
-  const { flight, mission, profile, match, evidence, fidelity, analogEntry, planetaryEntry, targetProfile } = input;
+  const { flight, mission, profile, match, evidence, fidelity, analogEntry, planetaryEntry, targetProfile, targetMinerals } = input;
   const result = flight.summary!, env = flight.environment;
   const a = debriefFor(flight, mission), { stats: s, scores } = a;
   const target = mission.planetaryTarget, earth = mission.earthAnalog, body = target.body, timeout = result.outcome === 'timeout';
@@ -134,10 +137,13 @@ export function buildSections(input: SectionInput): DebriefSection[] {
       {targetProfile && <div className="deb-terrain3d">
         <Suspense fallback={<p className="deb-pending" role="status">Loading the 3D terrain comparison…</p>}>
           {/* The flight landed on the Earth analog, so its point is an Earth-side marker, never a target landing. */}
-          <TerrainComparison3D earthProfile={profile} targetProfile={targetProfile} earthEntry={analogEntry} targetEntry={planetaryEntry}
+          <TerrainComparison3D earthProfile={profile} targetProfile={targetProfile} earthEntry={analogEntry} targetEntry={planetaryEntry} targetMinerals={targetMinerals}
             rehearsalPoints={timeout ? [] : [{ x: result.landingPoint.x, y: result.landingPoint.y, label: 'This flight', footprintRadiusM: flight.lander.legRadiusM }]} />
         </Suspense>
       </div>}
+      {targetMinerals && <p className="deb-geology"><strong>Minerals at {target.name}</strong> · {targetMinerals.map
+        ? <>{[...targetMinerals.map.layers].sort((x, y) => y.mean - x.mean).slice(0, 4).map(l => `${l.name} ${formatMineral(l.mean, l.unit)}`).join(' · ')} ({targetMinerals.map.kind === 'map' ? 'measured across the site' : 'one regional value'}, {targetMinerals.map.source.dataset}). Switch on “Ore &amp; mineral map” to see where.</>
+        : targetMinerals.reason}</p>}
       <p className="deb-note">Terrain match compares slope, roughness, relief and landform shape over the same 4 km window; shapes can agree while rock type and origin differ.</p>
     </> },
 
@@ -440,6 +446,8 @@ export function buildReportExport(input: SectionInput) {
     subsystems: subsystemReadings({ flight, mission, assessment: a, fidelity: done, rehearsal: done ? rehearsalRows(flight, done.guided) : null, analogEntry, planetaryEntry }),
     surfaceOperations: surfaceOpsAssessment(input),
     analogyByDimension: analogDimensions(input),
+    // measured mineral abundance at the target; Earth sites have no mineral product ingested
+    minerals: { target: input.targetMinerals?.map ?? null, targetUnavailable: input.targetMinerals?.map ? null : input.targetMinerals?.reason ?? null, earth: null },
   };
 }
 

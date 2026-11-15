@@ -73,8 +73,8 @@ describe('hazard sensor', () => {
 });
 
 describe('buildRocket', () => {
-  it('holds every folded lander inside its fairing', () => {
-    for (const { id: vehicleId } of equipmentLoadouts) for (const landingGearId of Object.keys(GEAR))
+  it.each(equipmentLoadouts)('holds every folded $id lander inside its fairing', ({ id: vehicleId }) => {
+    for (const landingGearId of Object.keys(GEAR))
       for (const solar of solarArrays) for (const antenna of antennaPackages) {
         const spec: LanderSpec = { vehicleId, landingGearId, solarArrayId: solar.id, antennaId: antenna.id, hazardSensor: 'lidar' };
         const lander = buildLander(spec); lander.setGear(0); lander.setArrays(0);

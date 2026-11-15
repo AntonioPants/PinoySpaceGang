@@ -3,8 +3,9 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import type {CatalogSite} from '../../../../app/sim/src/catalog';
 import type {TerrainProfile} from '../../lib/types';
-import {prepareTerrain,type TerrainData,type TerrainSiteMetadata} from './terrain3d/data';
+import {cropTerrain,prepareTerrain,type TerrainData,type TerrainSiteMetadata} from './terrain3d/data';
 import {makeTerrainScene,type TerrainMarker} from './terrain3d/scene';
+import {formatMineral,mineralColour,mineralRange,NO_EARTH_MINERALS,RAMP_CSS,sampleMineral,type MineralState} from '../../lib/minerals';
 import './terrain3d/comparison.css';
 export type {TerrainSiteMetadata,TerrainMarker};
 export interface TerrainComparison3DProps {
@@ -16,6 +17,8 @@ export interface TerrainComparison3DProps {
   earthMetadata?:TerrainSiteMetadata;targetMetadata?:TerrainSiteMetadata;
   /** Target-local touchdown. Never pass an Earth flight point as a measured planetary landing. */
   touchdown?:TerrainMarker|null;
+  /** Measured mineral abundance for each site, or why there is none. Earth sites have none ingested. */
+  targetMinerals?:MineralState;earthMinerals?:MineralState;
   /** Earth-local telemetry samples. No markers are invented when absent. */
   rehearsalPoints?:ReadonlyArray<TerrainMarker>;
   className?:string;
@@ -39,17 +42,38 @@ function Metadata({prepared}:{prepared:Prepared}){
 /** One WebGL context, two scissored orthographic views, equal metres per pixel.
  * No fetches, physics changes, scene registration or catalog mutation.
  */
-export default function TerrainComparison3D({earthProfile,targetProfile,catalogEntry,earthEntry,targetEntry,earthMetadata,targetMetadata,touchdown,rehearsalPoints=EMPTY_POINTS,className=''}:TerrainComparison3DProps){
-  const earth=useMemo(()=>prepare(earthProfile,earthEntry??catalogEntry,earthMetadata,'earth'),[earthProfile,earthEntry,catalogEntry,earthMetadata]);
-  const target=useMemo(()=>prepare(targetProfile,targetEntry,targetMetadata,'moon'),[targetProfile,targetEntry,targetMetadata]);
+export default function TerrainComparison3D({earthProfile,targetProfile,catalogEntry,earthEntry,targetEntry,earthMetadata,targetMetadata,touchdown,rehearsalPoints=EMPTY_POINTS,className='',targetMinerals,earthMinerals}:TerrainComparison3DProps){
+  const earthFull=useMemo(()=>prepare(earthProfile,earthEntry??catalogEntry,earthMetadata,'earth'),[earthProfile,earthEntry,catalogEntry,earthMetadata]);
+  const targetFull=useMemo(()=>prepare(targetProfile,targetEntry,targetMetadata,'moon'),[targetProfile,targetEntry,targetMetadata]);
+  // Both sites over the same ground area: the larger patch (Mars packs are 16 km, Earth's 4.8 km) shows its central part.
+  const [earth,target]=useMemo(():[Prepared,Prepared]=>{
+    const a=earthFull.data,b=targetFull.data;
+    if(!a||!b)return [earthFull,targetFull];
+    try{
+      const width=Math.min(a.width,b.width),depth=Math.min(a.depth,b.depth);
+      return [{data:cropTerrain(a,width,depth)},{data:cropTerrain(b,width,depth)}];
+    }catch{return [earthFull,targetFull];}
+  },[earthFull,targetFull]);
   // The pane is named for the world the player picked: "Moon Landing Zone" or "Mars Landing Zone".
   const world=String(target.data?.body??targetMetadata?.body??targetEntry?.body??targetProfile?.manifest.body??'').toLowerCase();
   const worldName=world==='mars'?'Mars':world==='moon'?'Moon':'Target';
   const host=useRef<HTMLDivElement>(null),left=useRef<HTMLDivElement>(null),right=useRef<HTMLDivElement>(null);
   const command=useRef<(action:string)=>void>(()=>{});
   const [heatmap,setHeatmap]=useState(false),[wire,setWire]=useState(false),[error,setError]=useState(''),[retry,setRetry]=useState(0),[scale,setScale]=useState(0),[omitted,setOmitted]=useState(0);
-  const mode=useRef({heatmap,wire});mode.current={heatmap,wire};
-  useEffect(()=>{command.current('mode');},[heatmap,wire]);
+  // The mineral map: a third colouring, switched like the slope heatmap, with a choice of mineral.
+  const [minerals,setMinerals]=useState(false),[mineralKey,setMineralKey]=useState('');
+  const sides:[MineralState,MineralState]=[earthMinerals??{map:null,reason:NO_EARTH_MINERALS},targetMinerals??{map:null,reason:'No mineral data is ingested for this site.'}];
+  const keys=[...new Map(sides.flatMap(side=>side.map?.layers??[]).map(l=>[l.key,l.name])).entries()];
+  const chosen=keys.some(([key])=>key===mineralKey)?mineralKey:keys[0]?.[0]??'';
+  const overlays=useMemo(()=>sides.map(side=>{
+    const map=side.map,layer=map?.layers.find(l=>l.key===chosen);
+    if(!minerals||!map||!layer)return null;
+    const range=mineralRange(map,layer);
+    return (x:number,north:number)=>{const v=sampleMineral(map,layer,x,north);return v===null?null:mineralColour(v,range);};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }),[minerals,chosen,earthMinerals,targetMinerals]);
+  const mode=useRef({heatmap,wire,overlays});mode.current={heatmap,wire,overlays};
+  useEffect(()=>{command.current('mode');},[heatmap,wire,overlays]);
   useEffect(()=>{
     const mount=host.current;if(!mount||!left.current||!right.current)return;
     setError('');setOmitted(0);
@@ -85,18 +109,18 @@ export default function TerrainComparison3D({earthProfile,targetProfile,catalogE
     command.current=action=>{
       if(action==='reset')reset();
       if(action==='in'||action==='out'){cameras[0].zoom=THREE.MathUtils.clamp(cameras[0].zoom*(action==='in'?1.25:.8),.2,80);cameras[0].updateProjectionMatrix();synchronize(0);}
-      if(action==='mode'){scenes.forEach(s=>s?.setMode(mode.current.heatmap,mode.current.wire));request();}
+      if(action==='mode'){scenes.forEach((s,i)=>{s?.setMode(mode.current.heatmap,mode.current.wire);s?.setOverlay(mode.current.overlays[i]);});request();}
     };
     const resize=()=>{width=mount.clientWidth;height=mount.clientHeight;if(!width||!height)return;renderer.setSize(width,height,false);
       cameras.forEach((c,i)=>{const w=i?width-Math.floor(width/2):Math.floor(width/2);c.left=-span*w/height/2;c.right=-c.left;c.top=span/2;c.bottom=-span/2;c.updateProjectionMatrix();});request();};
     const observer=new ResizeObserver(resize);observer.observe(mount);
     const lost=(event:Event)=>{event.preventDefault();setError('WebGL context lost. Retry 3D to restore the views.');};
     renderer.domElement.addEventListener('webglcontextlost',lost);
-    scenes.forEach(s=>s?.setMode(mode.current.heatmap,mode.current.wire));reset();resize();
+    scenes.forEach((s,i)=>{s?.setMode(mode.current.heatmap,mode.current.wire);s?.setOverlay(mode.current.overlays[i]);});reset();resize();
     return()=>{disposed=true;cancelAnimationFrame(frame);observer.disconnect();controls.forEach((c,i)=>{c.removeEventListener('change',changed[i]);c.dispose();});scenes.forEach(s=>s?.dispose());renderer.domElement.removeEventListener('webglcontextlost',lost);renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();command.current=()=>{};};
   },[earth,target,touchdown,rehearsalPoints,retry]);
-  return <section className={`tc3d ${className}`} aria-label="Side-by-side terrain comparison">
-    <div className="tc3d-toolbar" role="group" aria-label="Terrain visualization"><button aria-pressed={!heatmap} onClick={()=>setHeatmap(false)}>Natural / solar elevation</button><button aria-pressed={heatmap} onClick={()=>setHeatmap(true)}>Slope &amp; hazard heatmap</button><button aria-pressed={wire} onClick={()=>setWire(!wire)}>Wireframe</button><button onClick={()=>command.current('reset')}>Reset View</button><button aria-label="Zoom in both terrains" onClick={()=>command.current('in')}>+</button><button aria-label="Zoom out both terrains" onClick={()=>command.current('out')}>−</button></div>
+  return <section className={`tc3d${minerals?' minerals-on':''} ${className}`} aria-label="Side-by-side terrain comparison">
+    <div className="tc3d-toolbar" role="group" aria-label="Terrain visualization"><button aria-pressed={!heatmap&&!minerals} onClick={()=>{setHeatmap(false);setMinerals(false);}}>Natural / solar elevation</button><button aria-pressed={heatmap&&!minerals} onClick={()=>{setHeatmap(true);setMinerals(false);}}>Slope &amp; hazard heatmap</button><button aria-pressed={minerals} onClick={()=>setMinerals(on=>!on)}>Ore &amp; mineral map</button>{minerals&&keys.length>0&&<label className="tc3d-mineral-pick">Mineral <select value={chosen} onChange={e=>setMineralKey(e.target.value)}>{keys.map(([key,name])=><option key={key} value={key}>{name}</option>)}</select></label>}<button aria-pressed={wire} onClick={()=>setWire(!wire)}>Wireframe</button><button onClick={()=>command.current('reset')}>Reset View</button><button aria-label="Zoom in both terrains" onClick={()=>command.current('in')}>+</button><button aria-label="Zoom out both terrains" onClick={()=>command.current('out')}>−</button></div>
     <div className="tc3d-view" ref={host}>
       {[left,right].map((ref,i)=><div key={i} ref={ref} className={`tc3d-pane tc3d-pane-${i}`} tabIndex={0} role="group" aria-label={`${i?worldName:'Earth analog'} terrain controls: drag to orbit, right-drag to pan, wheel to zoom`} onKeyDown={e=>{if(['+','=','-','0'].includes(e.key)){e.preventDefault();command.current(e.key==='0'?'reset':e.key==='-'?'out':'in');}}}>
         <strong className="tc3d-title">{i?`${worldName} Landing Zone`:'Earth Analog Landing Zone'}</strong>
@@ -107,6 +131,16 @@ export default function TerrainComparison3D({earthProfile,targetProfile,catalogE
     </div>
     <p className="tc3d-note">Synchronized orbit, pan and zoom · East right / north away at reset · 1 m horizontal = 1 m vertical; no exaggeration. {heatmap?'Screening bands: green <3°, amber 3–5°, red >5°. Not vehicle-specific safety or lander tolerance; grey = unknown slope.':'Lighting and surface tint are illustrative, not measured acquisition conditions.'} {wire?'Wireframe shows native mesh triangulation.':''}</p>
     {(touchdown||rehearsalPoints.length>0)&&<p className="tc3d-note">Green beacons mark supplied local coordinates. Footprint radius uses the supplied value, otherwise an assumed 2 m. Beacons are enlarged for visibility; rings remain metric. {omitted>0?`${omitted} markers omitted outside valid terrain.`:''} {earth.data?.synthetic||target.data?.synthetic?'Markers on synthetic terrain do not locate real landing features.':''}</p>}
+    {minerals&&<div className="tc3d-minerals">{sides.map((side,i)=>{
+      const map=side.map,layer=map?.layers.find(l=>l.key===chosen),site=i?`${worldName} site`:'Earth site';
+      if(!map)return <div key={i} className="tc3d-mineral none"><strong>{site}</strong><span>{side.reason}</span></div>;
+      const range=layer?mineralRange(map,layer):null;
+      return <div key={i} className="tc3d-mineral"><strong>{site} · {map.kind==='map'?'measured map':'one regional value'}{map.kind==='map'&&typeof map.measured_share==='number'&&map.measured_share<.995?` · ${Math.round(map.measured_share*100)}% of the area observed, the rest left blank`:''}</strong>
+        {layer&&range?<span className="tc3d-ramp"><b>{formatMineral(range[0],layer.unit)}</b><i style={{background:RAMP_CSS}}/><b>{formatMineral(range[1],layer.unit)}</b><em>{layer.name}: {map.kind==='map'?`${formatMineral(layer.min,layer.unit)} to ${formatMineral(layer.max,layer.unit)}, mean ${formatMineral(layer.mean,layer.unit)}`:`${formatMineral(layer.mean,layer.unit)}${layer.below_detection?' (under the detection limit)':''}`}</em></span>
+          :<span>{keys.find(([key])=>key===chosen)?.[1]} is not in this site's data.</span>}
+        <ul>{map.layers.map(l=><li key={l.key} className={l.key===chosen?'on':undefined}><button type="button" onClick={()=>setMineralKey(l.key)}>{l.name}</button><b>{formatMineral(l.mean,l.unit)}</b></li>)}</ul>
+        <small><a href={map.source.page} target="_blank" rel="noreferrer">{map.source.dataset}</a> · {map.source.citation} · about {map.source.native_resolution_m>=1000?`${(map.source.native_resolution_m/1000).toFixed(0)} km`:`${map.source.native_resolution_m.toFixed(0)} m`} pixels. {map.caveats[map.kind==='map'?2:0]}</small>
+      </div>;})}</div>}
     <div className="tc3d-footers"><Metadata prepared={earth}/><Metadata prepared={target}/></div>
   </section>;
 }

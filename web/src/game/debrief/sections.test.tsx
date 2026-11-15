@@ -156,3 +156,25 @@ it('ignores negated catalog sentences when looking for caves and pits', async ()
   expect(subsurface('Regional volcanic terrain; no cave or safe landing claim.')).toContain('No pit, cave');
   expect(subsurface('Collapse pit studied as a skylight into a lava tube.')).toContain('describes pits, caves');
 });
+
+it('names the measured minerals on the terrain page, or says why there are none, and exports them', async () => {
+  const { profile, mission, flight } = await fly();
+  const base = { flight, mission, profile, fidelity: { status: 'working' as const } };
+  const terrain = (input: Parameters<typeof buildSections>[0]) => renderToStaticMarkup(<>{buildSections(input).find(s => s.id === 'terrain')!.content}</>);
+  const layer = (key: string, name: string, mean: number, unit = '%') => ({ key, name, unit, min: mean, max: mean, mean, values: [mean] });
+  const map = { id: mission.planetaryTarget.id, body: 'moon' as const, kind: 'map' as const, grid: { rows: 1, columns: 1 }, extent_m: { width: 4800, depth: 4800 },
+    source: { dataset: 'SELENE/Kaguya Multiband Imager mineral maps', citation: 'Lemelin et al.', page: 'https://example.org', native_resolution_m: 59, retrieved: '2026-01-01' },
+    layers: [layer('olivine', 'Olivine', 8.5), layer('feo', 'Iron oxide (FeO)', 19.6, 'wt%'), layer('orthopyroxene', 'Orthopyroxene', 36.4)], caveats: ['a', 'b', 'c'] };
+  const withMap = terrain({ ...base, targetMinerals: { map, reason: '' } });
+  // most abundant first, with units and the dataset named
+  expect(withMap).toMatch(/Orthopyroxene 36%.*Iron oxide \(FeO\) 20 wt%.*Olivine 8\.5%/);
+  expect(withMap).toContain('SELENE/Kaguya Multiband Imager mineral maps');
+  expect(withMap).toContain('measured across the site');
+  const without = terrain({ ...base, targetMinerals: { map: null, reason: 'The Kaguya mineral maps cover 50°N to 50°S only; this site is nearer a pole.' } });
+  expect(without).toContain('cover 50°N to 50°S only');
+  expect(terrain(base)).not.toContain('Minerals at');   // still loading: nothing claimed
+  const file = buildReportExport({ ...base, targetMinerals: { map, reason: '' } });
+  expect(file.minerals.target?.layers).toHaveLength(3);
+  expect(file.minerals.earth).toBeNull();
+  expect(buildReportExport({ ...base, targetMinerals: { map: null, reason: 'none here' } }).minerals.targetUnavailable).toBe('none here');
+});

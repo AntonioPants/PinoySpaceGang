@@ -137,8 +137,19 @@ biology, subsurface, operations, Earth's limits) with what is similar, what is n
 dataset (`analogDimensions`), then where the analogy breaks down, terrain, environment, landing
 behaviour, the flown flight, and how the analog helps exploration. It uses the bridge monitors' style
 (interior.css), its footer offers "Choose another site" (back to the worlds), and every page shrinks its type to fit the screen instead of scrolling (phones scroll).
-DEM credits link each dataset's description page, never the raw elevation file. "Download report (JSON)" in the footer exports the same
+DEM credits link each dataset's description page, never the raw elevation file. The side-by-side 3D terrain shows both
+sites over the same ground area (the 16 km Mars pack shows its central 4.8 km), and its "Ore & mineral map"
+button colours the target by measured mineral abundance (`web/public/minerals/`, Kaguya MI for the Moon,
+TES for Mars; Earth sites have none), with the mineral, its range and the source named. "Download report (JSON)" in the footer exports the same
 content as data; retry is kept. Test bench: `?debrief-demo`. The planner still uses `components/FlightReport.tsx`.
+
+The lunar mineral ingest masks the source's fixed gap-filler composition before averaging. All 14
+non-polar Moon maps include `measured_share`; Apollo 16 has 87.2% observed coverage, with its missing
+strip left blank rather than coloured as mineral abundance. The publication test rejects old files
+without this coverage field. Mars remains one regional value per mineral, not local ore mapping.
+Browser checks cover Apollo 16, Meridiani Planum and uncovered Shackleton, mineral switching and
+returning to natural shading, and legend fit at 1280×720, 1024×600 and 390×844. On small laptops the
+existing page-fit routine reduces type size; phones retain scrolling.
 
 ## Shared boundaries and integration
 
