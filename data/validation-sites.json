@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "sites": [
+    {
+      "id": "validation-istok",
+      "name": "Istok gully fan reference window",
+      "body": "mars",
+      "role": "planetary_target",
+      "region": "Aonia Terra, Istok",
+      "latitude": -45.11,
+      "longitude": -85.8,
+      "morphology": "unclassified",
+      "substrate": "unreviewed",
+      "evidence_url": "https://www.nature.com/articles/ncomms8543"
+    },
+    {
+      "id": "validation-hanaskogdalen",
+      "name": "Hanaskogdalen debris fan reference window",
+      "body": "earth",
+      "role": "earth_analog",
+      "region": "Spitsbergen, Svalbard",
+      "latitude": 78.285,
+      "longitude": 15.758,
+      "morphology": "unclassified",
+      "substrate": "sandstone_colluvium",
+      "evidence_url": "https://www.hou.usra.edu/meetings/lpsc2017/pdf/1132.pdf"
+    }
+  ]
+}

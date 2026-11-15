@@ -1,0 +1,80 @@
+{
+  "version": "1.1.0",
+  "frozen_method_commit": "d8978b32cb44481f163343f9be2187cc92beb6c6",
+  "purpose": "External process-analog references reserved for evaluation. Never use these records to fit weights, scales or landform rules. Publication independence does not establish statistical independence from prior development.",
+  "references": [
+    {
+      "id": "jezero-lake-salda-carbonates",
+      "planetary_id": "jezero",
+      "earth_id": "lake-salda",
+      "earth_region": "Burdur, Turkey",
+      "earth_latitude": 37.55,
+      "earth_longitude": 29.68,
+      "scope": "Carbonate mineralogy and lake depositional processes; not regional terrain or landing safety ground truth.",
+      "source_url": "https://www.jpl.nasa.gov/images/pia24375-lake-salda-beach/",
+      "independent_review": false,
+      "development_exposure": "unknown",
+      "evidence_dimensions": [
+        "mineralogy",
+        "depositional_process"
+      ],
+      "terrain_shape_ground_truth": false,
+      "source_review": {
+        "status": "primary_source_read",
+        "finding": "NASA/JPL relates Salda carbonate deposits to Jezero; this does not support equivalent regional landforms or lander soil mechanics."
+      }
+    },
+    {
+      "id": "meridiani-rio-tinto-mineralogy",
+      "planetary_id": "meridiani-planum",
+      "earth_id": "rio-tinto-headwaters",
+      "earth_region": "Huelva, Spain",
+      "earth_latitude": 37.7,
+      "earth_longitude": -6.6,
+      "scope": "Partial environmental, sulfate/iron-mineral precipitation and diagenesis analogy; not regional shape ground truth.",
+      "source_url": "https://www.sciencedirect.com/science/article/pii/S0012821X05006370",
+      "publication": "Fern\u00e1ndez-Remolar et al. (2005), Earth and Planetary Science Letters",
+      "evidence_dimensions": [
+        "mineralogy",
+        "diagenesis"
+      ],
+      "terrain_shape_ground_truth": false,
+      "source_review": {
+        "status": "primary_source_abstract_read",
+        "finding": "The authors explicitly describe a partial environmental analogy and different source processes. No numerical terrain equivalence is asserted."
+      },
+      "independent_review": false,
+      "development_exposure": "unknown"
+    },
+    {
+      "id": "istok-hanaskogdalen-gullies",
+      "planetary_id": "validation-istok",
+      "earth_id": "validation-hanaskogdalen",
+      "earth_region": "Spitsbergen, Svalbard",
+      "earth_latitude": 78.285,
+      "earth_longitude": 15.758,
+      "scope": "Debris-flow fan/channel morphology and recurrence comparisons; similar morphology does not prove water-driven formation on Mars. Regional DEM descriptors are an exploratory stress test only.",
+      "source_url": "https://doi.org/10.1016/j.icarus.2014.03.005",
+      "supporting_sources": [
+        "https://www.nature.com/articles/ncomms8543",
+        "https://www.hou.usra.edu/meetings/lpsc2017/pdf/1132.pdf"
+      ],
+      "counterevidence_url": "https://doi.org/10.1029/2024JE008319",
+      "publication": "Johnsson et al. (2014), Icarus; de Haas et al. (2015), Nature Communications; Bernhardt et al. (2017), LPSC 1132",
+      "evidence_dimensions": [
+        "gully_fan_morphology",
+        "flow_recurrence"
+      ],
+      "terrain_shape_ground_truth": false,
+      "maximum_supported_analysis_spacing_m": 30,
+      "source_review": {
+        "status": "primary_sources_read",
+        "finding": "Istok at 45.11 S, 274.2 E is compared with terrestrial debris-flow morphology. Hanaskogdalen coordinates are explicitly given by the 2017 field study. Later experiments show CO2-driven flows can yield similar forms. Exact footprint transfer and ground-truth labels require independent review."
+      },
+      "independent_review": false,
+      "development_exposure": "reserved_after_method_freeze",
+      "holdout_scope": "New planetary and Earth regions outside the frozen development catalog, checked spatially. Literature selection and footprint choices remain investigator decisions."
+    }
+  ],
+  "protocol": "data/validation-protocol.json"
+}

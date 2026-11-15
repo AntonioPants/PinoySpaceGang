@@ -138,6 +138,19 @@ content as data; retry is kept. Test bench: `?debrief-demo`. The planner still u
 
 ## Shared boundaries and integration
 
+Comparison audit: `docs/COMPARISON_VALIDITY.md` documents the on-demand game panel,
+generated all-candidate ranking sensitivity, external-reference exclusion checks,
+and terrain-upgrade pilot gates. Regenerate `scripts.catalog.validity` after catalog
+changes. These diagnostics do not tune production scores or validate landing safety.
+Measured Phoenix/HiRISE and Apollo 16/LROC pilots can be previewed from this panel;
+they use separate `terrain-pilots` packs, check coverage/hashes, and retain quality
+warnings. `scripts.catalog.pilot_comparison` isolates source sensitivity at frozen
+analysis scales. The reserved Istok–Svalbard literature evaluation lives outside
+the game catalog in `validation-terrain`; `scripts.catalog.external_validation`
+checks the frozen protocol and keeps unresolved-scale/review exclusions explicit.
+Rebuild those reports after relevant inputs change. Neither pilot changes physics
+or production ranking. The reference pilot is consumed, not fresh data for tuning.
+
 - `game/contracts.ts` owns scene and control-center props; `game/integrations.ts`
   registers modules. Add independent scene files rather than modifying the planner.
 - `GameSession` owns phase ordering, final mission and duplicate-callback guards.
