@@ -13,6 +13,7 @@ import type { FlightTelemetry } from '../../../../app/sim/src/types';
 import type { CatalogSite } from '../../../../app/sim/src/catalog';
 import type { MissionConfig, TerrainProfile } from '../../lib/types';
 import { computeFidelity } from '../../lib/fidelity';
+import { computeCustomFidelity } from '../../lib/fidelityCustom';
 import { loadProfile } from '../../lib/mission';
 import { downloadJson } from '../../lib/importSettings';
 import type { MatchCheck } from '../../lib/matching';
@@ -125,7 +126,9 @@ function StaticNoise({ active, phase }: { active: boolean; phase: Phase }) {
   return <canvas ref={ref} className={`deb-static${active ? ` on ${phase}` : ''}`} width={320} height={180} aria-hidden="true" />;
 }
 
-export default function DebriefScene({ flight, mission, profile, analogEntry, planetaryEntry, match, evidence, reducedMotion, onRetry, onNewSite }: {
+export default function DebriefScene({ flight, mission, profile, analogEntry, planetaryEntry, planetaryProfile, match, evidence, reducedMotion, onRetry, onNewSite }: {
+  /** The terrain of a pinned point (not in the catalog), for the comparison flights. */
+  planetaryProfile?: TerrainProfile;
   flight: FlightTelemetry; mission: MissionConfig; profile: TerrainProfile; match?: MatchCheck; evidence?: PairEvidence;
   analogEntry?: CatalogSite; planetaryEntry?: CatalogSite; reducedMotion: boolean;
   /** Fly again from the equipment bay, same site. */
@@ -148,11 +151,11 @@ export default function DebriefScene({ flight, mission, profile, analogEntry, pl
   // The rehearsal flights start at once, so they are usually finished by the time the report opens.
   useEffect(() => {
     const abort = new AbortController(); setFidelity({ status: 'working' });
-    computeFidelity(mission, profile, analogEntry, planetaryEntry, abort.signal)
+    (planetaryProfile ? computeCustomFidelity(mission, profile, planetaryProfile, analogEntry, abort.signal) : computeFidelity(mission, profile, analogEntry, planetaryEntry, abort.signal))
       .then(result => { if (!abort.signal.aborted) setFidelity({ status: 'done', result }); })
       .catch(e => { if (!abort.signal.aborted) setFidelity({ status: 'unavailable', reason: e instanceof Error ? e.message : 'Could not compute the score.' }); });
     return () => abort.abort();
-  }, [mission, profile, analogEntry, planetaryEntry]);
+  }, [mission, profile, analogEntry, planetaryEntry, planetaryProfile]);
 
   // The target's own terrain, for the side-by-side 3D view. Optional: the report works without it.
   const [targetProfile, setTargetProfile] = useState<TerrainProfile | undefined>();

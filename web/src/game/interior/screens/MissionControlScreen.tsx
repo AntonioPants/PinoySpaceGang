@@ -2,6 +2,7 @@ import {useEffect,useState} from 'react';
 import {loadCatalog,scoreLabel,type Catalog} from '../../../lib/catalog';
 import {evidenceFor} from '../../../components/AnalogEvidence';
 import LandingEvidence from '../../../components/LandingEvidence';
+import { isCustomTarget } from '../../../lib/analogClick';
 import type { MissionConfig, MissionSettings } from '../../../lib/types';
 import { overall, type Check } from '../checklist';
 import { Light, STATUS_PHRASE } from './ui';
@@ -12,7 +13,9 @@ export default function MissionControlScreen({ mission, settings, checks }: { mi
   const state = overall(checks);
   const [catalog,setCatalog]=useState<Catalog|null>(null);
   useEffect(()=>{let active=true;loadCatalog().then(c=>{if(active)setCatalog(c);}).catch(()=>{});return()=>{active=false;};},[]);
-  const evidence=catalog?evidenceFor(catalog,mission.planetaryTarget.id,mission.earthAnalog.id):null;
+  // A pinned point is not in the catalog: its figure is the on-demand terrain match the mission carries.
+  const pinned=isCustomTarget(mission.planetaryTarget.id),pinScore=mission.evidence.quantitativeSimilarityScore;
+  const evidence=catalog&&!pinned?evidenceFor(catalog,mission.planetaryTarget.id,mission.earthAnalog.id):null;
   return <>
     <header><h2>Mission control</h2><span className="mon-link"><i aria-hidden="true" /><i aria-hidden="true" /><i aria-hidden="true" />Link open</span></header>
     <div className="mon-columns">
@@ -21,7 +24,7 @@ export default function MissionControlScreen({ mission, settings, checks }: { mi
         <dl className="mon-facts">
           <div><dt>Departed</dt><dd>{mission.planetaryTarget.name}<small>{body}</small></dd></div>
           <div><dt>Test site</dt><dd>{mission.earthAnalog.name}<small>Earth</small></dd></div>
-          <div><dt>Analog match</dt><dd>{catalog?scoreLabel(catalog,mission.planetaryTarget.id,mission.earthAnalog.id):'Loading evidence…'}<small title={evidence?.matches[0]} style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',maxWidth:220}}>Match: {evidence?.matches[0]??'Not reviewed'}</small><small title={evidence?.differences[0]} style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',maxWidth:220}}>Limit: {evidence?.differences[0]??'No reviewed geological analogy'}</small><LandingEvidence compact targetId={mission.planetaryTarget.id} earthId={mission.earthAnalog.id}/></dd></div>
+          <div><dt>Analog match</dt><dd>{pinned?<>{typeof pinScore==='number'?`${(pinScore*100).toFixed(1)}% terrain match`:'Not scored'}<small>Pinned point: scored on demand from the global elevation mosaic</small><small>Limit: not reviewed, not validated; landform from the map unit or unmapped</small><LandingEvidence compact targetId={mission.planetaryTarget.id} earthId={mission.earthAnalog.id}/></>:<>{catalog?scoreLabel(catalog,mission.planetaryTarget.id,mission.earthAnalog.id):'Loading evidence…'}<small title={evidence?.matches[0]} style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',maxWidth:220}}>Match: {evidence?.matches[0]??'Not reviewed'}</small><small title={evidence?.differences[0]} style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',maxWidth:220}}>Limit: {evidence?.differences[0]??'No reviewed geological analogy'}</small><LandingEvidence compact targetId={mission.planetaryTarget.id} earthId={mission.earthAnalog.id}/></>}</dd></div>
           <div><dt>Test physics</dt><dd>{earth ? <>9.81 m/s²<small>Earth field test, Earth air</small></> : body === 'Moon' ? <>1.62 m/s²<small>Moon gravity, vacuum</small></> : <>{mission.planetaryTarget.gravity} m/s²<small>Mars gravity, thin air</small></>}</dd></div>
         </dl>
       </section>

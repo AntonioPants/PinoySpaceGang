@@ -12,6 +12,10 @@
   /* Buttons are neutral: paper on black for the main action, a paper outline for the rest.
      Gold is kept for what is selected or marked, not for every control. */
   --btn: #f2f1ed; --btn-hover: #ffffff; --btn-ink: #0b0c0e; --btn-line: #f2f1ed66; --btn-wash: #f2f1ed14;
+  /* The eggshell card (the site panel in the opening): dark ink on warm paper. Every text colour on it
+     reaches 4.5:1; --shell-score, --shell-found and --shell-alert are the gold, cyan and red of the dark UI, darkened. */
+  --shell: #efe9dc; --shell-ink: #14130f; --shell-dim: #5b574d; --shell-rule: #14130f24; --shell-wash: #14130f12;
+  --shell-score: #6a4a0c; --shell-found: #0f5f5c; --shell-alert: #8a1f11;
 }
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; }
@@ -458,6 +462,9 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
 .scene-sound { position: absolute; top: 16px; left: 16px; background: #111c; z-index: 5; }
 .flight-stage-3d { height: min(70vh, 620px); background: #000; }
 .flight-3d { position: absolute; inset: 0; }
+/* The player's own pin on a Cesium globe. */
+.cesium-pin { position: absolute; width: 22px; height: 22px; transform: translate(-50%, -50%); border: 2px solid #e9c78a; border-radius: 50%; box-shadow: 0 0 0 1px #000a, 0 0 14px #e9c78a99; pointer-events: none; }
+.cesium-pin::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: #fff1cf; }
 
 /* Compact terrain reference HUD. */
 .terrain-comparison-legend { position:absolute; z-index:4; left:14px; bottom:14px; max-width:min(540px,calc(100% - 28px)); padding:10px 12px; background:rgba(8,17,25,.88); border:1px solid #375967; border-radius:6px; color:#e4edf0; font-size:12px; }

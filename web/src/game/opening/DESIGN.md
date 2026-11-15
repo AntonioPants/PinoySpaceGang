@@ -45,3 +45,20 @@ the player flags a landing point inside the outlined area; the descent flies to 
 
 Launch Journey
 plays a latch click, lifts the lander off the pad with a whoosh and closes to black.
+
+The site panel (regions on the Moon and Mars, Earth matches) is the one light surface: a solid
+eggshell card with dark text (`--shell #efe9dc`, `--shell-ink #14130f`, `--shell-dim #5b574d`,
+`--shell-rule #14130f24`, `--shell-wash` for hover; `--shell-score`, `--shell-found` and
+`--shell-alert` are the gold, cyan and red of the dark UI darkened for paper). No blur, 4 px
+radius, soft shadow. Names and the heading are Inter; indices, regions, scores and labels are DM
+Mono. Rows are separated by hairlines; hover is a darker wash; the selected row is inverted (ink
+background, eggshell text, gold dot). The card's main button is the inverse of the page's. Every
+text colour on the card reaches 4.5:1 (the lowest is the dim text on a hovered row, 5.2:1). On a
+phone the card scrolls inside itself; the page never scrolls.
+
+One continuous shot: the simple Three.js globes (`WorldScene`) stay mounted from the title to the
+terrain. The detailed Cesium globe is a layer above that fades in once it has tiles and the
+fly-in has finished, with the camera handed across (same direction from the world's centre, same
+distance in radii, 42 degree field of view), and fades out before the player leaves. Switching
+between Google 3D and the measured terrain hands the camera pose across and cross-fades: no zoom
+is replayed. If Cesium is slow or offline the player stays on the simple globe.

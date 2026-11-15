@@ -83,7 +83,7 @@ export function buildSections(input: SectionInput): DebriefSection[] {
         ['Basis', basis(match)],
         ['Catalog rank', String(match.candidate_rank), 'among this target’s Earth candidates'],
         ['Test physics', `${mission.environment.gravityMs2} m/s²`, mission.environment.mode === 'earth' ? 'Earth field test' : `${body} gravity and air`],
-      ]} /> : <p className="deb-pending">No catalog pairing is recorded for {earth.name} and {target.name}, so there is no pre-flight match score.</p>}
+      ]} /> : <p className="deb-pending">{mission.planetaryTarget.id.startsWith('custom-') ? `${target.name} is a point you pinned, not a marked region. ${typeof mission.evidence.quantitativeSimilarityScore === 'number' ? `Its on-demand terrain match with ${earth.name} is ${(mission.evidence.quantitativeSimilarityScore * 100).toFixed(1)}%, ` : 'It was '}scored from the global elevation mosaic with the landform taken from the geologic map unit or left unmapped. Not reviewed and not validated; Earth cannot reproduce the target's gravity, air or radiation.` : `No catalog pairing is recorded for ${earth.name} and ${target.name}, so there is no pre-flight match score.`}</p>}
       <h4>Why it matches</h4>
       <ul className="deb-list">{(evidence?.matches.length ? evidence.matches : ['No pair-specific match evidence has been reviewed; the comparison rests on terrain shape alone.']).map(text => <li key={text}>{text}</li>)}</ul>
       <p className="deb-note">The match score is an engineering similarity computed before the flight. It is not scientifically validated and is separate from the flight scores.{evidence?.source && <> <a href={evidence.source} target="_blank" rel="noreferrer">Supporting source</a></>}</p>
