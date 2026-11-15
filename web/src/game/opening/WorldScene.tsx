@@ -6,7 +6,7 @@ import type { LandingPoint } from '../../lib/landing';
 import { earthFlight, earthSurface, elevationOver, globePoint, siteSwoop, EARTH_CENTRE, METRE_SCALE, type CameraPose } from './earthSurface';
 import { paintRegion, regionPatch } from './regions';
 import { buildLandingPicker, type LandingPicker } from './landingPick';
-import { buildTitleFlight } from './titleFlight';
+import { buildTitleFlight, LAUNCH_SECONDS } from './titleFlight';
 import { createEarthScenery, type EarthScenery } from '../../lib/earthTileScenery';
 
 export interface WorldProps {
@@ -21,6 +21,8 @@ export interface WorldProps {
   onBody: (body: Body) => void; onHover: (body: Body | null) => void;
   onTarget: (id: string) => void; onAnalog: (id: string) => void;
   onHoverSite: (id: string | null) => void; onLanding: (point: LandingPoint) => void;
+  /** The flight in from the title has settled enough for the world screen's text to appear. */
+  onArrived?: () => void;
 }
 const centres = { Moon: new T.Vector3(-3.6, .4, 0), Earth: EARTH_CENTRE, Mars: new T.Vector3(5.4, .4, -5) };
 // Mars sits about twice as far from Earth as the Moon, and further back. Still staged, not to scale.
@@ -28,7 +30,7 @@ const radii = { Moon: .85, Earth: 1.5, Mars: 1.18 };
 /** Half-width of a site's region outline, in degrees on its globe. Enlarged to be seen: see regions.ts. */
 const REGION_DEG = { Moon: 5.5, Mars: 5.5, Earth: 2.6 };
 /** Where the title's camera rides, far out and off to one side of the worlds, and how long the flight in takes. */
-const TITLE_POSITION = new T.Vector3(-26, 11, 66), ARRIVAL_SECONDS = 4.8;
+const TITLE_POSITION = new T.Vector3(-26, 11, 66), ARRIVAL_SECONDS = 5.6;
 /** The title looks a little below the worlds, so their bright point sits above the ship and the lettering. */
 const TITLE_AIM = new T.Vector3(0, -10, 0);
 const UP = new T.Vector3(0, 1, 0);
@@ -36,6 +38,34 @@ const UP = new T.Vector3(0, 1, 0);
 function release(root: T.Object3D) {
   root.traverse(o => { if (o instanceof T.Mesh || o instanceof T.Points || o instanceof T.Line || o instanceof T.Sprite) { o.geometry.dispose(); const materials = Array.isArray(o.material) ? o.material : [o.material]; materials.forEach(m => m.dispose()); } });
 }
+/**
+ * A thin glowing rim around a world, brightest at its limb. Illustrative, not a modelled atmosphere.
+ * It never takes a pointer hit, so clicks at a world's edge still reach the world.
+ */
+function atmosphere(radius: number, colour: number, strength: number) {
+  const material = new T.ShaderMaterial({
+    uniforms: { colour: { value: new T.Color(colour) }, strength: { value: strength } },
+    vertexShader: `#include <common>
+      #include <logdepthbuf_pars_vertex>
+      varying float vRim;
+      void main(){ vec4 view = modelViewMatrix * vec4(position, 1.); vec3 n = normalize(normalMatrix * normal);
+        vRim = 1. - abs(dot(n, normalize(-view.xyz))); gl_Position = projectionMatrix * view;
+        #include <logdepthbuf_vertex>
+      }`,
+    fragmentShader: `#include <logdepthbuf_pars_fragment>
+      uniform vec3 colour; uniform float strength; varying float vRim;
+      void main(){
+        #include <logdepthbuf_fragment>
+        float glow = pow(vRim, 3.) * strength; gl_FragColor = vec4(colour * glow, glow); }`,
+    transparent: true, depthWrite: false, blending: T.AdditiveBlending,
+  });
+  const shell = new T.Mesh(new T.SphereGeometry(radius * 1.045, 64, 40), material);
+  shell.raycast = () => {}; return shell;
+}
+/** Overshoot a little and settle: a world swelling into view. */
+const easeOutBack = (x: number) => 1 + 2.2 * (x - 1) ** 3 + 1.2 * (x - 1) ** 2;
+/** When each world appears during the arrival: Earth first, then the Moon, then Mars. */
+const REVEAL_AT = { Earth: .3, Moon: .37, Mars: .44 };
 type Route =
   | { kind: 'orbit' | 'swoop'; from: CameraPose; to: CameraPose; pivot: T.Vector3; elapsed: number; seconds: number; next?: () => void }
   | { kind: 'arrival'; from: CameraPose; to: CameraPose; elapsed: number; seconds: number };
@@ -60,11 +90,12 @@ export default function WorldScene(props: WorldProps) {
     const ambient = new T.AmbientLight(0xe1e5ef, 1.3); scene.add(ambient);
     const haze = new T.FogExp2(0x7b8990, 0), sky = new T.Color(0x030405); scene.fog = haze;
     const sun = new T.DirectionalLight(0xffe3b3, 3); sun.position.set(-5, 5, 8); scene.add(sun, sun.target);
-    const planets = new Map<Body | 'Earth', T.Mesh>(), textures: T.Texture[] = []; let disposed = false;
+    const planets = new Map<Body | 'Earth', T.Mesh>(), atmospheres = new Map<Body | 'Earth', T.Mesh>(), textures: T.Texture[] = []; let disposed = false;
     for (const body of ['Moon', 'Earth', 'Mars'] as const) {
       // The emissive map is the surface itself: raising its intensity brightens a hovered world evenly.
       const mat = new T.MeshStandardMaterial({ color: body === 'Mars' ? '#b77050' : '#e2dfd4', roughness: 1, emissive: 0xffffff, emissiveIntensity: 0 });
       const globe = new T.Mesh(new T.SphereGeometry(radii[body], 96, 64), mat); globe.position.copy(centres[body]); globe.userData.body = body;
+      if (body !== 'Moon') { const air = atmosphere(radii[body], body === 'Earth' ? 0x6fb4ff : 0xe8a070, body === 'Earth' ? .75 : .55); globe.add(air); atmospheres.set(body, air); }
       scene.add(globe); planets.set(body, globe);
       if (body !== 'Mars') new T.TextureLoader().load(`/textures/${body.toLowerCase()}.jpg`, texture => {
         if (disposed) { texture.dispose(); return; } texture.colorSpace = T.SRGBColorSpace; texture.wrapS = T.RepeatWrapping; textures.push(texture); mat.map = texture; mat.emissiveMap = texture; mat.needsUpdate = true;
@@ -91,7 +122,7 @@ export default function WorldScene(props: WorldProps) {
     let terrainRelief = 0, route: Route | null = null, stage: WorldProps['stage'] | null = null;
     let goalTarget = new T.Vector3(), goalOffset = camera.position.clone(), goalUp = UP.clone(), moving = true, surface = false;
     /** 0 while the worlds are still out of sight on the title, 1 once they are in view. */
-    let reveal = 0, hoverSite: string | null = null;
+    let reveal = 0, hoverSite: string | null = null, arrived = false;
     const glow = { Moon: 0, Mars: 0 };
     const pose = (): CameraPose => ({ position: camera.position.clone(), target: controls.target.clone(), up: camera.up.clone().normalize() });
     const aim = (target: T.Vector3, offset: T.Vector3, up: T.Vector3) => { goalTarget = target; goalOffset = offset; goalUp = up; moving = true; controls.enabled = false; };
@@ -209,7 +240,7 @@ export default function WorldScene(props: WorldProps) {
         else if (previous === 'title' && !reduced.matches) {
           // The flight in from the title: a long curving approach that ends on the three worlds.
           aim(target, offset, UP.clone());
-          route = { kind: 'arrival', from: pose(), to: { position: target.clone().add(offset), target, up: UP.clone() }, elapsed: 0, seconds: ARRIVAL_SECONDS };
+          route = { kind: 'arrival', from: pose(), to: { position: target.clone().add(offset), target, up: UP.clone() }, elapsed: 0, seconds: LAUNCH_SECONDS + ARRIVAL_SECONDS };
         } else fly(target, offset);
       } else {
         const selected=p.stage==='earth'?p.selectedAnalog:p.targets.find(t=>t.id===p.targetId);
@@ -240,7 +271,9 @@ export default function WorldScene(props: WorldProps) {
     const overSite=(id:string|null)=>{if(id===hoverSite)return;hoverSite=id;live.current.onHoverSite(id);paint.current();};
     const pointerDown=(e:PointerEvent)=>{down={x:e.clientX,y:e.clientY};};
     const pointerUp=(e:PointerEvent)=>{
-      if(Math.hypot(e.clientX-down.x,e.clientY-down.y)>6||route?.kind==='arrival')return;
+      if(Math.hypot(e.clientX-down.x,e.clientY-down.y)>6)return;
+      // A click during the launch skips ahead to the burst of light that reveals the worlds.
+      if(route?.kind==='arrival'){route.elapsed=Math.max(route.elapsed,LAUNCH_SECONDS+.33*ARRIVAL_SECONDS);return;}
       const p=live.current;
       if(surface){const point=ground(e);if(point)p.onLanding({x:Math.round(point.x),y:Math.round(-point.z)});return;}
       const obj=hit(e);
@@ -260,16 +293,22 @@ export default function WorldScene(props: WorldProps) {
     const resize=new ResizeObserver(()=>{const w=host.clientWidth,h=host.clientHeight;if(w&&h){renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();if(!surface)update.current();}});resize.observe(host);
     let frame=0,last=performance.now();
     const render=()=>{const now=performance.now(),dt=Math.min((now-last)/1000,.05);last=now;
-      let arrival: number | null = null;
+      let arrival: number | null = null, launch = 0;
       if (route) {
         route.elapsed += dt;
         const progress = reduced.matches ? 1 : Math.min(route.elapsed / route.seconds, 1);
         let at: CameraPose;
         if (route.kind === 'arrival') {
           // Fast out of the title, then a long slow settle onto the worlds, curving in from the side.
-          arrival = progress;
-          const e = 1 - Math.pow(1 - progress, 3.2), bend = new T.Vector3(17, 7, 40), a = route.from.position, b = route.to.position;
-          at = { position: a.clone().multiplyScalar((1 - e) ** 2).addScaledVector(bend, 2 * e * (1 - e)).addScaledVector(b, e * e), target: route.from.target.clone().lerp(route.to.target, e), up: UP };
+          // The launch plays first, from the title's fixed camera; then the camera flies in.
+          launch = Math.min(route.elapsed, LAUNCH_SECONDS); arrival = reduced.matches ? 1 : T.MathUtils.clamp((route.elapsed - LAUNCH_SECONDS) / ARRIVAL_SECONDS, 0, 1);
+          if (arrival >= .77 && !arrived) { arrived = true; live.current.onArrived?.(); }
+          // Ease away from the launch's fixed view and settle slowly: no jolt at either end.
+          const e = 1 - Math.pow(1 - T.MathUtils.smoothstep(arrival, 0, 1), 1.9), bend = new T.Vector3(17, 7, 40), a = route.from.position, b = route.to.position;
+          // The camera banks gently into the curve and levels out as it settles.
+          const position = a.clone().multiplyScalar((1 - e) ** 2).addScaledVector(bend, 2 * e * (1 - e)).addScaledVector(b, e * e), target = route.from.target.clone().lerp(route.to.target, e);
+          const roll = -.14 * Math.sin(Math.PI * e) * (1 - e);
+          at = { position, target, up: UP.clone().applyAxisAngle(target.clone().sub(position).normalize(), roll) };
         } else at = route.kind === 'orbit' ? earthFlight(route.from, route.to, progress) : siteSwoop(route.from, route.to, route.pivot, progress);
         camera.position.copy(at.position); camera.up.copy(at.up); controls.target.copy(at.target); camera.lookAt(at.target);
         if (progress === 1) { const next = route.kind === 'arrival' ? undefined : route.next; if (next) next(); else finishFlight(); }
@@ -278,22 +317,32 @@ export default function WorldScene(props: WorldProps) {
       // The worlds come out of the arrival's burst of light; on the title they are a single bright point.
       if (arrival !== null) reveal = T.MathUtils.smoothstep(arrival, .3, .5);
       else reveal += ((current.stage === 'title' ? 0 : 1) - reveal) * (1 - Math.exp(-3 * dt));
-      flash.style.opacity = arrival === null ? '0' : String(.85 * Math.exp(-(((arrival - .36) / .09) ** 2)));
-      title.update(dt, current.stage, arrival, 1 - reveal, reduced.matches);
+      flash.style.opacity = arrival === null ? '0' : String(.4 * Math.exp(-(((arrival - .36) / .13) ** 2)));
+      title.update(dt, current.stage, arrival, 1 - reveal, reduced.matches, launch);
+      // The view widens a touch as the worlds come up, then eases back.
+      const fov = 42 + (arrival === null ? 0 : 6 * Math.exp(-(((arrival - .3) / .2) ** 2)));
+      if (Math.abs(camera.fov - fov) > .01) { camera.fov = fov; camera.updateProjectionMatrix(); }
+      if (arrival === null) arrived = false;
       if (!reduced.matches) starShell.rotation.y += dt * .004;
       // Earth and its horizon stay present at every altitude; no globe/terrain swap.
+      const nearGround = terrain && current.stage === 'earth' ? 1 - T.MathUtils.smoothstep(camera.position.distanceTo(centres.Earth) - radii.Earth, .002, .025) : 0;
       for(const [body,mesh] of planets) {
-        mesh.visible = reveal > .002 && (!surface || body === 'Earth');
+        // On the arrival each world swells into view in turn, turning a little as it settles.
+        const own = arrival === null ? reveal : easeOutBack(T.MathUtils.clamp((arrival - REVEAL_AT[body]) / .2, 0, 1));
+        mesh.visible = own > .002 && (!surface || body === 'Earth');
+        mesh.rotation.y = arrival === null ? 0 : (1 - T.MathUtils.clamp((arrival - REVEAL_AT[body]) / .45, 0, 1)) ** 2 * -.9;
         // A hovered world brightens and swells a little.
         const lit = body === 'Earth' ? 0 : (glow[body] += ((current.stage === 'worlds' && current.hover === body ? 1 : 0) - glow[body]) * (1 - Math.exp(-9 * dt)));
         (mesh.material as T.MeshStandardMaterial).emissiveIntensity = lit * .3;
-        mesh.scale.setScalar(Math.max(reveal, .001) * (1 + lit * .05));
+        mesh.scale.setScalar(Math.max(own, .001) * (1 + lit * .05));
+        const air = atmospheres.get(body);
+        if (air) air.visible = !surface && nearGround === 0;
       }
-      const nearGround = terrain && current.stage === 'earth' ? 1 - T.MathUtils.smoothstep(camera.position.distanceTo(centres.Earth) - radii.Earth, .002, .025) : 0;
       // Thin enough that the place the camera is looking at stays in view all the way down.
       haze.density = nearGround * Math.min(160, .45 / Math.max(camera.position.distanceTo(controls.target), 1e-6));
       scene.background = nearGround > 0 ? sky.set(0x030405).lerp(haze.color, nearGround) : null;
-      ambient.intensity = T.MathUtils.lerp(1.3, .65, nearGround);
+      // The title's pad is lit by its own floodlights: the scene's sun and fill come up as the shuttle climbs.
+      ambient.intensity = T.MathUtils.lerp(1.3, .65, nearGround) * (1 - .82 * title.dim); sun.intensity = 3 * (1 - .9 * title.dim);
       if (terrain) {
         const localSun = new T.Vector3(-4000,5000,1500).applyQuaternion(terrain.quaternion).multiplyScalar(METRE_SCALE).add(terrain.position);
         sun.position.set(-5,5,8).lerp(localSun, nearGround); sun.target.position.set(0,0,0).lerp(terrain.position, nearGround);
