@@ -92,6 +92,7 @@
 .immersive-game-session .flight-3d .terrain-credit{bottom:155px!important;left:4%!important;right:4%!important;text-shadow:0 1px 6px #000}
 .immersive-game-session .model-assumptions{position:absolute;z-index:2;left:30px;top:100px;max-width:min(500px,80%);max-height:55%;overflow:auto;border:0;padding:10px;font-size:11px;background:#03040588;backdrop-filter:blur(10px)}
 .immersive-game-session .flight-result{position:absolute;z-index:3;left:50%;top:45%;transform:translate(-50%,-50%);width:min(600px,90%);background:#090b0de8;backdrop-filter:blur(16px);border:1px solid #c4ad794d;display:flex;flex-wrap:wrap;padding:28px}.immersive-game-session .flight-result h2{font-size:28px}
+.immersive-game-session .comparison-result-button{position:absolute;z-index:3;right:30px;bottom:150px;background:#090b0de8}
 .immersive-game-session .flight-workspace>.import-error{position:absolute;z-index:4;top:25%;left:5%;right:5%;background:#15110deb;padding:22px}
 .immersive-game-session .scene-skip,.immersive-game-session .scene-sound{top:24px;background:#05060799;backdrop-filter:blur(10px)}
 .immersive-game-session .scene-skip{right:26px}.immersive-game-session .scene-sound{left:26px}
