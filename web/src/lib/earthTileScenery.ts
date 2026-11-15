@@ -40,8 +40,21 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
   world.background = sky;
   world.add(tiles.group, polygon ? new T.HemisphereLight(look!.stars ? 0x222230 : look!.skyHorizon,look!.groundDark,look!.stars ? .25 : .95) : new T.AmbientLight(0xffffff, 2));
   const restoreGeometry = polygon ? meshes.map(mesh => ({ mesh, geometry:mesh.geometry.clone() })) : [];
+  // Flight meshes and bounds are already relative to the landing point. Only
+  // the streamed site's origin needs the off-centre target translation.
+  const groundFrame = polygon ? new T.Matrix4() : localToWorld;
+  const previousClipping = renderer.localClippingEnabled;
   if (polygon) {
-    tiles.registerPlugin(polygonTilePlugin(origin,look!));
+    // Clip fragments, so even a coarse tile spanning the entire DEM has a
+    // clean opening. Raycasts still see the tiles for height calibration.
+    const footprintPlanes = [
+      new T.Plane(new T.Vector3(-1, 0, 0), bounds.west),
+      new T.Plane(new T.Vector3(1, 0, 0), -bounds.east),
+      new T.Plane(new T.Vector3(0, 0, -1), bounds.north),
+      new T.Plane(new T.Vector3(0, 0, 1), -bounds.south),
+    ];
+    renderer.localClippingEnabled = true;
+    tiles.registerPlugin(polygonTilePlugin(origin,look!,footprintPlanes));
     for (const mesh of meshes) polygonGeometry(mesh.geometry);
     // The footprint filter below uses an index even for independent triangles.
     ground.setIndex(Array.from({length:ground.getAttribute('position').count},(_,i)=>i));
@@ -49,7 +62,7 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
     sun.position.set(-5500,4200,-7200).applyMatrix4(localToWorld);
     world.add(sun);
   }
-  const surroundings = look ? terrainSurroundings(ground,bounds,localToWorld,tiles.group,look) : undefined;
+  const surroundings = look ? terrainSurroundings(ground,bounds,groundFrame,tiles.group,look) : undefined;
   if (surroundings) world.add(surroundings.mesh);
   const full = ground.index!;
   const positions = ground.getAttribute('position');
@@ -71,14 +84,14 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
       const i = all[k]; probes.push(new T.Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)));
     }
   }
-  const probeRay = new T.Raycaster(), toLocal = localToWorld.clone().invert(), down = new T.Vector3(0, -1, 0).transformDirection(localToWorld);
+  const probeRay = new T.Raycaster(), toLocal = groundFrame.clone().invert(), down = new T.Vector3(0, -1, 0).transformDirection(groundFrame);
   /** Moves the streamed world vertically onto the measured terrain. True if it moved. */
   function calibrate() {
     tiles.group.updateMatrixWorld(true);
     // gaps without the current lift, i.e. how far the raw tiles sit above the DEM
     const gaps: number[] = [], top = new T.Vector3();
     for (const p of probes) {
-      top.set(p.x, 60000, p.z).applyMatrix4(localToWorld);
+      top.set(p.x, 60000, p.z).applyMatrix4(groundFrame);
       probeRay.set(top, down);
       const hit = probeRay.intersectObject(tiles.group, true)[0];
       if (hit) gaps.push(hit.point.applyMatrix4(toLocal).y - p.y - lift);
@@ -170,6 +183,6 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
       renderer.clearDepth();
       return true;
     },
-    dispose() { applyImagery(false); target.dispose(); surroundings?.dispose(); ground.setIndex(full); tiles.dispose(); restoreGeometry.forEach(({mesh,geometry}) => { mesh.geometry.copy(geometry); geometry.dispose(); }); draco.dispose(); credit.remove(); },
+    dispose() { if (polygon) renderer.localClippingEnabled = previousClipping; applyImagery(false); target.dispose(); surroundings?.dispose(); ground.setIndex(full); tiles.dispose(); restoreGeometry.forEach(({mesh,geometry}) => { mesh.geometry.copy(geometry); geometry.dispose(); }); draco.dispose(); credit.remove(); },
   };
 }

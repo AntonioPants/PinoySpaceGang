@@ -15,7 +15,7 @@ export function polygonGeometry(geometry: T.BufferGeometry) {
 
 
 /** Keep the streamed terrain's geometry, using the landing site's polygon style. */
-export function polygonTilePlugin(ecefToLocal: T.Matrix4, look: import('../components/cutscene/presets').EnvLook) {
+export function polygonTilePlugin(ecefToLocal: T.Matrix4, look: import('../components/cutscene/presets').EnvLook, footprintPlanes: T.Plane[] = []) {
   return {
     name: 'POLYGON_TERRAIN',
     processTileModel(scene: T.Object3D) {
@@ -32,6 +32,7 @@ export function polygonTilePlugin(ecefToLocal: T.Matrix4, look: import('../compo
         const original = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
         const materials = original.map(material => new T.MeshStandardMaterial({
           vertexColors:true, flatShading:true, roughness:1, side:material.side,
+          clippingPlanes: footprintPlanes, clipIntersection: true,
         }));
         original.forEach(material=>material.dispose());
         mesh.material = Array.isArray(mesh.material) ? materials : materials[0];
