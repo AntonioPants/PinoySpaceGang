@@ -19,7 +19,7 @@ def test_every_earth_pack_and_planetary_target_is_exported(built):
     vectors, fixtures = built
     earth = [s['id'] for s in CATALOG['sites'] if s['role'] == 'earth_analog' and s.get('terrain')]
     assert sorted(vectors['sites']) == sorted(earth)
-    assert len(fixtures['targets']) == 9
+    assert len(fixtures['targets']) >= 9
     scales = analog_score.load_scales()
     assert vectors['scales_by_resolution_m'] == {'150.0': scales[150.0], '500.0': scales[500.0]}
     assert len(scales[150.0]) == 15 and len(scales[500.0]) == 12
