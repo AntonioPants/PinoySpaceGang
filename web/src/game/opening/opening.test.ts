@@ -35,19 +35,23 @@ describe('swoop to a surface site', () => {
 });
 
 describe('site regions on a globe', () => {
-  it('lies on the sphere around the site, even at a pole', () => {
+  it('is a round dot on the sphere at the site, even at a pole', () => {
     for (const [lat, lon] of [[18.45, 77.4], [-89.55, 0]]) {
       const region = regionPatch('site', lat, lon, 1.18, 5.5), centre = globePoint(lat, lon, 1);
+      region.updateMatrixWorld(true);
+      let widest = 0;
       region.traverse(o => {
         if (!(o instanceof T.Mesh)) return;
         const p = o.geometry.getAttribute('position'), v = new T.Vector3();
         expect(o.userData.id).toBe('site');
         for (let i = 0; i < p.count; i++) {
-          v.fromBufferAttribute(p, i);
+          v.fromBufferAttribute(p, i).applyMatrix4(o.matrixWorld);
           expect(v.length()).toBeGreaterThan(1.18); expect(v.length()).toBeLessThan(1.18 * 1.01);
-          expect(T.MathUtils.radToDeg(v.angleTo(centre))).toBeLessThan(5.5 * Math.SQRT2 + .1);
+          widest = Math.max(widest, T.MathUtils.radToDeg(v.angleTo(centre)));
         }
       });
+      // Round, not square: no vertex reaches out towards a square's corners.
+      expect(widest).toBeGreaterThan(5.5 * .95); expect(widest).toBeLessThan(5.5 * 1.02);
     }
   });
 });

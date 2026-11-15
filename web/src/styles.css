@@ -100,6 +100,13 @@ h1 { font-size: clamp(30px, 3.1vw, 44px); line-height: 1.15; letter-spacing: -1.
 .cesium-site-dot { width: 14px; height: 14px; border: 3px solid #171717; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px #fff, 0 1px 9px #000; }
 .cesium-site-marker[aria-pressed=true] .cesium-site-dot { width: 19px; height: 19px; background: #e7c889; box-shadow: 0 0 0 2px #e7c889, 0 0 18px #e7c88988; }
 .cesium-site-marker:focus-visible { outline: 2px solid #e7c889; border-radius: 50%; }
+/* Hover, from the dot itself or from its row in the site list: the dot swells, turns pale gold and is named.
+   The simple globe's dots (game/opening/regions.ts) do the same, so the two globes read as one. */
+.cesium-site-dot { transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease; }
+.cesium-site-marker:hover .cesium-site-dot, .cesium-site-marker.is-hovered .cesium-site-dot { transform: scale(1.4); background: #f1d8a8; box-shadow: 0 0 0 1px #fff1cf, 0 0 16px #f1d8a8aa; }
+.cesium-site-marker:hover, .cesium-site-marker.is-hovered { z-index: 2; }
+.cesium-site-marker.is-hovered:not([aria-pressed=true]) .cesium-site-name { color: #fff1cf; }
+@media (prefers-reduced-motion: reduce) { .cesium-site-dot { transition: none; } }
 .cesium-site-name { position: absolute; bottom: 38px; left: 50%; transform: translateX(-50%); width: max-content; max-width: 170px; padding: 4px 7px; border-radius: 3px; background: #080808d9; color: #e7c889; font-size: 12px; text-align: center; white-space: normal; text-shadow: 0 1px 2px #000; }
 .globe-canvas canvas, .terrain-canvas canvas { display: block; touch-action: none; }
 .globe-caption { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 9px; white-space: nowrap; font-size: 10px; color: var(--muted); z-index: 1; }
