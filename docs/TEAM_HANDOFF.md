@@ -5,9 +5,9 @@ it supersedes earlier allocations in planning notes and agent context.
 
 ## Shared player journey
 
-Title screen / Start Journey → three worlds together → choose Moon/Mars → choose a study region → transition to
+Title (a ship racing in; click anywhere) → flight in to the three worlds → choose Moon/Mars → choose a study region → transition to
 Earth → select a proposed matching site → fly continuously into its measured terrain
-→ Select Equipment → configure the lander using arrow controls → Launch Journey
+→ flag a landing point on it → Select Equipment → configure the lander using arrow controls → Launch Journey
 → Furgan's departure cinematics → Tim's playable character and ship controls
 → launch the landing experiment → Earth approach → live physics → landing outcome
 → Antonio's in-character report.
@@ -29,7 +29,7 @@ terrain; keyboard/touch-accessible controls duplicate raycast selections. Reduce
 motion snaps cameras instead of animating. Missing WebGL still permits setup.
 
 The game occupies one fixed viewport at every stage, including cinematics and live
-descent. Start Journey requests browser fullscreen when supported; rejecting or exiting
+descent. Starting from the title requests browser fullscreen when supported; rejecting or exiting
 browser fullscreen must leave a fully playable viewport game. Do not restore page
 headers, max-width wrappers or aspect-ratio video windows around gameplay. Use compact
 HUD overlays and internally scrolling controls on small screens.
@@ -117,6 +117,11 @@ Coordinate with Furgan: landing-outcome visuals finish before the character debr
   registers modules. Add independent scene files rather than modifying the planner.
 - `GameSession` owns phase ordering, final mission and duplicate-callback guards.
 - Scene modules get the full mission; completion and skip share `onComplete`.
+- The landing point flagged on the terrain travels as `MissionConfig.earthAnalog.landingTargetM`
+  (x east, y north, metres from the patch centre; absent = centre). `flightSetup` in
+  `lib/simulation.ts` turns it into the sim's `target` and moves the approach start with it, so
+  the cutscenes, the descent and the report all follow it. `lib/landing.ts` keeps it 600 m inside
+  the patch; `GameSession` carries it through the console's relaunch.
 - Hardware IDs survive the console and report. The console's sensor change updates
   the final equipment sensor too. Physics remains single-source in `app/sim/`.
 - Fetch and merge the latest shared branch before work. Do not force-push or overwrite

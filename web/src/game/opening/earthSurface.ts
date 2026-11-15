@@ -135,3 +135,33 @@ export function earthFlight(from: CameraPose, to: CameraPose, progress: number):
     up: from.up.clone().applyQuaternion(new T.Quaternion().slerp(new T.Quaternion().setFromUnitVectors(from.up, to.up), ease(progress))).normalize(),
   };
 }
+
+/** Sine of a point's elevation above a surface site's horizon: 1 straight overhead, 0 on the horizon, negative beyond it. */
+export function elevationOver(point: T.Vector3, site: T.Vector3) {
+  return point.clone().sub(site).normalize().dot(site.clone().sub(EARTH_CENTRE).normalize());
+}
+
+/** The camera pose a fraction of the way between two poses that both sit above `site`'s horizon.
+ * The camera swings around the site while its distance changes evenly on a log scale, so a
+ * descent from orbit tilts over gradually and settles, instead of dropping straight down and
+ * turning at the last moment. It looks at the site for the whole of the low part of the path;
+ * the far pose's own aim (Earth's centre, in orbit) only matters while the camera is far away.
+ * Works in both directions, and both endpoints are exact. A point above the site's horizon
+ * is always outside the sphere, so the path cannot pass through Earth.
+ */
+export function siteSwoop(from: CameraPose, to: CameraPose, site: T.Vector3, progress: number): CameraPose {
+  const c = T.MathUtils.clamp(progress, 0, 1), e = c * c * c * (c * (c * 6 - 15) + 10);
+  const start = from.position.clone().sub(site), end = to.position.clone().sub(site);
+  const a = Math.max(start.length(), 1e-9), b = Math.max(end.length(), 1e-9);
+  const distance = Math.exp(T.MathUtils.lerp(Math.log(a), Math.log(b), e));
+  const swing = new T.Quaternion().slerp(new T.Quaternion().setFromUnitVectors(start.clone().normalize(), end.clone().normalize()), e);
+  const span = Math.abs(Math.log(a / b));
+  // 1 at the far end of the path, 0 at the near end.
+  const far = span < 1e-6 ? (a >= b ? 1 - e : e) : (Math.log(distance) - Math.log(Math.min(a, b))) / span;
+  const [nearAim, farAim] = a < b ? [from.target, to.target] : [to.target, from.target];
+  return {
+    position: start.normalize().applyQuaternion(swing).multiplyScalar(distance).add(site),
+    target: nearAim.clone().lerp(farAim, T.MathUtils.smoothstep(far, .5, 1)),
+    up: from.up.clone().lerp(to.up, e).normalize(),
+  };
+}

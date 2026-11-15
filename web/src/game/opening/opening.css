@@ -34,20 +34,37 @@
 .title-screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 24px 10vh;text-align:center;pointer-events:none;background:linear-gradient(transparent 35%,#03040555 60%,#030405e8)}
 .title-eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:#ddc99e;margin-bottom:24px}
 .title-screen h1{font-size:clamp(56px,9vw,140px);line-height:.92;letter-spacing:-.055em;font-weight:300;text-shadow:0 6px 60px #000;outline:none}.title-screen h1 span{font-weight:500;color:#dfc28d}
-.title-screen p{font-size:15px;letter-spacing:.08em;color:#c2beb4;margin:26px 0 38px}.title-screen small{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#938d7e;margin-top:30px}
-/* The one call to action on the title: solid brushed gold, a slow glow and a passing sheen. */
-.title-start{pointer-events:auto;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:34px;min-width:320px;min-height:72px;padding:11px 11px 11px 34px;border-radius:5px;color:#16130d;background:linear-gradient(180deg,#f6e2b8,#dfc28d 48%,#c4a362);border:1px solid #fff1cf;font-size:16px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;box-shadow:0 0 0 6px #dfc28d14,0 14px 46px #d6b77c40,inset 0 1px 0 #fffc;transition:transform .25s,box-shadow .25s,filter .25s;animation:game-arrive .9s .45s both,title-glow 2.8s 1.4s ease-in-out infinite}
-.title-start::before{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,#fffc 50%,transparent 62%);transform:translateX(-130%);animation:title-sheen 4.2s 1.6s ease-in-out infinite;pointer-events:none}
-.title-start span{position:relative}
-.title-start i{position:relative;display:grid;place-items:center;width:50px;height:50px;border-radius:3px;background:#16130d;color:#f1d8a8;transition:transform .25s,background .25s}
-.title-start:hover{transform:translateY(-3px) scale(1.03);filter:brightness(1.06);box-shadow:0 0 0 8px #dfc28d24,0 18px 70px #e7c88980,inset 0 1px 0 #fffc}
-.title-start:hover i{transform:translateX(5px);background:#000}
-.title-start:active{transform:translateY(0) scale(.98)}
-.title-start:focus-visible{outline:2px solid #fff1cf;outline-offset:8px}
-.title-eyebrow,.title-screen h1,.title-screen p,.title-screen small{animation:game-arrive .9s both}.title-screen h1{animation-delay:.12s}.title-screen p{animation-delay:.28s}.title-screen small{animation-delay:.65s}
-.title-screen kbd{font:inherit;color:#dfc28d;border:1px solid #c1a77266;border-radius:3px;padding:3px 7px;margin-right:6px}.title-screen small b{font-weight:400;color:#5d584e;padding:0 10px}
-@keyframes title-glow{0%,100%{box-shadow:0 0 0 6px #dfc28d14,0 14px 46px #d6b77c40,inset 0 1px 0 #fffc}50%{box-shadow:0 0 0 11px #dfc28d0d,0 14px 72px #e7c8897a,inset 0 1px 0 #fffc}}
-@keyframes title-sheen{0%,55%{transform:translateX(-130%)}85%,100%{transform:translateX(130%)}}
+.title-screen p{font-size:15px;letter-spacing:.08em;color:#c2beb4;margin:26px 0 30px}.title-screen small{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#938d7e;margin-top:30px}
+/* The whole title is the start control. The prompt is plain text that breathes: no button chrome. */
+.title-screen{pointer-events:auto;cursor:pointer;transition:opacity .9s,transform 1.4s cubic-bezier(.3,0,.2,1)}
+.title-screen.is-leaving{opacity:0;transform:scale(1.12);pointer-events:none}
+.title-prompt{display:flex;align-items:center;gap:22px;margin-top:6px;padding:14px 8px;font-size:13px;letter-spacing:.42em;text-transform:uppercase;color:#f1e4c6;text-shadow:0 0 24px #dfc28d88,0 2px 10px #000;animation:game-arrive .9s .5s both,title-breathe 2.6s 1.4s ease-in-out infinite}
+.title-prompt::before,.title-prompt::after{content:'';width:64px;height:1px;background:linear-gradient(90deg,transparent,#dfc28d)}.title-prompt::after{transform:scaleX(-1)}
+.title-prompt:focus-visible{outline:1px solid #dfc28d;outline-offset:6px}
+.title-eyebrow,.title-screen h1,.title-screen p{animation:game-arrive .9s both}.title-screen h1{animation-delay:.12s}.title-screen p{animation-delay:.28s}
+@keyframes title-breathe{0%,100%{opacity:1}50%{opacity:.38}}
+/* Flying in from the title: a burst of light as the worlds appear, and their labels wait for the camera to settle. */
+.arrival-flash{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 50% 46%,#fffaf0 0,#f3dcae 16%,#dfc28d66 38%,transparent 72%)}
+.is-arriving .game-heading,.is-arriving .world-labels,.is-arriving .game-bottom-note,.is-arriving .game-wordmark,.is-arriving .game-chapter{animation:none;opacity:0;pointer-events:none}
+.world-labels,.game-bottom-note{animation:game-arrive .8s both}.game-bottom-note{animation-delay:.25s}
+/* Everything selectable answers the pointer. */
+.game-site-list>button{position:relative;transition:background .2s,padding .2s}
+.game-site-list>button::before{content:'';position:absolute;left:0;top:18%;bottom:18%;width:2px;background:#e7c889;transform:scaleY(0);transition:transform .2s}
+.game-site-list>button:hover,.game-site-list>button.is-hovered,.game-site-list>button:focus-visible{background:#d6b77c1f;padding-left:14px}
+.game-site-list>button:hover::before,.game-site-list>button.is-hovered::before,.game-site-list>button:focus-visible::before{transform:scaleY(1)}
+.game-site-list>button:hover strong,.game-site-list>button.is-hovered strong{color:#f6e2b8}
+.game-site-list>button>svg{color:#8f8876;transition:transform .2s,color .2s;flex-shrink:0;margin-left:auto}.game-site-list>button:hover>svg,.game-site-list>button.is-hovered>svg{transform:translateX(4px);color:#e7c889}
+.game-site-list>button:hover i,.game-site-list>button.is-hovered i{background:#e7c889}
+.game-back,.game-text,.game-tools button,.game-wordmark{transition:color .2s,transform .2s,opacity .2s}
+.game-back:hover{color:#f6e2b8;transform:translateX(-3px)}.game-text:hover{color:#fff1cf;text-decoration:underline;text-underline-offset:4px}
+.game-tools button:hover,.journey-credits:hover{color:#f6e2b8}.game-wordmark:hover svg{transform:rotate(40deg)}.game-wordmark svg{transition:transform .4s}
+.game-primary svg{transition:transform .2s}.game-primary:hover svg{transform:translateX(4px)}.game-primary:active{transform:translateY(0) scale(.99)}.game-primary:disabled{opacity:.5;cursor:default;transform:none}
+.world-labels>button strong{transition:color .3s}.world-labels>button:hover strong,.world-labels>button:focus-visible strong{color:#f6e2b8}.world-labels>button small svg{transition:transform .3s}.world-labels>button:hover small svg{transform:translateX(4px)}
+.rail-choice button{transition:background .2s,border-color .2s,transform .15s}.rail-choice button:hover{border-color:#e7c889;transform:scale(1.08)}.rail-choice button:active{transform:scale(.94)}
+.site-menu-close{transition:color .2s,transform .2s}.site-menu-close:hover{color:#f6e2b8;transform:rotate(90deg)}
+.region-note{display:block;font-size:10px;color:#8f897b;line-height:1.5;margin:-8px 0 16px}
+/* The landing flag's readout on the terrain view. */
+.surface-brief .landing-readout{display:flex;align-items:center;gap:9px;color:#f1d8a8}.landing-readout .game-text{padding:0 0 0 10px;font-size:11px}
 /* Launch Journey: the bay's controls clear, the ship leaves, and the screen closes to black for the journey. */
 .is-launching .equipment-rails,.is-launching .hangar-manifest,.is-launching .game-heading,.is-launching .game-topbar{opacity:0;transition:opacity .45s;pointer-events:none}
 .launch-veil{position:absolute;inset:0;z-index:20;background:#030405;animation:launch-veil 1.75s both}
@@ -87,8 +104,9 @@
  .game-selector{left:20px;right:20px;top:auto;bottom:22px;width:auto;max-height:40%;padding:16px}.game-selector h2{font-size:14px;margin-bottom:10px}.game-site-list>button{padding:12px 4px}.game-site-list small{margin-top:3px}.site-description{margin:10px 0;font-size:10px}.game-selector .game-primary{min-height:44px;padding:12px 16px}.game-text{padding:10px 0}
  .on-surface .game-selector{bottom:230px;max-height:45%;z-index:3}.surface-brief{left:22px;right:22px;bottom:22px}.surface-brief h2{font-size:22px}.surface-brief small{max-width:100%}.surface-brief .game-primary{position:static;width:100%;margin-top:16px}.surface-nav{gap:25px}
  .opening-equipment .game-heading{top:80px}.equipment-scene{top:130px;left:0;right:0;bottom:43%;height:auto}.equipment-rails{top:auto;bottom:125px;left:22px;right:22px;width:auto;max-height:29%;overflow:auto;padding-right:5px}.equipment-rail{padding:9px 0}.rail-choice{margin:8px 0}.rail-choice strong{font-size:17px}.equipment-rail p{font-size:10px}.gear-note{font-size:10px}.hangar-manifest{bottom:18px;left:22px;right:22px;gap:4px 15px}.hangar-manifest>strong{font-size:14px}.hangar-manifest>p{font-size:10px}.hangar-manifest>.game-primary{min-width:0;gap:8px;padding:12px;font-size:12px}
- .title-screen h1{font-size:clamp(45px,12vw,80px)}.title-start{min-width:0;width:min(100%,320px);min-height:62px;font-size:14px;letter-spacing:.18em;padding-left:24px}.title-start i{width:42px;height:42px}.title-eyebrow{font-size:9px;letter-spacing:.2em}.title-screen p{font-size:12px}.title-screen{padding-bottom:12vh}
+ .title-screen h1{font-size:clamp(45px,12vw,80px)}.title-prompt{font-size:11px;letter-spacing:.3em;gap:14px}.title-prompt::before,.title-prompt::after{width:30px}.title-eyebrow{font-size:9px;letter-spacing:.2em}.title-screen p{font-size:12px}.title-screen{padding-bottom:12vh}
  .immersive-game-session .flight-toolbar{padding:18px;gap:12px}.immersive-game-session .flight-toolbar strong{max-width:100%;font-size:12px}.immersive-game-session .flight-toolbar>div+div{gap:6px}.immersive-game-session .flight-toolbar button{padding:7px 9px;min-height:32px;font-size:10px}.immersive-game-session .model-assumptions{top:132px;left:15px}.immersive-game-session .flight-hud{grid-template-columns:repeat(3,1fr);bottom:0;padding:18px 18px 53px;gap:18px}.immersive-game-session .flight-hud span{font-size:8px;margin-bottom:6px}.immersive-game-session .flight-help{font-size:8px;bottom:10px}.immersive-game-session>.systems-console{padding:32px 22px}.console-controls{grid-template-columns:1fr 1fr}.opening-report .journey-content{padding:20px 18px 65px}
  .immersive-game-session .flight-3d .terrain-credit{bottom:190px!important}
 }
 @media(prefers-reduced-motion:reduce){.opening-game *{animation:none!important;transition:none!important}}
+.surface-brief h2{outline:none}

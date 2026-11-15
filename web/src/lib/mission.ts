@@ -1,4 +1,5 @@
 import type { MissionConfig, MissionSettings, PlanetarySite, TerrainManifest, TerrainProfile } from './types';
+import { insideLandingArea, type LandingPoint } from './landing';
 export const TERRAIN_BASE = '/terrain/kilbourne-hole-v1/';
 export const defaultSettings: MissionSettings = {
   mode: 'AUTONOMOUS_HAZARD_AVOID', environment: 'planetary',
@@ -62,17 +63,22 @@ export function validateSettings(s: MissionSettings): string[] {
 }
 export interface MissionContext { terrainBase?: string; analogName?: string; terrainScore?: number | null;
   /** True when a real weather profile exists for the analog site. */
-  weatherAvailable?: boolean }
+  weatherAvailable?: boolean;
+  /** The landing point the player flagged on the terrain (x east, y north, metres from the patch centre). */
+  landingTarget?: LandingPoint }
 export function buildMission(site: PlanetarySite, profile: TerrainProfile, settings: MissionSettings, context: MissionContext = {}): MissionConfig {
   const errors = validateSettings(settings);
   if (errors.length) throw new Error(errors.join(' '));
+  const landing = context.landingTarget;
+  if (landing && !insideLandingArea(profile, landing)) throw new Error('The landing flag is outside the selectable area. Place it again.');
   const lunarVacuum = settings.environment === 'planetary' && site.body === 'Moon';
   return {
     schemaVersion: '1.0.0', createdAt: new Date().toISOString(),
     planetaryTarget: { id: site.id, name: site.name, body: site.body, gravity: site.gravity },
     earthAnalog: { id: profile.manifest.id, name: context.analogName ?? profile.manifest.name, terrainBaseUrl: context.terrainBase ?? profile.terrainBaseUrl ?? `/terrain/${profile.manifest.id}/`,
       elevationProfile: profile.heightsM, sampleSpacingM: profile.sampleSpacingM, profileRow: profile.row,
-      verticalOffsetM: profile.manifest.local_frame.vertical_offset_m, sourceSha256: profile.manifest.source.sha256 ?? profile.manifest.source.subset_sha256 ?? '' },
+      verticalOffsetM: profile.manifest.local_frame.vertical_offset_m, sourceSha256: profile.manifest.source.sha256 ?? profile.manifest.source.subset_sha256 ?? '',
+      ...(landing && (landing.x || landing.y) ? { landingTargetM: { x: landing.x, y: landing.y } } : {}) },
     strategy: { mode: settings.mode, hazardSensor: settings.hazardSensor, thrusterForceN: settings.thrusterForceN, fuelMassKg: settings.fuelMassKg, dryMassKg: settings.dryMassKg, maxSlopeToleranceDeg: settings.maxSlopeToleranceDeg },
     environment: { mode: settings.environment, gravityMs2: gravityFor(site, settings), windSpeedMs: lunarVacuum ? 0 : settings.windSpeedMs,
       atmosphereModel: lunarVacuum ? 'none' : settings.environment === 'earth' ? 'earth-standard' : 'mars-constant', dust: settings.dust, glare: settings.glare, interferenceSource: settings.siteConditions ? 'site' : 'manual',
