@@ -32,15 +32,17 @@ const TAIL: Record<FlightOutcome, number> = { success: 6.5, "hard-landing": 6.5,
 // Scene changes dissolve instead of cutting: a scene that ends leaves its last frame here, and the
 // next scene (cutscene, departure shot or live descent) starts under that still and fades it out.
 let rendererSequence=0;
-let handoff: { url: string; at: number } | null = null;
+export interface OpeningHandoff { offset: [number,number,number]; look: [number,number,number] }
+let handoff: { url: string; at: number; opening?: OpeningHandoff } | null = null;
 /** Keeps `canvas`'s current frame for the next scene. Call it right after rendering that frame. */
-export function leaveHandoff(canvas: HTMLCanvasElement) {
-  try { handoff = { url: canvas.toDataURL("image/jpeg", 0.9), at: performance.now() }; } catch { handoff = null; }
+export function leaveHandoff(canvas: HTMLCanvasElement, opening?: OpeningHandoff) {
+  try { handoff = { url: canvas.toDataURL("image/jpeg", 0.9), at: performance.now(), opening }; } catch { handoff = null; }
 }
 /** The previous scene's last frame, if it ended moments ago. */
 export function peekHandoff(): string | null {
   return handoff && performance.now() - handoff.at < 15000 ? handoff.url : null;
 }
+export function peekOpeningHandoff(): OpeningHandoff | null { return peekHandoff() ? handoff?.opening ?? null : null; }
 /** The still has been dissolved: the next scene change starts fresh. */
 export function clearHandoff() { handoff = null; }
 const DISSOLVE = 0.9;
@@ -353,11 +355,11 @@ export class CutsceneEngine {
   protected tick = (now: number) => {
     if (this.disposed) return;
     const dt = Math.min(0.05, Math.max(0, (now - this.last) / 1000)); this.last = now;
-    this.step(dt);
+    this.step(this.kind === "opening" || this.kind === "liftoff" ? Math.min(dt, Math.max(0,this.duration-this.t)) : dt);
     this.render();
     if (this.kind && this.kind !== "live" && this.t >= this.duration && this.finish) {
       const ending = this.kind !== "opening" && this.kind !== "liftoff";
-      if (!ending) leaveHandoff(this.renderer.domElement);     // the next scene dissolves from this frame
+      if (!ending) leaveHandoff(this.renderer.domElement, this.kind === "opening" ? {offset:this.camera.position.clone().sub(this.lander.group.position).toArray(),look:this.camLook.clone().sub(this.lander.group.position).toArray()} : undefined);     // the next scene dissolves from this frame
       this.finish();
       if (!ending) { this.kind = null; return; }      // opening and liftoff hold their last frame; endings keep smouldering
     }

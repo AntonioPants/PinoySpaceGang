@@ -462,3 +462,45 @@
 }
 .opening-earth.on-surface .game-selector { position:relative; inset:auto; grid-column:1; grid-row:2; justify-self:end; align-self:stretch; width:min(340px, calc(100% - 2 * var(--game-gutter))); margin:8px var(--game-gutter); max-height:none; overflow:hidden; z-index:6; }
 .opening-earth.on-surface .terrain-info-sheet { grid-column:1; }
+
+/* Gameplay remains full bleed; readable HUD elements float over the live scene. */
+.opening-game .journey-content { bottom:0; }
+.immersive-game-session .flight-workspace { display:block; }
+.immersive-game-session .flight-stage { position:absolute; inset:0; height:100%; }
+.immersive-game-session .flight-toolbar { position:absolute; inset:0 0 auto; z-index:3; max-height:28vh; background:linear-gradient(#030405b8,transparent); align-items:flex-start; }
+.immersive-game-session .flight-hud { position:absolute; inset:auto 0 66px; z-index:2; padding:16px 20px; background:transparent; pointer-events:none; }
+.immersive-game-session .flight-help { position:absolute; inset:auto 120px 34px 20px; z-index:2; margin:0; max-height:2.8em; padding:0; background:transparent; text-shadow:0 1px 4px #000; }
+.immersive-game-session .model-assumptions { position:absolute; inset:auto auto 10px 20px; z-index:3; max-width:min(560px,calc(100% - 150px)); max-height:30vh; padding:6px 10px; background:#03040580; border-radius:6px; }
+.immersive-game-session .terrain-comparison-legend { bottom:190px; }
+@media(max-width:760px) {
+  .immersive-game-session .flight-toolbar { max-height:32vh; padding:10px 12px; }
+  .immersive-game-session .flight-hud { bottom:76px; padding:10px 12px; gap:8px; }
+  .immersive-game-session .flight-help { left:12px; right:110px; bottom:38px; font-size:9px; }
+  .immersive-game-session .model-assumptions { left:12px; font-size:10px; }
+  .immersive-game-session .terrain-comparison-legend { bottom:220px; max-height:20vh; }
+}
+@media(max-height:540px) {
+  .immersive-game-session .flight-hud { bottom:42px; padding:8px 16px; }
+  .immersive-game-session .flight-help { display:none; }
+  .immersive-game-session .terrain-comparison-legend { bottom:118px; }
+}
+/* Keep attribution and the two footer overlays clear of the telemetry. */
+.immersive-game-session .flight-hud { bottom:88px; }
+.immersive-game-session .flight-help { bottom:42px; }
+.immersive-game-session .flight-3d .terrain-credit { top:auto!important; bottom:174px!important; max-height:2.8em; font-size:9px; }
+.immersive-game-session .terrain-comparison-legend { bottom:212px; }
+@media(max-width:760px) {
+  .immersive-game-session .flight-hud { bottom:96px; }
+  .immersive-game-session .flight-help { bottom:44px; }
+  .immersive-game-session .flight-3d .terrain-credit { bottom:214px!important; }
+  .immersive-game-session .terrain-comparison-legend { bottom:252px; }
+}
+@media(max-height:540px) {
+  .immersive-game-session .flight-hud { bottom:42px; }
+  .immersive-game-session .flight-3d .terrain-credit { bottom:94px!important; }
+  .immersive-game-session .terrain-comparison-legend { bottom:132px; }
+}
+.immersive-game-session .model-assumptions { left:auto; right:120px; max-width:min(560px,calc(100% - 240px)); }
+@media(max-width:760px) {
+  .immersive-game-session .model-assumptions { right:110px; max-width:calc(100% - 220px); }
+}

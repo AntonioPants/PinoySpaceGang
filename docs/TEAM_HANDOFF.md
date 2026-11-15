@@ -316,3 +316,23 @@ viewport override did not take effect in this environment; phone layout and a ha
 performance matrix are not claimed by these checks. Tile cache budgets are bounded
 (64 MiB per planetary renderer, 96 MiB per Earth scenery renderer), with download/parse
 concurrency capped at six/two. These are budgets, not measured total process/GPU usage.
+
+## Full-viewport flight overlays and approach camera (15 November 2026)
+
+`codex/immersive-handoff` restores a full-height scene behind the immersive descent's
+controls, HUD, help and assumptions. These are floating overlays with gradients rather
+than solid layout rows; planner sizing is unchanged. The journey no longer reserves an
+empty footer strip. DEM attribution sits above telemetry and assumptions leave room for
+the network status and Credits control.
+
+The natural Earth approach ends at its exact timeline endpoint and stores its final
+camera/look offsets relative to the lander with the frame handoff. The live `FlightView`
+starts from those offsets and eases to its chase framing over 0.9 seconds while following
+the authoritative simulation position. Skips and non-opening handoffs carry no camera
+pose, and cleared/expired frames cannot supply one. No simulation state, sensor behaviour
+or guidance parameters change. `cameraHandoff.test.ts` checks both endpoints, translated
+landing frames, unchanged inputs, and skipped/cleared handoffs.
+
+Browser: natural liftoff → Earth approach → live descent, Pause and overlay readability;
+scene bounds measured top 0, bottom 736, viewport height 736. Build and catalog consumer
+check pass; 431 tests pass (49 existing skips). Changes remain local unless explicitly pushed.

@@ -1,10 +1,11 @@
+import { openingCameraPose } from '../../web/src/components/cutscene/cameraHandoff';
 /**
  * Live 3D view of a flight flown by the physics engine in app/sim.
  * Each frame it advances the simulation and draws the true state: position, tilt, throttle,
  * hazard scan, divert, trail. When the flight ends it hands over to the cutscene ending.
  */
 import * as THREE from "three";
-import { CutsceneEngine, V, lerp, clamp01, TAIL, type Track } from "../../web/src/components/cutscene/engine";
+import { CutsceneEngine, peekOpeningHandoff, V, lerp, clamp01, TAIL, type Track, type OpeningHandoff } from "../../web/src/components/cutscene/engine";
 import type { Controls, FlightSummary, Sim, SimEvent, TelemetrySample } from "../sim/src/index.ts";
 import { buildOverlay, buildSiteMarker, OVERLAY_STYLE, overlayStep, type OverlayStyle, type SensorOverlay } from "./sensorOverlay.ts";
 import { buildLander, type LanderSpec } from "../../web/src/components/cutscene/lander";
@@ -54,6 +55,8 @@ export class FlightView extends CutsceneEngine {
   private cam = { az: 0.9, el: 0.3, dist: 34, lead: V(), vAz: 0, vEl: 0, vDist: 0, vLead: V() };   // camera orbit round the lander, on springs
   private chaseAz = 0.9;
   private cut = true;                     // next frame places the camera without easing
+  private openingCamera: OpeningHandoff | null = null;
+  private openingCameraAge = 0;
   externallyDriven = false;
   private simAcc = 0;                     // simulated time not yet stepped, s
   private path: THREE.Line; private trail: THREE.Line; private trailN = 0; private trailT = -1;
@@ -139,6 +142,7 @@ export class FlightView extends CutsceneEngine {
   /** Flies `sim` live. The same seed and settings as the prediction give the same flight. */
   fly(sim: Sim, s: FlightSetup, hooks: FlightHooks = {}) {
     this.applySetup(s); this.finish?.(); this.resetScene(); this.clearFlightVisuals();
+    this.openingCamera=peekOpeningHandoff();this.openingCameraAge=0;
     this.audio.start();this.beginHandoff();
     this.sim = sim; this.hooks = hooks; this.seen = 0; this.scanned = false; this.scanT = -1;
     this.kind = "live"; this.t = 0; this.camEase = 0; this.track = null; this.cut = true; this.simAcc = 0;
@@ -353,8 +357,14 @@ export class FlightView extends CutsceneEngine {
     }
     const a = c.az + this.az;
     this.camEase = 0;
-    this.setCam(P.clone().add(V(Math.cos(a) * Math.cos(c.el), Math.sin(c.el), Math.sin(a) * Math.cos(c.el)).multiplyScalar(c.dist)),
-      P.clone().add(V(0, 1.5, 0)).add(c.lead));
+    const position=P.clone().add(V(Math.cos(a)*Math.cos(c.el),Math.sin(c.el),Math.sin(a)*Math.cos(c.el)).multiplyScalar(c.dist));
+    const look=P.clone().add(V(0,1.5,0)).add(c.lead);
+    if(this.openingCamera){
+      const pose=openingCameraPose(P,position,look,this.openingCamera,this.openingCameraAge);
+      position.copy(pose.position);look.copy(pose.look);
+      this.openingCameraAge+=dt;if(this.openingCameraAge>=.9)this.openingCamera=null;
+    }
+    this.setCam(position,look);
   }
 
   /** The flight is over: stage the cutscene ending at the real touchdown point. */
