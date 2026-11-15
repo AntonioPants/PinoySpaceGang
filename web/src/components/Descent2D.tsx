@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { ComparisonToggle, ComparisonLegend, useTerrainComparison } from './TerrainComparison';
+import { comparisonEarth, comparisonHeight } from '../lib/terrainComparison';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useLanderSim } from '../../../app/sim/react/useLanderSim';
 import { SideView } from '../../../app/sim/viewer/components/SideView';
 import type { FlightTelemetry } from '../../../app/sim/src/types';
@@ -11,6 +13,9 @@ export interface DescentProps {mission:MissionConfig;profile:TerrainProfile;entr
   toolbarExtra?:ReactNode}
 /** The 2D side-view descent. The default view is the 3D one in Descent3D.tsx. */
 export default function Descent2D({ mission, profile, entry, weather, autoStart = false, onReport, onExit, toolbarExtra }: DescentProps) {
+  const comparison = useTerrainComparison(mission.planetaryTarget.id);
+  const earth = useMemo(() => comparisonEarth(profile), [profile]);
+  const reference = useMemo(() => comparison.pack ? { heightAt: (x: number, y: number) => comparisonHeight(comparison.pack!, earth, x, y) } : null, [comparison.pack, earth]);
   const lander = useLanderSim({speed:1,keyboard:mission.strategy.mode==='MANUAL_CONTROL'});
   const [error,setError]=useState(''), [started,setStarted]=useState(false);
   const outside=useRef(false);
@@ -25,8 +30,8 @@ export default function Descent2D({ mission, profile, entry, weather, autoStart 
     }
   }),[lander.onFrame,lander.setPaused,profile]);
   const state=lander.hud;
-  return <section className="flight-workspace"><div className="flight-toolbar"><div><strong>{mission.planetaryTarget.name} descent</strong><small>{mission.earthAnalog.name} · Measured Earth terrain</small></div><div><button className="subtle-button" onClick={onExit}>{started && !lander.summary ? 'End flight & configure' : 'Back to configuration'}</button><button className="primary-button" onClick={launch}>{started?'Restart flight':'Start descent'}</button>{started && !lander.summary && !error && <button className="subtle-button" onClick={lander.togglePause}>{lander.paused?'Resume':'Pause'}</button>}<label>Playback <select aria-label="Playback speed" value={lander.speed} onChange={e=>lander.setSpeed(Number(e.target.value))}><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></label>{toolbarExtra}</div></div>
-    <div className="flight-stage"><SideView onFrame={lander.onFrame} paused={lander.paused}/>{!started&&<div className="launch-overlay"><h2>Ready for descent</h2><p>Start 1,000 m above ground, 400 m west of the target.<br/>Initial velocity: 25 m/s east and 20 m/s down.</p><button className="primary-button" onClick={launch}>Start descent</button></div>}</div>
+  return <section className="flight-workspace"><div className="flight-toolbar"><div><strong>{mission.planetaryTarget.name} descent</strong><small>{mission.earthAnalog.name} · Measured Earth terrain</small></div><div><button className="subtle-button" onClick={onExit}>{started && !lander.summary ? 'End flight & configure' : 'Back to configuration'}</button><button className="primary-button" onClick={launch}>{started?'Restart flight':'Start descent'}</button>{started && !lander.summary && !error && <button className="subtle-button" onClick={lander.togglePause}>{lander.paused?'Resume':'Pause'}</button>}<label>Playback <select aria-label="Playback speed" value={lander.speed} onChange={e=>lander.setSpeed(Number(e.target.value))}><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></label><ComparisonToggle comparison={comparison}/>{toolbarExtra}</div></div>
+    <div className="flight-stage"><SideView onFrame={lander.onFrame} paused={lander.paused} comparison={reference}/><ComparisonLegend comparison={comparison} targetName={mission.planetaryTarget.name} earthName={mission.earthAnalog.name} earthSpacing={profile.sampleSpacingM}/>{!started&&<div className="launch-overlay"><h2>Ready for descent</h2><p>Start 1,000 m above ground, 400 m west of the target.<br/>Initial velocity: 25 m/s east and 20 m/s down.</p><button className="primary-button" onClick={launch}>Start descent</button></div>}</div>
     {error && <p role="alert" className="import-error">{error}</p>}
     <div className="flight-hud">{[['Elapsed',`${(state?.t??0).toFixed(1)} s`],['Altitude AGL',`${(state?.altitudeAGL??1000).toFixed(1)} m`],['Vertical velocity',`${(state?.velocity.z??-20).toFixed(2)} m/s`],['Fuel',`${(state?.fuelKg??mission.strategy.fuelMassKg).toFixed(1)} kg`],['Throttle',`${((state?.throttle??0)*100).toFixed(0)}%`]].map(([label,value])=><div key={label}><span>{label}</span><strong>{value}</strong></div>)}</div>
     <p className="flight-help">{mission.strategy.mode==='MANUAL_CONTROL'?'Keyboard: hold W/S to raise/lower throttle; arrow keys steer; X cuts the engine.':'Autonomous hazard-avoidance guidance is active after launch.'} Physics runs at a fixed 1/120 s timestep. Terrain does not resolve footpad-scale hazards.</p>

@@ -1,3 +1,6 @@
+import type { TerrainPack } from '../../components/cutscene/terrainPack';
+import { comparisonEarth } from '../../lib/terrainComparison';
+import { buildTerrainHologram, disposeHologram } from '../../lib/terrainComparison3D';
 import { useEffect, useRef, useState } from 'react';
 import * as T from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -13,7 +16,7 @@ export interface WorldProps {
   stage: 'title' | 'worlds' | 'destination' | 'earth'; body: Body; hover: Body | null;
   targets: PlanetarySite[]; analogs: AnalogSite[]; targetId: string; analogId: string;
   selectedAnalog: AnalogSite;
-  profile: TerrainProfile | null; surface: boolean;
+  profile: TerrainProfile | null; surface: boolean; comparisonPack?: TerrainPack | null;
   /** A site the pointer is over in the list beside the scene; its region lights up here too. */
   hoverSite: string | null;
   /** The landing point flagged on the terrain (x east, y north, metres from the patch centre). */
@@ -73,6 +76,7 @@ type Route =
 /** One renderer and coordinate system from the title's flight to the three worlds to a measured Earth patch. */
 export default function WorldScene(props: WorldProps) {
   const mount = useRef<HTMLDivElement>(null), live = useRef(props), update = useRef<() => void>(() => {});
+  const compare = useRef<() => void>(() => {});
   const paint = useRef<() => void>(() => {}), plant = useRef<() => void>(() => {});
   const [error, setError] = useState(false); live.current = props;
   useEffect(() => {
@@ -116,6 +120,16 @@ export default function WorldScene(props: WorldProps) {
     const title = buildTitleFlight(); camera.add(title.rig); scene.add(title.beacon); textures.push(...title.textures);
     const markers = new T.Group(); scene.add(markers);
     let terrain: T.Group | null = null, terrainProfile: TerrainProfile | null = null, terrainMaterial: T.MeshStandardMaterial | null = null;
+    let hologram: T.Group | null = null;
+    compare.current = () => {
+      if (hologram) { disposeHologram(hologram); hologram = null; }
+      const p = live.current;
+      if (!terrain || !p.profile || !p.comparisonPack || p.stage !== 'earth' || !p.surface) return;
+      const earth = comparisonEarth(p.profile);
+      let low = Infinity; for (const h of earth.heights) low = Math.min(low,h);
+      hologram = buildTerrainHologram(earth,p.comparisonPack,{elevation:low,curved:true});
+      terrain.add(hologram);
+    };
     let picker: LandingPicker | null = null, lastSite: T.Vector3 | null = null;
     const departingPatches: T.Group[] = [];
     let scenery: EarthScenery | undefined;
@@ -204,6 +218,7 @@ export default function WorldScene(props: WorldProps) {
           }
         }
       }
+      compare.current();
       if(terrain)terrain.visible=p.stage==='earth';
       departingPatches.forEach(patch => { patch.visible = p.stage==='earth'; });
       sun.position.set(-5,5,8);sun.target.position.set(0,0,0);
@@ -352,10 +367,11 @@ export default function WorldScene(props: WorldProps) {
       const streamed = surface && scenery?.draw(camera);
       if (streamed) { planets.get('Earth')!.visible = false; scene.background = null; renderer.autoClear = false; }
       renderer.render(scene,camera); renderer.autoClear = true;frame=requestAnimationFrame(render);};render();
-    return()=>{disposed=true;scenery?.dispose();cancelAnimationFrame(frame);resize.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',pointerDown);renderer.domElement.removeEventListener('pointerup',pointerUp);renderer.domElement.removeEventListener('pointermove',pointerMove);renderer.domElement.removeEventListener('pointerleave',pointerLeave);textures.forEach(t=>t.dispose());release(scene);renderer.dispose();renderer.domElement.remove();flash.remove();update.current=()=>{};paint.current=()=>{};plant.current=()=>{};};
+    return()=>{disposed=true;scenery?.dispose();cancelAnimationFrame(frame);resize.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',pointerDown);renderer.domElement.removeEventListener('pointerup',pointerUp);renderer.domElement.removeEventListener('pointermove',pointerMove);renderer.domElement.removeEventListener('pointerleave',pointerLeave);textures.forEach(t=>t.dispose());release(scene);renderer.dispose();renderer.domElement.remove();flash.remove();update.current=()=>{};paint.current=()=>{};plant.current=()=>{};compare.current=()=>{};};
   },[]);
   useEffect(()=>update.current(),[props.stage,props.body,props.hover,props.targetId,props.analogId,props.profile,props.surface,props.analogs,props.targets]);
   useEffect(()=>paint.current(),[props.hoverSite]);
   useEffect(()=>plant.current(),[props.landing]);
+  useEffect(() => { compare.current(); }, [props.comparisonPack, props.surface, props.profile, props.stage]);
   return <div className="opening-world-scene" ref={mount}>{error&&<p className="scene-unavailable">3D graphics are unavailable. Use the destination and site controls to continue.</p>}</div>;
 }
