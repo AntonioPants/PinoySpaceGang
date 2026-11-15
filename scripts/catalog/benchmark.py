@@ -73,7 +73,7 @@ def method_scores(catalog, public=PUBLIC, include_candidate=True):
         centre = tf.features(*grids[tid], live)
         out[PRODUCTION][tid] = {e['id']: analog_score.combine(
             analog_score.terrain_percent(tf.features(*grids[e['id']], live), centre, frozen.get(live)),
-            analog_score.landform(e['morphology'], target['morphology'])['match_percent']) for e in earth}
+            analog_score.landform(e['morphology'], target['morphology'], e.get('inferred_landforms',()))['match_percent']) for e in earth}
         if not include_candidate: continue
         resolution = tf.common_resolution(grids[tid][1])
         vectors = {sid: tf.features(*grids[sid], resolution) for sid in [tid]+[e['id'] for e in earth]}
@@ -108,6 +108,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     parser.add_argument('--write', action='store_true', help=f'write {OUTPUT.relative_to(ROOT)}')
     parser.add_argument('--candidate',action='store_true',help='Also evaluate the experimental descriptor score; not production ranking')
+    parser.add_argument('--output',type=Path,default=OUTPUT,help='Write a separate report to preserve historical benchmarks')
     args = parser.parse_args(argv)
     report = benchmark(json.loads((PUBLIC/'sites.json').read_text(encoding='utf-8')),include_candidate=args.candidate)
     for method, data in report['methods'].items():
@@ -118,7 +119,7 @@ def main(argv=None):
                 continue
             print(f'  {tid:18} auc {row["auc"]:.2f}  recall@10 {row["recall_at_10"]:.2f}  '
                   f'mean rank {row["mean_rank"]:5.1f} gap {row["score_gap_pp"]:.2f} pp of {row["candidates"]}  ({row["known"]} known)')
-    OUTPUT.write_text(json.dumps(report, indent=2,allow_nan=False)+'\n', encoding='utf-8')
+    args.output.write_text(json.dumps(report, indent=2,allow_nan=False)+'\n', encoding='utf-8')
 
 
 if __name__ == '__main__':

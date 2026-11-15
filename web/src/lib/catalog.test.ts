@@ -19,7 +19,12 @@ function profileOf(id: string) {
 
 describe('site catalog in the mission planner', () => {
   it('lists every planetary target and Earth analog from the catalog', () => {
-    expect(catalog.targets.map(t => t.id).sort()).toEqual(['arsia-flank', 'bagnold', 'jezero', 'lucus-planum', 'malapert-massif', 'marius-hills', 'mons-mouton', 'phoenix', 'shackleton-rim']);
+    const ids = catalog.targets.map(t => t.id);
+    // The nine original targets plus the twenty added study areas on each body.
+    for (const id of ['arsia-flank', 'bagnold', 'jezero', 'lucus-planum', 'malapert-massif', 'marius-hills', 'mons-mouton', 'phoenix', 'shackleton-rim', 'apollo-11-tranquillity', 'oxia-planum']) expect(ids).toContain(id);
+    expect(catalog.targets.filter(t => t.body === 'Moon')).toHaveLength(24);
+    expect(catalog.targets.filter(t => t.body === 'Mars')).toHaveLength(25);
+    expect(new Set(ids).size).toBe(ids.length);
     expect(catalog.targets.find(t => t.id === 'jezero')).toMatchObject({ body: 'Mars', gravity: 3.72 });
     expect(catalog.analogs.filter(a => a.available)).toHaveLength([...catalog.entries.values()].filter(s => s.body === 'earth' && s.terrain).length);
     expect(catalog.analogs.filter(a => !a.available)).toEqual([]);

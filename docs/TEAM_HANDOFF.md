@@ -127,12 +127,14 @@ Coordinate with Furgan: landing-outcome visuals finish before the character debr
 
 Current delivery: `web/src/game/debrief/DebriefScene.tsx` replaces the flat report in the
 game's `report` stage. The astronaut walks to the mission-control monitor, the camera
-pushes into its screen, and the report opens there as an eight-section carousel
+pushes into its screen, and the analog report opens there as a nine-section carousel
 (`sections.tsx`) with left/right arrows, arrow keys and a burst of TV static between
 sections. It reuses Tim's cabin, astronaut and camera helpers read-only and shows only
 the flown telemetry. Reduced motion or missing WebGL opens the report directly; "Skip to
-report" is always available. Telemetry export was removed at Antonio's request; retry is
-kept. Test bench: `?debrief-demo`. The planner still uses `components/FlightReport.tsx`.
+report" is always available. The report leads with why the pair is an analog and where the
+analogy breaks down (the catalog's own pair evidence), then terrain, environment, landing
+behaviour and the flown flight. "Download report (JSON)" in the footer exports the same
+content as data; retry is kept. Test bench: `?debrief-demo`. The planner still uses `components/FlightReport.tsx`.
 
 ## Shared boundaries and integration
 
@@ -222,11 +224,13 @@ New seams. Nothing in `game/contracts.ts`, `MissionConfig` or the scene registry
   In `OpeningGame`, `pin` holds the point and its state; when `pinActive`, `target`, `ranked`
   and `topTen` come from the server's answer, `pairingOf`/`matchOf` are skipped, and
   `AnalogEvidence`, `LandingEvidence`, `MissionControlScreen` and the debrief's match section
-  show pinned-point copy (they detect the `custom-` id). `computeFidelity` takes an optional
-  planetary profile (Tim: `lib/fidelity.ts`) and then skips the catalog lookup, the pack download
-  and the cached baseline; `DebriefScene`, `FlightReport` and `FlightReportNHB` pass it through.
-  The mission carries the pin's terrain match as `evidence.quantitativeSimilarityScore` with
-  status `unvalidated-pair`.
+  show pinned-point copy (they detect the `custom-` id). The debrief's comparison flights for a pin
+  run in `lib/fidelityCustom.ts` on the terrain the service returned: no catalog lookup, no pack
+  download, no cached baseline. `lib/fidelity.ts` is deliberately untouched, because it is part of
+  the landing baseline's engine fingerprint; `DebriefScene`, `FlightReport` and `FlightReportNHB`
+  take an optional `planetaryProfile` and choose between the two. The debrief's side-by-side 3D
+  terrain view is skipped for a pin. The mission carries the pin's terrain match as
+  `evidence.quantitativeSimilarityScore` with status `unvalidated-pair`.
 - **The server** (`supabase/`, new; Antonio's method, Tim's project). One edge function, a cache
   table, the geologic maps and gazetteer in PostGIS. `supabase/README.md` says what is deployed,
   how to verify (`node supabase/verify.ts`) and how to redeploy. Env keys: `VITE_SUPABASE_URL`,
@@ -239,6 +243,6 @@ New seams. Nothing in `game/contracts.ts`, `MissionConfig` or the scene registry
 
 Who should review what: Eyad the opening (`OpeningGame.tsx`, `WorldScene.tsx`, `opening.css`,
 `MoonGlobe.tsx`); Antonio the scoring port, the unit-to-family table, the evidence copy and
-`docs/ANALOG_MATCHING.md`; Tim `lib/fidelity.ts` and the Supabase project; Furgan `vite.config.ts`.
+`docs/ANALOG_MATCHING.md`; Tim `lib/fidelityCustom.ts` and the Supabase project; Furgan `vite.config.ts`.
 The rest of the performance pass (quality tiers, hidden-tab pause, lost-context recovery,
 renderer audit, GPU warm-up, a lazy catalog) was not done: see the pull request.

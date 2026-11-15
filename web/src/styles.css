@@ -465,3 +465,14 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
 /* The player's own pin on a Cesium globe. */
 .cesium-pin { position: absolute; width: 22px; height: 22px; transform: translate(-50%, -50%); border: 2px solid #e9c78a; border-radius: 50%; box-shadow: 0 0 0 1px #000a, 0 0 14px #e9c78a99; pointer-events: none; }
 .cesium-pin::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: #fff1cf; }
+
+/* Compact terrain reference HUD. */
+.terrain-comparison-legend { position:absolute; z-index:4; left:14px; bottom:14px; max-width:min(540px,calc(100% - 28px)); padding:10px 12px; background:rgba(8,17,25,.88); border:1px solid #375967; border-radius:6px; color:#e4edf0; font-size:12px; }
+.terrain-comparison-legend strong,.terrain-comparison-legend small { display:block; }
+.terrain-comparison-legend small { margin-top:5px; line-height:1.4; color:#bfcfd5; }
+.terrain-comparison-legend details { margin-top:5px; }
+.terrain-comparison-legend p { margin:5px 0 0; }
+.comparison-earth { color:#dfc78f; }
+.comparison-planet { color:#65e7ff; margin-left:10px; }
+.surface-brief .terrain-comparison-legend { position:static; max-width:100%; margin:8px 0; }
+@media(max-width:600px) { .terrain-comparison-legend { font-size:10px; left:8px; bottom:8px; max-width:calc(100% - 16px); padding:7px; } }

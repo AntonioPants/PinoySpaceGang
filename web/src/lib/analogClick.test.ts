@@ -5,6 +5,7 @@ import sitesJson from '../../public/sites.json';
 import { parseCatalog } from './catalog';
 import { analyseClick, clickEvidence, ClickError, clickLandformLabel, clickScoreLabel, customAnalogs, customTarget, decodeClick, formatPoint, isCustomTarget, SERVICE_UNAVAILABLE, type ClickResponse } from './analogClick';
 import { computeFidelity } from './fidelity';
+import { computeCustomFidelity } from './fidelityCustom';
 import { isBaselineMission } from './landingSimilarity';
 import { buildMission, defaultSettings, loadProfile } from './mission';
 import { catalogSites } from '../data/sites';
@@ -137,7 +138,7 @@ describe('the debrief for a pinned point', () => {
     // Without the fetched terrain there is nothing to compare against: the catalog path refuses.
     await expect(computeFidelity(mission, analogProfile, catalogSites.find(site => site.id === earth.id))).rejects.toThrow(/not in the site catalog/);
     vi.stubGlobal('fetch', async () => { throw new Error('a pinned point must not download a pack or a baseline'); });
-    const report = await computeFidelity(mission, analogProfile, catalogSites.find(site => site.id === earth.id), undefined, undefined, planetary);
+    const report = await computeCustomFidelity(mission, analogProfile, planetary, catalogSites.find(site => site.id === earth.id));
     expect(Number.isFinite(report.guided.score)).toBe(true);
     expect(Number.isFinite(report.stress.score)).toBe(true);
     expect(Number.isFinite(report.stress.planetary.successRate)).toBe(true);
@@ -145,6 +146,6 @@ describe('the debrief for a pinned point', () => {
     expect(isBaselineMission(mission)).toBe(true);
     // Terrain from another world or another target is refused rather than flown.
     const wrong = decodeClick(copy()).profile; wrong.manifest.id = 'custom-mars-0.00n-0.00e';
-    await expect(computeFidelity(mission, analogProfile, undefined, undefined, undefined, wrong)).rejects.toThrow(/does not belong/);
+    await expect(computeCustomFidelity(mission, analogProfile, wrong)).rejects.toThrow(/does not belong/);
   });
 });

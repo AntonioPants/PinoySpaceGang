@@ -225,7 +225,7 @@ both coarse grids look smooth. Ranks reflect available candidates and are not
 environmental-accuracy rankings; fixed score normalization does not depend on the
 number of sites.
 
-## Compatibility gate
+## Compatibility g  ate
 
 Finite measured, derived or modeled quantities need source URL, method, coverage
 and compatible units (Celsius converts to kelvin). Assumed parameters are excluded.
@@ -331,3 +331,32 @@ cannot reproduce the target's gravity, atmosphere or radiation.
 Sources: USGS Astrogeology MGS MOLA 463 m and LRO LOLA 118 m global DEM mosaics; Tanaka et al.
 (2014) USGS SIM 3292; Fortezzo et al. (2020) Unified Geologic Map of the Moon; IAU Gazetteer of
 Planetary Nomenclature (names, centre points).
+## Expanded-population audit (15 November 2026)
+
+`data/matching-benchmark.json` remains the historical 50-Earth-site result.
+`data/matching-benchmark-expanded.json` evaluates all 102 Earth sites and all 49
+planetary targets. Targets without reference pairs report null metrics, not zero
+accuracy. The benchmark now passes inferred scan landforms through the same
+75%-discounted landform function as production; previously it treated every scan
+as an unknown label with zero landform contribution. Production scores/scales are
+unchanged.
+
+| Pure-score reference metric | Historical 50 Earth | Expanded 102 Earth |
+|---|---:|---:|
+| Analog AUC | 0.9173 | 0.8430 |
+| Analog recall@10 | 0.7797 | 0.5254 |
+| Analog mean reference rank | 9.1186 | 20.0339 |
+| Retired terrain AUC | 0.4163 | 0.3557 |
+
+These populations differ; the decrease is not hidden or fixed by changing weights.
+The expanded pool includes plausible unlabelled scans which can outrank the old
+reference sites. Unlabelled candidates count as non-reference examples in AUC,
+not scientifically disproven analogs. Historical regression thresholds are tested
+against the original curated Earth population, while the expanded report stays
+separate. More independent reference labels are required before claiming accuracy
+for the 40 added planetary targets.
+
+The full scan shortlist now covers all 49 targets without adding unbuilt windows
+to the playable catalog. Published comparisons include source-backed exploratory
+context under `comparison_explanation`; these are catalog interpretations, not
+reviewed literature pairings and never change ranking priority.

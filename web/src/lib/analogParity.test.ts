@@ -25,8 +25,8 @@ const two = (v: number) => Math.round(Math.round(v * 1e4) / 100) / 100;
 const SHARES = /^(slope_gt_|bowl_share|ridge_share)/;
 
 describe('click-anywhere scoring parity', () => {
-  it('reproduces the Python descriptors of all 9 planetary packs', () => {
-    expect(Object.keys(fixtures.targets)).toHaveLength(9);
+  it('reproduces the Python descriptors of every planetary pack', () => {
+    expect(Object.keys(fixtures.targets).length).toBeGreaterThanOrEqual(9);
     let worst = 0;
     for (const [id, target] of Object.entries(fixtures.targets)) {
       const mine = vectors[id], n = centralWindow(pack(id), target.spacing_m).rows;

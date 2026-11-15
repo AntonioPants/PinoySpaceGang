@@ -40,6 +40,8 @@ SITES = [
 ]
 
 SITES.extend(GLOBAL_SITES)
+from .planetary_sites import SITES as PLANETARY_SITES
+SITES.extend(PLANETARY_SITES)
 
 def records():
     keys = ['id','name','body','longitude','latitude','region','morphology','substrate','evidence_url','description','matches']

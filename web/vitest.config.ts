@@ -1,5 +1,7 @@
 import { defineConfig } from 'vitest/config';
+import { engineFingerprint } from '../app/sim/scripts/engine-fingerprint';
 export default defineConfig({
+  define: {__LANDING_ENGINE_SHA__: JSON.stringify(engineFingerprint())},
   esbuild: { jsx: 'automatic' },
   resolve: { dedupe: ['react', 'react-dom', 'three'] },
   // The suite loads every real terrain pack and flies full descents in parallel workers; on a busy

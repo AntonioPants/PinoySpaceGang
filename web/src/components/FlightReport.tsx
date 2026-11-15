@@ -3,6 +3,7 @@ import type { FlightTelemetry } from '../../../app/sim/src/types';
 import type { CatalogSite } from '../../../app/sim/src/catalog';
 import type { MissionConfig, TerrainProfile } from '../lib/types';
 import { computeFidelity, type FidelityReport } from '../lib/fidelity';
+import { computeCustomFidelity } from '../lib/fidelityCustom';
 import type { MatchCheck } from '../lib/matching';
 import LandingEvidence from './LandingEvidence';
 import FlightDebrief from './FlightDebrief';
@@ -13,7 +14,7 @@ export default function FlightReport({flight,mission,profile,analogEntry,planeta
   const [fidelity,setFidelity]=useState<FidelityState>({status:'working'});
   useEffect(()=>{
     const abort=new AbortController(); setFidelity({status:'working'});
-    computeFidelity(mission,profile,analogEntry,planetaryEntry,abort.signal,planetaryProfile)
+    (planetaryProfile ? computeCustomFidelity(mission, profile, planetaryProfile, analogEntry, abort.signal) : computeFidelity(mission, profile, analogEntry, planetaryEntry, abort.signal))
       .then(r=>{ if(!abort.signal.aborted) setFidelity({status:'done',result:r}); })
       .catch(e=>{ if(!abort.signal.aborted) setFidelity({status:'unavailable',reason:e instanceof Error?e.message:'Could not compute the score.'}); });
     return ()=>abort.abort();

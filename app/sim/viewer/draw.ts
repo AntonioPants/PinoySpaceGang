@@ -144,6 +144,7 @@ interface Particle {
 }
 
 /** Side-on chase view. Keeps its own camera, particles and effects state per flight. */
+export interface ComparisonProfile { heightAt(x: number, north: number): number | null }
 export function createSideRenderer() {
   let current: Sim | undefined;
   let particles: Particle[] = [];
@@ -161,7 +162,7 @@ export function createSideRenderer() {
     cam.init = false;
   };
 
-  return function draw(ctx: CanvasRenderingContext2D, sim: Sim | null, input: SimInput | null, dtReal: number, paused: boolean) {
+  return function draw(ctx: CanvasRenderingContext2D, sim: Sim | null, input: SimInput | null, dtReal: number, paused: boolean, comparison?: ComparisonProfile | null) {
     const W = ctx.canvas.width;
     const H = ctx.canvas.height;
     const dpr = window.devicePixelRatio || 1;
@@ -223,6 +224,18 @@ export function createSideRenderer() {
     ctx.lineWidth = 1.5 * dpr;
     ctx.stroke();
 
+    // Same camera and metre scale. Leave gaps outside the shared DEM.
+    if (comparison) {
+      ctx.strokeStyle = '#65e7ff'; ctx.lineWidth = 2 * dpr; ctx.setLineDash([7*dpr,4*dpr]);
+      ctx.beginPath(); let connected = false;
+      for (let px=0; px<=W; px+=2) {
+        const h = comparison.heightAt(cam.x+(px-W/2)/scale, s.position.y);
+        if (h === null) { connected=false; continue; }
+        if (connected) ctx.lineTo(px,Z(h)); else ctx.moveTo(px,Z(h));
+        connected=true;
+      }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
     const { aim, target } = aimFromEvents(sim, input);
     const mark = (x: number, color: string, label: string) => {
       ctx.strokeStyle = color;

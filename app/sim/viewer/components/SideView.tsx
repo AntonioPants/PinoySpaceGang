@@ -1,17 +1,19 @@
 import { useEffect, useRef } from 'react';
 import type { FrameListener } from '../../react/useLanderSim.ts';
-import { createSideRenderer } from '../draw.ts';
+import { createSideRenderer, type ComparisonProfile } from '../draw.ts';
 
 interface Props {
   onFrame: (fn: FrameListener) => () => void;
   paused: boolean;
+  comparison?: ComparisonProfile | null;
 }
 
 /** Chase-camera side view, drawn imperatively every animation frame (not via React renders). */
-export function SideView({ onFrame, paused }: Props) {
+export function SideView({ onFrame, paused, comparison }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
   const pausedRef = useRef(paused);
   pausedRef.current = paused;
+  const comparisonRef = useRef(comparison); comparisonRef.current = comparison;
 
   useEffect(() => {
     const canvas = ref.current!;
@@ -27,7 +29,7 @@ export function SideView({ onFrame, paused }: Props) {
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
-    const off = onFrame((sim, dt, input) => draw(ctx, sim, input, dt, pausedRef.current));
+    const off = onFrame((sim, dt, input) => draw(ctx, sim, input, dt, pausedRef.current, comparisonRef.current));
     return () => {
       off();
       ro.disconnect();

@@ -1,21 +1,24 @@
 """Range-read a verified 0.5-degree Diviner GCP cell (96 local-time bins)."""
 import hashlib
 import math
+import re
 import numpy as np
 import requests
 
 BASE='https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_gcp/'
 
+def band_for(latitude):
+    if not math.isfinite(latitude) or not -90 <= latitude <= 90:
+        raise ValueError('Invalid lunar latitude')
+    lat0 = min(80, math.floor(latitude/10)*10)
+    return (f'{lat0:02d}n{lat0+10:02d}n' if lat0 >= 0 else
+            f'{abs(lat0):02d}s{abs(lat0+10):02d}s'), lat0
+
 def thermal_bins(site, cache, offline=False, retained=None):
-    if 10 <= site['latitude'] < 20:
-        band, lat0 = '10n20n', 10
-    elif -90 <= site['latitude'] < -80:
-        band, lat0 = '90s80s', -90
-    else:
-        raise ValueError('Diviner retrieval supports only 10N-20N and 90S-80S; select and verify another product band first')
+    band, lat0 = band_for(site['latitude'])
     stem=f'global_cumul_avg_cyl_{band}_002'
-    x=math.floor((site['longitude']+180)/0.5)
-    y=math.floor((site['latitude']-lat0)/0.5)
+    x=math.floor(((site['longitude']+180)%360)/0.5)
+    y=min(19,math.floor((site['latitude']-lat0)/0.5))
     record=1+(x*20+y)*96
     start,end=record*113,(record+96)*113-1
     path=cache/f"{site['id']}-diviner.tab"
@@ -23,6 +26,16 @@ def thermal_bins(site, cache, offline=False, retained=None):
         path = retained
     if not path.exists():
         if offline: return {}
+        # Verify the product layout before computing byte offsets for a new cell.
+        label=cache/(stem+'.lbl')
+        if not label.exists():
+            response=requests.get(BASE+stem+'.lbl',timeout=60)
+            response.raise_for_status(); label.write_bytes(response.content)
+        text=label.read_text(encoding='ascii')
+        for key,expected in [('RECORD_BYTES',113),('COLUMNS',11),('MINIMUM_LATITUDE',lat0),('MAXIMUM_LATITUDE',lat0+10)]:
+            found=re.search(r'\b'+key+r'\s*=\s*(-?[\d.]+)',text)
+            if not found or float(found.group(1))!=expected:
+                raise ValueError('Unexpected Diviner product label: '+key)
         with requests.get(BASE+stem+'.tab',headers={'Range':f'bytes={start}-{end}'},stream=True,timeout=60) as r:
             if r.status_code!=206 or not r.headers.get('Content-Range','').startswith(f'bytes {start}-{end}/'):
                 raise ValueError('Diviner server did not honor bounded range request')

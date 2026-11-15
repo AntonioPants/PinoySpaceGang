@@ -8,27 +8,75 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import type { FlightTelemetry } from '../../../../app/sim/src/types';
 import type { CatalogSite } from '../../../../app/sim/src/catalog';
 import type { MissionConfig, TerrainProfile } from '../../lib/types';
 import { computeFidelity } from '../../lib/fidelity';
+import { computeCustomFidelity } from '../../lib/fidelityCustom';
+import { loadProfile } from '../../lib/mission';
+import { downloadJson } from '../../lib/importSettings';
 import type { MatchCheck } from '../../lib/matching';
 import { buildAstronaut } from '../interior/astronaut';
 import { buildCabin } from '../interior/cabin';
 import { buildSpace } from '../interior/exterior';
 import { followCamera, headingOf, standSpot, stationCamera, type CameraPose } from '../interior/player';
 import { ROOM, SCREEN, STATIONS } from '../interior/stations';
-import { buildSections, stepIndex, type FidelityState } from './sections';
+import { buildReportExport, buildSections, stepIndex, type FidelityState, type PairEvidence } from './sections';
 import '../interior/interior.css';
 import './debrief.css';
 
 type Stage = 'walk' | 'screen';
 const WALK_S = 3.6, SETTLE_S = 1.3, ZOOM_S = 1.7;
-/** How long the static covers the screen when the section changes, ms. The content swaps halfway. */
-const STATIC_MS = 420;
+/** How long a page change takes, ms: the static and the old page fade out together, the page swaps halfway, then the new page fades in as the static clears. */
+const STATIC_MS = 700;
 const REPORT_STATION = STATIONS.find(s => s.id === 'mission')!;
 const START = { x: 1.1, z: -0.4 };
+
+/**
+ * TV static as sound, made in code (no audio file). It plays for as long as the picture static is up,
+ * looping while a page is still loading: a crackle as the signal drops, hiss that wobbles like a weak
+ * signal, then it dulls and fades as the picture locks back in.
+ */
+let audio: AudioContext | null = null, hiss: AudioBuffer | null = null;
+let playing: { stop: (fadeMs: number) => void } | null = null;
+function staticBuffer(context: AudioContext) {
+  const rate = context.sampleRate, length = rate;   // one second, looped seamlessly (no envelope inside)
+  const buffer = context.createBuffer(1, length, rate), data = buffer.getChannelData(0);
+  let flutter = 1, target = 1;
+  for (let i = 0; i < length; i++) {
+    if (i % Math.floor(rate / 30) === 0) target = 0.45 + Math.random() * 0.55;   // signal strength wobbles ~30 times a second
+    flutter += (target - flutter) * 0.004;
+    const crackle = Math.random() < 0.01 ? (Math.random() * 2 - 1) * 1.6 : 0;
+    data[i] = (Math.random() * 2 - 1) * 0.6 * flutter + crackle;
+  }
+  return buffer;
+}
+function startStatic() {
+  playing?.stop(40);
+  try {
+    audio ??= new AudioContext();
+    if (audio.state === 'suspended') void audio.resume();
+    hiss ??= staticBuffer(audio);
+    const now = audio.currentTime, source = audio.createBufferSource(), band = audio.createBiquadFilter(), gain = audio.createGain();
+    source.buffer = hiss; source.loop = true; source.loopStart = 0; source.loopEnd = hiss.duration;
+    band.type = 'bandpass'; band.Q.value = 0.5; band.frequency.setValueAtTime(3200, now);
+    gain.gain.setValueAtTime(0, now); gain.gain.linearRampToValueAtTime(0.18, now + 0.012);
+    source.connect(band).connect(gain).connect(audio.destination); source.start(now, Math.random() * hiss.duration);
+    const handle = { stop: (fadeMs: number) => {
+      if (playing === handle) playing = null;
+      const at = audio!.currentTime, end = at + fadeMs / 1000;
+      gain.gain.cancelScheduledValues(at); gain.gain.setValueAtTime(gain.gain.value, at); gain.gain.linearRampToValueAtTime(0, end);
+      band.frequency.cancelScheduledValues(at); band.frequency.setValueAtTime(band.frequency.value, at); band.frequency.linearRampToValueAtTime(1800, end);
+      source.stop(end + 0.02);
+    } };
+    playing = handle;
+  } catch { playing = null; /* no audio available: the picture still changes */ }
+}
+const stopStatic = (fadeMs: number) => playing?.stop(fadeMs);
+
+/** Longest the static will wait for the 3D terrain before showing the page anyway. */
+const TERRAIN_WAIT_MS = 12000;
 
 const ease = (t: number) => t * t * (3 - 2 * t);
 const clamp01 = (t: number) => Math.max(0, Math.min(1, t));
@@ -40,16 +88,17 @@ function screenTexture(): THREE.CanvasTexture {
   const canvas = document.createElement('canvas'); canvas.width = 840; canvas.height = 490;
   const g = canvas.getContext('2d')!;
   g.fillStyle = '#0a0c0f'; g.fillRect(0, 0, 840, 490);
-  g.fillStyle = '#f2f4f6'; g.font = '500 44px "Inter Variable", sans-serif'; g.fillText('Flight report', 44, 86);
+  g.fillStyle = '#f2f4f6'; g.font = '500 44px "Inter Variable", sans-serif'; g.fillText('Analog report', 44, 86);
   g.fillStyle = '#343a42'; g.fillRect(44, 112, 752, 2);
-  g.fillStyle = '#5fc48a'; g.font = '600 26px "Inter Variable", sans-serif'; g.fillText('Telemetry received', 44, 170);
+  g.fillStyle = '#5fc48a'; g.font = '600 26px "Inter Variable", sans-serif'; g.fillText('Analog characterisation received', 44, 170);
   g.fillStyle = '#23282e'; for (let i = 0; i < 5; i++) g.fillRect(44, 210 + i * 46, 752 - (i % 3) * 150, 18);
   const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
   return texture;
 }
 
 /** Draws TV static into a small canvas for as long as `active` is true. */
-function StaticNoise({ active }: { active: boolean }) {
+type Phase = 'idle' | 'out' | 'hold' | 'in';
+function StaticNoise({ active, phase }: { active: boolean; phase: Phase }) {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = ref.current, g = canvas?.getContext('2d');
@@ -72,17 +121,22 @@ function StaticNoise({ active }: { active: boolean }) {
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
   }, [active]);
-  return <canvas ref={ref} className={`deb-static${active ? ' on' : ''}`} width={320} height={180} aria-hidden="true" />;
+  return <canvas ref={ref} className={`deb-static${active ? ` on ${phase}` : ''}`} width={320} height={180} aria-hidden="true" />;
 }
 
-export default function DebriefScene({ flight, mission, profile, analogEntry, planetaryEntry, planetaryProfile, match, reducedMotion, onRetry }: {
+export default function DebriefScene({ flight, mission, profile, analogEntry, planetaryEntry, planetaryProfile, match, evidence, reducedMotion, onRetry }: {
   /** The terrain of a pinned point (not in the catalog), for the comparison flights. */
   planetaryProfile?: TerrainProfile;
-  flight: FlightTelemetry; mission: MissionConfig; profile: TerrainProfile; match?: MatchCheck;
+  flight: FlightTelemetry; mission: MissionConfig; profile: TerrainProfile; match?: MatchCheck; evidence?: PairEvidence;
   analogEntry?: CatalogSite; planetaryEntry?: CatalogSite; reducedMotion: boolean; onRetry: () => void;
 }) {
   const [stage, setStage] = useState<Stage>(reducedMotion ? 'screen' : 'walk');
-  const [index, setIndex] = useState(0), [noise, setNoise] = useState(false);
+  const [index, setIndex] = useState(0);
+  // 'out': static rising, old page fading out. 'hold': full static while the new page's 3D terrain
+  // loads. 'in': new page fading in, static clearing.
+  const [phase, setPhase] = useState<Phase>('idle');
+  const pending = useRef(0), phaseRef = useRef<Phase>('idle');
+  const enter = (next: Phase) => { phaseRef.current = next; setPhase(next); };
   const [fidelity, setFidelity] = useState<FidelityState>({ status: 'working' });
   const mount = useRef<HTMLDivElement>(null), heading = useRef<HTMLHeadingElement>(null);
   const swap = useRef(0);
@@ -91,18 +145,54 @@ export default function DebriefScene({ flight, mission, profile, analogEntry, pl
   // The rehearsal flights start at once, so they are usually finished by the time the report opens.
   useEffect(() => {
     const abort = new AbortController(); setFidelity({ status: 'working' });
-    computeFidelity(mission, profile, analogEntry, planetaryEntry, abort.signal, planetaryProfile)
+    (planetaryProfile ? computeCustomFidelity(mission, profile, planetaryProfile, analogEntry, abort.signal) : computeFidelity(mission, profile, analogEntry, planetaryEntry, abort.signal))
       .then(result => { if (!abort.signal.aborted) setFidelity({ status: 'done', result }); })
       .catch(e => { if (!abort.signal.aborted) setFidelity({ status: 'unavailable', reason: e instanceof Error ? e.message : 'Could not compute the score.' }); });
     return () => abort.abort();
   }, [mission, profile, analogEntry, planetaryEntry, planetaryProfile]);
 
-  const sections = useMemo(() => buildSections({ flight, mission, profile, match, fidelity }), [flight, mission, profile, match, fidelity]);
+  // The target's own terrain, for the side-by-side 3D view. Optional: the report works without it.
+  const [targetProfile, setTargetProfile] = useState<TerrainProfile | undefined>();
+  // 'loading' until the target terrain arrives; 'none' when there is none or it failed (no 3D view to wait for).
+  const terrainState = useRef<'loading' | 'ready' | 'none'>('loading');
+  useEffect(() => {
+    const abort = new AbortController(), terrain = planetaryEntry?.terrain;
+    setTargetProfile(undefined); terrainState.current = terrain ? 'loading' : 'none';
+    if (terrain) loadProfile(abort.signal, terrain.manifest_url, planetaryEntry.id, planetaryEntry.body)
+      .then(p => { if (!abort.signal.aborted) { terrainState.current = 'ready'; setTargetProfile(p); } })
+      .catch(() => { if (!abort.signal.aborted) terrainState.current = 'none'; /* the 3D view is skipped */ });
+    return () => abort.abort();
+  }, [planetaryEntry]);
+
+  const input = useMemo(() => ({ flight, mission, profile, match, evidence, fidelity, analogEntry, planetaryEntry, targetProfile }),
+    [flight, mission, profile, match, evidence, fidelity, analogEntry, planetaryEntry, targetProfile]);
+  const sections = useMemo(() => buildSections(input), [input]);
+  const sectionIds = useRef<string[]>([]); sectionIds.current = sections.map(sec => sec.id);
+  const indexRef = useRef(0); indexRef.current = index;
+  const screenRef = useRef<HTMLDivElement>(null);
+
+  /** Resolves once the terrain page's 3D view has drawn (or has nothing to draw, or reported an error). */
+  const terrainDrawn = useCallback(() => new Promise<void>(resolve => {
+    const began = performance.now();
+    const check = () => {
+      const view = screenRef.current?.querySelector('.deb-terrain3d');
+      const canvas = view?.querySelector<HTMLCanvasElement>('.tc3d-canvas');
+      const settled = terrainState.current === 'none' || (canvas && canvas.width > 0) || view?.querySelector('.tc3d-error, [role=status].tc3d-metadata');
+      if (settled || performance.now() - began > TERRAIN_WAIT_MS) {
+        // two more frames, so the first terrain frame is on screen before the static clears
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+        return;
+      }
+      swap.current = window.setTimeout(check, 100);
+    };
+    check();
+  }), []);
+  const download = () => downloadJson(buildReportExport(input), `analog-report-${mission.planetaryTarget.id}-${mission.earthAnalog.id}.json`);
 
   const openScreen = useCallback(() => {
     setStage(current => {
       if (current === 'screen') return current;
-      if (!reducedMotion) { setNoise(true); window.setTimeout(() => setNoise(false), STATIC_MS); }   // the report tunes in
+      if (!reducedMotion) { enter('in'); startStatic(); stopStatic(STATIC_MS / 2); window.setTimeout(() => enter('idle'), STATIC_MS / 2); }   // the report tunes in
       return 'screen';
     });
   }, [reducedMotion]);
@@ -194,15 +284,26 @@ export default function DebriefScene({ flight, mission, profile, analogEntry, pl
   const go = useCallback((delta: number) => {
     if (sections.length < 2) return;
     if (reducedMotion) { setIndex(i => stepIndex(i, delta, sections.length)); return; }
+    // Presses during a change add up, so quick double-presses never lose a step.
+    if (phaseRef.current === 'hold') return;   // the terrain page is still loading; it opens by itself
+    pending.current += delta;
+    if (phaseRef.current === 'out') return;
     window.clearTimeout(swap.current);
-    setNoise(true);
-    // the section changes under the static, then the picture comes back
+    enter('out'); startStatic();
+    const fadeIn = () => {
+      enter('in'); stopStatic(STATIC_MS / 2);
+      swap.current = window.setTimeout(() => enter('idle'), STATIC_MS / 2);
+    };
     swap.current = window.setTimeout(() => {
-      setIndex(i => stepIndex(i, delta, sections.length));
-      swap.current = window.setTimeout(() => setNoise(false), STATIC_MS / 2);
+      const step = pending.current; pending.current = 0;
+      const next = stepIndex(indexRef.current, step, sections.length);
+      setIndex(next);
+      // The terrain page builds a 3D view after it appears: keep the static up until it has drawn.
+      if (sectionIds.current[next] === 'terrain') { enter('hold'); void terrainDrawn().then(() => { if (phaseRef.current === 'hold') fadeIn(); }); }
+      else fadeIn();
     }, STATIC_MS / 2);
-  }, [reducedMotion, sections.length]);
-  useEffect(() => () => window.clearTimeout(swap.current), []);
+  }, [reducedMotion, sections.length, terrainDrawn]);
+  useEffect(() => () => { window.clearTimeout(swap.current); stopStatic(60); }, []);
   useEffect(() => {
     if (stage !== 'screen') return;
     const keys = (e: KeyboardEvent) => {
@@ -215,13 +316,14 @@ export default function DebriefScene({ flight, mission, profile, analogEntry, pl
   const section = sections[Math.min(index, sections.length - 1)];
   if (stage === 'walk') return <section className="debrief-scene" aria-label="Debrief">
     <div ref={mount} className="deb-view" />
-    <p className="deb-caption" role="status">The landing report is coming in on the mission-control monitor.</p>
+    <p className="deb-sr" role="status">The analog report is coming in on the mission-control monitor.</p>
     <button type="button" className="deb-skip" onClick={openScreen}>Skip to report</button>
   </section>;
   return <section className="debrief-scene" aria-label="Landing report">
-    <div className={`deb-screen monitor-screen${noise ? ' tuning' : ''}`}>
+    <div ref={screenRef} className={`deb-screen monitor-screen${phase === 'idle' ? '' : ` tuning phase-${phase}`}`} style={{ ['--half' as string]: `${STATIC_MS / 2}ms` }}>
+      {phase === 'hold' && <p className="deb-sr" role="status">Loading the 3D terrain comparison…</p>}
       <header>
-        <h2 ref={heading} tabIndex={-1}>Flight report</h2>
+        <h2 ref={heading} tabIndex={-1}>Analog report</h2>
         <span className="mon-link"><i aria-hidden="true" /><i aria-hidden="true" /><i aria-hidden="true" />{mission.planetaryTarget.name} → {mission.earthAnalog.name}</span>
       </header>
       <div className="deb-page" role="group" aria-roledescription="slide" aria-label={`${section.title}, ${index + 1} of ${sections.length}`} aria-live="polite">
@@ -232,9 +334,10 @@ export default function DebriefScene({ flight, mission, profile, analogEntry, pl
         <div className="deb-dots" role="tablist" aria-label="Report sections">{sections.map((s, i) =>
           <button key={s.id} type="button" role="tab" aria-selected={i === index} aria-label={s.title} title={s.title} onClick={() => go(i - index)} />)}</div>
         <span className="deb-count">{index + 1} / {sections.length}</span>
+        <button type="button" className="deb-download" onClick={download}><Download size={16} aria-hidden="true" /> Download report (JSON)</button>
         <button type="button" className="deb-retry" onClick={onRetry}>Configure another flight</button>
       </footer>
-      <StaticNoise active={noise} />
+      <StaticNoise active={phase !== 'idle'} phase={phase} />
       <div className="deb-scanlines" aria-hidden="true" />
     </div>
     <button type="button" className="deb-arrow left" aria-label="Previous section" onClick={() => go(-1)}><ChevronLeft size={34} /></button>

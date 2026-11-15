@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import type { StressFidelityResult } from '../../../app/sim/src/fidelity';
 import type { MissionConfig } from './types';
+declare const __LANDING_ENGINE_SHA__:string;
 export interface LandingRow {earth_id:string;planetary_id:string;stress:StressFidelityResult}
-export interface LandingCatalog {schema_version:string;method_version:string;catalog_sha256:string;seeds:number[];assumptions:string;limitation:string;rows:LandingRow[]}
+export interface LandingCatalog {schema_version:string;method_version:string;catalog_sha256:string;engine_sha256:string;seeds:number[];assumptions:string;limitation:string;rows:LandingRow[]}
 let pending:Promise<LandingCatalog>|undefined;
 /** The baseline has no equipment override. Custom gear, weather, or interference always runs live. */
 export function isBaselineMission(mission:MissionConfig):boolean {
@@ -13,6 +14,7 @@ export function isBaselineMission(mission:MissionConfig):boolean {
 export function loadLandingSimilarity():Promise<LandingCatalog> {
   return pending ??= fetch('/landing-similarity.json').then(r=>{if(!r.ok)throw new Error('Landing baseline unavailable');return r.json();}).then(async data=>{
     if(data.schema_version!=='1.0.0'||!Array.isArray(data.rows))throw new Error('Unsupported landing baseline');
+    if(typeof __LANDING_ENGINE_SHA__==='undefined'||data.engine_sha256!==__LANDING_ENGINE_SHA__)throw new Error('Landing baseline belongs to a different physics build');
     const response=await fetch('/sites.json');
     if(!response.ok)throw new Error('Cannot verify baseline catalog');
     const digest=await crypto.subtle.digest('SHA-256',await response.arrayBuffer());

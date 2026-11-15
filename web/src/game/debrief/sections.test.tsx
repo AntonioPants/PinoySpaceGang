@@ -8,8 +8,10 @@ import { computeFidelity } from '../../lib/fidelity';
 import { buildMission, defaultSettings, loadProfile } from '../../lib/mission';
 import { toSimInput } from '../../lib/simulation';
 import { debriefFor } from '../../lib/debrief';
+import { evidenceFor } from '../../components/AnalogEvidence';
 import { runSim } from '../../../../app/sim/src/engine';
-import { buildSections, stepIndex } from './sections';
+import { buildReportExport, buildSections, stepIndex, surfaceOpsAssessment } from './sections';
+import { earthElevationFromMoonDeg } from './LanderSchematic';
 
 afterEach(() => vi.unstubAllGlobals());
 async function fly() {
@@ -27,38 +29,117 @@ it('steps round the carousel in both directions', () => {
   expect(stepIndex(2, 3, 8)).toBe(5);
 });
 
-it('splits the flown report into carousel sections that carry the real telemetry', async () => {
+it('leads with why the pair is an analog, then where it breaks down, then the real flight', async () => {
   const { profile, target, mission, flight } = await fly();
   const fidelity = await computeFidelity(mission, profile, catalogSites.find(s => s.id === profile.manifest.id), catalogSites.find(s => s.id === target.id));
-  const match = parseCatalog(raw).matching?.comparisons.find(p => p.planetary_id === target.id && p.earth_id === profile.manifest.id);
-  const sections = buildSections({ flight, mission, profile, match, fidelity: { status: 'done', result: fidelity } });
-  expect(sections.map(s => s.title)).toEqual(['Touchdown', 'Landing assessment', 'Touchdown against limits', 'Flight statistics', 'Rehearsal flights', 'Analog fidelity', 'Analog match', 'Site conditions']);
+  const catalog = parseCatalog(raw), earthId = profile.manifest.id;
+  const match = catalog.matching?.comparisons.find(p => p.planetary_id === target.id && p.earth_id === earthId);
+  const evidence = evidenceFor(catalog, target.id, earthId);
+  const analogEntry = catalogSites.find(s => s.id === profile.manifest.id), planetaryEntry = catalogSites.find(s => s.id === target.id);
+  const input = { flight, mission, profile, match, evidence, fidelity: { status: 'done' as const, result: fidelity }, analogEntry, planetaryEntry };
+  const sections = buildSections(input);
+  expect(sections.map(s => s.title)).toEqual(['Why this analog', 'Where the analogy breaks down', 'Terrain and geology', 'Environment and conditions',
+    'Landing behaviour on both terrains', 'This flight beside the rehearsals', 'Landing outcome', 'Touchdown against limits', 'Flight statistics', 'Post-landing and surface operations readiness']);
   const html = Object.fromEntries(sections.map(s => [s.id, renderToStaticMarkup(<>{s.content}</>)]));
   const summary = flight.summary!, a = debriefFor(flight, mission);
-  expect(html.touchdown).toContain(`${summary.verticalSpeedMps.toFixed(2)} m/s`);
-  expect(html.touchdown).toContain(`${summary.fuelRemainingKg.toFixed(1)} kg`);
-  expect(html.assessment).toContain(`${a.scores.overall} / 100`);
-  expect(html.assessment).toContain('not engineering ratings');
-  expect(html.limits).toContain('Roughness under legs');
-  expect(html.statistics).toContain('Delta-v spent');
+
+  // The catalog's own evidence for the pair, not generic text.
+  expect(html.why).toContain(mission.planetaryTarget.name);
+  expect(html.why).toContain(mission.earthAnalog.name);
+  expect(html.why).toContain('Why it matches');
+  expect(renderToStaticMarkup(<>{evidence.matches[0]}</>)).not.toBe('');
+  expect(html.why).toContain(renderToStaticMarkup(<>{evidence.matches[0]}</>));
+  expect(html['breaks-down']).toContain('What Earth cannot reproduce');
+  expect(html['breaks-down']).toContain('9.81 m/s²');
+  expect(html['breaks-down']).toContain(`${mission.planetaryTarget.gravity} m/s²`);
+  if (evidence.differences.length) expect(html['breaks-down']).toContain(renderToStaticMarkup(<>{evidence.differences[0]}</>));
+
+  expect(html.environment).toContain(`${flight.environment.gravity} m/s²`);
   expect(html.rehearsal).toContain('Earth analog, mean');
   expect(html.fidelity).toContain(`${fidelity.stress.score} / 100`);
-  expect(html.fidelity).toMatch(/>(Success|Failure)</);
-  expect(html.conditions).toContain(`${flight.environment.gravity} m/s²`);
-  expect(html.touchdown).toContain('What Earth cannot reproduce');
-  expect(html.touchdown).toContain('9.81 m/s²');
   expect(html.fidelity).toContain('Catalog landing baseline');
-  // No telemetry download and no raw "0.0 m" for a reached target.
-  expect(Object.values(html).join('')).not.toMatch(/Download|>0\.0 m</);
+  expect(html.fidelity).toMatch(/>(Success|Failure)</);
+  expect(html.outcome).toContain(`${summary.verticalSpeedMps.toFixed(2)} m/s`);
+  expect(html.outcome).toContain(`${summary.fuelRemainingKg.toFixed(1)} kg`);
+  expect(html.outcome).toContain(`${a.scores.overall} / 100`);
+  expect(html.outcome).toContain('not engineering ratings');
+  expect(html.limits).toContain('Roughness under legs');
+  expect(html.statistics).toContain('Delta-v spent');
+
+  const all = Object.values(html).join('');
+  // A reached target is never a raw "0.0 m", unknowns are never dressed up, and nothing claims microgravity.
+  expect(all).not.toMatch(/>0\.0 m<|micro-gravity|Evidence coverage/);
+  // Every figure of the form "x m/s²" on the pages comes from the mission or the flight, plus Earth's 9.81.
+  const allowed = new Set([9.81, mission.planetaryTarget.gravity, mission.environment.gravityMs2, flight.environment.gravity].map(String));
+  for (const [, value] of all.matchAll(/([\d.]+) m\/s²/g)) expect(allowed).toContain(value);
+
+  // The download carries the same report as data.
+  const file = buildReportExport(input);
+  expect(file.pair.planetaryTarget.id).toBe(target.id);
+  expect(file.whyThisAnalog.matches).toEqual(evidence.matches);
+  expect(file.whyThisAnalog.analogScorePercent).toBe(match?.analog_score_percent ?? null);
+  expect(file.whereItBreaksDown.earthCannotReproduce.gravity).toEqual({ targetMs2: mission.planetaryTarget.gravity, earthMs2: 9.81, flownMs2: mission.environment.gravityMs2 });
+  expect(file.flight.touchdown).toBe(flight.summary);
+  expect(file.flight.statistics).toEqual(a.stats);
+  expect(file.landingBehaviour).toMatchObject({ stress: { score: fidelity.stress.score } });
+  expect(() => JSON.stringify(file)).not.toThrow();
+
+  // Schematic: six parts, each with spec, flight status and analog delta; struts carry the contact margins.
+  expect(html.limits).toContain('Lander schematic');
+  expect(file.subsystems.map(r => r.id)).toEqual(['comms', 'sensors', 'avionics', 'engine', 'struts', 'payload']);
+  for (const r of file.subsystems) for (const list of [r.spec, r.status, r.analogDelta]) expect(list.length).toBeGreaterThan(0);
+  const struts = file.subsystems.find(r => r.id === 'struts')!;
+  expect(struts.spec.join(' ')).toContain(`sink ${flight.lander.limits.maxVerticalMps} m/s`);
+  for (const m of a.margins.filter(m => m.key !== 'tilt')) expect(struts.status.join(' ')).toContain(m.label);
+  if (a.margins.filter(m => m.key !== 'tilt').every(m => m.status === 'within')) expect(struts.level).toBe('nominal'); else expect(['caution', 'exceeded']).toContain(struts.level);
+  expect(file.subsystems.find(r => r.id === 'engine')!.status.join(' ')).toContain(`${a.stats.fuelUsedKg.toFixed(0)} of ${a.stats.fuelLoadedKg.toFixed(0)} kg`);
+  // Marius Hills is a near-side lunar target: Earth is above the horizon.
+  expect(file.subsystems.find(r => r.id === 'comms')!.headline).toBe('Earth in view');
+
+  // Section 10: lunar target, so habitability is marked not applicable rather than scored.
+  expect(html['surface-ops']).toContain('Water, ice and ISRU');
+  expect(html['surface-ops']).toContain('Not applicable');
+  const ops = file.surfaceOperations;
+  expect(ops.map(o => o.id)).toEqual(['water-isru', 'mobility', 'subsurface', 'habitability']);
+  expect(ops.find(o => o.id === 'habitability')).toMatchObject({ applies: false, level: 'not_applicable' });
 });
 
 it('says so instead of showing empty sections while rehearsals run or when no pairing exists', async () => {
   const { profile, mission, flight } = await fly();
   const working = buildSections({ flight, mission, profile, fidelity: { status: 'working' } });
   const text = (id: string, list = working) => renderToStaticMarkup(<>{list.find(s => s.id === id)!.content}</>);
-  expect(text('rehearsal')).toContain('still running');
   expect(text('fidelity')).toContain('still running');
-  expect(text('match')).toContain('No catalog pairing');
+  expect(text('rehearsal')).toContain('still running');
+  expect(text('why')).toContain('No catalog pairing');
+  expect(text('why')).toContain('No pair-specific match evidence');
+  expect(text('breaks-down')).toContain('No pair-specific differences');
+  expect(text('environment')).toContain('No environment comparison');
   const failed = buildSections({ flight, mission, profile, fidelity: { status: 'unavailable', reason: 'terrain missing' } });
   expect(text('fidelity', failed)).toContain('terrain missing');
+  expect(buildReportExport({ flight, mission, profile, fidelity: { status: 'working' } }).landingBehaviour).toEqual({ status: 'working' });
+});
+
+it('works out Earth visibility from the Moon and keeps habitability for Mars targets only', async () => {
+  expect(earthElevationFromMoonDeg(0, 0)).toBeCloseTo(90);
+  expect(earthElevationFromMoonDeg(0, 180)).toBeCloseTo(-90);
+  expect(earthElevationFromMoonDeg(-89.55, 0)).toBeCloseTo(0.45, 1);
+
+  const { profile } = await fly();
+  const mars = targets.find(t => t.id === 'jezero')!, mission = buildMission(mars, profile, defaultSettings);
+  const marsFlight = runSim(toSimInput(mission, profile));
+  const ops = surfaceOpsAssessment({ flight: marsFlight, mission, profile, fidelity: { status: 'working' },
+    analogEntry: catalogSites.find(s => s.id === profile.manifest.id), planetaryEntry: catalogSites.find(s => s.id === mars.id) });
+  const life = ops.find(o => o.id === 'habitability')!;
+  expect(life.applies).toBe(true);
+  expect(life.level).not.toBe('supported');   // never claimed without biosignature data
+  expect(life.landed.join(' ')).toContain('No biosignature');
+});
+
+it('ignores negated catalog sentences when looking for caves and pits', async () => {
+  const { profile, mission, flight } = await fly();
+  const site = (description: string) => ({ ...catalogSites.find(s => s.id === profile.manifest.id)!, name: 'Test site', description, identifiers: [] });
+  const subsurface = (description: string) => surfaceOpsAssessment({ flight, mission, profile, fidelity: { status: 'working' }, analogEntry: site(description) })
+    .find(o => o.id === 'subsurface')!.analog[0];
+  expect(subsurface('Regional volcanic terrain; no cave or safe landing claim.')).toContain('No pit, cave');
+  expect(subsurface('Collapse pit studied as a skylight into a lava tube.')).toContain('describes pits, caves');
 });
