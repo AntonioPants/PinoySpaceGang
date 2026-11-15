@@ -77,8 +77,10 @@ Earth opening is attached through Tim's adapter in `game/scenes/`. His `Descent3
 now flies Furgan's live view and plays the actual outcome itself, so the registry's
 separate outcome slot is null to avoid replaying the ending twice. No Earth scene
 is mislabeled as a planetary departure. Planetary arrival and liftoff remain empty.
-Use selected equipment IDs for the future animated model; the current cutscene lander
-is generic and does not yet depict all selected gear. Keep Skip available, honor reduced
+The shared procedural model now draws selected spacecraft, gear and sensor IDs in the
+equipment bay, liftoff, Earth approach and live descent. Optional appearance IDs
+(`liveryId`, `solarArrayId`, `antennaId`) follow the same mission equipment handoff;
+missing IDs use the heritage/standard/dish appearance. They are cosmetic only. Keep Skip available, honor reduced
 motion, release renderers/listeners/timers on exit, and start audio only after consent.
 Terrain-load failure offers continuation rather than silently substituting terrain.
 
@@ -138,3 +140,32 @@ skip, flight, outcome and debrief. Verify small screens, reduced motion and miss
 Known remaining work: planetary departure/liftoff, measured equipment
 data and gear physics, selected-gear cinematic models, character debrief, performance
 profiling and final packaging. These are explicit handoffs, not completed features.
+
+## Lander appearance update (15 November 2026)
+
+The shared `components/cutscene/lander.ts` model adds panel seams, inspection windows,
+fasteners, attitude-control pods, a curved engine bell, leg pistons, layered pads and
+framed solar cells. Static geometry is merged by material; the flame and deployable
+beacon remain separate animation objects. The model stays within 12 meshes for all
+45 tested appearance combinations, including payload/six-leg/camera hardware. This
+is a draw-call budget check, not a measured frame-rate or device-support claim.
+
+`lib/landerAppearance.ts` owns five coordinated liveries, three solar-array layouts
+and three antenna packages. `EquipmentBay` offers Hardware and Appearance sections,
+colour swatches, appearance reset and camera reset. Part changes replace the model
+without recreating the renderer or resetting the orbit. Controls remain usable when
+WebGL initialization fails; reduced motion disables orbit damping. The existing
+small-screen rail scrolls internally.
+
+`MissionConfig.equipment` and `EquipmentSelection` now accept the three optional
+appearance IDs. Existing spreads preserve them through mission locking and retry.
+They do not enter `equipmentSettings` or the physics engine. Foot-circle radii and
+pad contact level are unchanged; visual suspension does not imply simulated damping.
+
+Validation: production build and catalog consumer check passed; all 254 tests passed
+with `pnpm test --maxWorkers=2`. An unrestricted parallel run timed out in the existing
+Earth surface test; it passed with two workers. Live browser QA remains pending:
+the local Chromium process cannot open its required socket in this environment,
+and the separate remote browser cannot reach the local Vite server. Before merging,
+check desktop/mobile layout, all selectors, camera retention/reset, boarding, launch,
+cinematic skip, descent, retry, reduced motion and the WebGL fallback.

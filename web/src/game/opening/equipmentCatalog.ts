@@ -1,3 +1,4 @@
+import { defaultAppearance, type LanderAppearance } from '../../lib/landerAppearance';
 import type { MissionSettings } from '../../lib/types';
 import { equipmentLoadouts } from '../equipment';
 
@@ -13,8 +14,8 @@ export const sensors: { id: MissionSettings['hazardSensor']; name: string; detai
   { id: 'camera', name: 'Navigation camera', detail: 'Optical sensing. Glare affects hazard detection.' },
   { id: 'none', name: 'No hazard sensor', detail: 'A blind landing experiment without terrain detection.' },
 ];
-export interface EquipmentSelection { vehicleId: string; landingGearId: string; hazardSensor: MissionSettings['hazardSensor'] }
-export const initialEquipment: EquipmentSelection = { vehicleId: vehicles[0].id, landingGearId: landingGear[0].id, hazardSensor: 'lidar' };
+export interface EquipmentSelection extends LanderAppearance { vehicleId: string; landingGearId: string; hazardSensor: MissionSettings['hazardSensor'] }
+export const initialEquipment: EquipmentSelection = { vehicleId: vehicles[0].id, landingGearId: landingGear[0].id, hazardSensor: 'lidar', ...defaultAppearance };
 export function equipmentSettings(selection: EquipmentSelection, previous: MissionSettings): MissionSettings {
   const vehicle = vehicles.find(v=>v.id===selection.vehicleId);
   if(!vehicle || !landingGear.some(g=>g.id===selection.landingGearId) || !sensors.some(s=>s.id===selection.hazardSensor)) throw new Error('Select available equipment before launching.');
