@@ -1,6 +1,6 @@
 import * as T from 'three';
 import { TilesRenderer } from '3d-tiles-renderer/three';
-import { CesiumIonAuthPlugin } from '3d-tiles-renderer/three/plugins';
+import { DisposableCesiumIonAuthPlugin as CesiumIonAuthPlugin } from './cesiumIonAuth';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { polygonGeometry, polygonTilePlugin, streamedGap } from './polygonTerrain';
