@@ -31,7 +31,9 @@ export const SCORING = {
 };
 
 export type Grade = 'A' | 'B' | 'C' | 'D' | 'F';
-export type MarginKey = 'vertical' | 'horizontal' | 'slope' | 'roughness' | 'tilt';
+/** 'stability' is only present for a lander with a landing gear model: its lean against its tip angle. */
+export type MarginKey = 'vertical' | 'horizontal' | 'slope' | 'roughness' | 'tilt' | 'stability';
+type LimitKey = Exclude<MarginKey, 'stability'>;
 export type MarginStatus = 'within' | 'marginal' | 'exceeded';
 
 export interface Margin {
@@ -119,7 +121,7 @@ export interface AssessmentContext {
 const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
 const pct = (v: number) => `${Math.round(v * 100)}%`;
 
-const MARGIN_DEFS: Array<{ key: MarginKey; label: string; unit: string; limit: keyof TouchdownLimits; digits: number }> = [
+const MARGIN_DEFS: Array<{ key: LimitKey; label: string; unit: string; limit: keyof TouchdownLimits; digits: number }> = [
   { key: 'vertical', label: 'Sink rate', unit: 'm/s', limit: 'maxVerticalMps', digits: 2 },
   { key: 'horizontal', label: 'Lateral speed', unit: 'm/s', limit: 'maxHorizontalMps', digits: 2 },
   { key: 'slope', label: 'Ground slope', unit: '°', limit: 'maxSlopeDeg', digits: 1 },
@@ -134,21 +136,34 @@ export function assessFlight(flight: FlightTelemetry, context: AssessmentContext
   const touchedDown = summary.outcome !== 'timeout';
 
   // --- margins -----------------------------------------------------------------------------
-  const values: Record<MarginKey, number> = {
+  const values: Record<LimitKey, number> = {
     vertical: summary.verticalSpeedMps,
     horizontal: summary.horizontalSpeedMps,
     slope: summary.slopeDeg,
     roughness: summary.roughnessM,
     tilt: summary.tiltDeg,
   };
+  // With a landing gear model, slope, tilt and lateral speed do not fail a landing one by one:
+  // together they decide whether it tips (the 'stability' margin below). Over their own guide
+  // value they are shown as marginal unless the vehicle did go over.
+  const gear = touchedDown ? summary.gear : undefined;
+  const combined = (key: MarginKey) => !!gear && (key === 'slope' || key === 'tilt' || key === 'horizontal');
   const margins: Margin[] = !touchedDown ? [] : MARGIN_DEFS.map((d) => {
     const limit = lander.limits[d.limit];
     const ratio = values[d.key] / limit;
+    const over = ratio > 1 && (!combined(d.key) || gear!.tipped || (d.key === 'horizontal' && ratio > 2));
     return {
       key: d.key, label: d.label, unit: d.unit, value: values[d.key], limit, ratio,
-      status: ratio > 1 ? 'exceeded' : ratio > SCORING.marginalRatio ? 'marginal' : 'within',
+      status: over ? 'exceeded' : ratio > SCORING.marginalRatio ? 'marginal' : 'within',
     };
   });
+  if (gear) {
+    const ratio = gear.tipped ? Math.max(1.01, Math.min(2, gear.tipRatio)) : gear.peakLeanDeg / gear.staticTipDeg;
+    margins.push({
+      key: 'stability', label: 'Lean towards tip-over', unit: '°', value: gear.peakLeanDeg, limit: Math.round(gear.staticTipDeg * 10) / 10, ratio,
+      status: gear.tipped ? 'exceeded' : ratio > SCORING.marginalRatio ? 'marginal' : 'within',
+    });
+  }
   const limitingFactor = margins.reduce<Margin | null>((worst, m) => (!worst || m.ratio > worst.ratio ? m : worst), null);
   const margin = (key: MarginKey) => margins.find((m) => m.key === key);
 
@@ -270,6 +285,13 @@ export function assessFlight(flight: FlightTelemetry, context: AssessmentContext
     add(causes, 'tilted', `The vehicle was still tilted ${values.tilt.toFixed(1)}° at contact, i.e. still manoeuvring when it reached the ground.`);
     add(recommendations, 'level-out', 'Finish lateral corrections earlier so the vehicle is upright for the last few metres.');
   }
+  if (gear && exceeded('vertical'))
+    add(causes, 'stroke-bottomed', `The legs ran out of travel: a ${values.vertical.toFixed(2)} m/s sink rate needs ${(gear.strokeRatio * gear.strokeM).toFixed(2)} m of stroke and the gear has ${gear.strokeM.toFixed(2)} m (it absorbs up to ${gear.maxSinkMps.toFixed(2)} m/s).`);
+  if (gear?.tipped) {
+    add(causes, 'tipped', `The vehicle went over: it met the ground leaning ${gear.groundLeanDeg.toFixed(1)}° (slope plus tilt) and its ${values.horizontal.toFixed(2)} m/s of lateral speed and the rebound of the legs carried it past the ${gear.staticTipDeg.toFixed(1)}° tip angle of its stance under ${env.gravity.toFixed(2)} m/s² gravity.`);
+    add(recommendations, 'wider-stance', 'Fit a wider or six-leg gear, land on flatter ground, or cancel sideways drift before contact. Softer damping also returns less rebound.');
+  }
+  if (gear && exceeded('vertical')) add(recommendations, 'more-stroke', 'Fit a gear with more stroke or more damping, or arrive slower.');
   if (exceeded('slope') || exceeded('roughness')) {
     const what = [exceeded('slope') ? `a ${values.slope.toFixed(1)}° slope` : '', exceeded('roughness') ? `${values.roughness.toFixed(2)} m of relief under the legs` : ''].filter(Boolean).join(' and ');
     add(causes, 'bad-ground', `The touchdown point had ${what}, beyond what this vehicle tolerates.`);

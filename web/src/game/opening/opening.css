@@ -2,7 +2,7 @@
 .game-network-status{position:absolute;bottom:8px;left:16px;z-index:30;padding:5px 10px;background:#111e;color:#e7d6a8;border:1px solid #665b42;border-radius:5px;font-size:11px;max-width:calc(100% - 32px);pointer-events:none}
 .lunar-destination .moon-status{bottom:48px;max-width:60%;overflow-wrap:anywhere}
 .lunar-destination .globe-disclaimer{top:90px}
-.opening-game{position:fixed;inset:0;height:100dvh;background:#030405;color:#eeeae1;isolation:isolate;overflow:hidden;font-family:'IBM Plex Sans',sans-serif}
+.opening-game{position:fixed;inset:0;height:100dvh;background:#030405;color:#eeeae1;isolation:isolate;overflow:hidden;font-family:var(--font-ui)}
 .opening-game::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:-1;background:linear-gradient(#03040588,transparent 25%,transparent 65%,#030405b0)}
 .opening-world-scene{position:absolute;inset:0;z-index:-2;background:radial-gradient(ellipse at 50% 60%,#12151b 0, #030405 67%)}
 .opening-world-scene canvas,.equipment-scene canvas{display:block;width:100%;height:100%;touch-action:none}
@@ -139,3 +139,31 @@
 .equipment-rails button:disabled{opacity:.45;cursor:default}
 .is-launching .equipment-view-tools{opacity:0;pointer-events:none}
 @media(max-width:760px){.equipment-rails{bottom:125px}.equipment-view-tools{left:22px;bottom:calc(29% + 136px);font-size:10px;gap:10px}.equipment-tabs{margin-bottom:8px}.equipment-tabs button{padding:8px}.livery-name{margin:10px 0;font-size:17px}.livery-swatches button{width:36px;height:36px}}
+/* ---- Type and buttons. Inter for reading, DM Mono for figures and labels (both nasa.gov's faces),
+   Michroma for the wordmark. Buttons are neutral paper on black: solid for the main action, an
+   outline for the rest. Gold marks what is selected or flagged, not every control. */
+.title-screen h1{font-family:var(--font-display);font-weight:400;font-size:clamp(34px,6.4vw,104px);line-height:1.02;letter-spacing:.01em}.title-screen h1 span{font-weight:400}
+.game-wordmark{font-family:var(--font-display);font-size:13px;font-weight:400;letter-spacing:.14em;text-transform:uppercase}
+.title-eyebrow,.title-prompt,.game-chapter,.world-labels span,.rail-heading,.game-site-list>button>span,.hangar-manifest>span,.game-bottom-note,.region-note{font-family:var(--font-data)}
+.game-chapter{letter-spacing:.08em;text-transform:uppercase;font-size:11px}
+.hangar-manifest>p,.surface-brief p,.equipment-rail p,.immersive-game-session .flight-hud strong{font-family:var(--font-data);letter-spacing:-.01em}
+.game-heading h1{font-weight:300;letter-spacing:-.025em}.world-labels strong,.surface-brief h2,.hangar-manifest>strong,.rail-choice strong{font-weight:400;letter-spacing:-.015em}
+.title-prompt{color:#f4f2ec;text-shadow:0 2px 12px #000}.title-prompt::before,.title-prompt::after{background:linear-gradient(90deg,transparent,#f2f1ed)}
+.game-primary{background:var(--btn);color:var(--btn-ink);font-weight:600;letter-spacing:.01em;border:1px solid var(--btn);border-radius:3px;box-shadow:0 8px 30px #0008}
+.game-primary:hover{background:var(--btn-hover);border-color:var(--btn-hover)}
+.game-primary:focus-visible,.game-text:focus-visible,.game-back:focus-visible{outline-color:var(--btn)}
+.game-text,.game-back{color:var(--btn);text-decoration:underline;text-decoration-color:#f2f1ed55;text-underline-offset:4px}
+.game-back{text-decoration:none}.game-back svg{color:var(--btn)}
+.game-text:hover,.game-back:hover{color:var(--btn-hover);text-decoration-color:var(--btn-hover)}
+.game-tools{color:var(--btn)}.game-tools button{padding:7px 11px;border:1px solid var(--btn-line);border-radius:3px;background:#0b0c0e80}
+.game-tools button:hover,.journey-credits:hover{color:var(--btn-hover);border-color:var(--btn);background:var(--btn-wash)}
+.journey-credits{color:var(--btn);border:1px solid var(--btn-line);border-radius:3px;background:#0b0c0ecc}
+.rail-choice button{border-color:var(--btn-line);color:var(--btn)}.rail-choice button:hover{background:var(--btn);border-color:var(--btn);color:var(--btn-ink)}
+.site-menu-close{color:var(--btn)}.site-menu-close:hover{color:var(--btn-hover)}
+.landing-readout .game-text{color:var(--btn)}
+.immersive-game-session .flight-toolbar .primary-button{background:var(--btn);color:var(--btn-ink);border:1px solid var(--btn)}
+.immersive-game-session .scene-skip,.immersive-game-session .scene-sound{background:#0b0c0ecc;border-color:var(--btn-line);color:var(--btn)}
+/* the bay's newer controls (tabs, reset, view tools) in the same neutral system; livery swatches keep their own colours */
+.equipment-tabs button{color:#c9c7c0}.equipment-tabs button[aria-pressed=true]{background:var(--btn);color:var(--btn-ink);font-weight:600;box-shadow:none}
+.equipment-reset,.title-atlas{color:var(--btn)}.equipment-view-tools button{border-color:var(--btn-line);color:var(--btn)}.equipment-view-tools button:hover:not(:disabled){background:var(--btn-wash);border-color:var(--btn)}
+.equipment-rails button:focus-visible,.equipment-view-tools button:focus-visible{outline-color:var(--btn)}

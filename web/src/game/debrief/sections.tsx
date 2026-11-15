@@ -9,7 +9,7 @@ import { SCORING } from '../../../../app/sim/src/assessment';
 import type { MissionConfig, TerrainProfile } from '../../lib/types';
 import type { FidelityReport } from '../../lib/fidelity';
 import { LANDFORM_RELATION, percent, type MatchCheck } from '../../lib/matching';
-import { debriefFor, rehearsalRows } from '../../lib/debrief';
+import { debriefFor, gearRows, rehearsalRows } from '../../lib/debrief';
 import LandingEvidence from '../../components/LandingEvidence';
 
 export type FidelityState = { status: 'working' } | { status: 'done'; result: FidelityReport } | { status: 'unavailable'; reason: string };
@@ -75,6 +75,7 @@ export function buildSections({ flight, mission, profile, match, fidelity }: Sec
         <b>{m.value.toFixed(m.unit === '°' ? 1 : 2)} / {m.limit} {m.unit}</b>
         <em>{Math.round(m.ratio * 100)}%{m.status === 'exceeded' ? ' · over limit' : m.status === 'marginal' ? ' · marginal' : ' of limit'}</em>
       </li>)}</ul> : <p>The vehicle never touched down, so there are no contact readings to compare with its limits.</p>}
+      {gearRows(flight).length > 0 && <p className="deb-note">Landing gear · {gearRows(flight).map(([name, value]) => `${name}: ${value}`).join(' · ')}</p>}
       <Findings title="Why the flight ended this way" items={a.causes} />
       <Findings title={a.causes.length ? 'Contributing conditions' : 'Worth noting'} items={a.factors} />
       <Findings title="For the next flight" items={a.recommendations} />

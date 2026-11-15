@@ -3,6 +3,9 @@ import type { TerrainProfile } from '../../lib/types';
 import { landingArea, type LandingPoint } from '../../lib/landing';
 import { EARTH_METRES } from './earthSurface';
 
+/** Ground steeper than this is marked with red dots: the slope the standard landing gear is rated for, degrees. */
+export const STEEP_SLOPE_DEG = 12;
+
 /**
  * Choosing a landing point on the measured terrain: the selectable area's outline, a light
  * wash over it while the pointer is on it, a ring under the pointer, and a flag where the
@@ -79,9 +82,25 @@ export function buildLandingPicker(profile: TerrainProfile) {
   const foot = new T.Mesh(new T.RingGeometry(.1, .14, 32).rotateX(-Math.PI / 2).translate(0, .01, 0), gold(.9, false));
   flag.add(pole, pennant, foot); flag.renderOrder = 5; group.add(flag);
 
+  // Red dots on steep ground, one per measured cell whose slope is over the standard gear's
+  // rating: where a touchdown is likely to go over. The slope is the measured grid's own
+  // gradient (central differences), the same data the descent lands on.
+  const steep: number[] = [];
+  for (let r = 1; r < rows - 1; r++) for (let c = 1; c < columns - 1; c++) {
+    const gradient = Math.hypot(at(c + 1, r) - at(c - 1, r), at(c, r + 1) - at(c, r - 1)) / (2 * spacing);
+    if (Math.atan(gradient) * 180 / Math.PI < STEEP_SLOPE_DEG) continue;
+    const x = c * spacing - halfX, z = r * spacing - halfZ;
+    steep.push(x, heightAt(x, z) + 6, z);
+  }
+  const steepGeometry = new T.BufferGeometry(); steepGeometry.setAttribute('position', new T.Float32BufferAttribute(steep, 3));
+  const steepMaterial = new T.PointsMaterial({ color: 0xff4d3d, size: 4.5, sizeAttenuation: false, transparent: true, opacity: 0, depthWrite: false, fog: false });
+  const steepDots = new T.Points(steepGeometry, steepMaterial); steepDots.renderOrder = 4; steepDots.frustumCulled = false; group.add(steepDots);
+
   let hovering = false, shown = 0;
   return {
     group, pick, inArea, area,
+    /** How many measured cells are steeper than STEEP_SLOPE_DEG. */
+    steepCells: steep.length / 3,
     /** The pointer's ground point (inside the selectable area), or null when it is elsewhere. */
     setHover(point: T.Vector3 | null) { hovering = !!point; cursor.visible = !!point; if (point) cursor.position.copy(point).setY(point.y + 4); },
     setFlag(point: LandingPoint) { flag.position.set(point.x, heightAt(point.x, -point.y), -point.y); },
@@ -90,6 +109,7 @@ export function buildLandingPicker(profile: TerrainProfile) {
       shown += ((active ? 1 : 0) - shown) * (1 - Math.exp(-5 * dt));
       (wash.material as T.MeshBasicMaterial).opacity += ((hovering && active ? .13 : 0) - (wash.material as T.MeshBasicMaterial).opacity) * (1 - Math.exp(-9 * dt));
       (outline.material as T.LineBasicMaterial).opacity = .55 * shown;
+      steepMaterial.opacity = .85 * shown; steepDots.visible = shown > .02;
       flag.visible = shown > .02; if (!active) cursor.visible = false;
       const reach = eye.distanceTo(flag.position);
       flag.scale.setScalar(T.MathUtils.clamp(reach * .05, 30, 2000) * shown);

@@ -78,6 +78,26 @@ export interface TouchdownLimits {
   maxRoughnessM: number;
 }
 
+/**
+ * Landing gear as the physics models it (see gear.ts). When a lander has one, the sink-rate and
+ * roughness limits come from it and tip-over is decided by its stance instead of a fixed slope limit.
+ */
+export interface LandingGearConfig {
+  /** 'custom' = a preset whose stroke or damping has been trimmed. */
+  gearId: 'standard-four' | 'wide-four' | 'survey-six' | 'custom';
+  legs: number;
+  /** Centre to each foot pad, m. Becomes the lander's legRadiusM. */
+  radiusM: number;
+  /** Shock-absorber travel, m. */
+  strokeM: number;
+  /** Share of the stroke's work that is dissipated instead of returned as rebound, 0..1. */
+  dampingRatio: number;
+  /** Added to the lander's dry mass, kg. */
+  gearMassKg: number;
+  /** Foot pad radius, m. */
+  padRadiusM: number;
+}
+
 export interface LanderConfig {
   name: string;
   dryMassKg: number;
@@ -94,6 +114,10 @@ export interface LanderConfig {
   /** Physical tilt limit of the attitude controller. */
   maxTiltDeg: number;
   limits: TouchdownLimits;
+  /** Optional landing gear model. Its mass is already included in dryMassKg once the lander is resolved. */
+  gear?: LandingGearConfig;
+  /** Hull centre of mass above the feet with the legs compressed, m (default HULL_CG_HEIGHT_M). Used with `gear`. */
+  hullCgHeightM?: number;
 }
 
 export type Strategy = 'autonomous' | 'manual';
@@ -234,6 +258,8 @@ export interface FlightSummary {
   finalAimPoint: Vec2;
   distanceFromTargetM: number;
   diverted: boolean;
+  /** How the landing gear fared, when the lander has a gear model and reached the ground. */
+  gear?: import('./gear.ts').GearTouchdown;
 }
 
 export interface FlightTelemetry {
