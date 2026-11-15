@@ -285,3 +285,9 @@ npm run build
 Full and single-site build/registration paths regenerate the matrix. Validation
 recomputes it and rejects stale results. No new science datasets were ingested for
 this change; all values reference the existing source-backed catalog.
+
+## Game evidence and landing baseline
+
+`catalog.analogScoreFor` reads the detailed modern analog score, or the all-pair central screening score outside the published ten. The full atlas sorts by this score; the ten retain published evidence-tier rank. Legacy terrain fallback is explicitly labelled. Percentages are engineering similarity, not validated accuracy.
+
+`app/sim/scripts/landing-similarity.ts` stages the deterministic baseline; `python -m scripts.catalog.findings --publish` publishes it and the generated findings through the existing transaction (stop dev servers first). Baselines cover proposed pairs, all published ten, and each target's best scanned window. They use 25 trials per patch and an explicit fixed configuration; scores do not alter analog rankings. Runtime verifies the catalog checksum. Only an exact default scenario without gear/weather/interference overrides can reuse baseline stress results; other missions run live. See SUBMISSION.md for assumptions and limits.

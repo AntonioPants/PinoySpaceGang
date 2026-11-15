@@ -44,7 +44,9 @@ const candidates: AnalogSite[] = [
 
 export const displaySiteName = (name: string) => name
   .replace(/\s*:\s*\d+(?:\.\d+)?\s*km\s*[EW]\s*,?\s*\d+(?:\.\d+)?\s*km\s*[NS]\s*$/i, '')
-  .replace(/\s*study\s*area\b/gi, '').replace(/\bbase-/gi, 'base ').replace(/\s+/g, ' ').trim();
+  .replace(/\s*study\s*area\b/gi, '').replace(/\bbase-/gi, 'base ').replace(/\s+/g, ' ')
+  // scan regions append " region" to a seed name that may already end in "regional" or "region"
+  .replace(/\bregion(?:al)?\s+region\b/gi, 'region').trim();
 
 export function parseCatalog(raw: unknown): Catalog {
   const data = raw as { schema_version?: string; sites?: CatalogEntry[]; pairings?: Pairing[]; analog_matching?: AnalogMatching };
@@ -95,12 +97,26 @@ export async function loadCatalog(signal?: AbortSignal): Promise<Catalog> {
 export const pairingOf = (catalog: Catalog, targetId: string, analogId: string) =>
   catalog.pairings.find(p => p.planetary_id === targetId && p.earth_id === analogId);
 
-/** Analogs for a target: proposed pairings first (best terrain score first), then the rest. */
+export const matchOf = (catalog: Catalog, targetId: string, analogId: string) =>
+  catalog.matching?.comparisons.find(p => p.planetary_id === targetId && p.earth_id === analogId);
+
+/** Screening stores the central 2.x analog score for all pairs, including those outside the top ten. */
+export function analogScoreFor(catalog: Catalog, targetId: string, analogId: string): number | null {
+  return matchOf(catalog, targetId, analogId)?.analog_score_percent
+    ?? catalog.matching?.selection?.screening?.find(p => p.planetary_id === targetId && p.earth_id === analogId)?.central_upper_bound_percent
+    ?? null;
+}
+export function scoreLabel(catalog: Catalog, targetId: string, analogId: string): string {
+  const score = analogScoreFor(catalog, targetId, analogId);
+  if (score !== null) return `${score.toFixed(1)}% analog match`;
+  const terrain = pairingOf(catalog, targetId, analogId)?.terrain_score;
+  return typeof terrain === 'number' ? `${(terrain * 100).toFixed(1)}% legacy terrain` : 'Match unknown';
+}
+
+/** Full atlas order: modern analog score, explicitly labelled legacy fallback, stable ID ties. */
 export function analogsFor(catalog: Catalog, targetId: string): AnalogSite[] {
-  const score = (a: AnalogSite) => pairingOf(catalog, targetId, a.id)?.terrain_score ?? -1;
-  const paired = catalog.analogs.filter(a => pairingOf(catalog, targetId, a.id)).sort((a, b) => score(b) - score(a));
-  const rest = catalog.analogs.filter(a => !pairingOf(catalog, targetId, a.id));
-  return [...paired, ...rest.filter(a => a.available), ...rest.filter(a => !a.available)];
+  const score = (a: AnalogSite) => analogScoreFor(catalog, targetId, a.id) ?? ((pairingOf(catalog, targetId, a.id)?.terrain_score ?? -0.01) * 100);
+  return [...catalog.analogs].sort((a,b) => Number(b.available)-Number(a.available) || score(b)-score(a) || a.id.localeCompare(b.id));
 }
 
 /** Up to ten available candidates after the pipeline's conservative screening. */

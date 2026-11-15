@@ -4,6 +4,7 @@ import type { CatalogSite } from '../../../app/sim/src/catalog';
 import type { MissionConfig, TerrainProfile } from '../lib/types';
 import { computeFidelity, type FidelityReport } from '../lib/fidelity';
 import type { MatchCheck } from '../lib/matching';
+import LandingEvidence from './LandingEvidence';
 import FlightDebrief from './FlightDebrief';
 type FidelityState = { status: 'working' } | { status: 'done'; result: FidelityReport } | { status: 'unavailable'; reason: string };
 export default function FlightReport({flight,mission,profile,analogEntry,planetaryEntry,match,onRetry}:{match?:MatchCheck;flight:FlightTelemetry;mission:MissionConfig;profile:TerrainProfile;analogEntry?:CatalogSite;planetaryEntry?:CatalogSite;onRetry:()=>void}) {
@@ -20,7 +21,7 @@ export default function FlightReport({flight,mission,profile,analogEntry,planeta
   const sources=Object.entries(env.sources);
   return <section className="report-panel"><div className="section-heading"><div><span className="badge ready">Simulation result · {result.outcome}</span><h2>{result.outcome==='success'?'Touchdown complete.':'Flight ended.'}</h2></div><button className="primary-button" onClick={onRetry}>Configure another flight</button></div><p>{mission.environment.mode === 'earth' ? 'Earth field test' : `${mission.planetaryTarget.body} physics scenario`} on {mission.earthAnalog.name}, comparing with {mission.planetaryTarget.name}. This is a simulated outcome, not an engineering certification.</p>
     <div className="report-metrics">{[['Vertical contact speed',`${result.verticalSpeedMps.toFixed(2)} m/s`],['Lateral contact speed',`${result.horizontalSpeedMps.toFixed(2)} m/s`],['Ground slope',`${result.slopeDeg.toFixed(2)}°`],['Vehicle tilt',`${result.tiltDeg.toFixed(2)}°`],['Fuel remaining',`${result.fuelRemainingKg.toFixed(1)} kg`],['Distance from target',result.distanceFromTargetM<0.5?'Reached':`${result.distanceFromTargetM.toFixed(1)} m`]].map(([name,value])=><div key={name}><span>{name}</span><strong>{result.outcome==='timeout' && /contact|slope/.test(name)?'No touchdown':value}</strong></div>)}</div>
-    <h3>What happened</h3>{result.failureReasons.length?<ul>{result.failureReasons.map(reason=><li key={reason}>{reason}</li>)}</ul>:<p>The simulated touchdown stayed within this vehicle’s speed, slope, tilt, and roughness limits.</p>}
+    <p>What Earth cannot reproduce: target gravity {mission.planetaryTarget.gravity} m/s² versus Earth 9.81 m/s²; target vacuum/thin air versus Earth air. This mission uses {mission.environment.gravityMs2} m/s² and {env.airDensity} kg/m³. Radiation is not simulated or reproduced by the terrain.</p><h3>Catalog baseline landing comparison</h3><LandingEvidence targetId={mission.planetaryTarget.id} earthId={mission.earthAnalog.id}/><h3>What happened</h3>{result.failureReasons.length?<ul>{result.failureReasons.map(reason=><li key={reason}>{reason}</li>)}</ul>:<p>The simulated touchdown stayed within this vehicle’s speed, slope, tilt, and roughness limits.</p>}
     <FlightDebrief flight={flight} mission={mission} fidelity={fidelity.status==='done'?fidelity.result:null} match={match} />
 
     <h3>Analog fidelity</h3>

@@ -1,3 +1,11 @@
+# Analog Atlas
+
+Find an Earth testbed for a Moon or Mars region, inspect what matches and what does not, then test landing behaviour on real elevation data. Analog percentages are engineering similarity, not scientifically validated accuracy.
+
+**[Play Analog Atlas](https://analog.timhufnagel.org)** · [Submission](docs/SUBMISSION.md) · [Generated findings](docs/FINDINGS.md) · [Demo script](docs/DEMO_SCRIPT.md)
+
+**Judge it in two minutes:** Start Journey → Mars → Lucus Planum → Find Earth terrain. Read the percentages in the ten-site slider, select a discovered candidate and open More for evidence and limits. Compare the separate baseline landing result. Explore all 102 or use Atlas to change targets. Credits → Findings shows generated results and their limitations. Select Equipment and fly to inspect the real telemetry debrief; use `?planner` and the flat console if 3D is unavailable.
+
 # Planetary Analog Simulator
 
 ## Game direction and team handoff

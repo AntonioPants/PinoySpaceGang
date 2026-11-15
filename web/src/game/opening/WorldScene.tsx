@@ -87,7 +87,7 @@ export default function WorldScene(props: WorldProps) {
       const points = p.stage === 'destination' ? p.targets.filter(t=>t.body===p.body) : p.stage === 'earth' && !surface ? p.analogs : [];
       const body = p.stage === 'destination' ? p.body : 'Earth';
       for (const point of points) {
-        const marker = new T.Mesh(new T.SphereGeometry(.034,12,10),new T.MeshBasicMaterial({color:point.id === (p.stage==='earth'?p.analogId:p.targetId) ? 0xe9c78a : 0xffffff}));
+        const marker = new T.Mesh(new T.SphereGeometry(.034,12,10),new T.MeshBasicMaterial({color:point.id === (p.stage==='earth'?p.analogId:p.targetId) ? 0xe9c78a : point.id.startsWith('scan-') ? 0x65d6d1 : 0xffffff}));
         marker.position.copy(globePoint(point.lat,point.lon,radii[body]+.018).add(centres[body])); marker.userData.id=point.id; markers.add(marker);
       }
       if (p.profile && p.profile !== terrainProfile) {

@@ -1,0 +1,4068 @@
+{
+  "schema_version": "1.0.0",
+  "method_version": "stress-baseline-1.0.0",
+  "catalog_sha256": "6d938636c37e2428e3b67bc1e43d5c270ebae63bec099a13926821f826c84e0f",
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "assumptions": "800 kg dry mass; 350 kg fuel; 12 kN thrust; 12 degree slope limit; default engine leg geometry; zero wind; no added rocks; site-derived interference; target gravity and air density. No scientific validation.",
+  "limitation": "25 sampled blind landings per patch; success share is not an area survey. Planetary grids are 150–500 m versus 30 m Earth grids. Coarse operational comparison, not landing safety.",
+  "source": "sites.json terrain manifests, source citations and checksums; app/sim/src/fidelity.ts",
+  "rows": [
+    {
+      "earth_id": "amboy",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 93,
+        "components": {
+          "successRate": 0.96,
+          "ground": 0.8373952649009336,
+          "fuel": 0.9998042471086172
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "amboy",
+          "flights": 25,
+          "successRate": 0.96,
+          "meanSlopeDeg": 2.4911437012727813,
+          "meanFuelUsedKg": 64.97356404920805,
+          "outcomes": {
+            "success": 24,
+            "tip-over": 1
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.994808,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "askja-east",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 88,
+        "components": {
+          "successRate": 0.96,
+          "ground": 0.6831052822097412,
+          "fuel": 0.9955580600052323
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "askja-east",
+          "flights": 25,
+          "successRate": 0.96,
+          "meanSlopeDeg": 4.34262349356709,
+          "meanFuelUsedKg": 65.7166467923004,
+          "outcomes": {
+            "tip-over": 1,
+            "success": 24
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.742334,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "cima-lava-field",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 87,
+        "components": {
+          "successRate": 0.96,
+          "ground": 0.6417642275521971,
+          "fuel": 0.9968044608593528
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "cima-lava-field",
+          "flights": 25,
+          "successRate": 0.96,
+          "meanSlopeDeg": 4.838716149457621,
+          "meanFuelUsedKg": 64.38008794360279,
+          "outcomes": {
+            "success": 24,
+            "tip-over": 1
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.854942,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "craters-moon",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 63,
+        "components": {
+          "successRate": 0.68,
+          "ground": 0.2949528574499053,
+          "fuel": 0.9987376877249511
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "craters-moon",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 9.000452590685121,
+          "meanFuelUsedKg": 65.1602119413496,
+          "outcomes": {
+            "success": 17,
+            "tip-over": 8
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.903959,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "etna-east",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 58,
+        "components": {
+          "successRate": 0.68,
+          "ground": 0.12573740653106136,
+          "fuel": 0.9878708335547769
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "etna-east",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 11.031038001711249,
+          "meanFuelUsedKg": 67.06191142113009,
+          "outcomes": {
+            "success": 17,
+            "tip-over": 8
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.154883,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "fournaise-enclos",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 24,
+        "components": {
+          "successRate": 0.07999999999999996,
+          "ground": 0,
+          "fuel": 0.9817221415797616
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "fournaise-enclos",
+          "flights": 25,
+          "successRate": 0.08,
+          "meanSlopeDeg": 18.748123481023214,
+          "meanFuelUsedKg": 68.13793251675777,
+          "outcomes": {
+            "tip-over": 23,
+            "success": 2
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.004128,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "harrat-khaybar",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 74,
+        "components": {
+          "successRate": 0.84,
+          "ground": 0.38487639916212923,
+          "fuel": 0.9980681339431724
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "harrat-khaybar",
+          "flights": 25,
+          "successRate": 0.84,
+          "meanSlopeDeg": 7.921370090138435,
+          "meanFuelUsedKg": 64.60123073327121,
+          "outcomes": {
+            "success": 21,
+            "tip-over": 4
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.83046,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "kilbourne-hole-v1",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 89,
+        "components": {
+          "successRate": 0.92,
+          "ground": 0.7524108391686954,
+          "fuel": 0.9985036497056742
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "kilbourne-hole-v1",
+          "flights": 25,
+          "successRate": 0.92,
+          "meanSlopeDeg": 3.5109568100596396,
+          "meanFuelUsedKg": 65.20116859472307,
+          "outcomes": {
+            "success": 23,
+            "tip-over": 2
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.893899,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "lanzarote-timanfaya",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 95,
+        "components": {
+          "successRate": 1,
+          "ground": 0.8470328121838844,
+          "fuel": 0.9980449125781886
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "lanzarote-timanfaya",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.375493133877372,
+          "meanFuelUsedKg": 64.59716699439905,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.927451,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "lava-beds",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 82,
+        "components": {
+          "successRate": 0.88,
+          "ground": 0.6049155810106046,
+          "fuel": 0.9979661515681802
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "lava-beds",
+          "flights": 25,
+          "successRate": 0.88,
+          "meanSlopeDeg": 5.28089990795673,
+          "meanFuelUsedKg": 65.2952307687845,
+          "outcomes": {
+            "success": 22,
+            "tip-over": 3
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.805619,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "payun-matru",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 46,
+        "components": {
+          "successRate": 0.52,
+          "ground": 0,
+          "fuel": 0.993672291173031
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "payun-matru",
+          "flights": 25,
+          "successRate": 0.52,
+          "meanSlopeDeg": 13.62287682088034,
+          "meanFuelUsedKg": 63.831958248496484,
+          "outcomes": {
+            "tip-over": 12,
+            "success": 13
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.613776,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "pinacate-elegante",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 46,
+        "components": {
+          "successRate": 0.52,
+          "ground": 0,
+          "fuel": 0.9965492289273908
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "pinacate-elegante",
+          "flights": 25,
+          "successRate": 0.52,
+          "meanSlopeDeg": 14.128783623499706,
+          "meanFuelUsedKg": 64.33542235550945,
+          "outcomes": {
+            "success": 13,
+            "tip-over": 12
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.627851,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-amboy-region-r3280-c1280",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 100,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9934931592304165,
+          "fuel": 0.9999822670388451
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-amboy-region-r3280-c1280",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.4618047908489832,
+          "meanFuelUsedKg": 64.93620402501394,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "sunset-crater",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 74,
+        "components": {
+          "successRate": 0.8,
+          "ground": 0.4610441326068343,
+          "fuel": 0.9978905359425962
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "sunset-crater",
+          "flights": 25,
+          "successRate": 0.8,
+          "meanSlopeDeg": 7.007357288801972,
+          "meanFuelUsedKg": 64.57015108317039,
+          "outcomes": {
+            "tip-over": 5,
+            "success": 20
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.833659,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "tongariro-west",
+      "planetary_id": "arsia-flank",
+      "stress": {
+        "score": 73,
+        "components": {
+          "successRate": 0.8,
+          "ground": 0.4309822020468247,
+          "fuel": 0.9968853561358397
+        },
+        "planetary": {
+          "siteId": "arsia-flank",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5398868800839849,
+          "meanFuelUsedKg": 64.93930729321605,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "tongariro-west",
+          "flights": 25,
+          "successRate": 0.8,
+          "meanSlopeDeg": 7.3681004555220895,
+          "meanFuelUsedKg": 64.39424461698799,
+          "outcomes": {
+            "success": 20,
+            "tip-over": 5
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.682316,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "badain-jaran",
+      "planetary_id": "bagnold",
+      "stress": {
+        "score": 35,
+        "components": {
+          "successRate": 0.28,
+          "ground": 0.021332939141208374,
+          "fuel": 0.9996927242213437
+        },
+        "planetary": {
+          "siteId": "bagnold",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 3.3972781761748068,
+          "meanFuelUsedKg": 64.78289165591247,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "badain-jaran",
+          "flights": 25,
+          "successRate": 0.28,
+          "meanSlopeDeg": 15.141282906480306,
+          "meanFuelUsedKg": 64.72911839464761,
+          "outcomes": {
+            "tip-over": 18,
+            "success": 7
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.887329,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "erg-chebbi",
+      "planetary_id": "bagnold",
+      "stress": {
+        "score": 79,
+        "components": {
+          "successRate": 0.76,
+          "ground": 0.6957454102914838,
+          "fuel": 0.9978094593108974
+        },
+        "planetary": {
+          "siteId": "bagnold",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 3.3972781761748068,
+          "meanFuelUsedKg": 64.78289165591247,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "erg-chebbi",
+          "flights": 25,
+          "successRate": 0.76,
+          "meanSlopeDeg": 7.048333252677001,
+          "meanFuelUsedKg": 65.16623627650543,
+          "outcomes": {
+            "success": 19,
+            "tip-over": 6
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.861771,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "great-sand-dunes",
+      "planetary_id": "bagnold",
+      "stress": {
+        "score": 62,
+        "components": {
+          "successRate": 0.6,
+          "ground": 0.4113223367587834,
+          "fuel": 0.9973072147456173
+        },
+        "planetary": {
+          "siteId": "bagnold",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 3.3972781761748068,
+          "meanFuelUsedKg": 64.78289165591247,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "great-sand-dunes",
+          "flights": 25,
+          "successRate": 0.6,
+          "meanSlopeDeg": 10.461410135069405,
+          "meanFuelUsedKg": 65.25412907542943,
+          "outcomes": {
+            "success": 15,
+            "tip-over": 10
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.953359,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "rub-khali-oman",
+      "planetary_id": "bagnold",
+      "stress": {
+        "score": 92,
+        "components": {
+          "successRate": 0.92,
+          "ground": 0.8545738158925916,
+          "fuel": 0.9984200937511764
+        },
+        "planetary": {
+          "siteId": "bagnold",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 3.3972781761748068,
+          "meanFuelUsedKg": 64.78289165591247,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "rub-khali-oman",
+          "flights": 25,
+          "successRate": 0.92,
+          "meanSlopeDeg": 1.652163966885906,
+          "meanFuelUsedKg": 65.05937524945661,
+          "outcomes": {
+            "tip-over": 2,
+            "success": 23
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.80695,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-erg-chebbi-region-r480-c1120",
+      "planetary_id": "bagnold",
+      "stress": {
+        "score": 96,
+        "components": {
+          "successRate": 0.96,
+          "ground": 0.9250478275946483,
+          "fuel": 0.999709025392693
+        },
+        "planetary": {
+          "siteId": "bagnold",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 3.3972781761748068,
+          "meanFuelUsedKg": 64.78289165591247,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-erg-chebbi-region-r480-c1120",
+          "flights": 25,
+          "successRate": 0.96,
+          "meanSlopeDeg": 2.497852107310587,
+          "meanFuelUsedKg": 64.83381221219119,
+          "outcomes": {
+            "success": 24,
+            "tip-over": 1
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-erg-chebbi-region-r640-c1120",
+      "planetary_id": "bagnold",
+      "stress": {
+        "score": 88,
+        "components": {
+          "successRate": 0.88,
+          "ground": 0.7955830387286547,
+          "fuel": 0.9985673321630791
+        },
+        "planetary": {
+          "siteId": "bagnold",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 3.3972781761748068,
+          "meanFuelUsedKg": 64.78289165591247,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-erg-chebbi-region-r640-c1120",
+          "flights": 25,
+          "successRate": 0.88,
+          "meanSlopeDeg": 5.850281711430951,
+          "meanFuelUsedKg": 64.53217478445131,
+          "outcomes": {
+            "success": 22,
+            "tip-over": 3
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "sossusvlei-dunes",
+      "planetary_id": "bagnold",
+      "stress": {
+        "score": 52,
+        "components": {
+          "successRate": 0.48,
+          "ground": 0.2618007125868482,
+          "fuel": 0.9991652445021508
+        },
+        "planetary": {
+          "siteId": "bagnold",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 3.3972781761748068,
+          "meanFuelUsedKg": 64.78289165591247,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "sossusvlei-dunes",
+          "flights": 25,
+          "successRate": 0.48,
+          "meanSlopeDeg": 12.255669625132628,
+          "meanFuelUsedKg": 64.92897386803607,
+          "outcomes": {
+            "tip-over": 13,
+            "success": 12
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.928,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "taklamakan-interior",
+      "planetary_id": "bagnold",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9790765428799442,
+          "fuel": 0.9986966580436517
+        },
+        "planetary": {
+          "siteId": "bagnold",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 3.3972781761748068,
+          "meanFuelUsedKg": 64.78289165591247,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "taklamakan-interior",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 3.146196690734137,
+          "meanFuelUsedKg": 65.01097649827342,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.800228,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "tsondab-dunes",
+      "planetary_id": "bagnold",
+      "stress": {
+        "score": 66,
+        "components": {
+          "successRate": 0.64,
+          "ground": 0.4560549965414188,
+          "fuel": 0.999363219246277
+        },
+        "planetary": {
+          "siteId": "bagnold",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 3.3972781761748068,
+          "meanFuelUsedKg": 64.78289165591247,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "tsondab-dunes",
+          "flights": 25,
+          "successRate": 0.64,
+          "meanSlopeDeg": 9.92461821767778,
+          "meanFuelUsedKg": 64.89432828781399,
+          "outcomes": {
+            "success": 16,
+            "tip-over": 9
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.846954,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "white-sands",
+      "planetary_id": "bagnold",
+      "stress": {
+        "score": 95,
+        "components": {
+          "successRate": 1,
+          "ground": 0.8449990116721444,
+          "fuel": 0.9981921088304818
+        },
+        "planetary": {
+          "siteId": "bagnold",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 3.3972781761748068,
+          "meanFuelUsedKg": 64.78289165591247,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "white-sands",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.5372663162405396,
+          "meanFuelUsedKg": 65.09927261057815,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.748415,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "atacama-yungay",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 92,
+        "components": {
+          "successRate": 0.92,
+          "ground": 0.852260381185789,
+          "fuel": 0.9989928201792801
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "atacama-yungay",
+          "flights": 25,
+          "successRate": 0.92,
+          "meanSlopeDeg": 4.092485391070892,
+          "meanFuelUsedKg": 65.43488242028943,
+          "outcomes": {
+            "success": 23,
+            "tip-over": 2
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.951968,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "badwater",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 95,
+        "components": {
+          "successRate": 1,
+          "ground": 0.8196239945212931,
+          "fuel": 0.9984875935959233
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "badwater",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.15509789955587597,
+          "meanFuelUsedKg": 64.99395483095003,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.854737,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "bardenas-blanca",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9628604512560729,
+          "fuel": 0.9977230605915781
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "bardenas-blanca",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.8739353803732341,
+          "meanFuelUsedKg": 64.86016155518962,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.875959,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "bisti-badlands",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9768326249903811,
+          "fuel": 0.9971126223552519
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "bisti-badlands",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.0416014651849332,
+          "meanFuelUsedKg": 64.75333486383252,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.905361,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "capitol-reef",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 67,
+        "components": {
+          "successRate": 0.72,
+          "ground": 0.38353137023014605,
+          "fuel": 0.9981419282701859
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "capitol-reef",
+          "flights": 25,
+          "successRate": 0.72,
+          "meanSlopeDeg": 9.717233522538606,
+          "meanFuelUsedKg": 64.93346339894597,
+          "outcomes": {
+            "success": 18,
+            "tip-over": 7
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.981894,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "dallol",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 100,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9940639910501269,
+          "fuel": 0.9989286745440539
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "dallol",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.248377857901881,
+          "meanFuelUsedKg": 65.07114399687288,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.916105,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "hverir-namafjall",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 80,
+        "components": {
+          "successRate": 0.8,
+          "ground": 0.6649704049301455,
+          "fuel": 0.9984883752246707
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "hverir-namafjall",
+          "flights": 25,
+          "successRate": 0.8,
+          "meanSlopeDeg": 6.339965106138612,
+          "meanFuelUsedKg": 64.99409161598082,
+          "outcomes": {
+            "success": 20,
+            "tip-over": 5
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.990887,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "ischigualasto",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.958111077878486,
+          "fuel": 0.9993252228987508
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "ischigualasto",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.8222770307585265,
+          "meanFuelUsedKg": 65.14053995894484,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.977564,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "lake-abbe-margin",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 94,
+        "components": {
+          "successRate": 1,
+          "ground": 0.8066991695583035,
+          "fuel": 0.9984803345991586
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "lake-abbe-margin",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0,
+          "meanFuelUsedKg": 64.99268450651621,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.855443,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "makgadikgadi-kubu",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 95,
+        "components": {
+          "successRate": 1,
+          "ground": 0.8498347237152413,
+          "fuel": 0.9984205709972948
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "makgadikgadi-kubu",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5176266498832549,
+          "meanFuelUsedKg": 64.98222587619003,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.85821,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-dallol-region-r960-c400",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9826419564906127,
+          "fuel": 0.9990366796912885
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-dallol-region-r960-c400",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.1113134431877114,
+          "meanFuelUsedKg": 65.42720700568796,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "tabernas-badlands",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 46,
+        "components": {
+          "successRate": 0.43999999999999995,
+          "ground": 0.1462295981067685,
+          "fuel": 0.9955971837487684
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "tabernas-badlands",
+          "flights": 25,
+          "successRate": 0.44,
+          "meanSlopeDeg": 12.564854788019137,
+          "meanFuelUsedKg": 64.4881331076979,
+          "outcomes": {
+            "success": 11,
+            "tip-over": 14
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.812185,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "talampaya-canyon",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 50,
+        "components": {
+          "successRate": 0.6,
+          "ground": 0.002169173963522897,
+          "fuel": 0.9939408928035793
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "talampaya-canyon",
+          "flights": 25,
+          "successRate": 0.6,
+          "meanSlopeDeg": 14.293579877738084,
+          "meanFuelUsedKg": 64.19828219228982,
+          "outcomes": {
+            "success": 15,
+            "tip-over": 10
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.901411,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "uyuni-incahuasi",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 94,
+        "components": {
+          "successRate": 0.96,
+          "ground": 0.8632445354373651,
+          "fuel": 0.9982178142372801
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "uyuni-incahuasi",
+          "flights": 25,
+          "successRate": 0.96,
+          "meanSlopeDeg": 0.6785443905487408,
+          "meanFuelUsedKg": 64.94674344318746,
+          "outcomes": {
+            "success": 24,
+            "tip-over": 1
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.860243,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "valle-luna-chile",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 68,
+        "components": {
+          "successRate": 0.72,
+          "ground": 0.413788928451719,
+          "fuel": 0.9973077549694945
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "valle-luna-chile",
+          "flights": 25,
+          "successRate": 0.72,
+          "meanSlopeDeg": 9.35414282387973,
+          "meanFuelUsedKg": 64.78748307132498,
+          "outcomes": {
+            "tip-over": 7,
+            "success": 18
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.972566,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "wadi-rum",
+      "planetary_id": "jezero",
+      "stress": {
+        "score": 42,
+        "components": {
+          "successRate": 0.43999999999999995,
+          "ground": 0,
+          "fuel": 0.9913210583822639
+        },
+        "planetary": {
+          "siteId": "jezero",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.319609965300359,
+          "meanFuelUsedKg": 65.25862595166345,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "wadi-rum",
+          "flights": 25,
+          "successRate": 0.44,
+          "meanSlopeDeg": 22.955208715386142,
+          "meanFuelUsedKg": 63.739811168559626,
+          "outcomes": {
+            "success": 11,
+            "tip-over": 14
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.843129,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "dunhuang-yardangs",
+      "planetary_id": "lucus-planum",
+      "stress": {
+        "score": 95,
+        "components": {
+          "successRate": 1,
+          "ground": 0.8442601092006485,
+          "fuel": 0.997165882720011
+        },
+        "planetary": {
+          "siteId": "lucus-planum",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.4754292087881973,
+          "meanFuelUsedKg": 65.30147184437996,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "dunhuang-yardangs",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.344307898380414,
+          "meanFuelUsedKg": 64.8055013203819,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.989595,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "lut-yardangs",
+      "planetary_id": "lucus-planum",
+      "stress": {
+        "score": 100,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9973450909677977,
+          "fuel": 0.9975055170514391
+        },
+        "planetary": {
+          "siteId": "lucus-planum",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.4754292087881973,
+          "meanFuelUsedKg": 65.30147184437996,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "lut-yardangs",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5072881171746254,
+          "meanFuelUsedKg": 64.8649373283818,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.978364,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "qaidam",
+      "planetary_id": "lucus-planum",
+      "stress": {
+        "score": 97,
+        "components": {
+          "successRate": 1,
+          "ground": 0.8898674732716029,
+          "fuel": 0.9969548094137065
+        },
+        "planetary": {
+          "siteId": "lucus-planum",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.4754292087881973,
+          "meanFuelUsedKg": 65.30147184437996,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "qaidam",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.7970195295289633,
+          "meanFuelUsedKg": 64.76856349177861,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.967607,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "richat-ridges",
+      "planetary_id": "lucus-planum",
+      "stress": {
+        "score": 89,
+        "components": {
+          "successRate": 0.92,
+          "ground": 0.7736023762239846,
+          "fuel": 0.9972987545284568
+        },
+        "planetary": {
+          "siteId": "lucus-planum",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.4754292087881973,
+          "meanFuelUsedKg": 65.30147184437996,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "richat-ridges",
+          "flights": 25,
+          "successRate": 0.92,
+          "meanSlopeDeg": 3.1922006941003813,
+          "meanFuelUsedKg": 64.82875388685991,
+          "outcomes": {
+            "success": 23,
+            "tip-over": 2
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.930684,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-atacama-yungay-region-r800-c720",
+      "planetary_id": "lucus-planum",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9670330343867863,
+          "fuel": 0.997973795519024
+        },
+        "planetary": {
+          "siteId": "lucus-planum",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.4754292087881973,
+          "meanFuelUsedKg": 65.30147184437996,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-atacama-yungay-region-r800-c720",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.8710327961467617,
+          "meanFuelUsedKg": 64.94688606020915,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-atacama-yungay-region-r880-c880",
+      "planetary_id": "lucus-planum",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9843781113812897,
+          "fuel": 0.9979757908603688
+        },
+        "planetary": {
+          "siteId": "lucus-planum",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.4754292087881973,
+          "meanFuelUsedKg": 65.30147184437996,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-atacama-yungay-region-r880-c880",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6628918722127208,
+          "meanFuelUsedKg": 64.94723524494451,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-lut-yardangs-region-r320-c240",
+      "planetary_id": "lucus-planum",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9840355513590997,
+          "fuel": 0.9989400428376367
+        },
+        "planetary": {
+          "siteId": "lucus-planum",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.4754292087881973,
+          "meanFuelUsedKg": 65.30147184437996,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-lut-yardangs-region-r320-c240",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6670025924790004,
+          "meanFuelUsedKg": 65.11597934096639,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-lut-yardangs-region-r480-c240",
+      "planetary_id": "lucus-planum",
+      "stress": {
+        "score": 100,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9920863552199414,
+          "fuel": 0.9987828709097906
+        },
+        "planetary": {
+          "siteId": "lucus-planum",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.4754292087881973,
+          "meanFuelUsedKg": 65.30147184437996,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-lut-yardangs-region-r480-c240",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.5703929461489005,
+          "meanFuelUsedKg": 65.08847425359332,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-lut-yardangs-region-r720-c240",
+      "planetary_id": "lucus-planum",
+      "stress": {
+        "score": 100,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9854572051185365,
+          "fuel": 0.9986750931701235
+        },
+        "planetary": {
+          "siteId": "lucus-planum",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.4754292087881973,
+          "meanFuelUsedKg": 65.30147184437996,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-lut-yardangs-region-r720-c240",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6499427473657589,
+          "meanFuelUsedKg": 65.06961314915158,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-lut-yardangs-region-r960-c400",
+      "planetary_id": "lucus-planum",
+      "stress": {
+        "score": 100,
+        "components": {
+          "successRate": 1,
+          "ground": 0.994161642961573,
+          "fuel": 0.998672976885717
+        },
+        "planetary": {
+          "siteId": "lucus-planum",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.4754292087881973,
+          "meanFuelUsedKg": 65.30147184437996,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-lut-yardangs-region-r960-c400",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.40536892432707416,
+          "meanFuelUsedKg": 65.06924279938043,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "bromo-sandsea",
+      "planetary_id": "malapert-massif",
+      "stress": {
+        "score": 70,
+        "components": {
+          "successRate": 0.76,
+          "ground": 0.39947319246865887,
+          "fuel": 0.9997719517428473
+        },
+        "planetary": {
+          "siteId": "malapert-massif",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 9.039504947647103,
+          "meanFuelUsedKg": 47.10841165280392,
+          "outcomes": {
+            "tip-over": 8,
+            "success": 17
+          }
+        },
+        "analog": {
+          "siteId": "bromo-sandsea",
+          "flights": 25,
+          "successRate": 0.44,
+          "meanSlopeDeg": 16.245826638023196,
+          "meanFuelUsedKg": 47.068503207802195,
+          "outcomes": {
+            "success": 11,
+            "tip-over": 14
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "etna-east",
+      "planetary_id": "malapert-massif",
+      "stress": {
+        "score": 95,
+        "components": {
+          "successRate": 1,
+          "ground": 0.8341696131325683,
+          "fuel": 0.9949719359702945
+        },
+        "planetary": {
+          "siteId": "malapert-massif",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 9.039504947647103,
+          "meanFuelUsedKg": 47.10841165280392,
+          "outcomes": {
+            "tip-over": 8,
+            "success": 17
+          }
+        },
+        "analog": {
+          "siteId": "etna-east",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 11.029469590056284,
+          "meanFuelUsedKg": 47.988322858002384,
+          "outcomes": {
+            "success": 17,
+            "tip-over": 8
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "kilbourne-hole-v1",
+      "planetary_id": "malapert-massif",
+      "stress": {
+        "score": 74,
+        "components": {
+          "successRate": 0.76,
+          "ground": 0.5391225602376841,
+          "fuel": 0.9997024427243275
+        },
+        "planetary": {
+          "siteId": "malapert-massif",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 9.039504947647103,
+          "meanFuelUsedKg": 47.10841165280392,
+          "outcomes": {
+            "tip-over": 8,
+            "success": 17
+          }
+        },
+        "analog": {
+          "siteId": "kilbourne-hole-v1",
+          "flights": 25,
+          "successRate": 0.92,
+          "meanSlopeDeg": 3.5089756704993125,
+          "meanFuelUsedKg": 47.056339129561245,
+          "outcomes": {
+            "success": 23,
+            "tip-over": 2
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "lonar-crater",
+      "planetary_id": "malapert-massif",
+      "stress": {
+        "score": 96,
+        "components": {
+          "successRate": 0.9600000000000001,
+          "ground": 0.9412763033064623,
+          "fuel": 0.9980344589353524
+        },
+        "planetary": {
+          "siteId": "malapert-massif",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 9.039504947647103,
+          "meanFuelUsedKg": 47.10841165280392,
+          "outcomes": {
+            "tip-over": 8,
+            "success": 17
+          }
+        },
+        "analog": {
+          "siteId": "lonar-crater",
+          "flights": 25,
+          "successRate": 0.72,
+          "meanSlopeDeg": 9.744189307969556,
+          "meanFuelUsedKg": 46.76444196649058,
+          "outcomes": {
+            "success": 18,
+            "tip-over": 7
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "meteor-crater",
+      "planetary_id": "malapert-massif",
+      "stress": {
+        "score": 92,
+        "components": {
+          "successRate": 0.88,
+          "ground": 0.9378491832591017,
+          "fuel": 0.9985109357308813
+        },
+        "planetary": {
+          "siteId": "malapert-massif",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 9.039504947647103,
+          "meanFuelUsedKg": 47.10841165280392,
+          "outcomes": {
+            "tip-over": 8,
+            "success": 17
+          }
+        },
+        "analog": {
+          "siteId": "meteor-crater",
+          "flights": 25,
+          "successRate": 0.8,
+          "meanSlopeDeg": 8.293695146756324,
+          "meanFuelUsedKg": 46.84782540570816,
+          "outcomes": {
+            "success": 20,
+            "tip-over": 5
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "pinacate-elegante",
+      "planetary_id": "malapert-massif",
+      "stress": {
+        "score": 79,
+        "components": {
+          "successRate": 0.84,
+          "ground": 0.5761817501578139,
+          "fuel": 0.9970660579772513
+        },
+        "planetary": {
+          "siteId": "malapert-massif",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 9.039504947647103,
+          "meanFuelUsedKg": 47.10841165280392,
+          "outcomes": {
+            "tip-over": 8,
+            "success": 17
+          }
+        },
+        "analog": {
+          "siteId": "pinacate-elegante",
+          "flights": 25,
+          "successRate": 0.52,
+          "meanSlopeDeg": 14.125323945753337,
+          "meanFuelUsedKg": 46.59497179882291,
+          "outcomes": {
+            "success": 13,
+            "tip-over": 12
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "pingualuit",
+      "planetary_id": "malapert-massif",
+      "stress": {
+        "score": 71,
+        "components": {
+          "successRate": 0.76,
+          "ground": 0.418896486490535,
+          "fuel": 0.9992316747205018
+        },
+        "planetary": {
+          "siteId": "malapert-massif",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 9.039504947647103,
+          "meanFuelUsedKg": 47.10841165280392,
+          "outcomes": {
+            "tip-over": 8,
+            "success": 17
+          }
+        },
+        "analog": {
+          "siteId": "pingualuit",
+          "flights": 25,
+          "successRate": 0.92,
+          "meanSlopeDeg": 2.066262785533523,
+          "meanFuelUsedKg": 46.97395472889174,
+          "outcomes": {
+            "success": 23,
+            "tip-over": 2
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-tongariro-west-region-r1040-c720",
+      "planetary_id": "malapert-massif",
+      "stress": {
+        "score": 63,
+        "components": {
+          "successRate": 0.6399999999999999,
+          "ground": 0.3646941878861417,
+          "fuel": 0.9963574507335566
+        },
+        "planetary": {
+          "siteId": "malapert-massif",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 9.039504947647103,
+          "meanFuelUsedKg": 47.10841165280392,
+          "outcomes": {
+            "tip-over": 8,
+            "success": 17
+          }
+        },
+        "analog": {
+          "siteId": "scan-tongariro-west-region-r1040-c720",
+          "flights": 25,
+          "successRate": 0.32,
+          "meanSlopeDeg": 16.663174693013403,
+          "meanFuelUsedKg": 47.745857774431514,
+          "outcomes": {
+            "success": 8,
+            "tip-over": 17
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-tongariro-west-region-r1120-c800",
+      "planetary_id": "malapert-massif",
+      "stress": {
+        "score": 92,
+        "components": {
+          "successRate": 0.9199999999999999,
+          "ground": 0.862698789561006,
+          "fuel": 0.9982164920659219
+        },
+        "planetary": {
+          "siteId": "malapert-massif",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 9.039504947647103,
+          "meanFuelUsedKg": 47.10841165280392,
+          "outcomes": {
+            "tip-over": 8,
+            "success": 17
+          }
+        },
+        "analog": {
+          "siteId": "scan-tongariro-west-region-r1120-c800",
+          "flights": 25,
+          "successRate": 0.6,
+          "meanSlopeDeg": 10.68711947291503,
+          "meanFuelUsedKg": 47.42052554126759,
+          "outcomes": {
+            "tip-over": 10,
+            "success": 15
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "tongariro-west",
+      "planetary_id": "malapert-massif",
+      "stress": {
+        "score": 90,
+        "components": {
+          "successRate": 0.88,
+          "ground": 0.8605212473125871,
+          "fuel": 0.9973921415752689
+        },
+        "planetary": {
+          "siteId": "malapert-massif",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 9.039504947647103,
+          "meanFuelUsedKg": 47.10841165280392,
+          "outcomes": {
+            "tip-over": 8,
+            "success": 17
+          }
+        },
+        "analog": {
+          "siteId": "tongariro-west",
+          "flights": 25,
+          "successRate": 0.8,
+          "meanSlopeDeg": 7.365759915398148,
+          "meanFuelUsedKg": 46.65203642847599,
+          "outcomes": {
+            "success": 20,
+            "tip-over": 5
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "askja-east",
+      "planetary_id": "marius-hills",
+      "stress": {
+        "score": 90,
+        "components": {
+          "successRate": 0.96,
+          "ground": 0.741741509586477,
+          "fuel": 0.9973755620967043
+        },
+        "planetary": {
+          "siteId": "marius-hills",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.2512273090049384,
+          "meanFuelUsedKg": 46.84057128409231,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "askja-east",
+          "flights": 25,
+          "successRate": 0.96,
+          "meanSlopeDeg": 4.350329193967215,
+          "meanFuelUsedKg": 47.29984791716905,
+          "outcomes": {
+            "tip-over": 1,
+            "success": 24
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.759068,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "bromo-sandsea",
+      "planetary_id": "marius-hills",
+      "stress": {
+        "score": 42,
+        "components": {
+          "successRate": 0.43999999999999995,
+          "ground": 0,
+          "fuel": 0.9986975318645149
+        },
+        "planetary": {
+          "siteId": "marius-hills",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.2512273090049384,
+          "meanFuelUsedKg": 46.84057128409231,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "bromo-sandsea",
+          "flights": 25,
+          "successRate": 0.44,
+          "meanSlopeDeg": 16.245826638023196,
+          "meanFuelUsedKg": 47.068503207802195,
+          "outcomes": {
+            "success": 11,
+            "tip-over": 14
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.624603,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "cima-lava-field",
+      "planetary_id": "marius-hills",
+      "stress": {
+        "score": 89,
+        "components": {
+          "successRate": 0.96,
+          "ground": 0.7009990120353722,
+          "fuel": 0.998933131035604
+        },
+        "planetary": {
+          "siteId": "marius-hills",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.2512273090049384,
+          "meanFuelUsedKg": 46.84057128409231,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "cima-lava-field",
+          "flights": 25,
+          "successRate": 0.96,
+          "meanSlopeDeg": 4.839239164580472,
+          "meanFuelUsedKg": 46.65386921532301,
+          "outcomes": {
+            "success": 24,
+            "tip-over": 1
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.871676,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "craters-moon",
+      "planetary_id": "marius-hills",
+      "stress": {
+        "score": 65,
+        "components": {
+          "successRate": 0.68,
+          "ground": 0.35423088488057675,
+          "fuel": 0.9989094118713936
+        },
+        "planetary": {
+          "siteId": "marius-hills",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.2512273090049384,
+          "meanFuelUsedKg": 46.84057128409231,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "craters-moon",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 9.000456690438018,
+          "meanFuelUsedKg": 47.03142420659844,
+          "outcomes": {
+            "success": 17,
+            "tip-over": 8
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.920694,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "fogo-caldera",
+      "planetary_id": "marius-hills",
+      "stress": {
+        "score": 32,
+        "components": {
+          "successRate": 0.24,
+          "ground": 0,
+          "fuel": 0.9902356037628077
+        },
+        "planetary": {
+          "siteId": "marius-hills",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.2512273090049384,
+          "meanFuelUsedKg": 46.84057128409231,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "fogo-caldera",
+          "flights": 25,
+          "successRate": 0.24,
+          "meanSlopeDeg": 23.929918629410917,
+          "meanFuelUsedKg": 45.131801942583664,
+          "outcomes": {
+            "success": 6,
+            "tip-over": 19
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.110329,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "harrat-khaybar",
+      "planetary_id": "marius-hills",
+      "stress": {
+        "score": 75,
+        "components": {
+          "successRate": 0.84,
+          "ground": 0.44431382478242176,
+          "fuel": 0.9994713149075556
+        },
+        "planetary": {
+          "siteId": "marius-hills",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.2512273090049384,
+          "meanFuelUsedKg": 46.84057128409231,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "harrat-khaybar",
+          "flights": 25,
+          "successRate": 0.84,
+          "meanSlopeDeg": 7.919461411615877,
+          "meanFuelUsedKg": 46.74805139291454,
+          "outcomes": {
+            "success": 21,
+            "tip-over": 4
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.847194,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "lanzarote-timanfaya",
+      "planetary_id": "marius-hills",
+      "stress": {
+        "score": 97,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9063325244130636,
+          "fuel": 0.9995273642203905
+        },
+        "planetary": {
+          "siteId": "marius-hills",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.2512273090049384,
+          "meanFuelUsedKg": 46.84057128409231,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "lanzarote-timanfaya",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.375237016048175,
+          "meanFuelUsedKg": 46.75786002266064,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.944185,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "lava-beds",
+      "planetary_id": "marius-hills",
+      "stress": {
+        "score": 84,
+        "components": {
+          "successRate": 0.88,
+          "ground": 0.6640984149362981,
+          "fuel": 0.9984512114653274
+        },
+        "planetary": {
+          "siteId": "marius-hills",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.2512273090049384,
+          "meanFuelUsedKg": 46.84057128409231,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "lava-beds",
+          "flights": 25,
+          "successRate": 0.88,
+          "meanSlopeDeg": 5.2820463297693605,
+          "meanFuelUsedKg": 47.111609277660015,
+          "outcomes": {
+            "success": 22,
+            "tip-over": 3
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.822354,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "payun-matru",
+      "planetary_id": "marius-hills",
+      "stress": {
+        "score": 46,
+        "components": {
+          "successRate": 0.52,
+          "ground": 0,
+          "fuel": 0.9972196158643031
+        },
+        "planetary": {
+          "siteId": "marius-hills",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.2512273090049384,
+          "meanFuelUsedKg": 46.84057128409231,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "payun-matru",
+          "flights": 25,
+          "successRate": 0.52,
+          "meanSlopeDeg": 13.620618904506461,
+          "meanFuelUsedKg": 46.35400406034536,
+          "outcomes": {
+            "tip-over": 12,
+            "success": 13
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.63051,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-harrat-khaybar-region-r1120-c320",
+      "planetary_id": "marius-hills",
+      "stress": {
+        "score": 98,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9362685038599943,
+          "fuel": 0.9999729839768151
+        },
+        "planetary": {
+          "siteId": "marius-hills",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.2512273090049384,
+          "meanFuelUsedKg": 46.84057128409231,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-harrat-khaybar-region-r1120-c320",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 2.0160052626850065,
+          "meanFuelUsedKg": 46.83584348003497,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "sunset-crater",
+      "planetary_id": "marius-hills",
+      "stress": {
+        "score": 76,
+        "components": {
+          "successRate": 0.8,
+          "ground": 0.5202463913200459,
+          "fuel": 0.9994476334367977
+        },
+        "planetary": {
+          "siteId": "marius-hills",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.2512273090049384,
+          "meanFuelUsedKg": 46.84057128409231,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "sunset-crater",
+          "flights": 25,
+          "successRate": 0.8,
+          "meanSlopeDeg": 7.008270613164388,
+          "meanFuelUsedKg": 46.743907135531906,
+          "outcomes": {
+            "tip-over": 5,
+            "success": 20
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.850393,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "teide-canadas",
+      "planetary_id": "marius-hills",
+      "stress": {
+        "score": 40,
+        "components": {
+          "successRate": 0.4,
+          "ground": 0,
+          "fuel": 0.9939864293356182
+        },
+        "planetary": {
+          "siteId": "marius-hills",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.2512273090049384,
+          "meanFuelUsedKg": 46.84057128409231,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "teide-canadas",
+          "flights": 25,
+          "successRate": 0.4,
+          "meanSlopeDeg": 16.97926665342023,
+          "meanFuelUsedKg": 47.89294615035913,
+          "outcomes": {
+            "tip-over": 15,
+            "success": 10
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.04806,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "etna-east",
+      "planetary_id": "mons-mouton",
+      "stress": {
+        "score": 73,
+        "components": {
+          "successRate": 0.68,
+          "ground": 0.6318919451839249,
+          "fuel": 0.9923404871902982
+        },
+        "planetary": {
+          "siteId": "mons-mouton",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.612172932263381,
+          "meanFuelUsedKg": 46.64790811630458,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "etna-east",
+          "flights": 25,
+          "successRate": 0.68,
+          "meanSlopeDeg": 11.029469590056284,
+          "meanFuelUsedKg": 47.988322858002384,
+          "outcomes": {
+            "success": 17,
+            "tip-over": 8
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "haughton",
+      "planetary_id": "mons-mouton",
+      "stress": {
+        "score": 92,
+        "components": {
+          "successRate": 1,
+          "ground": 0.73964748861745,
+          "fuel": 0.9985849687540531
+        },
+        "planetary": {
+          "siteId": "mons-mouton",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.612172932263381,
+          "meanFuelUsedKg": 46.64790811630458,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "haughton",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 3.487942795672782,
+          "meanFuelUsedKg": 46.895538584345275,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "kilbourne-hole-v1",
+      "planetary_id": "mons-mouton",
+      "stress": {
+        "score": 88,
+        "components": {
+          "successRate": 0.92,
+          "ground": 0.7414002281863277,
+          "fuel": 0.9976661084956762
+        },
+        "planetary": {
+          "siteId": "mons-mouton",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.612172932263381,
+          "meanFuelUsedKg": 46.64790811630458,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "kilbourne-hole-v1",
+          "flights": 25,
+          "successRate": 0.92,
+          "meanSlopeDeg": 3.5089756704993125,
+          "meanFuelUsedKg": 47.056339129561245,
+          "outcomes": {
+            "success": 23,
+            "tip-over": 2
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "lonar-crater",
+      "planetary_id": "mons-mouton",
+      "stress": {
+        "score": 78,
+        "components": {
+          "successRate": 0.72,
+          "ground": 0.7389986353578188,
+          "fuel": 0.9993340922846514
+        },
+        "planetary": {
+          "siteId": "mons-mouton",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.612172932263381,
+          "meanFuelUsedKg": 46.64790811630458,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "lonar-crater",
+          "flights": 25,
+          "successRate": 0.72,
+          "meanSlopeDeg": 9.744189307969556,
+          "meanFuelUsedKg": 46.76444196649058,
+          "outcomes": {
+            "success": 18,
+            "tip-over": 7
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "meteor-crater",
+      "planetary_id": "mons-mouton",
+      "stress": {
+        "score": 86,
+        "components": {
+          "successRate": 0.8,
+          "ground": 0.8598731487922547,
+          "fuel": 0.9988576154891224
+        },
+        "planetary": {
+          "siteId": "mons-mouton",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.612172932263381,
+          "meanFuelUsedKg": 46.64790811630458,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "meteor-crater",
+          "flights": 25,
+          "successRate": 0.8,
+          "meanSlopeDeg": 8.293695146756324,
+          "meanFuelUsedKg": 46.84782540570816,
+          "outcomes": {
+            "success": 20,
+            "tip-over": 5
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "pingualuit",
+      "planetary_id": "mons-mouton",
+      "stress": {
+        "score": 85,
+        "components": {
+          "successRate": 0.92,
+          "ground": 0.6211741544391784,
+          "fuel": 0.9981368764995019
+        },
+        "planetary": {
+          "siteId": "mons-mouton",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.612172932263381,
+          "meanFuelUsedKg": 46.64790811630458,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "pingualuit",
+          "flights": 25,
+          "successRate": 0.92,
+          "meanSlopeDeg": 2.066262785533523,
+          "meanFuelUsedKg": 46.97395472889174,
+          "outcomes": {
+            "success": 23,
+            "tip-over": 2
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-tongariro-west-region-r1040-c720",
+      "planetary_id": "mons-mouton",
+      "stress": {
+        "score": 41,
+        "components": {
+          "successRate": 0.32000000000000006,
+          "ground": 0.16241651993749817,
+          "fuel": 0.9937260019535603
+        },
+        "planetary": {
+          "siteId": "mons-mouton",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.612172932263381,
+          "meanFuelUsedKg": 46.64790811630458,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-tongariro-west-region-r1040-c720",
+          "flights": 25,
+          "successRate": 0.32,
+          "meanSlopeDeg": 16.663174693013403,
+          "meanFuelUsedKg": 47.745857774431514,
+          "outcomes": {
+            "success": 8,
+            "tip-over": 17
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-tongariro-west-region-r1120-c800",
+      "planetary_id": "mons-mouton",
+      "stress": {
+        "score": 70,
+        "components": {
+          "successRate": 0.6,
+          "ground": 0.6604211216123625,
+          "fuel": 0.9955850432859257
+        },
+        "planetary": {
+          "siteId": "mons-mouton",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.612172932263381,
+          "meanFuelUsedKg": 46.64790811630458,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-tongariro-west-region-r1120-c800",
+          "flights": 25,
+          "successRate": 0.6,
+          "meanSlopeDeg": 10.68711947291503,
+          "meanFuelUsedKg": 47.42052554126759,
+          "outcomes": {
+            "tip-over": 10,
+            "success": 15
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "tongariro-west",
+      "planetary_id": "mons-mouton",
+      "stress": {
+        "score": 88,
+        "components": {
+          "successRate": 0.8,
+          "ground": 0.9372010847387694,
+          "fuel": 0.9999764096447348
+        },
+        "planetary": {
+          "siteId": "mons-mouton",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.612172932263381,
+          "meanFuelUsedKg": 46.64790811630458,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "tongariro-west",
+          "flights": 25,
+          "successRate": 0.8,
+          "meanSlopeDeg": 7.365759915398148,
+          "meanFuelUsedKg": 46.65203642847599,
+          "outcomes": {
+            "success": 20,
+            "tip-over": 5
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "wolfe-creek",
+      "planetary_id": "mons-mouton",
+      "stress": {
+        "score": 87,
+        "components": {
+          "successRate": 0.96,
+          "ground": 0.6343462322787885,
+          "fuel": 0.998346875306929
+        },
+        "planetary": {
+          "siteId": "mons-mouton",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.612172932263381,
+          "meanFuelUsedKg": 46.64790811630458,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "wolfe-creek",
+          "flights": 25,
+          "successRate": 0.96,
+          "meanSlopeDeg": 2.224327719608844,
+          "meanFuelUsedKg": 46.93720493759199,
+          "outcomes": {
+            "success": 24,
+            "tip-over": 1
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "barrow-observatory",
+      "planetary_id": "phoenix",
+      "stress": {
+        "score": 100,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9900764452758422,
+          "fuel": 0.9981386750810514
+        },
+        "planetary": {
+          "siteId": "phoenix",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6087002957686535,
+          "meanFuelUsedKg": 65.32923630448884,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "barrow-observatory",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.48961763907875955,
+          "meanFuelUsedKg": 65.00350444367282,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.939824,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-amboy-region-r1600-c480",
+      "planetary_id": "phoenix",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.969478511006395,
+          "fuel": 0.9973629841959923
+        },
+        "planetary": {
+          "siteId": "phoenix",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6087002957686535,
+          "meanFuelUsedKg": 65.32923630448884,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-amboy-region-r1600-c480",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.9749581636919136,
+          "meanFuelUsedKg": 64.86775853878751,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-amboy-region-r1760-c400",
+      "planetary_id": "phoenix",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9653283750091946,
+          "fuel": 0.9971461540037277
+        },
+        "planetary": {
+          "siteId": "phoenix",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6087002957686535,
+          "meanFuelUsedKg": 65.32923630448884,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-amboy-region-r1760-c400",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.0247597956583194,
+          "meanFuelUsedKg": 64.8298132551412,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-amboy-region-r1920-c320",
+      "planetary_id": "phoenix",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9744738686953618,
+          "fuel": 0.9985055089503718
+        },
+        "planetary": {
+          "siteId": "phoenix",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6087002957686535,
+          "meanFuelUsedKg": 65.32923630448884,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-amboy-region-r1920-c320",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.9150138714243126,
+          "meanFuelUsedKg": 65.06770037080392,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-amboy-region-r3040-c80",
+      "planetary_id": "phoenix",
+      "stress": {
+        "score": 100,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9994834065490528,
+          "fuel": 0.9986989552801359
+        },
+        "planetary": {
+          "siteId": "phoenix",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6087002957686535,
+          "meanFuelUsedKg": 65.32923630448884,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-amboy-region-r3040-c80",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6025011743572871,
+          "meanFuelUsedKg": 65.10155347851263,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-amboy-region-r3120-c1120",
+      "planetary_id": "phoenix",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9763456372404251,
+          "fuel": 0.9982554566011509
+        },
+        "planetary": {
+          "siteId": "phoenix",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6087002957686535,
+          "meanFuelUsedKg": 65.32923630448884,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-amboy-region-r3120-c1120",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.8925526488835522,
+          "meanFuelUsedKg": 65.02394120969025,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-atacama-yungay-region-r240-c880",
+      "planetary_id": "phoenix",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9632298228766117,
+          "fuel": 0.9977206117022861
+        },
+        "planetary": {
+          "siteId": "phoenix",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6087002957686535,
+          "meanFuelUsedKg": 65.32923630448884,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-atacama-yungay-region-r240-c880",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.0499424212493131,
+          "meanFuelUsedKg": 64.9303433523889,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-harrat-khaybar-region-r1040-c80",
+      "planetary_id": "phoenix",
+      "stress": {
+        "score": 98,
+        "components": {
+          "successRate": 1,
+          "ground": 0.921993855205016,
+          "fuel": 0.9971311230400397
+        },
+        "planetary": {
+          "siteId": "phoenix",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6087002957686535,
+          "meanFuelUsedKg": 65.32923630448884,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-harrat-khaybar-region-r1040-c80",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.544774033308462,
+          "meanFuelUsedKg": 64.8271828364958,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-ischigualasto-region-r720-c80",
+      "planetary_id": "phoenix",
+      "stress": {
+        "score": 99,
+        "components": {
+          "successRate": 1,
+          "ground": 0.952572289196719,
+          "fuel": 0.9974753149664992
+        },
+        "planetary": {
+          "siteId": "phoenix",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6087002957686535,
+          "meanFuelUsedKg": 65.32923630448884,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-ischigualasto-region-r720-c80",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 1.1778328254080253,
+          "meanFuelUsedKg": 64.8874164236262,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-lut-yardangs-region-r320-c240",
+      "planetary_id": "phoenix",
+      "stress": {
+        "score": 100,
+        "components": {
+          "successRate": 1,
+          "ground": 0.9951414752741378,
+          "fuel": 0.9987813887798717
+        },
+        "planetary": {
+          "siteId": "phoenix",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6087002957686535,
+          "meanFuelUsedKg": 65.32923630448884,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-lut-yardangs-region-r320-c240",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 0.6670025924790004,
+          "meanFuelUsedKg": 65.11597934096639,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 3.72,
+        "airDensity": 0.02,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "amboy",
+      "planetary_id": "shackleton-rim",
+      "stress": {
+        "score": 87,
+        "components": {
+          "successRate": 0.96,
+          "ground": 0.6394657678217572,
+          "fuel": 0.9981205352552552
+        },
+        "planetary": {
+          "siteId": "shackleton-rim",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.816047832569621,
+          "meanFuelUsedKg": 46.62126045409531,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "amboy",
+          "flights": 25,
+          "successRate": 0.96,
+          "meanSlopeDeg": 2.4896370464307074,
+          "meanFuelUsedKg": 46.95016678442564,
+          "outcomes": {
+            "success": 24,
+            "tip-over": 1
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "askja-east",
+      "planetary_id": "shackleton-rim",
+      "stress": {
+        "score": 92,
+        "components": {
+          "successRate": 0.96,
+          "ground": 0.7945234467831328,
+          "fuel": 0.9961223573538643
+        },
+        "planetary": {
+          "siteId": "shackleton-rim",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.816047832569621,
+          "meanFuelUsedKg": 46.62126045409531,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "askja-east",
+          "flights": 25,
+          "successRate": 0.96,
+          "meanSlopeDeg": 4.350329193967215,
+          "meanFuelUsedKg": 47.29984791716905,
+          "outcomes": {
+            "tip-over": 1,
+            "success": 24
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "bromo-sandsea",
+      "planetary_id": "shackleton-rim",
+      "stress": {
+        "score": 48,
+        "components": {
+          "successRate": 0.43999999999999995,
+          "ground": 0.21418509954553544,
+          "fuel": 0.997444327121675
+        },
+        "planetary": {
+          "siteId": "shackleton-rim",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.816047832569621,
+          "meanFuelUsedKg": 46.62126045409531,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "bromo-sandsea",
+          "flights": 25,
+          "successRate": 0.44,
+          "meanSlopeDeg": 16.245826638023196,
+          "meanFuelUsedKg": 47.068503207802195,
+          "outcomes": {
+            "success": 11,
+            "tip-over": 14
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "haughton",
+      "planetary_id": "shackleton-rim",
+      "stress": {
+        "score": 92,
+        "components": {
+          "successRate": 1,
+          "ground": 0.72265791359193,
+          "fuel": 0.9984326963985716
+        },
+        "planetary": {
+          "siteId": "shackleton-rim",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.816047832569621,
+          "meanFuelUsedKg": 46.62126045409531,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "haughton",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 3.487942795672782,
+          "meanFuelUsedKg": 46.895538584345275,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.552238,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "kilbourne-hole-v1",
+      "planetary_id": "shackleton-rim",
+      "stress": {
+        "score": 88,
+        "components": {
+          "successRate": 0.92,
+          "ground": 0.7244106531608077,
+          "fuel": 0.9975138361401946
+        },
+        "planetary": {
+          "siteId": "shackleton-rim",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.816047832569621,
+          "meanFuelUsedKg": 46.62126045409531,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "kilbourne-hole-v1",
+          "flights": 25,
+          "successRate": 0.92,
+          "meanSlopeDeg": 3.5089756704993125,
+          "meanFuelUsedKg": 47.056339129561245,
+          "outcomes": {
+            "success": 23,
+            "tip-over": 2
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.645536,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "lonar-crater",
+      "planetary_id": "shackleton-rim",
+      "stress": {
+        "score": 79,
+        "components": {
+          "successRate": 0.72,
+          "ground": 0.7559882103833387,
+          "fuel": 0.9991818199291699
+        },
+        "planetary": {
+          "siteId": "shackleton-rim",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.816047832569621,
+          "meanFuelUsedKg": 46.62126045409531,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "lonar-crater",
+          "flights": 25,
+          "successRate": 0.72,
+          "meanSlopeDeg": 9.744189307969556,
+          "meanFuelUsedKg": 46.76444196649058,
+          "outcomes": {
+            "success": 18,
+            "tip-over": 7
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.627426,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "meteor-crater",
+      "planetary_id": "shackleton-rim",
+      "stress": {
+        "score": 86,
+        "components": {
+          "successRate": 0.8,
+          "ground": 0.8768627238177747,
+          "fuel": 0.9987053431336409
+        },
+        "planetary": {
+          "siteId": "shackleton-rim",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.816047832569621,
+          "meanFuelUsedKg": 46.62126045409531,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "meteor-crater",
+          "flights": 25,
+          "successRate": 0.8,
+          "meanSlopeDeg": 8.293695146756324,
+          "meanFuelUsedKg": 46.84782540570816,
+          "outcomes": {
+            "success": 20,
+            "tip-over": 5
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.554145,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "pinacate-elegante",
+      "planetary_id": "shackleton-rim",
+      "stress": {
+        "score": 58,
+        "components": {
+          "successRate": 0.52,
+          "ground": 0.3908936572346904,
+          "fuel": 0.9998497791127292
+        },
+        "planetary": {
+          "siteId": "shackleton-rim",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.816047832569621,
+          "meanFuelUsedKg": 46.62126045409531,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "pinacate-elegante",
+          "flights": 25,
+          "successRate": 0.52,
+          "meanSlopeDeg": 14.125323945753337,
+          "meanFuelUsedKg": 46.59497179882291,
+          "outcomes": {
+            "success": 13,
+            "tip-over": 12
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "pingualuit",
+      "planetary_id": "shackleton-rim",
+      "stress": {
+        "score": 84,
+        "components": {
+          "successRate": 0.92,
+          "ground": 0.6041845794136584,
+          "fuel": 0.9979846041440203
+        },
+        "planetary": {
+          "siteId": "shackleton-rim",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.816047832569621,
+          "meanFuelUsedKg": 46.62126045409531,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "pingualuit",
+          "flights": 25,
+          "successRate": 0.92,
+          "meanSlopeDeg": 2.066262785533523,
+          "meanFuelUsedKg": 46.97395472889174,
+          "outcomes": {
+            "success": 23,
+            "tip-over": 2
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.667467,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "scan-tongariro-west-region-r1120-c800",
+      "planetary_id": "shackleton-rim",
+      "stress": {
+        "score": 70,
+        "components": {
+          "successRate": 0.6,
+          "ground": 0.6774106966378826,
+          "fuel": 0.9954327709304441
+        },
+        "planetary": {
+          "siteId": "shackleton-rim",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.816047832569621,
+          "meanFuelUsedKg": 46.62126045409531,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "scan-tongariro-west-region-r1120-c800",
+          "flights": 25,
+          "successRate": 0.6,
+          "meanSlopeDeg": 10.68711947291503,
+          "meanFuelUsedKg": 47.42052554126759,
+          "outcomes": {
+            "tip-over": 10,
+            "success": 15
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": null,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    },
+    {
+      "earth_id": "wolfe-creek",
+      "planetary_id": "shackleton-rim",
+      "stress": {
+        "score": 86,
+        "components": {
+          "successRate": 0.96,
+          "ground": 0.6173566572532685,
+          "fuel": 0.9981946029514475
+        },
+        "planetary": {
+          "siteId": "shackleton-rim",
+          "flights": 25,
+          "successRate": 1,
+          "meanSlopeDeg": 6.816047832569621,
+          "meanFuelUsedKg": 46.62126045409531,
+          "outcomes": {
+            "success": 25
+          }
+        },
+        "analog": {
+          "siteId": "wolfe-creek",
+          "flights": 25,
+          "successRate": 0.96,
+          "meanSlopeDeg": 2.224327719608844,
+          "meanFuelUsedKg": 46.93720493759199,
+          "outcomes": {
+            "success": 24,
+            "tip-over": 1
+          }
+        },
+        "gridSize": 5,
+        "assumedRockAbundance": 0,
+        "catalogTerrainScore": 0.514878,
+        "gravity": 1.62,
+        "airDensity": 0,
+        "method": "25 blind landings (no hazard sensor) spread over the middle of each terrain; score = 50% landable share + 30% touchdown slope + 20% fuel used."
+      }
+    }
+  ]
+}

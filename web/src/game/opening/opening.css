@@ -76,3 +76,8 @@
  .immersive-game-session .flight-3d .terrain-credit{bottom:190px!important}
 }
 @media(prefers-reduced-motion:reduce){.opening-game *{animation:none!important;transition:none!important}}
+
+/* Evidence remains inside the game HUD, with bounded expansion on phones. */
+.analog-evidence{max-width:640px;margin:10px 0}.analog-evidence .evidence-line{margin:4px 0;font-size:12px;line-height:1.4;color:#d8d2c4}.analog-evidence .evidence-line b{color:#ddc493;font-weight:500;margin-right:4px}.analog-evidence summary{cursor:pointer;font-size:12px;padding:8px 0}.analog-evidence details[open]{max-height:24vh;overflow:auto;background:#080d12ed;padding:8px 12px}.analog-evidence h3{font-size:12px;margin:8px 0}.analog-evidence ul{padding-left:18px;font-size:12px;line-height:1.45}.analog-evidence a{color:#e7c889}.surface-brief .analog-evidence small,.surface-brief .landing-evidence small{max-width:100%}.landing-evidence{max-width:640px;margin:8px 0;font-size:12px}.landing-evidence small{display:block}.game-site-list .analog-score{color:#e7c889}.game-site-list .scan-label{color:#65d6d1}.game-selector select{max-width:100%;background:#101820;color:#fff;font-size:12px}.surface-brief{max-height:65vh;overflow:auto}.surface-brief>.game-primary{position:static;margin-top:10px}.game-selector label{font-size:12px}
+
+.game-site-list>div>button{width:100%;display:flex;gap:13px;align-items:center;text-align:left;border-bottom:1px solid #ffffff14;padding:12px 4px}.game-site-list>div>button:hover{background:#d6b77c12}.scan-heading{font-size:12px;color:#65d6d1;margin:14px 0 4px}

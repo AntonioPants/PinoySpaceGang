@@ -221,3 +221,7 @@ Include scene credits/licences. No placeholder success results or invented image
   checked at 390 px width without horizontal overflow.
 - Python publication tests were not run in this checkout because pytest is not installed.
   The catalog assets are consumed unchanged from main and pass the JavaScript checks.
+
+## Challenge evidence delivery
+
+The opening presents modern analog percentages for the published ten and full Earth atlas. Cards expose sourced matches and limitations; cyan scan markers denote new windows near known regions with unreviewed local geology. The bridge and debrief use the same catalog evidence. Landing behaviour is a distinct deterministic fixed-lander baseline; custom settings retain live comparisons. Credits links the generated findings, and docs/SUBMISSION.md and docs/DEMO_SCRIPT.md describe the judge-facing flow. No scoring-method or physics changes are implied.
