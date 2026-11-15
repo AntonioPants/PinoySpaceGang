@@ -1,5 +1,6 @@
 import { matchOf, pairingOf, scoreLabel, type Catalog } from '../lib/catalog';
 import { LANDFORM_RELATION } from '../lib/matching';
+import ComparisonValidity from './ComparisonValidity';
 
 export function evidenceFor(catalog: Catalog, targetId: string, earthId: string) {
   const pair = pairingOf(catalog, targetId, earthId), entry = catalog.entries.get(earthId);
@@ -25,5 +26,6 @@ export default function AnalogEvidence({catalog,targetId,earthId}:{catalog:Catal
       <p>What Earth cannot reproduce: {target.gravity} m/s² target gravity versus 9.81 m/s² on Earth; {target.body==='Moon'?'vacuum':'thin Martian air'}; the target radiation environment. Radiation is not simulated.</p>
       {evidence.source&&<a href={evidence.source} target="_blank" rel="noreferrer">Supporting source</a>}
     </details>
+    <ComparisonValidity catalog={catalog} targetId={targetId} earthId={earthId}/>
   </section>;
 }

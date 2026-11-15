@@ -1,0 +1,4223 @@
+{
+  "version": "1.0.0",
+  "catalog_sha256": "24bf4c7476b684e141def5b008a4c6d688a542871cb0052b1a9b7c2d94caab51",
+  "generator_sha256": "4217180a24ac54958a9a038d42d7c569c22c7d39fc3aafe1a503053b6f7d1fc0",
+  "scales_sha256": "a166026afe3836a375353480d7739ac345a92aff102e4c9f90d9c8077228cab7",
+  "config_sha256": "27b105f0a2183862dcfc791af3c120959a82fc6d14806401d9292f985e80be38",
+  "pilots": {
+    "phoenix": {
+      "site_id": "phoenix",
+      "product_id": "DTEPC_008591_2485_008644_2485_U01",
+      "product_config_sha256": "db91a002167a4d7f276d002a11facae9bc0fb95db87e16cfe0257a7c8b172f84",
+      "catalog_elevation_sha256": "c03eec6c3f70ba00234c7c3a4b0d57b8f34a8948ccf1870120a3115b6dc1865b",
+      "pilot_elevation_sha256": "5044c4df7fa2bf74a6bd2b1f988451c7351ee7b11d00a3e60c8e8528cff3e98b",
+      "manifest_url": "/terrain-pilots/phoenix/manifest.json",
+      "manifest_sha256": "9cec4ba45ec54924d834abdf602f99fa9d33e6977a195a846dcc750f1a178811",
+      "source_receipt": {
+        "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/PSP_008591_2485_PSP_008644_2485/DTEPC_008591_2485_008644_2485_U01.tif",
+        "subset_sha256": "951979bc3cb2b80195a841f7e145ce25888f1d814d95e7c3f82f1aba8d8b7580",
+        "source_window": [
+          4101,
+          3323,
+          6587,
+          6587
+        ],
+        "source_crs_wkt": "PROJCS[\"Mars (2015) - Sphere / Ocentric / North Polar\",GEOGCS[\"Mars (2015) - Sphere / Ocentric\",DATUM[\"Mars (2015) - Sphere\",SPHEROID[\"Mars (2015) - Sphere\",3396190,0]],PRIMEM[\"Reference Meridian\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]]],PROJECTION[\"Polar_Stereographic\"],PARAMETER[\"latitude_of_origin\",90],PARAMETER[\"central_meridian\",0],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1],AXIS[\"Easting\",SOUTH],AXIS[\"Northing\",SOUTH]]",
+        "scale": 1.0,
+        "offset": 0.0,
+        "source_tags": {
+          "DATA_SET_ID": "\"MRO-M-HIRISE-5-DTM-V1.0\"",
+          "INSTRUMENT_ID": "\"HIRISE\"",
+          "INSTRUMENT_NAME": "\"HIGH RESOLUTION IMAGING SCIENCE EXPERIMENT\"",
+          "PRODUCER_INSTITUTION_NAME": "\"UNIVERSITY OF ARIZONA\"",
+          "PRODUCT_ID": "\"DTEPC_008591_2485_008644_2485_U01\"",
+          "TARGET_NAME": "\"MARS\"",
+          "AREA_OR_POINT": "Area"
+        },
+        "source_shape": [
+          12615,
+          13203
+        ],
+        "source_spacing": [
+          0.996514980811846,
+          0.996514980811846
+        ],
+        "finite_source_fraction": 0.9210616741013053
+      },
+      "metadata": [
+        {
+          "name": "pds-label",
+          "url": "https://www.uahirise.org/PDS/DTM/PSP/ORB_008500_008599/PSP_008591_2485_PSP_008644_2485/DTEPC_008591_2485_008644_2485_U01.IMG",
+          "resolved_url": "https://www.uahirise.org/PDS/DTM/PSP/ORB_008500_008599/PSP_008591_2485_PSP_008644_2485/DTEPC_008591_2485_008644_2485_U01.IMG",
+          "sha256": "55b5e3ad1c35598dc23532431ec21c8ce7ccc1ab5faa44682aace616460d1ec2"
+        }
+      ],
+      "quality": null,
+      "centre_latitude": 68.22,
+      "centre_longitude": -125.75,
+      "output_spacing_m": 30,
+      "window_m": 4530,
+      "minimum_cell_valid_fraction": 1.0,
+      "relative_vertical_error_m": null,
+      "error_definition": null,
+      "expert_review": "pending",
+      "status": "measured_subset_staged",
+      "production_changed": false,
+      "generator_sha256": "b125dac494f4fdaf832576a4558ef443d740a58ff1859c63a17c556da3e200ff",
+      "reproduction_command": "python -m scripts.catalog.ingest_pilot phoenix --offline",
+      "source_metadata": {
+        "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/PSP_008591_2485_PSP_008644_2485/DTEPC_008591_2485_008644_2485_U01.tif",
+        "product_id": "DTEPC_008591_2485_008644_2485_U01",
+        "native_spacing_m_approx": 0.996514980811846,
+        "vertical_datum": "MOLA equipotential surface; USGS controlled raster aligned to MOLA",
+        "subset_sha256": "951979bc3cb2b80195a841f7e145ce25888f1d814d95e7c3f82f1aba8d8b7580",
+        "coverage": null,
+        "resampling": "Area average of finite physical metre elevations; no gap filling.",
+        "scale_applied": 1.0,
+        "offset_applied": 0.0
+      },
+      "warnings": [
+        "Independent artifact/geological review pending; rankings remain experimental.",
+        "No confidence raster was available in this product listing; finite elevations do not establish stereo reliability.",
+        "Product-specific vertical-error estimate is unavailable."
+      ],
+      "analysis_spacing_m": 500.0,
+      "analysis_window_m": 4000.0,
+      "baseline_descriptors": {
+        "slope_mean": 0.7859513757505114,
+        "slope_p90": 1.2012095595820995,
+        "relief": 61.07354736328125,
+        "hypsometric_integral": 0.475828360211427,
+        "slope_gt_5": 0.0,
+        "slope_gt_10": 0.0,
+        "slope_gt_15": 0.0,
+        "slope_gt_20": 0.0,
+        "roughness_150m": null,
+        "roughness_450m": null,
+        "roughness_1000m": 5.902701180354776,
+        "bowl_share": 0.0,
+        "ridge_share": 0.0,
+        "roughness_fine": 2.1085976630492507,
+        "roughness_mid": 2.842439107568981,
+        "roughness_coarse": 2.9518776584702593
+      },
+      "pilot_descriptors": {
+        "slope_mean": 0.877961584806136,
+        "slope_p90": 1.3565133537560974,
+        "relief": 68.72624433594001,
+        "hypsometric_integral": 0.46360711297391394,
+        "slope_gt_5": 0.0,
+        "slope_gt_10": 0.0,
+        "slope_gt_15": 0.0,
+        "slope_gt_20": 0.0,
+        "roughness_150m": null,
+        "roughness_450m": null,
+        "roughness_1000m": 6.376255970129556,
+        "bowl_share": 0.0,
+        "ridge_share": 0.0,
+        "roughness_fine": 2.889349258633805,
+        "roughness_mid": 3.759784373988162,
+        "roughness_coarse": 3.8467381367645257
+      },
+      "fine_descriptors": {
+        "slope_mean": 0.9987942164067193,
+        "slope_p90": 1.7066764076087126,
+        "relief": 71.799560546875,
+        "hypsometric_integral": 0.46310511262876186,
+        "slope_gt_5": 0.0,
+        "slope_gt_10": 0.0,
+        "slope_gt_15": 0.0,
+        "slope_gt_20": 0.0,
+        "roughness_150m": 0.7303650832535511,
+        "roughness_450m": 2.122968175341675,
+        "roughness_1000m": 4.8320589337143875,
+        "bowl_share": 0.028568513416998266,
+        "ridge_share": 0.007448219569431691,
+        "roughness_fine": 0.30549825903534766,
+        "roughness_mid": 0.48662578378466737,
+        "roughness_coarse": 0.6518174191622974
+      },
+      "fine_analysis_spacing_m": 30,
+      "top_ten_overlap": 9,
+      "changed_score_ranks": 43,
+      "candidates": {
+        "amboy": {
+          "baseline_score_rank": 25,
+          "pilot_score_rank": 25,
+          "earth_elevation_sha256": "c9d7902d3c19b92ccc44c738740999d66e20abd8bc6170dc9506aed02c9f2fb2",
+          "baseline_similarity_percent": 46.72403742960985,
+          "pilot_priority_rank": 25,
+          "baseline_terrain_percent": 93.4480748592197,
+          "pilot_terrain_percent": 93.73757913782845,
+          "pilot_similarity_percent": 46.868789568914224,
+          "window_sensitivity": {
+            "rank_range": [
+              17,
+              37
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "askja-east": {
+          "baseline_score_rank": 80,
+          "pilot_score_rank": 80,
+          "earth_elevation_sha256": "30fc8a0f076faf10b6f64dd91fa3bee17587a68c79eebe04b28c6a2f761c0bfb",
+          "baseline_similarity_percent": 31.433710487342285,
+          "pilot_priority_rank": 80,
+          "baseline_terrain_percent": 62.86742097468457,
+          "pilot_terrain_percent": 63.724123624506156,
+          "pilot_similarity_percent": 31.862061812253078,
+          "window_sensitivity": {
+            "rank_range": [
+              74,
+              85
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "atacama-yungay": {
+          "baseline_score_rank": 86,
+          "pilot_score_rank": 86,
+          "earth_elevation_sha256": "0c975863b1212126a0073d1d8f9fa29ae66c0d07005b27bd1d6762f3fc9360ca",
+          "baseline_similarity_percent": 27.64047776454237,
+          "pilot_priority_rank": 86,
+          "baseline_terrain_percent": 55.28095552908474,
+          "pilot_terrain_percent": 56.03427641217786,
+          "pilot_similarity_percent": 28.01713820608893,
+          "window_sensitivity": {
+            "rank_range": [
+              81,
+              88
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "badain-jaran": {
+          "baseline_score_rank": 98,
+          "pilot_score_rank": 98,
+          "earth_elevation_sha256": "44b18ccf3922adc37e3e8f15638a9fd1f112415ce62247392a9da7418ec21c65",
+          "baseline_similarity_percent": 15.718223986088987,
+          "pilot_priority_rank": 98,
+          "baseline_terrain_percent": 31.436447972177973,
+          "pilot_terrain_percent": 31.86483660115622,
+          "pilot_similarity_percent": 15.93241830057811,
+          "window_sensitivity": {
+            "rank_range": [
+              98,
+              98
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "badwater": {
+          "baseline_score_rank": 36,
+          "pilot_score_rank": 39,
+          "earth_elevation_sha256": "150f8a5d1a98325200246d788e97dff6998b7738d928db65e42cf37a4cbd795a",
+          "baseline_similarity_percent": 44.76982305497078,
+          "pilot_priority_rank": 39,
+          "baseline_terrain_percent": 89.53964610994156,
+          "pilot_terrain_percent": 88.33588138594976,
+          "pilot_similarity_percent": 44.16794069297488,
+          "window_sensitivity": {
+            "rank_range": [
+              38,
+              43
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "bardenas-blanca": {
+          "baseline_score_rank": 48,
+          "pilot_score_rank": 48,
+          "earth_elevation_sha256": "01860e7005fce8a08e4faf1c4c7075876f4e3681da73bb1ec3bfa55a88933609",
+          "baseline_similarity_percent": 41.84330477420139,
+          "pilot_priority_rank": 48,
+          "baseline_terrain_percent": 83.68660954840279,
+          "pilot_terrain_percent": 83.94587258365547,
+          "pilot_similarity_percent": 41.972936291827736,
+          "window_sensitivity": {
+            "rank_range": [
+              45,
+              56
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "barrow-observatory": {
+          "baseline_score_rank": 1,
+          "pilot_score_rank": 1,
+          "earth_elevation_sha256": "f97be7a9ecabe62953acb25f9c130e5db0325ea02d1c1f15920300f19a3d5f5b",
+          "baseline_similarity_percent": 91.96795500372617,
+          "pilot_priority_rank": 1,
+          "baseline_terrain_percent": 83.93591000745235,
+          "pilot_terrain_percent": 82.80748151870155,
+          "pilot_similarity_percent": 91.40374075935077,
+          "window_sensitivity": {
+            "rank_range": [
+              1,
+              1
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "bisti-badlands": {
+          "baseline_score_rank": 51,
+          "pilot_score_rank": 49,
+          "earth_elevation_sha256": "190a70b982b814bd4218a4db880f8f37b4ebcd73f633b2bc29e81a2defe2b6b5",
+          "baseline_similarity_percent": 41.344275882304366,
+          "pilot_priority_rank": 49,
+          "baseline_terrain_percent": 82.68855176460873,
+          "pilot_terrain_percent": 83.52138360360746,
+          "pilot_similarity_percent": 41.76069180180373,
+          "window_sensitivity": {
+            "rank_range": [
+              47,
+              56
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "bromo-sandsea": {
+          "baseline_score_rank": 96,
+          "pilot_score_rank": 96,
+          "earth_elevation_sha256": "69efed74b165be58fc56ded1bfbebe76b1b92b851c3d5b8769174ff24377d97f",
+          "baseline_similarity_percent": 18.41787622357077,
+          "pilot_priority_rank": 96,
+          "baseline_terrain_percent": 36.83575244714154,
+          "pilot_terrain_percent": 37.337718111397834,
+          "pilot_similarity_percent": 18.668859055698917,
+          "window_sensitivity": {
+            "rank_range": [
+              93,
+              97
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "capitol-reef": {
+          "baseline_score_rank": 81,
+          "pilot_score_rank": 81,
+          "earth_elevation_sha256": "073fa35ca497a1d6b7b7afb5b6e0d8c00d90935e69c9faf2bbde4f4bee659ef4",
+          "baseline_similarity_percent": 31.37966184097632,
+          "pilot_priority_rank": 81,
+          "baseline_terrain_percent": 62.75932368195264,
+          "pilot_terrain_percent": 63.61455327568753,
+          "pilot_similarity_percent": 31.807276637843763,
+          "window_sensitivity": {
+            "rank_range": [
+              75,
+              81
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "cima-lava-field": {
+          "baseline_score_rank": 54,
+          "pilot_score_rank": 54,
+          "earth_elevation_sha256": "4edd3896de523140f343d7e0c2659225cbae5e6d0b7e196b97f7a3f55b98a04d",
+          "baseline_similarity_percent": 40.02837765674063,
+          "pilot_priority_rank": 54,
+          "baseline_terrain_percent": 80.05675531348126,
+          "pilot_terrain_percent": 81.14769929288826,
+          "pilot_similarity_percent": 40.57384964644413,
+          "window_sensitivity": {
+            "rank_range": [
+              48,
+              58
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "craters-moon": {
+          "baseline_score_rank": 75,
+          "pilot_score_rank": 75,
+          "earth_elevation_sha256": "e031cfdc0a4bf4428ffb8a2366686f742912d0332c2607dc5159e738f1792322",
+          "baseline_similarity_percent": 32.7886375328854,
+          "pilot_priority_rank": 75,
+          "baseline_terrain_percent": 65.5772750657708,
+          "pilot_terrain_percent": 66.47090525523805,
+          "pilot_similarity_percent": 33.235452627619026,
+          "window_sensitivity": {
+            "rank_range": [
+              72,
+              76
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "dallol": {
+          "baseline_score_rank": 55,
+          "pilot_score_rank": 57,
+          "earth_elevation_sha256": "dfce3939401a7b780c2a8e6d5e6f6f0139d5641062df5fdc868e9ed17d6701d1",
+          "baseline_similarity_percent": 39.31633350687859,
+          "pilot_priority_rank": 57,
+          "baseline_terrain_percent": 78.63266701375719,
+          "pilot_terrain_percent": 79.42464833737338,
+          "pilot_similarity_percent": 39.71232416868669,
+          "window_sensitivity": {
+            "rank_range": [
+              56,
+              61
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "dunhuang-yardangs": {
+          "baseline_score_rank": 49,
+          "pilot_score_rank": 50,
+          "earth_elevation_sha256": "af6508ca92f83349949e833dcb9094cf9d801378ad6c1091339ff292eb67679a",
+          "baseline_similarity_percent": 41.58720326761942,
+          "pilot_priority_rank": 50,
+          "baseline_terrain_percent": 83.17440653523884,
+          "pilot_terrain_percent": 83.30308639179688,
+          "pilot_similarity_percent": 41.65154319589844,
+          "window_sensitivity": {
+            "rank_range": [
+              40,
+              55
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "erg-chebbi": {
+          "baseline_score_rank": 78,
+          "pilot_score_rank": 78,
+          "earth_elevation_sha256": "5c4a336368eac66dcf064982bb06906ecce97f082a96dcd939c604c1b6c52323",
+          "baseline_similarity_percent": 31.640422325971663,
+          "pilot_priority_rank": 78,
+          "baseline_terrain_percent": 63.280844651943326,
+          "pilot_terrain_percent": 64.14318108082432,
+          "pilot_similarity_percent": 32.07159054041216,
+          "window_sensitivity": {
+            "rank_range": [
+              76,
+              81
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "etna-east": {
+          "baseline_score_rank": 99,
+          "pilot_score_rank": 99,
+          "earth_elevation_sha256": "97a3c34be21b8c430ee0e38df612f5b73a6b4899f6fb3e186e66404970c51f41",
+          "baseline_similarity_percent": 10.109543678967665,
+          "pilot_priority_rank": 99,
+          "baseline_terrain_percent": 20.21908735793533,
+          "pilot_terrain_percent": 20.49461553211464,
+          "pilot_similarity_percent": 10.24730776605732,
+          "window_sensitivity": {
+            "rank_range": [
+              99,
+              99
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "fogo-caldera": {
+          "baseline_score_rank": 102,
+          "pilot_score_rank": 102,
+          "earth_elevation_sha256": "582c5c4d6c2babb57562cf2b80b304f4f2202ed310c34c001022d20abf44757d",
+          "baseline_similarity_percent": 3.918597661147062,
+          "pilot_priority_rank": 102,
+          "baseline_terrain_percent": 7.837195322294124,
+          "pilot_terrain_percent": 7.943993818171386,
+          "pilot_similarity_percent": 3.971996909085693,
+          "window_sensitivity": {
+            "rank_range": [
+              102,
+              102
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "fournaise-enclos": {
+          "baseline_score_rank": 101,
+          "pilot_score_rank": 101,
+          "earth_elevation_sha256": "6057bc2f3b979fecc4d7d3b367eda6748132383f2df4455345f3129fef1446a2",
+          "baseline_similarity_percent": 6.1939923556882945,
+          "pilot_priority_rank": 101,
+          "baseline_terrain_percent": 12.387984711376589,
+          "pilot_terrain_percent": 12.474212246531224,
+          "pilot_similarity_percent": 6.237106123265612,
+          "window_sensitivity": {
+            "rank_range": [
+              100,
+              101
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "great-sand-dunes": {
+          "baseline_score_rank": 83,
+          "pilot_score_rank": 83,
+          "earth_elevation_sha256": "ad5a3908da5784b06887cdab31066b1bb5ae6bb1a023e83fb7f946e3b6eb9f31",
+          "baseline_similarity_percent": 29.693601090950427,
+          "pilot_priority_rank": 83,
+          "baseline_terrain_percent": 59.387202181900854,
+          "pilot_terrain_percent": 59.80057144116162,
+          "pilot_similarity_percent": 29.90028572058081,
+          "window_sensitivity": {
+            "rank_range": [
+              81,
+              83
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "harrat-khaybar": {
+          "baseline_score_rank": 89,
+          "pilot_score_rank": 89,
+          "earth_elevation_sha256": "0d09c31a54f30dba4a0a4c90ae1663f12d645c8a441bff61c325e0395e8609c9",
+          "baseline_similarity_percent": 24.138799449769053,
+          "pilot_priority_rank": 89,
+          "baseline_terrain_percent": 48.277598899538106,
+          "pilot_terrain_percent": 48.89144181596458,
+          "pilot_similarity_percent": 24.44572090798229,
+          "window_sensitivity": {
+            "rank_range": [
+              88,
+              93
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "haughton": {
+          "baseline_score_rank": 60,
+          "pilot_score_rank": 59,
+          "earth_elevation_sha256": "ff017a52616e1eb865cacd072cff6d1a4796c2d0ccf5a7172fe394132e0e4999",
+          "baseline_similarity_percent": 38.47924904448497,
+          "pilot_priority_rank": 59,
+          "baseline_terrain_percent": 76.95849808896995,
+          "pilot_terrain_percent": 77.95623579275819,
+          "pilot_similarity_percent": 38.978117896379096,
+          "window_sensitivity": {
+            "rank_range": [
+              58,
+              63
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "hverir-namafjall": {
+          "baseline_score_rank": 79,
+          "pilot_score_rank": 79,
+          "earth_elevation_sha256": "461e84f2c373aa70dcb32b7b725b6af870c7906452150f9732573ebfa6dd5933",
+          "baseline_similarity_percent": 31.499530452334863,
+          "pilot_priority_rank": 79,
+          "baseline_terrain_percent": 62.999060904669726,
+          "pilot_terrain_percent": 63.85755742920561,
+          "pilot_similarity_percent": 31.928778714602807,
+          "window_sensitivity": {
+            "rank_range": [
+              76,
+              82
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "ischigualasto": {
+          "baseline_score_rank": 61,
+          "pilot_score_rank": 60,
+          "earth_elevation_sha256": "a5d018c335c22f59bacec7b702c32caebf49cae67bbc2e0affd9f89aedf921e6",
+          "baseline_similarity_percent": 38.4078251109222,
+          "pilot_priority_rank": 60,
+          "baseline_terrain_percent": 76.8156502218444,
+          "pilot_terrain_percent": 77.86242723404791,
+          "pilot_similarity_percent": 38.93121361702396,
+          "window_sensitivity": {
+            "rank_range": [
+              55,
+              61
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "kilbourne-hole-v1": {
+          "baseline_score_rank": 82,
+          "pilot_score_rank": 82,
+          "earth_elevation_sha256": "1f1eafaee1781ecd570e9b6acac1f2adf03952d64afc02f4238798cd168c99d9",
+          "baseline_similarity_percent": 30.62214403833714,
+          "pilot_priority_rank": 82,
+          "baseline_terrain_percent": 61.24428807667428,
+          "pilot_terrain_percent": 61.67058372735443,
+          "pilot_similarity_percent": 30.835291863677217,
+          "window_sensitivity": {
+            "rank_range": [
+              80,
+              84
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "lake-abbe-margin": {
+          "baseline_score_rank": 52,
+          "pilot_score_rank": 53,
+          "earth_elevation_sha256": "e4784585653a57b09aafb747cc53fd31d8f0de860774382b88aba3867ff26901",
+          "baseline_similarity_percent": 41.007034239848274,
+          "pilot_priority_rank": 53,
+          "baseline_terrain_percent": 82.01406847969655,
+          "pilot_terrain_percent": 81.44714923596038,
+          "pilot_similarity_percent": 40.72357461798019,
+          "window_sensitivity": {
+            "rank_range": [
+              50,
+              53
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "lanzarote-timanfaya": {
+          "baseline_score_rank": 32,
+          "pilot_score_rank": 32,
+          "earth_elevation_sha256": "157ebdfc9cc90b5c0b77b364cb82bb28d70ca251a8509329f038c18376fb5bed",
+          "baseline_similarity_percent": 45.76976089165801,
+          "pilot_priority_rank": 32,
+          "baseline_terrain_percent": 91.53952178331602,
+          "pilot_terrain_percent": 92.17668977443897,
+          "pilot_similarity_percent": 46.088344887219485,
+          "window_sensitivity": {
+            "rank_range": [
+              27,
+              35
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "lava-beds": {
+          "baseline_score_rank": 66,
+          "pilot_score_rank": 66,
+          "earth_elevation_sha256": "26935f3c727017c0c71993d5166aed381f0fc895afd076679de4885294b44850",
+          "baseline_similarity_percent": 36.67955646533244,
+          "pilot_priority_rank": 66,
+          "baseline_terrain_percent": 73.35911293066488,
+          "pilot_terrain_percent": 74.35878725262519,
+          "pilot_similarity_percent": 37.179393626312596,
+          "window_sensitivity": {
+            "rank_range": [
+              59,
+              67
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "lonar-crater": {
+          "baseline_score_rank": 85,
+          "pilot_score_rank": 85,
+          "earth_elevation_sha256": "2e0d535e9b142f091b81dfd239433ce6ae988cc0b18f968d1a0b829cd3812234",
+          "baseline_similarity_percent": 28.61080123984381,
+          "pilot_priority_rank": 85,
+          "baseline_terrain_percent": 57.22160247968762,
+          "pilot_terrain_percent": 57.619897913075654,
+          "pilot_similarity_percent": 28.809948956537827,
+          "window_sensitivity": {
+            "rank_range": [
+              84,
+              87
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "lut-yardangs": {
+          "baseline_score_rank": 35,
+          "pilot_score_rank": 35,
+          "earth_elevation_sha256": "af421e487c54f98796855768fdeea5b90b5be16e989820088c8d9f75867e253b",
+          "baseline_similarity_percent": 45.3812278646434,
+          "pilot_priority_rank": 35,
+          "baseline_terrain_percent": 90.7624557292868,
+          "pilot_terrain_percent": 90.13506357918973,
+          "pilot_similarity_percent": 45.06753178959487,
+          "window_sensitivity": {
+            "rank_range": [
+              32,
+              38
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "makgadikgadi-kubu": {
+          "baseline_score_rank": 58,
+          "pilot_score_rank": 61,
+          "earth_elevation_sha256": "e243fbf8330c7755f08038a9ee4f729c10d8c893f896e394b69f5e1a0cffc97f",
+          "baseline_similarity_percent": 38.831060086262745,
+          "pilot_priority_rank": 61,
+          "baseline_terrain_percent": 77.66212017252549,
+          "pilot_terrain_percent": 77.12528361202666,
+          "pilot_similarity_percent": 38.56264180601333,
+          "window_sensitivity": {
+            "rank_range": [
+              60,
+              66
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "meteor-crater": {
+          "baseline_score_rank": 73,
+          "pilot_score_rank": 73,
+          "earth_elevation_sha256": "3c4d68b555651fc573471bf8ef3e8b6984be4f51f176c05ee19e71dd9541e16a",
+          "baseline_similarity_percent": 33.27195501447359,
+          "pilot_priority_rank": 73,
+          "baseline_terrain_percent": 66.54391002894718,
+          "pilot_terrain_percent": 67.00709411215635,
+          "pilot_similarity_percent": 33.503547056078176,
+          "window_sensitivity": {
+            "rank_range": [
+              72,
+              75
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "payun-matru": {
+          "baseline_score_rank": 91,
+          "pilot_score_rank": 91,
+          "earth_elevation_sha256": "f015033bbeeec5898fead8130756a3487c75cda11d18c3d8001ce524c636ac93",
+          "baseline_similarity_percent": 23.098114119609573,
+          "pilot_priority_rank": 91,
+          "baseline_terrain_percent": 46.196228239219145,
+          "pilot_terrain_percent": 46.825750343525584,
+          "pilot_similarity_percent": 23.412875171762792,
+          "window_sensitivity": {
+            "rank_range": [
+              90,
+              93
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "pinacate-elegante": {
+          "baseline_score_rank": 97,
+          "pilot_score_rank": 97,
+          "earth_elevation_sha256": "ffd9b204a57c37f964f90d6d12e048d4e0c8352343b6608e41953bf2704d04cb",
+          "baseline_similarity_percent": 18.332880710526577,
+          "pilot_priority_rank": 97,
+          "baseline_terrain_percent": 36.665761421053155,
+          "pilot_terrain_percent": 36.920976317226064,
+          "pilot_similarity_percent": 18.460488158613032,
+          "window_sensitivity": {
+            "rank_range": [
+              95,
+              97
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "pingualuit": {
+          "baseline_score_rank": 87,
+          "pilot_score_rank": 87,
+          "earth_elevation_sha256": "35424ce71b48f25215ed2ca03a9ccec805a17ed09409d162be9aaeba06943045",
+          "baseline_similarity_percent": 27.043732674891334,
+          "pilot_priority_rank": 87,
+          "baseline_terrain_percent": 54.08746534978267,
+          "pilot_terrain_percent": 54.82452238455352,
+          "pilot_similarity_percent": 27.41226119227676,
+          "window_sensitivity": {
+            "rank_range": [
+              84,
+              88
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "qaidam": {
+          "baseline_score_rank": 56,
+          "pilot_score_rank": 55,
+          "earth_elevation_sha256": "96a74a13f9d204cec16bcc36e433afeaefffed56068e4988de8db10005d8303d",
+          "baseline_similarity_percent": 39.219286513663945,
+          "pilot_priority_rank": 55,
+          "baseline_terrain_percent": 78.43857302732789,
+          "pilot_terrain_percent": 79.50746582297471,
+          "pilot_similarity_percent": 39.753732911487354,
+          "window_sensitivity": {
+            "rank_range": [
+              55,
+              62
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "richat-ridges": {
+          "baseline_score_rank": 68,
+          "pilot_score_rank": 68,
+          "earth_elevation_sha256": "65c37883d1ad21060c448767f6a1b6f43dbb23ea368fe248008ebbacd3ec11c9",
+          "baseline_similarity_percent": 35.47124133660736,
+          "pilot_priority_rank": 68,
+          "baseline_terrain_percent": 70.94248267321473,
+          "pilot_terrain_percent": 71.90922525544246,
+          "pilot_similarity_percent": 35.95461262772123,
+          "window_sensitivity": {
+            "rank_range": [
+              65,
+              68
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "rub-khali-oman": {
+          "baseline_score_rank": 70,
+          "pilot_score_rank": 70,
+          "earth_elevation_sha256": "3305b17550fc7968a636af027fb3d7c51e11d53526a98b2b17a7cccc60432992",
+          "baseline_similarity_percent": 34.553081769581134,
+          "pilot_priority_rank": 70,
+          "baseline_terrain_percent": 69.10616353916227,
+          "pilot_terrain_percent": 70.04788235798965,
+          "pilot_similarity_percent": 35.023941178994825,
+          "window_sensitivity": {
+            "rank_range": [
+              66,
+              72
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r1280-c240": {
+          "baseline_score_rank": 14,
+          "pilot_score_rank": 11,
+          "earth_elevation_sha256": "b3750da67ed61854a3fe5e6c4a1a3b44bfe93406ed2f1c8d23ca4b4ba6106ac4",
+          "baseline_similarity_percent": 48.3369128148853,
+          "pilot_priority_rank": 11,
+          "baseline_terrain_percent": 96.6738256297706,
+          "pilot_terrain_percent": 97.0133025184087,
+          "pilot_similarity_percent": 48.50665125920435,
+          "window_sensitivity": {
+            "rank_range": [
+              6,
+              13
+            ],
+            "top_ten_runs": 17,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r1600-c480": {
+          "baseline_score_rank": 7,
+          "pilot_score_rank": 10,
+          "earth_elevation_sha256": "8801814372439b7fcdf4267a9e3d3ae9e0fddc749c903acd7d804c791e238ab0",
+          "baseline_similarity_percent": 48.72010822778195,
+          "pilot_priority_rank": 10,
+          "baseline_terrain_percent": 97.4402164555639,
+          "pilot_terrain_percent": 97.03713794048228,
+          "pilot_similarity_percent": 48.51856897024114,
+          "window_sensitivity": {
+            "rank_range": [
+              5,
+              18
+            ],
+            "top_ten_runs": 13,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r1600-c880": {
+          "baseline_score_rank": 37,
+          "pilot_score_rank": 37,
+          "earth_elevation_sha256": "e5e7b4c30f0d1943c53869b4a219f1113aad77755302a85e780a0d8396c7b009",
+          "baseline_similarity_percent": 44.628311230250816,
+          "pilot_priority_rank": 37,
+          "baseline_terrain_percent": 89.25662246050163,
+          "pilot_terrain_percent": 89.87790015258088,
+          "pilot_similarity_percent": 44.93895007629044,
+          "window_sensitivity": {
+            "rank_range": [
+              33,
+              40
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r1760-c400": {
+          "baseline_score_rank": 2,
+          "pilot_score_rank": 2,
+          "earth_elevation_sha256": "9e1ad611c3e78c0c142d2e11ba8edc59185d2774e2530fbd68ff93d3413f471b",
+          "baseline_similarity_percent": 49.405947704431476,
+          "pilot_priority_rank": 2,
+          "baseline_terrain_percent": 98.81189540886295,
+          "pilot_terrain_percent": 98.40730665766043,
+          "pilot_similarity_percent": 49.203653328830214,
+          "window_sensitivity": {
+            "rank_range": [
+              2,
+              8
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r1920-c320": {
+          "baseline_score_rank": 8,
+          "pilot_score_rank": 4,
+          "earth_elevation_sha256": "ddac14616c58570c9811c6e2f375eb45bc67f164a8db5a12626d82652711f406",
+          "baseline_similarity_percent": 48.61801602203536,
+          "pilot_priority_rank": 4,
+          "baseline_terrain_percent": 97.23603204407073,
+          "pilot_terrain_percent": 98.19081868077446,
+          "pilot_similarity_percent": 49.09540934038723,
+          "window_sensitivity": {
+            "rank_range": [
+              2,
+              8
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r2960-c1200": {
+          "baseline_score_rank": 12,
+          "pilot_score_rank": 7,
+          "earth_elevation_sha256": "8dc2540ef03ee1d608455ef430fd93a7201c9e038f160c3d3855249106b90cc3",
+          "baseline_similarity_percent": 48.48011275211273,
+          "pilot_priority_rank": 7,
+          "baseline_terrain_percent": 96.96022550422546,
+          "pilot_terrain_percent": 97.40181721573211,
+          "pilot_similarity_percent": 48.700908607866054,
+          "window_sensitivity": {
+            "rank_range": [
+              6,
+              11
+            ],
+            "top_ten_runs": 24,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r3040-c80": {
+          "baseline_score_rank": 6,
+          "pilot_score_rank": 6,
+          "earth_elevation_sha256": "9e22b1811eb601867fd79e02a8a6283022d5a80fbf66e88534d3778a4c83bd95",
+          "baseline_similarity_percent": 48.723786603566225,
+          "pilot_priority_rank": 6,
+          "baseline_terrain_percent": 97.44757320713245,
+          "pilot_terrain_percent": 97.43234701969737,
+          "pilot_similarity_percent": 48.71617350984869,
+          "window_sensitivity": {
+            "rank_range": [
+              2,
+              13
+            ],
+            "top_ten_runs": 22,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r3120-c1120": {
+          "baseline_score_rank": 9,
+          "pilot_score_rank": 9,
+          "earth_elevation_sha256": "5faa8de3d990002f9b2c32a89b04d486288c65bc1c875725388a2c6893f94b38",
+          "baseline_similarity_percent": 48.600294833095816,
+          "pilot_priority_rank": 9,
+          "baseline_terrain_percent": 97.20058966619163,
+          "pilot_terrain_percent": 97.13325463437108,
+          "pilot_similarity_percent": 48.56662731718554,
+          "window_sensitivity": {
+            "rank_range": [
+              5,
+              13
+            ],
+            "top_ten_runs": 19,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r3120-c240": {
+          "baseline_score_rank": 24,
+          "pilot_score_rank": 26,
+          "earth_elevation_sha256": "aa9b5deab2bbf9dc870d6503d6e7422760e568f709e9e77c4a86bc612d22f096",
+          "baseline_similarity_percent": 47.0482899886598,
+          "pilot_priority_rank": 26,
+          "baseline_terrain_percent": 94.0965799773196,
+          "pilot_terrain_percent": 93.44614081550546,
+          "pilot_similarity_percent": 46.72307040775273,
+          "window_sensitivity": {
+            "rank_range": [
+              24,
+              34
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r3280-c1280": {
+          "baseline_score_rank": 20,
+          "pilot_score_rank": 21,
+          "earth_elevation_sha256": "d5d80d5cc79b80183f4c0d9c31771ec9acce0e265023d06724bd9e06abc25566",
+          "baseline_similarity_percent": 47.65288838232144,
+          "pilot_priority_rank": 21,
+          "baseline_terrain_percent": 95.30577676464289,
+          "pilot_terrain_percent": 94.64697907433595,
+          "pilot_similarity_percent": 47.32348953716797,
+          "window_sensitivity": {
+            "rank_range": [
+              18,
+              26
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-atacama-yungay-region-r240-c880": {
+          "baseline_score_rank": 3,
+          "pilot_score_rank": 8,
+          "earth_elevation_sha256": "591612c8d2dd22809b0d86b65eb33973167f0281da271bc29c0b853071b1f391",
+          "baseline_similarity_percent": 49.04037064147159,
+          "pilot_priority_rank": 8,
+          "baseline_terrain_percent": 98.08074128294318,
+          "pilot_terrain_percent": 97.24006626487775,
+          "pilot_similarity_percent": 48.62003313243888,
+          "window_sensitivity": {
+            "rank_range": [
+              3,
+              11
+            ],
+            "top_ten_runs": 17,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-atacama-yungay-region-r800-c720": {
+          "baseline_score_rank": 15,
+          "pilot_score_rank": 16,
+          "earth_elevation_sha256": "7cd5062bed4cb3f0b8c79a56e364cb80a26020923e35fae8fcae1da3a9777599",
+          "baseline_similarity_percent": 48.31591006991386,
+          "pilot_priority_rank": 16,
+          "baseline_terrain_percent": 96.63182013982772,
+          "pilot_terrain_percent": 95.33270872546474,
+          "pilot_similarity_percent": 47.66635436273237,
+          "window_sensitivity": {
+            "rank_range": [
+              12,
+              20
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-atacama-yungay-region-r880-c880": {
+          "baseline_score_rank": 13,
+          "pilot_score_rank": 13,
+          "earth_elevation_sha256": "d351d5d413fc802047a9933315d29f3577e94867c89bd6ce4e57017c49c6dd72",
+          "baseline_similarity_percent": 48.434616071170886,
+          "pilot_priority_rank": 13,
+          "baseline_terrain_percent": 96.86923214234177,
+          "pilot_terrain_percent": 96.19962712401453,
+          "pilot_similarity_percent": 48.09981356200726,
+          "window_sensitivity": {
+            "rank_range": [
+              12,
+              18
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-badain-jaran-region-r1120-c320": {
+          "baseline_score_rank": 72,
+          "pilot_score_rank": 72,
+          "earth_elevation_sha256": "0da70d45930c14382b5710c0618ee5e05b424ef748f03bed6b45b1a1fc7ab737",
+          "baseline_similarity_percent": 33.57265497111339,
+          "pilot_priority_rank": 72,
+          "baseline_terrain_percent": 67.14530994222677,
+          "pilot_terrain_percent": 68.06030795007825,
+          "pilot_similarity_percent": 34.03015397503913,
+          "window_sensitivity": {
+            "rank_range": [
+              70,
+              73
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-badwater-region-r1040-c480": {
+          "baseline_score_rank": 46,
+          "pilot_score_rank": 45,
+          "earth_elevation_sha256": "3fef73c05c1ea64bae45aed02d7810b3c9acfc059a6fccd905ed627228ee6f4e",
+          "baseline_similarity_percent": 41.89879300851872,
+          "pilot_priority_rank": 45,
+          "baseline_terrain_percent": 83.79758601703745,
+          "pilot_terrain_percent": 84.93950679057062,
+          "pilot_similarity_percent": 42.46975339528531,
+          "window_sensitivity": {
+            "rank_range": [
+              42,
+              48
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-dallol-region-r1120-c320": {
+          "baseline_score_rank": 31,
+          "pilot_score_rank": 31,
+          "earth_elevation_sha256": "ed1a8874f7d2041c102ed2f1b475d08a36d0a3401df4012f3dfc1bdbe808acbe",
+          "baseline_similarity_percent": 45.942058537663485,
+          "pilot_priority_rank": 31,
+          "baseline_terrain_percent": 91.88411707532697,
+          "pilot_terrain_percent": 92.52368364889477,
+          "pilot_similarity_percent": 46.26184182444739,
+          "window_sensitivity": {
+            "rank_range": [
+              26,
+              33
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-dallol-region-r560-c240": {
+          "baseline_score_rank": 44,
+          "pilot_score_rank": 44,
+          "earth_elevation_sha256": "74777d6aed174dabc3584ef063a2791bd357727d4d123a39c4ec30d89689331d",
+          "baseline_similarity_percent": 42.326349876139666,
+          "pilot_priority_rank": 44,
+          "baseline_terrain_percent": 84.65269975227933,
+          "pilot_terrain_percent": 85.80627327363518,
+          "pilot_similarity_percent": 42.90313663681759,
+          "window_sensitivity": {
+            "rank_range": [
+              37,
+              49
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-dallol-region-r960-c400": {
+          "baseline_score_rank": 27,
+          "pilot_score_rank": 22,
+          "earth_elevation_sha256": "0c23583a79d32375b98fea1ba4e235b684645f4aa031045f5c00881a045d454e",
+          "baseline_similarity_percent": 46.60794461916448,
+          "pilot_priority_rank": 22,
+          "baseline_terrain_percent": 93.21588923832896,
+          "pilot_terrain_percent": 94.48615447392864,
+          "pilot_similarity_percent": 47.24307723696432,
+          "window_sensitivity": {
+            "rank_range": [
+              16,
+              28
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r320-c1040": {
+          "baseline_score_rank": 65,
+          "pilot_score_rank": 65,
+          "earth_elevation_sha256": "711903a663c054be2623f5f4f4a3255333f831c0bffb4a3a063bf135b2f05f8f",
+          "baseline_similarity_percent": 36.97544587396051,
+          "pilot_priority_rank": 65,
+          "baseline_terrain_percent": 73.95089174792102,
+          "pilot_terrain_percent": 74.95863031799253,
+          "pilot_similarity_percent": 37.479315158996265,
+          "window_sensitivity": {
+            "rank_range": [
+              65,
+              69
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r480-c1120": {
+          "baseline_score_rank": 53,
+          "pilot_score_rank": 51,
+          "earth_elevation_sha256": "3a60612de2fb1e411d570fb6bf48f893c8b4abf745af2d67a00a3e603c7defc1",
+          "baseline_similarity_percent": 40.85682595186179,
+          "pilot_priority_rank": 51,
+          "baseline_terrain_percent": 81.71365190372357,
+          "pilot_terrain_percent": 82.82717463182638,
+          "pilot_similarity_percent": 41.41358731591319,
+          "window_sensitivity": {
+            "rank_range": [
+              44,
+              52
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r480-c400": {
+          "baseline_score_rank": 63,
+          "pilot_score_rank": 63,
+          "earth_elevation_sha256": "88828d3cf3e5673a2707597b2446176d063e701e25c74da42d49bdc4509ccdc6",
+          "baseline_similarity_percent": 37.13142719353446,
+          "pilot_priority_rank": 63,
+          "baseline_terrain_percent": 74.26285438706893,
+          "pilot_terrain_percent": 75.27484411323147,
+          "pilot_similarity_percent": 37.63742205661573,
+          "window_sensitivity": {
+            "rank_range": [
+              60,
+              63
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r640-c1120": {
+          "baseline_score_rank": 67,
+          "pilot_score_rank": 67,
+          "earth_elevation_sha256": "d54970c07137b79622a582e2dba49ccce3b53ab0d3df02f6be9a6d73b6d3d2c3",
+          "baseline_similarity_percent": 35.75526570595837,
+          "pilot_priority_rank": 67,
+          "baseline_terrain_percent": 71.51053141191674,
+          "pilot_terrain_percent": 72.48501486934072,
+          "pilot_similarity_percent": 36.24250743467036,
+          "window_sensitivity": {
+            "rank_range": [
+              48,
+              75
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r80-c1120": {
+          "baseline_score_rank": 74,
+          "pilot_score_rank": 74,
+          "earth_elevation_sha256": "e82c3cc920ce9460ca1d635cb88d7a70e5d8fd5462eaaea0180b43e5f2744357",
+          "baseline_similarity_percent": 32.95901308281037,
+          "pilot_priority_rank": 74,
+          "baseline_terrain_percent": 65.91802616562074,
+          "pilot_terrain_percent": 66.81629981533568,
+          "pilot_similarity_percent": 33.40814990766784,
+          "window_sensitivity": {
+            "rank_range": [
+              72,
+              78
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r800-c1120": {
+          "baseline_score_rank": 69,
+          "pilot_score_rank": 69,
+          "earth_elevation_sha256": "b6d8d6ac395c4748063001c787e57dc27c6bf8b3fe94d67e27bbf84c30e0f246",
+          "baseline_similarity_percent": 35.25500169092191,
+          "pilot_priority_rank": 69,
+          "baseline_terrain_percent": 70.51000338184382,
+          "pilot_terrain_percent": 71.47085251164157,
+          "pilot_similarity_percent": 35.735426255820784,
+          "window_sensitivity": {
+            "rank_range": [
+              55,
+              71
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r960-c80": {
+          "baseline_score_rank": 57,
+          "pilot_score_rank": 56,
+          "earth_elevation_sha256": "84eb1ca003bbc8d3360fed3a7a72c1cf476a0e62ce3e4527ac70b614d043311b",
+          "baseline_similarity_percent": 39.1964581867077,
+          "pilot_priority_rank": 56,
+          "baseline_terrain_percent": 78.3929163734154,
+          "pilot_terrain_percent": 79.46118699980852,
+          "pilot_similarity_percent": 39.73059349990426,
+          "window_sensitivity": {
+            "rank_range": [
+              49,
+              59
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r1040-c80": {
+          "baseline_score_rank": 4,
+          "pilot_score_rank": 5,
+          "earth_elevation_sha256": "a4698044cc2fee0cc434506616d2266ea8819bece6885dbb17ad099c337e0ee2",
+          "baseline_similarity_percent": 49.002337443025745,
+          "pilot_priority_rank": 5,
+          "baseline_terrain_percent": 98.00467488605149,
+          "pilot_terrain_percent": 98.11666646745348,
+          "pilot_similarity_percent": 49.05833323372674,
+          "window_sensitivity": {
+            "rank_range": [
+              3,
+              8
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r1120-c320": {
+          "baseline_score_rank": 33,
+          "pilot_score_rank": 33,
+          "earth_elevation_sha256": "1f1fec204feef49e05c6bd4997315d8f288175d5f08ce8b8370a7ede159afa79",
+          "baseline_similarity_percent": 45.61584599917879,
+          "pilot_priority_rank": 33,
+          "baseline_terrain_percent": 91.23169199835758,
+          "pilot_terrain_percent": 91.86671731621908,
+          "pilot_similarity_percent": 45.93335865810954,
+          "window_sensitivity": {
+            "rank_range": [
+              22,
+              35
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r160-c160": {
+          "baseline_score_rank": 29,
+          "pilot_score_rank": 30,
+          "earth_elevation_sha256": "41391d634a606b1364d1e424a19a056b296e348b463d9549b37d8507601141be",
+          "baseline_similarity_percent": 46.14297361419743,
+          "pilot_priority_rank": 30,
+          "baseline_terrain_percent": 92.28594722839486,
+          "pilot_terrain_percent": 93.03938080771603,
+          "pilot_similarity_percent": 46.519690403858014,
+          "window_sensitivity": {
+            "rank_range": [
+              20,
+              30
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r400-c320": {
+          "baseline_score_rank": 28,
+          "pilot_score_rank": 28,
+          "earth_elevation_sha256": "06773dcb4390f6b6bad412c9bc8e7052bdb9173fcc077bd1847b34a5dd8215fb",
+          "baseline_similarity_percent": 46.37198268396358,
+          "pilot_priority_rank": 28,
+          "baseline_terrain_percent": 92.74396536792716,
+          "pilot_terrain_percent": 93.3895169826946,
+          "pilot_similarity_percent": 46.6947584913473,
+          "window_sensitivity": {
+            "rank_range": [
+              23,
+              34
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r480-c1040": {
+          "baseline_score_rank": 42,
+          "pilot_score_rank": 40,
+          "earth_elevation_sha256": "10b253d4be8a7f3f42e581893a9227ffd161683f533f208c562b740f582d9809",
+          "baseline_similarity_percent": 43.598714827301635,
+          "pilot_priority_rank": 40,
+          "baseline_terrain_percent": 87.19742965460327,
+          "pilot_terrain_percent": 87.80437417432255,
+          "pilot_similarity_percent": 43.90218708716127,
+          "window_sensitivity": {
+            "rank_range": [
+              35,
+              41
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r640-c1120": {
+          "baseline_score_rank": 34,
+          "pilot_score_rank": 34,
+          "earth_elevation_sha256": "3862b2de6ac30caf03c95276ed547936ada1c1f05af988bac51a9751205c6caf",
+          "baseline_similarity_percent": 45.44691833724943,
+          "pilot_priority_rank": 34,
+          "baseline_terrain_percent": 90.89383667449886,
+          "pilot_terrain_percent": 91.52651032399025,
+          "pilot_similarity_percent": 45.763255161995126,
+          "window_sensitivity": {
+            "rank_range": [
+              31,
+              36
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r640-c160": {
+          "baseline_score_rank": 11,
+          "pilot_score_rank": 12,
+          "earth_elevation_sha256": "aed00af21fd9773ed10bc87a384585c487b6cdef99a0bacd65f9467514da9dbb",
+          "baseline_similarity_percent": 48.57447311865094,
+          "pilot_priority_rank": 12,
+          "baseline_terrain_percent": 97.14894623730189,
+          "pilot_terrain_percent": 96.45079908983321,
+          "pilot_similarity_percent": 48.225399544916606,
+          "window_sensitivity": {
+            "rank_range": [
+              5,
+              16
+            ],
+            "top_ten_runs": 11,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r80-c880": {
+          "baseline_score_rank": 30,
+          "pilot_score_rank": 27,
+          "earth_elevation_sha256": "0e6c5e5985aa3c7369a5479f89fa49d233372771167d7185fd6d557b9f264c36",
+          "baseline_similarity_percent": 46.08006719778043,
+          "pilot_priority_rank": 27,
+          "baseline_terrain_percent": 92.16013439556086,
+          "pilot_terrain_percent": 93.41601272046277,
+          "pilot_similarity_percent": 46.70800636023139,
+          "window_sensitivity": {
+            "rank_range": [
+              12,
+              31
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r960-c1040": {
+          "baseline_score_rank": 22,
+          "pilot_score_rank": 14,
+          "earth_elevation_sha256": "e6a8f4aa2d1572d7c922627ffb5edd495ba14d48b89e9bd4c0591700a7fdd13f",
+          "baseline_similarity_percent": 47.332754623155196,
+          "pilot_priority_rank": 14,
+          "baseline_terrain_percent": 94.66550924631039,
+          "pilot_terrain_percent": 95.95552864524011,
+          "pilot_similarity_percent": 47.977764322620054,
+          "window_sensitivity": {
+            "rank_range": [
+              9,
+              26
+            ],
+            "top_ten_runs": 1,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r960-c480": {
+          "baseline_score_rank": 26,
+          "pilot_score_rank": 24,
+          "earth_elevation_sha256": "1420b2a6ce0c5e0bc53110814238612247a4b8f8e4066b4ba3967dede22d7e09",
+          "baseline_similarity_percent": 46.657453951207465,
+          "pilot_priority_rank": 24,
+          "baseline_terrain_percent": 93.31490790241493,
+          "pilot_terrain_percent": 93.96443360728748,
+          "pilot_similarity_percent": 46.98221680364374,
+          "window_sensitivity": {
+            "rank_range": [
+              20,
+              30
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-ischigualasto-region-r1280-c1040": {
+          "baseline_score_rank": 39,
+          "pilot_score_rank": 38,
+          "earth_elevation_sha256": "2211b451c864a49be25774c2b4d2d8d1b7256fffddd91a9678e11d7b290e486c",
+          "baseline_similarity_percent": 44.199047041116415,
+          "pilot_priority_rank": 38,
+          "baseline_terrain_percent": 88.39809408223283,
+          "pilot_terrain_percent": 89.60270658685462,
+          "pilot_similarity_percent": 44.80135329342731,
+          "window_sensitivity": {
+            "rank_range": [
+              31,
+              41
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-ischigualasto-region-r1440-c720": {
+          "baseline_score_rank": 38,
+          "pilot_score_rank": 36,
+          "earth_elevation_sha256": "a69708f8e27c897727afc2bbf3f3ed1205a5a672a7b434cbcd8327b7a6076deb",
+          "baseline_similarity_percent": 44.352363599421714,
+          "pilot_priority_rank": 36,
+          "baseline_terrain_percent": 88.70472719884343,
+          "pilot_terrain_percent": 89.91351823344861,
+          "pilot_similarity_percent": 44.95675911672431,
+          "window_sensitivity": {
+            "rank_range": [
+              32,
+              40
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-ischigualasto-region-r1920-c800": {
+          "baseline_score_rank": 43,
+          "pilot_score_rank": 42,
+          "earth_elevation_sha256": "794b9e35d596d512b953ade9ac0809afab12e03086f208cb660a3a5836a3ee8f",
+          "baseline_similarity_percent": 43.32259347444084,
+          "pilot_priority_rank": 42,
+          "baseline_terrain_percent": 86.64518694888169,
+          "pilot_terrain_percent": 87.24828754011455,
+          "pilot_similarity_percent": 43.62414377005727,
+          "window_sensitivity": {
+            "rank_range": [
+              35,
+              47
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-ischigualasto-region-r720-c80": {
+          "baseline_score_rank": 5,
+          "pilot_score_rank": 3,
+          "earth_elevation_sha256": "78a9e72839564637109e30e16928fc8720ea2e94e4f124ab62e1934fe46b6cf2",
+          "baseline_similarity_percent": 48.77001314936236,
+          "pilot_priority_rank": 3,
+          "baseline_terrain_percent": 97.54002629872473,
+          "pilot_terrain_percent": 98.3574774687091,
+          "pilot_similarity_percent": 49.17873873435455,
+          "window_sensitivity": {
+            "rank_range": [
+              2,
+              6
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lake-abbe-margin-region-r320-c800": {
+          "baseline_score_rank": 45,
+          "pilot_score_rank": 46,
+          "earth_elevation_sha256": "75432c3fcd0bbdaab3026be269b8833d6e187cc2d715a19e228ae271be5cef54",
+          "baseline_similarity_percent": 41.98031344574698,
+          "pilot_priority_rank": 46,
+          "baseline_terrain_percent": 83.96062689149396,
+          "pilot_terrain_percent": 84.54504139276817,
+          "pilot_similarity_percent": 42.272520696384085,
+          "window_sensitivity": {
+            "rank_range": [
+              41,
+              58
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lake-abbe-margin-region-r400-c1120": {
+          "baseline_score_rank": 47,
+          "pilot_score_rank": 47,
+          "earth_elevation_sha256": "2acd59b305e53613aada9ea9ba91129106ca726c17ca24e8573f3f72310ab99b",
+          "baseline_similarity_percent": 41.89224825360359,
+          "pilot_priority_rank": 47,
+          "baseline_terrain_percent": 83.78449650720718,
+          "pilot_terrain_percent": 84.36768503918478,
+          "pilot_similarity_percent": 42.18384251959239,
+          "window_sensitivity": {
+            "rank_range": [
+              43,
+              52
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r240-c400": {
+          "baseline_score_rank": 21,
+          "pilot_score_rank": 23,
+          "earth_elevation_sha256": "025d78fc0fc5e11068744adbc19c591b0bcd872fe669008e61f2d9941f7582fd",
+          "baseline_similarity_percent": 47.63325760385435,
+          "pilot_priority_rank": 23,
+          "baseline_terrain_percent": 95.2665152077087,
+          "pilot_terrain_percent": 93.98575885712114,
+          "pilot_similarity_percent": 46.99287942856057,
+          "window_sensitivity": {
+            "rank_range": [
+              15,
+              26
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r320-c240": {
+          "baseline_score_rank": 10,
+          "pilot_score_rank": 15,
+          "earth_elevation_sha256": "6e4f036945abc51387064b9fd6325d6717c7daca37b19af9db4e38eb901de9d1",
+          "baseline_similarity_percent": 48.57647580645095,
+          "pilot_priority_rank": 15,
+          "baseline_terrain_percent": 97.1529516129019,
+          "pilot_terrain_percent": 95.84683414355545,
+          "pilot_similarity_percent": 47.92341707177773,
+          "window_sensitivity": {
+            "rank_range": [
+              10,
+              17
+            ],
+            "top_ten_runs": 1,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r480-c240": {
+          "baseline_score_rank": 16,
+          "pilot_score_rank": 18,
+          "earth_elevation_sha256": "4c8217c88924f247d301ea8c727feb640db0aec9466bafbaddbc57e1e210daf5",
+          "baseline_similarity_percent": 48.202050272745616,
+          "pilot_priority_rank": 18,
+          "baseline_terrain_percent": 96.40410054549123,
+          "pilot_terrain_percent": 95.10805057738737,
+          "pilot_similarity_percent": 47.55402528869369,
+          "window_sensitivity": {
+            "rank_range": [
+              15,
+              21
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r720-c240": {
+          "baseline_score_rank": 17,
+          "pilot_score_rank": 20,
+          "earth_elevation_sha256": "e9f42bf8125d09fa792c74556e715fb546ad55067a89ac9c019c86f48243fd9d",
+          "baseline_similarity_percent": 48.06716510595632,
+          "pilot_priority_rank": 20,
+          "baseline_terrain_percent": 96.13433021191264,
+          "pilot_terrain_percent": 94.84190701725774,
+          "pilot_similarity_percent": 47.42095350862887,
+          "window_sensitivity": {
+            "rank_range": [
+              14,
+              24
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r80-c320": {
+          "baseline_score_rank": 19,
+          "pilot_score_rank": 19,
+          "earth_elevation_sha256": "0b880ce78f678a26ce33bda3ffdf6b51435c2e4d8ed12173d086fc447dea4340",
+          "baseline_similarity_percent": 47.88337825206333,
+          "pilot_priority_rank": 19,
+          "baseline_terrain_percent": 95.76675650412666,
+          "pilot_terrain_percent": 95.10477230825879,
+          "pilot_similarity_percent": 47.552386154129394,
+          "window_sensitivity": {
+            "rank_range": [
+              14,
+              27
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r800-c400": {
+          "baseline_score_rank": 23,
+          "pilot_score_rank": 29,
+          "earth_elevation_sha256": "58da1bc1205d3a5f935d71c93982d7f72acb35b2db5c964813243149193ec3a9",
+          "baseline_similarity_percent": 47.30223890695922,
+          "pilot_priority_rank": 29,
+          "baseline_terrain_percent": 94.60447781391844,
+          "pilot_terrain_percent": 93.3326218476325,
+          "pilot_similarity_percent": 46.66631092381625,
+          "window_sensitivity": {
+            "rank_range": [
+              20,
+              30
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r960-c400": {
+          "baseline_score_rank": 18,
+          "pilot_score_rank": 17,
+          "earth_elevation_sha256": "8a38968e824c6463e76a659d348b0f293acb217a717098c14fe0bc5b9e3c8fd6",
+          "baseline_similarity_percent": 47.88561888332557,
+          "pilot_priority_rank": 17,
+          "baseline_terrain_percent": 95.77123776665114,
+          "pilot_terrain_percent": 95.10922259422023,
+          "pilot_similarity_percent": 47.554611297110114,
+          "window_sensitivity": {
+            "rank_range": [
+              15,
+              22
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-rub-khali-oman-region-r80-c720": {
+          "baseline_score_rank": 64,
+          "pilot_score_rank": 64,
+          "earth_elevation_sha256": "efa5987343f941f4d2df461742556601468952f50197f33df7c0ad92cdc8898d",
+          "baseline_similarity_percent": 37.023227984068534,
+          "pilot_priority_rank": 64,
+          "baseline_terrain_percent": 74.04645596813707,
+          "pilot_terrain_percent": 75.0554968044606,
+          "pilot_similarity_percent": 37.5277484022303,
+          "window_sensitivity": {
+            "rank_range": [
+              64,
+              71
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-sossusvlei-dunes-region-r400-c1040": {
+          "baseline_score_rank": 59,
+          "pilot_score_rank": 58,
+          "earth_elevation_sha256": "f1f91cfd1a06e32fa538ff8eb604d0732829d49db88c7b2ab8fac5de08881ec9",
+          "baseline_similarity_percent": 38.608705726645816,
+          "pilot_priority_rank": 58,
+          "baseline_terrain_percent": 77.21741145329163,
+          "pilot_terrain_percent": 78.24578740317149,
+          "pilot_similarity_percent": 39.122893701585745,
+          "window_sensitivity": {
+            "rank_range": [
+              46,
+              78
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-tongariro-west-region-r1040-c720": {
+          "baseline_score_rank": 94,
+          "pilot_score_rank": 94,
+          "earth_elevation_sha256": "ab58aee9f39765be08d53e73e1bda72adab9843941ef54228894e0728a22b6d3",
+          "baseline_similarity_percent": 18.86968300779287,
+          "pilot_priority_rank": 94,
+          "baseline_terrain_percent": 37.73936601558574,
+          "pilot_terrain_percent": 38.25364534129815,
+          "pilot_similarity_percent": 19.126822670649076,
+          "window_sensitivity": {
+            "rank_range": [
+              93,
+              96
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-tongariro-west-region-r1120-c800": {
+          "baseline_score_rank": 76,
+          "pilot_score_rank": 76,
+          "earth_elevation_sha256": "fe6775fe5fff06550e54143d831704b7e761c5fe4f6de88977e92e74f121d98e",
+          "baseline_similarity_percent": 32.18123768755758,
+          "pilot_priority_rank": 76,
+          "baseline_terrain_percent": 64.36247537511515,
+          "pilot_terrain_percent": 65.23955132873414,
+          "pilot_similarity_percent": 32.61977566436707,
+          "window_sensitivity": {
+            "rank_range": [
+              73,
+              81
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "sossusvlei-dunes": {
+          "baseline_score_rank": 93,
+          "pilot_score_rank": 93,
+          "earth_elevation_sha256": "a2ed36f54aef15f3d9e0716710f9d66e24501d06abedd0af4a66b8c3c7251ff4",
+          "baseline_similarity_percent": 22.934281890817218,
+          "pilot_priority_rank": 93,
+          "baseline_terrain_percent": 45.868563781634435,
+          "pilot_terrain_percent": 46.18783550242865,
+          "pilot_similarity_percent": 23.093917751214324,
+          "window_sensitivity": {
+            "rank_range": [
+              89,
+              93
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "sunset-crater": {
+          "baseline_score_rank": 90,
+          "pilot_score_rank": 90,
+          "earth_elevation_sha256": "bff11e08c5538947c6be92be8f33e5027534c519d090fd2cf962b05bb3ab9fd4",
+          "baseline_similarity_percent": 24.06705555394194,
+          "pilot_priority_rank": 90,
+          "baseline_terrain_percent": 48.13411110788388,
+          "pilot_terrain_percent": 48.79004099801785,
+          "pilot_similarity_percent": 24.395020499008925,
+          "window_sensitivity": {
+            "rank_range": [
+              89,
+              91
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "tabernas-badlands": {
+          "baseline_score_rank": 84,
+          "pilot_score_rank": 84,
+          "earth_elevation_sha256": "2e7b1c7e937e269945633441008f909d8bbb02db0cf83d9629364266375a1e6d",
+          "baseline_similarity_percent": 28.61493437189188,
+          "pilot_priority_rank": 84,
+          "baseline_terrain_percent": 57.22986874378376,
+          "pilot_terrain_percent": 57.62822171514866,
+          "pilot_similarity_percent": 28.81411085757433,
+          "window_sensitivity": {
+            "rank_range": [
+              83,
+              87
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "taklamakan-interior": {
+          "baseline_score_rank": 62,
+          "pilot_score_rank": 62,
+          "earth_elevation_sha256": "d1d4c51dd4dedabb37e97c3fa5b2d65398fca9b61c01ee394ef4440639c0613b",
+          "baseline_similarity_percent": 37.80180247109534,
+          "pilot_priority_rank": 62,
+          "baseline_terrain_percent": 75.60360494219069,
+          "pilot_terrain_percent": 76.36507781836562,
+          "pilot_similarity_percent": 38.18253890918281,
+          "window_sensitivity": {
+            "rank_range": [
+              59,
+              65
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "talampaya-canyon": {
+          "baseline_score_rank": 88,
+          "pilot_score_rank": 88,
+          "earth_elevation_sha256": "42949e54f895f740f2342dddf5151d9f953921694f0116663cf4094da25d7066",
+          "baseline_similarity_percent": 24.69340509898516,
+          "pilot_priority_rank": 88,
+          "baseline_terrain_percent": 49.38681019797032,
+          "pilot_terrain_percent": 50.05981078407474,
+          "pilot_similarity_percent": 25.02990539203737,
+          "window_sensitivity": {
+            "rank_range": [
+              87,
+              93
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "teide-canadas": {
+          "baseline_score_rank": 100,
+          "pilot_score_rank": 100,
+          "earth_elevation_sha256": "1a76fa168094560d1d2ed5c5dcacd574989dc3d3aabb012fc4f498c17c5e0e19",
+          "baseline_similarity_percent": 6.63948846316175,
+          "pilot_priority_rank": 100,
+          "baseline_terrain_percent": 13.2789769263235,
+          "pilot_terrain_percent": 13.459931298927422,
+          "pilot_similarity_percent": 6.729965649463711,
+          "window_sensitivity": {
+            "rank_range": [
+              100,
+              101
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "tongariro-west": {
+          "baseline_score_rank": 92,
+          "pilot_score_rank": 92,
+          "earth_elevation_sha256": "d40ca7b863951d743a37ee47e84bed4570ca058872896a2573a6b6c6f15a7643",
+          "baseline_similarity_percent": 23.019365137671194,
+          "pilot_priority_rank": 92,
+          "baseline_terrain_percent": 46.03873027534239,
+          "pilot_terrain_percent": 46.66610613409106,
+          "pilot_similarity_percent": 23.33305306704553,
+          "window_sensitivity": {
+            "rank_range": [
+              87,
+              95
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "tsondab-dunes": {
+          "baseline_score_rank": 71,
+          "pilot_score_rank": 71,
+          "earth_elevation_sha256": "38935a990fdf52db09002c168db2a93ec11433640f5dbd91cb9d6e5d794151ac",
+          "baseline_similarity_percent": 34.508548140841185,
+          "pilot_priority_rank": 71,
+          "baseline_terrain_percent": 69.01709628168237,
+          "pilot_terrain_percent": 69.95760136922712,
+          "pilot_similarity_percent": 34.97880068461356,
+          "window_sensitivity": {
+            "rank_range": [
+              67,
+              71
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "uyuni-incahuasi": {
+          "baseline_score_rank": 50,
+          "pilot_score_rank": 52,
+          "earth_elevation_sha256": "c2664881edb346edadf19100295beae3414ca00e64b1fb2e11db11381dfe1263",
+          "baseline_similarity_percent": 41.508033087262994,
+          "pilot_priority_rank": 52,
+          "baseline_terrain_percent": 83.01606617452599,
+          "pilot_terrain_percent": 82.47586430582959,
+          "pilot_similarity_percent": 41.237932152914794,
+          "window_sensitivity": {
+            "rank_range": [
+              48,
+              56
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "valle-luna-chile": {
+          "baseline_score_rank": 77,
+          "pilot_score_rank": 77,
+          "earth_elevation_sha256": "90e96bb7ac42d4d121982cf0dc56df4ead6cac74cdefa1373a0ef329ea4b18fa",
+          "baseline_similarity_percent": 31.868831768497262,
+          "pilot_priority_rank": 77,
+          "baseline_terrain_percent": 63.737663536994525,
+          "pilot_terrain_percent": 64.18131452231286,
+          "pilot_similarity_percent": 32.09065726115643,
+          "window_sensitivity": {
+            "rank_range": [
+              77,
+              83
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "wadi-rum": {
+          "baseline_score_rank": 95,
+          "pilot_score_rank": 95,
+          "earth_elevation_sha256": "37a5a117eb2c307c378f250d9d5b3f4bddb72f67b2d2a6f63e45529c56f58951",
+          "baseline_similarity_percent": 18.62164129407306,
+          "pilot_priority_rank": 95,
+          "baseline_terrain_percent": 37.24328258814612,
+          "pilot_terrain_percent": 37.750801719464825,
+          "pilot_similarity_percent": 18.875400859732412,
+          "window_sensitivity": {
+            "rank_range": [
+              94,
+              97
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "white-sands": {
+          "baseline_score_rank": 41,
+          "pilot_score_rank": 43,
+          "earth_elevation_sha256": "5cd1054e3759b73de17cd1062e351be4739e7335e3f54801bf1b0f3c6dbaa6d1",
+          "baseline_similarity_percent": 43.705598931801106,
+          "pilot_priority_rank": 43,
+          "baseline_terrain_percent": 87.41119786360221,
+          "pilot_terrain_percent": 86.80697116072655,
+          "pilot_similarity_percent": 43.403485580363274,
+          "window_sensitivity": {
+            "rank_range": [
+              41,
+              48
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "wolfe-creek": {
+          "baseline_score_rank": 40,
+          "pilot_score_rank": 41,
+          "earth_elevation_sha256": "42830193f6bcf841bdf49d24375241455366c429f8c4d52ca6ec9c8822408e90",
+          "baseline_similarity_percent": 43.7319727625013,
+          "pilot_priority_rank": 41,
+          "baseline_terrain_percent": 87.4639455250026,
+          "pilot_terrain_percent": 87.26486615961993,
+          "pilot_similarity_percent": 43.632433079809964,
+          "window_sensitivity": {
+            "rank_range": [
+              41,
+              51
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        }
+      },
+      "interpretation": "Same-method source sensitivity, not accuracy improvement. 30 m descriptors are separate from the coarser ranking calculation."
+    },
+    "apollo-16-descartes": {
+      "site_id": "apollo-16-descartes",
+      "product_id": "NAC_DTM_APOLLO16",
+      "product_config_sha256": "2c19e6f38b55954ddd25ec6d008997e7eac413c6711df42be34afbc830cdcf4e",
+      "catalog_elevation_sha256": "4ae5081bfe2f3825ef5db007dc29c0970547c63d8ecd3c9a5c7b0c6555d7d3de",
+      "pilot_elevation_sha256": "1128e134064f18489bbab0a89de32d0ef0fca3b52df84a036a4170443ee67c06",
+      "manifest_url": "/terrain-pilots/apollo-16-descartes/manifest.json",
+      "manifest_sha256": "7274f481948f46e92b422a0b674f235b26ed5a67fc78ec87042943504b002f8e",
+      "source_receipt": {
+        "url": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16.TIF",
+        "subset_sha256": "5355a097ec5d979d50316a5cf259d84f3caff01db18f1839e77c6912425d0a22",
+        "source_window": [
+          4265,
+          4308,
+          2272,
+          2272
+        ],
+        "source_crs_wkt": "PROJCS[\"Equirectangular Moon\",GEOGCS[\"GCS_Moon\",DATUM[\"D_Moon\",SPHEROID[\"Moon_localRadius\",1737400,0]],PRIMEM[\"Reference_Meridian\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]]],PROJECTION[\"Equirectangular\"],PARAMETER[\"standard_parallel_1\",-9],PARAMETER[\"central_meridian\",180],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]",
+        "scale": 1.0,
+        "offset": 0.0,
+        "source_tags": {
+          "AREA_OR_POINT": "Area"
+        },
+        "source_shape": [
+          15653,
+          11985
+        ],
+        "source_spacing": [
+          2.0000000000006,
+          2.0000000000006
+        ],
+        "finite_source_fraction": 1.0
+      },
+      "metadata": [
+        {
+          "name": "pds-label",
+          "url": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16.LBL",
+          "resolved_url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16.LBL",
+          "sha256": "4f0ebfe199122158f2f3619b2c8cbd0c399e85295272aef4df12ab562cdbe1ee"
+        },
+        {
+          "name": "readme",
+          "url": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16_README.TXT",
+          "resolved_url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16_README.TXT",
+          "sha256": "193c30878cd1563665e52678f760d10665069a40393da318d3e6547e9176f8b1"
+        }
+      ],
+      "quality": {
+        "receipt": {
+          "url": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16_CONF.IMG",
+          "subset_sha256": "b4d2f9bfe7189682bec19844a0276cd8b2f4eacbc2c02080a59a6932016473a6",
+          "source_window": [
+            4265,
+            4308,
+            2272,
+            2272
+          ],
+          "source_crs_wkt": "PROJCS[\"EQUIRECTANGULAR MOON\",GEOGCS[\"GCS_MOON\",DATUM[\"D_MOON\",SPHEROID[\"MOON_localRadius\",1737400,0]],PRIMEM[\"Reference_Meridian\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]]],PROJECTION[\"Equirectangular\"],PARAMETER[\"standard_parallel_1\",-9],PARAMETER[\"central_meridian\",180],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]",
+          "scale": 1.0,
+          "offset": 0.0,
+          "source_tags": {
+            "FILTER_NAME": "",
+            "DATA_SET_ID": "\"LRO-L-LROC-5-RDR-V1.0\"",
+            "PRODUCT_ID": "NAC_DTM_APOLLO16_CONF",
+            "PRODUCER_INSTITUTION_NAME": "\"ARIZONA STATE UNIVERSITY\"",
+            "PRODUCT_TYPE": "RDR",
+            "MISSION_NAME": "",
+            "SPACECRAFT_NAME": "",
+            "INSTRUMENT_NAME": "\"LUNAR RECONNAISSANCE ORBITER CAMERA\"",
+            "INSTRUMENT_ID": "LROC",
+            "TARGET_NAME": "MOON",
+            "CENTER_FILTER_WAVELENGTH": "",
+            "BANDWIDTH": "",
+            "PRODUCT_CREATION_TIME": "2020-10-13T12:47:58",
+            "START_TIME": "2010-02-02T10:54:14",
+            "STOP_TIME": "2011-07-19T20:53:00",
+            "NOTE": ""
+          },
+          "source_shape": [
+            15653,
+            11985
+          ],
+          "source_spacing": [
+            2.0000000000006,
+            2.0000000000006
+          ],
+          "finite_source_fraction": 1.0
+        },
+        "code_counts": {
+          "3": 295162,
+          "10": 14278,
+          "11": 96510,
+          "12": 550886,
+          "13": 1937018,
+          "14": 2268130
+        },
+        "accepted_codes": [
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "mean_accepted_fraction": 0.9428179264068604,
+        "minimum_cell_accepted_fraction": 0.29954466223716736,
+        "scope": "Source subset including crop margin; codes require product documentation. Finite DTM is not proof of reliable stereo correlation."
+      },
+      "centre_latitude": -8.973,
+      "centre_longitude": 15.501,
+      "output_spacing_m": 30,
+      "window_m": 4530,
+      "minimum_cell_valid_fraction": 1.0,
+      "relative_vertical_error_m": 0.88,
+      "error_definition": "LROC relative LE: 90% vertical precision; separate LOLA RMS 1.02 m. Not an independent local accuracy measurement.",
+      "expert_review": "pending",
+      "status": "measured_subset_staged",
+      "production_changed": false,
+      "generator_sha256": "b125dac494f4fdaf832576a4558ef443d740a58ff1859c63a17c556da3e200ff",
+      "reproduction_command": "python -m scripts.catalog.ingest_pilot apollo-16-descartes --offline",
+      "source_metadata": {
+        "url": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16.TIF",
+        "product_id": "NAC_DTM_APOLLO16",
+        "native_spacing_m_approx": 2,
+        "vertical_datum": "Elevation above 1737400 m lunar reference sphere; tied to LOLA",
+        "subset_sha256": "5355a097ec5d979d50316a5cf259d84f3caff01db18f1839e77c6912425d0a22",
+        "coverage": "2010-02-02T10:54:14 / 2011-07-19T20:53:00 (PDS v1.9 label; supersedes shortened website date range)",
+        "resampling": "Area average of finite physical metre elevations; no gap filling.",
+        "scale_applied": 1.0,
+        "offset_applied": 0.0
+      },
+      "warnings": [
+        "Independent artifact/geological review pending; rankings remain experimental.",
+        "Confidence map includes pixels outside successful-correlation/manually-edited codes; preview with caution."
+      ],
+      "analysis_spacing_m": 150.0,
+      "analysis_window_m": 3900.0,
+      "baseline_descriptors": {
+        "slope_mean": 2.6835294190716725,
+        "slope_p90": 5.813591861306202,
+        "relief": 148.8250932693482,
+        "hypsometric_integral": 0.4909282150376757,
+        "slope_gt_5": 0.10798816568047337,
+        "slope_gt_10": 0.04881656804733728,
+        "slope_gt_15": 0.0029585798816568047,
+        "slope_gt_20": 0.0,
+        "roughness_150m": null,
+        "roughness_450m": 5.833688373609983,
+        "roughness_1000m": 10.962334679683382,
+        "bowl_share": 0.185,
+        "ridge_share": 0.19,
+        "roughness_fine": 5.639867761659243,
+        "roughness_mid": 8.28233613429426,
+        "roughness_coarse": 9.97056663688141
+      },
+      "pilot_descriptors": {
+        "slope_mean": 3.703063013110358,
+        "slope_p90": 7.84336408350444,
+        "relief": 176.5123532485962,
+        "hypsometric_integral": 0.5400737848998071,
+        "slope_gt_5": 0.1819526627218935,
+        "slope_gt_10": 0.07100591715976332,
+        "slope_gt_15": 0.04142011834319527,
+        "slope_gt_20": 0.0029585798816568047,
+        "roughness_150m": null,
+        "roughness_450m": 8.388629089624049,
+        "roughness_1000m": 13.343667286782242,
+        "bowl_share": 0.1825,
+        "ridge_share": 0.2225,
+        "roughness_fine": 8.234908230251222,
+        "roughness_mid": 11.034574539791716,
+        "roughness_coarse": 12.569620721434662
+      },
+      "fine_descriptors": {
+        "slope_mean": 5.629126184978905,
+        "slope_p90": 11.922173315907596,
+        "relief": 211.39844512939453,
+        "hypsometric_integral": 0.5190725275478238,
+        "slope_gt_5": 0.3771270280965572,
+        "slope_gt_10": 0.13618633048787382,
+        "slope_gt_15": 0.0704392560348239,
+        "slope_gt_20": 0.04030753575668494,
+        "roughness_150m": 4.110729908584457,
+        "roughness_450m": 9.703029605094951,
+        "roughness_1000m": 14.243693091679567,
+        "bowl_share": 0.18783797571676358,
+        "ridge_share": 0.23589429650035712,
+        "roughness_fine": 2.4743291556769127,
+        "roughness_mid": 4.082718700022214,
+        "roughness_coarse": 5.491260472008423
+      },
+      "fine_analysis_spacing_m": 30,
+      "top_ten_overlap": 10,
+      "changed_score_ranks": 88,
+      "candidates": {
+        "amboy": {
+          "baseline_score_rank": 7,
+          "pilot_score_rank": 9,
+          "earth_elevation_sha256": "c9d7902d3c19b92ccc44c738740999d66e20abd8bc6170dc9506aed02c9f2fb2",
+          "baseline_similarity_percent": 66.7740367355572,
+          "pilot_priority_rank": 9,
+          "baseline_terrain_percent": 83.5480734711144,
+          "pilot_terrain_percent": 75.7401163462629,
+          "pilot_similarity_percent": 62.87005817313145,
+          "window_sensitivity": {
+            "rank_range": [
+              8,
+              9
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "askja-east": {
+          "baseline_score_rank": 86,
+          "pilot_score_rank": 44,
+          "earth_elevation_sha256": "30fc8a0f076faf10b6f64dd91fa3bee17587a68c79eebe04b28c6a2f761c0bfb",
+          "baseline_similarity_percent": 37.19231092791131,
+          "pilot_priority_rank": 44,
+          "baseline_terrain_percent": 74.38462185582262,
+          "pilot_terrain_percent": 78.73883543912787,
+          "pilot_similarity_percent": 39.369417719563934,
+          "window_sensitivity": {
+            "rank_range": [
+              30,
+              56
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "atacama-yungay": {
+          "baseline_score_rank": 87,
+          "pilot_score_rank": 48,
+          "earth_elevation_sha256": "0c975863b1212126a0073d1d8f9fa29ae66c0d07005b27bd1d6762f3fc9360ca",
+          "baseline_similarity_percent": 36.85182893723197,
+          "pilot_priority_rank": 48,
+          "baseline_terrain_percent": 73.70365787446394,
+          "pilot_terrain_percent": 77.90972375102851,
+          "pilot_similarity_percent": 38.954861875514254,
+          "window_sensitivity": {
+            "rank_range": [
+              30,
+              64
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "badain-jaran": {
+          "baseline_score_rank": 98,
+          "pilot_score_rank": 98,
+          "earth_elevation_sha256": "44b18ccf3922adc37e3e8f15638a9fd1f112415ce62247392a9da7418ec21c65",
+          "baseline_similarity_percent": 22.017920991145456,
+          "pilot_priority_rank": 98,
+          "baseline_terrain_percent": 44.03584198229091,
+          "pilot_terrain_percent": 46.54884686765191,
+          "pilot_similarity_percent": 23.274423433825955,
+          "window_sensitivity": {
+            "rank_range": [
+              98,
+              99
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "badwater": {
+          "baseline_score_rank": 52,
+          "pilot_score_rank": 65,
+          "earth_elevation_sha256": "150f8a5d1a98325200246d788e97dff6998b7738d928db65e42cf37a4cbd795a",
+          "baseline_similarity_percent": 40.15153223315132,
+          "pilot_priority_rank": 65,
+          "baseline_terrain_percent": 80.30306446630264,
+          "pilot_terrain_percent": 72.70000076038848,
+          "pilot_similarity_percent": 36.35000038019424,
+          "window_sensitivity": {
+            "rank_range": [
+              61,
+              68
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "bardenas-blanca": {
+          "baseline_score_rank": 44,
+          "pilot_score_rank": 59,
+          "earth_elevation_sha256": "01860e7005fce8a08e4faf1c4c7075876f4e3681da73bb1ec3bfa55a88933609",
+          "baseline_similarity_percent": 41.320868769313954,
+          "pilot_priority_rank": 59,
+          "baseline_terrain_percent": 82.64173753862791,
+          "pilot_terrain_percent": 74.81449730360555,
+          "pilot_similarity_percent": 37.407248651802774,
+          "window_sensitivity": {
+            "rank_range": [
+              51,
+              62
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "barrow-observatory": {
+          "baseline_score_rank": 55,
+          "pilot_score_rank": 61,
+          "earth_elevation_sha256": "f97be7a9ecabe62953acb25f9c130e5db0325ea02d1c1f15920300f19a3d5f5b",
+          "baseline_similarity_percent": 39.96022557812731,
+          "pilot_priority_rank": 61,
+          "baseline_terrain_percent": 79.92045115625461,
+          "pilot_terrain_percent": 74.03705564831046,
+          "pilot_similarity_percent": 37.01852782415523,
+          "window_sensitivity": {
+            "rank_range": [
+              57,
+              66
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "bisti-badlands": {
+          "baseline_score_rank": 42,
+          "pilot_score_rank": 57,
+          "earth_elevation_sha256": "190a70b982b814bd4218a4db880f8f37b4ebcd73f633b2bc29e81a2defe2b6b5",
+          "baseline_similarity_percent": 41.82524275238902,
+          "pilot_priority_rank": 57,
+          "baseline_terrain_percent": 83.65048550477805,
+          "pilot_terrain_percent": 75.72770380483963,
+          "pilot_similarity_percent": 37.86385190241982,
+          "window_sensitivity": {
+            "rank_range": [
+              45,
+              58
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "bromo-sandsea": {
+          "baseline_score_rank": 16,
+          "pilot_score_rank": 13,
+          "earth_elevation_sha256": "69efed74b165be58fc56ded1bfbebe76b1b92b851c3d5b8769174ff24377d97f",
+          "baseline_similarity_percent": 46.09228781874196,
+          "pilot_priority_rank": 13,
+          "baseline_terrain_percent": 42.18457563748392,
+          "pilot_terrain_percent": 44.653912009223795,
+          "pilot_similarity_percent": 47.3269560046119,
+          "window_sensitivity": {
+            "rank_range": [
+              13,
+              13
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "capitol-reef": {
+          "baseline_score_rank": 84,
+          "pilot_score_rank": 35,
+          "earth_elevation_sha256": "073fa35ca497a1d6b7b7afb5b6e0d8c00d90935e69c9faf2bbde4f4bee659ef4",
+          "baseline_similarity_percent": 37.51107586754123,
+          "pilot_priority_rank": 35,
+          "baseline_terrain_percent": 75.02215173508246,
+          "pilot_terrain_percent": 80.6380513971331,
+          "pilot_similarity_percent": 40.31902569856655,
+          "window_sensitivity": {
+            "rank_range": [
+              27,
+              46
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "cima-lava-field": {
+          "baseline_score_rank": 27,
+          "pilot_score_rank": 27,
+          "earth_elevation_sha256": "4edd3896de523140f343d7e0c2659225cbae5e6d0b7e196b97f7a3f55b98a04d",
+          "baseline_similarity_percent": 43.33649906350623,
+          "pilot_priority_rank": 27,
+          "baseline_terrain_percent": 86.67299812701246,
+          "pilot_terrain_percent": 82.33760355967897,
+          "pilot_similarity_percent": 41.168801779839484,
+          "window_sensitivity": {
+            "rank_range": [
+              25,
+              42
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "craters-moon": {
+          "baseline_score_rank": 58,
+          "pilot_score_rank": 22,
+          "earth_elevation_sha256": "e031cfdc0a4bf4428ffb8a2366686f742912d0332c2607dc5159e738f1792322",
+          "baseline_similarity_percent": 39.88347975399663,
+          "pilot_priority_rank": 22,
+          "baseline_terrain_percent": 79.76695950799326,
+          "pilot_terrain_percent": 83.78545973030785,
+          "pilot_similarity_percent": 41.892729865153925,
+          "window_sensitivity": {
+            "rank_range": [
+              17,
+              28
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "dallol": {
+          "baseline_score_rank": 29,
+          "pilot_score_rank": 41,
+          "earth_elevation_sha256": "dfce3939401a7b780c2a8e6d5e6f6f0139d5641062df5fdc868e9ed17d6701d1",
+          "baseline_similarity_percent": 42.973320634720906,
+          "pilot_priority_rank": 41,
+          "baseline_terrain_percent": 85.94664126944181,
+          "pilot_terrain_percent": 79.30754502243613,
+          "pilot_similarity_percent": 39.653772511218065,
+          "window_sensitivity": {
+            "rank_range": [
+              38,
+              47
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "dunhuang-yardangs": {
+          "baseline_score_rank": 30,
+          "pilot_score_rank": 39,
+          "earth_elevation_sha256": "af6508ca92f83349949e833dcb9094cf9d801378ad6c1091339ff292eb67679a",
+          "baseline_similarity_percent": 42.869487449483834,
+          "pilot_priority_rank": 39,
+          "baseline_terrain_percent": 85.73897489896767,
+          "pilot_terrain_percent": 79.42724501658643,
+          "pilot_similarity_percent": 39.71362250829321,
+          "window_sensitivity": {
+            "rank_range": [
+              27,
+              43
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "erg-chebbi": {
+          "baseline_score_rank": 83,
+          "pilot_score_rank": 42,
+          "earth_elevation_sha256": "5c4a336368eac66dcf064982bb06906ecce97f082a96dcd939c604c1b6c52323",
+          "baseline_similarity_percent": 37.60299654043696,
+          "pilot_priority_rank": 42,
+          "baseline_terrain_percent": 75.20599308087392,
+          "pilot_terrain_percent": 78.99932588103822,
+          "pilot_similarity_percent": 39.49966294051911,
+          "window_sensitivity": {
+            "rank_range": [
+              34,
+              51
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "etna-east": {
+          "baseline_score_rank": 9,
+          "pilot_score_rank": 8,
+          "earth_elevation_sha256": "97a3c34be21b8c430ee0e38df612f5b73a6b4899f6fb3e186e66404970c51f41",
+          "baseline_similarity_percent": 63.801495413898174,
+          "pilot_priority_rank": 8,
+          "baseline_terrain_percent": 27.602990827796344,
+          "pilot_terrain_percent": 29.218772619833956,
+          "pilot_similarity_percent": 64.60938630991697,
+          "window_sensitivity": {
+            "rank_range": [
+              6,
+              9
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "fogo-caldera": {
+          "baseline_score_rank": 93,
+          "pilot_score_rank": 93,
+          "earth_elevation_sha256": "582c5c4d6c2babb57562cf2b80b304f4f2202ed310c34c001022d20abf44757d",
+          "baseline_similarity_percent": 31.76317485116975,
+          "pilot_priority_rank": 93,
+          "baseline_terrain_percent": 13.526349702339502,
+          "pilot_terrain_percent": 14.318134538197386,
+          "pilot_similarity_percent": 32.15906726909869,
+          "window_sensitivity": {
+            "rank_range": [
+              78,
+              95
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "fournaise-enclos": {
+          "baseline_score_rank": 102,
+          "pilot_score_rank": 102,
+          "earth_elevation_sha256": "6057bc2f3b979fecc4d7d3b367eda6748132383f2df4455345f3129fef1446a2",
+          "baseline_similarity_percent": 8.492283749604082,
+          "pilot_priority_rank": 102,
+          "baseline_terrain_percent": 16.984567499208165,
+          "pilot_terrain_percent": 18.334255533857828,
+          "pilot_similarity_percent": 9.167127766928914,
+          "window_sensitivity": {
+            "rank_range": [
+              102,
+              102
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "great-sand-dunes": {
+          "baseline_score_rank": 48,
+          "pilot_score_rank": 21,
+          "earth_elevation_sha256": "ad5a3908da5784b06887cdab31066b1bb5ae6bb1a023e83fb7f946e3b6eb9f31",
+          "baseline_similarity_percent": 40.78212140139743,
+          "pilot_priority_rank": 21,
+          "baseline_terrain_percent": 81.56424280279487,
+          "pilot_terrain_percent": 83.84801905343886,
+          "pilot_similarity_percent": 41.92400952671943,
+          "window_sensitivity": {
+            "rank_range": [
+              20,
+              32
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "harrat-khaybar": {
+          "baseline_score_rank": 95,
+          "pilot_score_rank": 92,
+          "earth_elevation_sha256": "0d09c31a54f30dba4a0a4c90ae1663f12d645c8a441bff61c325e0395e8609c9",
+          "baseline_similarity_percent": 30.03399297543778,
+          "pilot_priority_rank": 92,
+          "baseline_terrain_percent": 60.06798595087556,
+          "pilot_terrain_percent": 64.86060205690404,
+          "pilot_similarity_percent": 32.43030102845202,
+          "window_sensitivity": {
+            "rank_range": [
+              73,
+              95
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "haughton": {
+          "baseline_score_rank": 3,
+          "pilot_score_rank": 6,
+          "earth_elevation_sha256": "ff017a52616e1eb865cacd072cff6d1a4796c2d0ccf5a7172fe394132e0e4999",
+          "baseline_similarity_percent": 70.41543153388187,
+          "pilot_priority_rank": 6,
+          "baseline_terrain_percent": 90.83086306776376,
+          "pilot_terrain_percent": 84.49591669402446,
+          "pilot_similarity_percent": 67.24795834701223,
+          "window_sensitivity": {
+            "rank_range": [
+              3,
+              6
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "hverir-namafjall": {
+          "baseline_score_rank": 51,
+          "pilot_score_rank": 18,
+          "earth_elevation_sha256": "461e84f2c373aa70dcb32b7b725b6af870c7906452150f9732573ebfa6dd5933",
+          "baseline_similarity_percent": 40.66010194656306,
+          "pilot_priority_rank": 18,
+          "baseline_terrain_percent": 81.32020389312612,
+          "pilot_terrain_percent": 86.58242614874342,
+          "pilot_similarity_percent": 43.29121307437171,
+          "window_sensitivity": {
+            "rank_range": [
+              14,
+              21
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "ischigualasto": {
+          "baseline_score_rank": 17,
+          "pilot_score_rank": 23,
+          "earth_elevation_sha256": "a5d018c335c22f59bacec7b702c32caebf49cae67bbc2e0affd9f89aedf921e6",
+          "baseline_similarity_percent": 45.548962402370535,
+          "pilot_priority_rank": 23,
+          "baseline_terrain_percent": 91.09792480474107,
+          "pilot_terrain_percent": 83.49385291079396,
+          "pilot_similarity_percent": 41.74692645539698,
+          "window_sensitivity": {
+            "rank_range": [
+              20,
+              37
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "kilbourne-hole-v1": {
+          "baseline_score_rank": 6,
+          "pilot_score_rank": 3,
+          "earth_elevation_sha256": "1f1eafaee1781ecd570e9b6acac1f2adf03952d64afc02f4238798cd168c99d9",
+          "baseline_similarity_percent": 66.83740273199822,
+          "pilot_priority_rank": 3,
+          "baseline_terrain_percent": 83.67480546399646,
+          "pilot_terrain_percent": 87.35049839901987,
+          "pilot_similarity_percent": 68.67524919950993,
+          "window_sensitivity": {
+            "rank_range": [
+              3,
+              5
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "lake-abbe-margin": {
+          "baseline_score_rank": 91,
+          "pilot_score_rank": 95,
+          "earth_elevation_sha256": "e4784585653a57b09aafb747cc53fd31d8f0de860774382b88aba3867ff26901",
+          "baseline_similarity_percent": 34.156932088881824,
+          "pilot_priority_rank": 95,
+          "baseline_terrain_percent": 68.31386417776365,
+          "pilot_terrain_percent": 61.9296149620433,
+          "pilot_similarity_percent": 30.96480748102165,
+          "window_sensitivity": {
+            "rank_range": [
+              93,
+              95
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "lanzarote-timanfaya": {
+          "baseline_score_rank": 32,
+          "pilot_score_rank": 51,
+          "earth_elevation_sha256": "157ebdfc9cc90b5c0b77b364cb82bb28d70ca251a8509329f038c18376fb5bed",
+          "baseline_similarity_percent": 42.724936795263226,
+          "pilot_priority_rank": 51,
+          "baseline_terrain_percent": 85.44987359052645,
+          "pilot_terrain_percent": 77.54018012981786,
+          "pilot_similarity_percent": 38.77009006490893,
+          "window_sensitivity": {
+            "rank_range": [
+              45,
+              54
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "lava-beds": {
+          "baseline_score_rank": 56,
+          "pilot_score_rank": 33,
+          "earth_elevation_sha256": "26935f3c727017c0c71993d5166aed381f0fc895afd076679de4885294b44850",
+          "baseline_similarity_percent": 39.92440243892437,
+          "pilot_priority_rank": 33,
+          "baseline_terrain_percent": 79.84880487784874,
+          "pilot_terrain_percent": 80.85231174392477,
+          "pilot_similarity_percent": 40.426155871962386,
+          "window_sensitivity": {
+            "rank_range": [
+              25,
+              43
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "lonar-crater": {
+          "baseline_score_rank": 8,
+          "pilot_score_rank": 5,
+          "earth_elevation_sha256": "2e0d535e9b142f091b81dfd239433ce6ae988cc0b18f968d1a0b829cd3812234",
+          "baseline_similarity_percent": 64.71270953389212,
+          "pilot_priority_rank": 5,
+          "baseline_terrain_percent": 79.42541906778425,
+          "pilot_terrain_percent": 85.63343706317806,
+          "pilot_similarity_percent": 67.81671853158903,
+          "window_sensitivity": {
+            "rank_range": [
+              3,
+              7
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "lut-yardangs": {
+          "baseline_score_rank": 88,
+          "pilot_score_rank": 90,
+          "earth_elevation_sha256": "af421e487c54f98796855768fdeea5b90b5be16e989820088c8d9f75867e253b",
+          "baseline_similarity_percent": 36.62971019043541,
+          "pilot_priority_rank": 90,
+          "baseline_terrain_percent": 73.25942038087082,
+          "pilot_terrain_percent": 66.41298587244286,
+          "pilot_similarity_percent": 33.20649293622143,
+          "window_sensitivity": {
+            "rank_range": [
+              90,
+              92
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "makgadikgadi-kubu": {
+          "baseline_score_rank": 76,
+          "pilot_score_rank": 84,
+          "earth_elevation_sha256": "e243fbf8330c7755f08038a9ee4f729c10d8c893f896e394b69f5e1a0cffc97f",
+          "baseline_similarity_percent": 38.13210518767114,
+          "pilot_priority_rank": 84,
+          "baseline_terrain_percent": 76.26421037534227,
+          "pilot_terrain_percent": 69.04100435715961,
+          "pilot_similarity_percent": 34.520502178579804,
+          "window_sensitivity": {
+            "rank_range": [
+              71,
+              90
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "meteor-crater": {
+          "baseline_score_rank": 5,
+          "pilot_score_rank": 4,
+          "earth_elevation_sha256": "3c4d68b555651fc573471bf8ef3e8b6984be4f51f176c05ee19e71dd9541e16a",
+          "baseline_similarity_percent": 67.40039536754757,
+          "pilot_priority_rank": 4,
+          "baseline_terrain_percent": 84.80079073509515,
+          "pilot_terrain_percent": 87.06150959945255,
+          "pilot_similarity_percent": 68.53075479972628,
+          "window_sensitivity": {
+            "rank_range": [
+              3,
+              6
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "payun-matru": {
+          "baseline_score_rank": 96,
+          "pilot_score_rank": 96,
+          "earth_elevation_sha256": "f015033bbeeec5898fead8130756a3487c75cda11d18c3d8001ce524c636ac93",
+          "baseline_similarity_percent": 26.482091446933193,
+          "pilot_priority_rank": 96,
+          "baseline_terrain_percent": 52.964182893866386,
+          "pilot_terrain_percent": 57.24411410054863,
+          "pilot_similarity_percent": 28.622057050274314,
+          "window_sensitivity": {
+            "rank_range": [
+              96,
+              96
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "pinacate-elegante": {
+          "baseline_score_rank": 13,
+          "pilot_score_rank": 12,
+          "earth_elevation_sha256": "ffd9b204a57c37f964f90d6d12e048d4e0c8352343b6608e41953bf2704d04cb",
+          "baseline_similarity_percent": 47.57208013238801,
+          "pilot_priority_rank": 12,
+          "baseline_terrain_percent": 45.144160264776026,
+          "pilot_terrain_percent": 48.212032562791364,
+          "pilot_similarity_percent": 49.10601628139568,
+          "window_sensitivity": {
+            "rank_range": [
+              12,
+              12
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "pingualuit": {
+          "baseline_score_rank": 11,
+          "pilot_score_rank": 11,
+          "earth_elevation_sha256": "35424ce71b48f25215ed2ca03a9ccec805a17ed09409d162be9aaeba06943045",
+          "baseline_similarity_percent": 57.738236450509625,
+          "pilot_priority_rank": 11,
+          "baseline_terrain_percent": 65.47647290101925,
+          "pilot_terrain_percent": 68.63258581723201,
+          "pilot_similarity_percent": 59.316292908616006,
+          "window_sensitivity": {
+            "rank_range": [
+              10,
+              11
+            ],
+            "top_ten_runs": 10,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "qaidam": {
+          "baseline_score_rank": 38,
+          "pilot_score_rank": 54,
+          "earth_elevation_sha256": "96a74a13f9d204cec16bcc36e433afeaefffed56068e4988de8db10005d8303d",
+          "baseline_similarity_percent": 42.247616149738136,
+          "pilot_priority_rank": 54,
+          "baseline_terrain_percent": 84.49523229947627,
+          "pilot_terrain_percent": 76.49244216437184,
+          "pilot_similarity_percent": 38.24622108218592,
+          "window_sensitivity": {
+            "rank_range": [
+              48,
+              58
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "richat-ridges": {
+          "baseline_score_rank": 15,
+          "pilot_score_rank": 15,
+          "earth_elevation_sha256": "65c37883d1ad21060c448767f6a1b6f43dbb23ea368fe248008ebbacd3ec11c9",
+          "baseline_similarity_percent": 47.19316396980731,
+          "pilot_priority_rank": 15,
+          "baseline_terrain_percent": 94.38632793961462,
+          "pilot_terrain_percent": 88.28470178309533,
+          "pilot_similarity_percent": 44.142350891547665,
+          "window_sensitivity": {
+            "rank_range": [
+              14,
+              18
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "rub-khali-oman": {
+          "baseline_score_rank": 60,
+          "pilot_score_rank": 43,
+          "earth_elevation_sha256": "3305b17550fc7968a636af027fb3d7c51e11d53526a98b2b17a7cccc60432992",
+          "baseline_similarity_percent": 39.31002142485001,
+          "pilot_priority_rank": 43,
+          "baseline_terrain_percent": 78.62004284970001,
+          "pilot_terrain_percent": 78.82475384660208,
+          "pilot_similarity_percent": 39.41237692330104,
+          "window_sensitivity": {
+            "rank_range": [
+              33,
+              48
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r1280-c240": {
+          "baseline_score_rank": 63,
+          "pilot_score_rank": 70,
+          "earth_elevation_sha256": "b3750da67ed61854a3fe5e6c4a1a3b44bfe93406ed2f1c8d23ca4b4ba6106ac4",
+          "baseline_similarity_percent": 39.075027952392084,
+          "pilot_priority_rank": 70,
+          "baseline_terrain_percent": 78.15005590478417,
+          "pilot_terrain_percent": 70.84656869726322,
+          "pilot_similarity_percent": 35.42328434863161,
+          "window_sensitivity": {
+            "rank_range": [
+              68,
+              73
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r1600-c480": {
+          "baseline_score_rank": 74,
+          "pilot_score_rank": 80,
+          "earth_elevation_sha256": "8801814372439b7fcdf4267a9e3d3ae9e0fddc749c903acd7d804c791e238ab0",
+          "baseline_similarity_percent": 38.31778682080795,
+          "pilot_priority_rank": 80,
+          "baseline_terrain_percent": 76.6355736416159,
+          "pilot_terrain_percent": 69.47362186496585,
+          "pilot_similarity_percent": 34.736810932482925,
+          "window_sensitivity": {
+            "rank_range": [
+              75,
+              81
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r1600-c880": {
+          "baseline_score_rank": 25,
+          "pilot_score_rank": 36,
+          "earth_elevation_sha256": "e5e7b4c30f0d1943c53869b4a219f1113aad77755302a85e780a0d8396c7b009",
+          "baseline_similarity_percent": 43.56288786844633,
+          "pilot_priority_rank": 36,
+          "baseline_terrain_percent": 87.12577573689266,
+          "pilot_terrain_percent": 80.54510387224313,
+          "pilot_similarity_percent": 40.272551936121566,
+          "window_sensitivity": {
+            "rank_range": [
+              30,
+              48
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r1760-c400": {
+          "baseline_score_rank": 65,
+          "pilot_score_rank": 74,
+          "earth_elevation_sha256": "9e1ad611c3e78c0c142d2e11ba8edc59185d2774e2530fbd68ff93d3413f471b",
+          "baseline_similarity_percent": 38.81329188543052,
+          "pilot_priority_rank": 74,
+          "baseline_terrain_percent": 77.62658377086105,
+          "pilot_terrain_percent": 70.37201747567137,
+          "pilot_similarity_percent": 35.186008737835685,
+          "window_sensitivity": {
+            "rank_range": [
+              72,
+              75
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r1920-c320": {
+          "baseline_score_rank": 72,
+          "pilot_score_rank": 78,
+          "earth_elevation_sha256": "ddac14616c58570c9811c6e2f375eb45bc67f164a8db5a12626d82652711f406",
+          "baseline_similarity_percent": 38.38410925693264,
+          "pilot_priority_rank": 78,
+          "baseline_terrain_percent": 76.76821851386528,
+          "pilot_terrain_percent": 69.59387045526249,
+          "pilot_similarity_percent": 34.796935227631245,
+          "window_sensitivity": {
+            "rank_range": [
+              73,
+              80
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r2960-c1200": {
+          "baseline_score_rank": 61,
+          "pilot_score_rank": 69,
+          "earth_elevation_sha256": "8dc2540ef03ee1d608455ef430fd93a7201c9e038f160c3d3855249106b90cc3",
+          "baseline_similarity_percent": 39.276678191866765,
+          "pilot_priority_rank": 69,
+          "baseline_terrain_percent": 78.55335638373353,
+          "pilot_terrain_percent": 71.21217886550595,
+          "pilot_similarity_percent": 35.606089432752974,
+          "window_sensitivity": {
+            "rank_range": [
+              67,
+              71
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r3040-c80": {
+          "baseline_score_rank": 79,
+          "pilot_score_rank": 86,
+          "earth_elevation_sha256": "9e22b1811eb601867fd79e02a8a6283022d5a80fbf66e88534d3778a4c83bd95",
+          "baseline_similarity_percent": 38.05565714894467,
+          "pilot_priority_rank": 86,
+          "baseline_terrain_percent": 76.11131429788934,
+          "pilot_terrain_percent": 68.99835700199813,
+          "pilot_similarity_percent": 34.499178500999065,
+          "window_sensitivity": {
+            "rank_range": [
+              77,
+              86
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r3120-c1120": {
+          "baseline_score_rank": 78,
+          "pilot_score_rank": 85,
+          "earth_elevation_sha256": "5faa8de3d990002f9b2c32a89b04d486288c65bc1c875725388a2c6893f94b38",
+          "baseline_similarity_percent": 38.06679258590993,
+          "pilot_priority_rank": 85,
+          "baseline_terrain_percent": 76.13358517181986,
+          "pilot_terrain_percent": 69.01854655889096,
+          "pilot_similarity_percent": 34.50927327944548,
+          "window_sensitivity": {
+            "rank_range": [
+              78,
+              86
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r3120-c240": {
+          "baseline_score_rank": 73,
+          "pilot_score_rank": 79,
+          "earth_elevation_sha256": "aa9b5deab2bbf9dc870d6503d6e7422760e568f709e9e77c4a86bc612d22f096",
+          "baseline_similarity_percent": 38.37247881101729,
+          "pilot_priority_rank": 79,
+          "baseline_terrain_percent": 76.74495762203458,
+          "pilot_terrain_percent": 69.5727834022596,
+          "pilot_similarity_percent": 34.7863917011298,
+          "window_sensitivity": {
+            "rank_range": [
+              69,
+              86
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-amboy-region-r3280-c1280": {
+          "baseline_score_rank": 85,
+          "pilot_score_rank": 89,
+          "earth_elevation_sha256": "d5d80d5cc79b80183f4c0d9c31771ec9acce0e265023d06724bd9e06abc25566",
+          "baseline_similarity_percent": 37.49646721132098,
+          "pilot_priority_rank": 89,
+          "baseline_terrain_percent": 74.99293442264197,
+          "pilot_terrain_percent": 67.98449494209268,
+          "pilot_similarity_percent": 33.99224747104634,
+          "window_sensitivity": {
+            "rank_range": [
+              88,
+              90
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-atacama-yungay-region-r240-c880": {
+          "baseline_score_rank": 64,
+          "pilot_score_rank": 71,
+          "earth_elevation_sha256": "591612c8d2dd22809b0d86b65eb33973167f0281da271bc29c0b853071b1f391",
+          "baseline_similarity_percent": 38.93487761935822,
+          "pilot_priority_rank": 71,
+          "baseline_terrain_percent": 77.86975523871644,
+          "pilot_terrain_percent": 70.84101309385227,
+          "pilot_similarity_percent": 35.420506546926134,
+          "window_sensitivity": {
+            "rank_range": [
+              68,
+              79
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-atacama-yungay-region-r800-c720": {
+          "baseline_score_rank": 68,
+          "pilot_score_rank": 76,
+          "earth_elevation_sha256": "7cd5062bed4cb3f0b8c79a56e364cb80a26020923e35fae8fcae1da3a9777599",
+          "baseline_similarity_percent": 38.6085751908737,
+          "pilot_priority_rank": 76,
+          "baseline_terrain_percent": 77.2171503817474,
+          "pilot_terrain_percent": 70.00084754632245,
+          "pilot_similarity_percent": 35.00042377316122,
+          "window_sensitivity": {
+            "rank_range": [
+              75,
+              83
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-atacama-yungay-region-r880-c880": {
+          "baseline_score_rank": 81,
+          "pilot_score_rank": 87,
+          "earth_elevation_sha256": "d351d5d413fc802047a9933315d29f3577e94867c89bd6ce4e57017c49c6dd72",
+          "baseline_similarity_percent": 37.91010229912811,
+          "pilot_priority_rank": 87,
+          "baseline_terrain_percent": 75.82020459825623,
+          "pilot_terrain_percent": 68.73445286149918,
+          "pilot_similarity_percent": 34.36722643074959,
+          "window_sensitivity": {
+            "rank_range": [
+              83,
+              88
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-badain-jaran-region-r1120-c320": {
+          "baseline_score_rank": 50,
+          "pilot_score_rank": 20,
+          "earth_elevation_sha256": "0da70d45930c14382b5710c0618ee5e05b424ef748f03bed6b45b1a1fc7ab737",
+          "baseline_similarity_percent": 40.70409546192985,
+          "pilot_priority_rank": 20,
+          "baseline_terrain_percent": 81.4081909238597,
+          "pilot_terrain_percent": 84.9682588674126,
+          "pilot_similarity_percent": 42.4841294337063,
+          "window_sensitivity": {
+            "rank_range": [
+              15,
+              30
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-badwater-region-r1040-c480": {
+          "baseline_score_rank": 54,
+          "pilot_score_rank": 62,
+          "earth_elevation_sha256": "3fef73c05c1ea64bae45aed02d7810b3c9acfc059a6fccd905ed627228ee6f4e",
+          "baseline_similarity_percent": 40.00571382669408,
+          "pilot_priority_rank": 62,
+          "baseline_terrain_percent": 80.01142765338815,
+          "pilot_terrain_percent": 73.9301592211217,
+          "pilot_similarity_percent": 36.96507961056085,
+          "window_sensitivity": {
+            "rank_range": [
+              59,
+              65
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-dallol-region-r1120-c320": {
+          "baseline_score_rank": 28,
+          "pilot_score_rank": 46,
+          "earth_elevation_sha256": "ed1a8874f7d2041c102ed2f1b475d08a36d0a3401df4012f3dfc1bdbe808acbe",
+          "baseline_similarity_percent": 43.096188912008756,
+          "pilot_priority_rank": 46,
+          "baseline_terrain_percent": 86.19237782401751,
+          "pilot_terrain_percent": 78.40148203464425,
+          "pilot_similarity_percent": 39.20074101732212,
+          "window_sensitivity": {
+            "rank_range": [
+              39,
+              55
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-dallol-region-r560-c240": {
+          "baseline_score_rank": 62,
+          "pilot_score_rank": 67,
+          "earth_elevation_sha256": "74777d6aed174dabc3584ef063a2791bd357727d4d123a39c4ec30d89689331d",
+          "baseline_similarity_percent": 39.25660305132099,
+          "pilot_priority_rank": 67,
+          "baseline_terrain_percent": 78.51320610264197,
+          "pilot_terrain_percent": 71.83611555928768,
+          "pilot_similarity_percent": 35.91805777964384,
+          "window_sensitivity": {
+            "rank_range": [
+              62,
+              73
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-dallol-region-r960-c400": {
+          "baseline_score_rank": 46,
+          "pilot_score_rank": 60,
+          "earth_elevation_sha256": "0c23583a79d32375b98fea1ba4e235b684645f4aa031045f5c00881a045d454e",
+          "baseline_similarity_percent": 40.940910597295655,
+          "pilot_priority_rank": 60,
+          "baseline_terrain_percent": 81.88182119459131,
+          "pilot_terrain_percent": 74.22958311619723,
+          "pilot_similarity_percent": 37.11479155809862,
+          "window_sensitivity": {
+            "rank_range": [
+              56,
+              64
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r320-c1040": {
+          "baseline_score_rank": 40,
+          "pilot_score_rank": 17,
+          "earth_elevation_sha256": "711903a663c054be2623f5f4f4a3255333f831c0bffb4a3a063bf135b2f05f8f",
+          "baseline_similarity_percent": 42.012527289484055,
+          "pilot_priority_rank": 17,
+          "baseline_terrain_percent": 84.02505457896811,
+          "pilot_terrain_percent": 87.44124951060051,
+          "pilot_similarity_percent": 43.72062475530026,
+          "window_sensitivity": {
+            "rank_range": [
+              15,
+              20
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r480-c1120": {
+          "baseline_score_rank": 21,
+          "pilot_score_rank": 29,
+          "earth_elevation_sha256": "3a60612de2fb1e411d570fb6bf48f893c8b4abf745af2d67a00a3e603c7defc1",
+          "baseline_similarity_percent": 44.60470174681219,
+          "pilot_priority_rank": 29,
+          "baseline_terrain_percent": 89.20940349362438,
+          "pilot_terrain_percent": 81.80368285955127,
+          "pilot_similarity_percent": 40.90184142977564,
+          "window_sensitivity": {
+            "rank_range": [
+              22,
+              41
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r480-c400": {
+          "baseline_score_rank": 22,
+          "pilot_score_rank": 26,
+          "earth_elevation_sha256": "88828d3cf3e5673a2707597b2446176d063e701e25c74da42d49bdc4509ccdc6",
+          "baseline_similarity_percent": 44.55394147768568,
+          "pilot_priority_rank": 26,
+          "baseline_terrain_percent": 89.10788295537137,
+          "pilot_terrain_percent": 82.84648770410514,
+          "pilot_similarity_percent": 41.42324385205257,
+          "window_sensitivity": {
+            "rank_range": [
+              18,
+              29
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r640-c1120": {
+          "baseline_score_rank": 49,
+          "pilot_score_rank": 25,
+          "earth_elevation_sha256": "d54970c07137b79622a582e2dba49ccce3b53ab0d3df02f6be9a6d73b6d3d2c3",
+          "baseline_similarity_percent": 40.73347294894289,
+          "pilot_priority_rank": 25,
+          "baseline_terrain_percent": 81.46694589788578,
+          "pilot_terrain_percent": 82.95755628181077,
+          "pilot_similarity_percent": 41.47877814090538,
+          "window_sensitivity": {
+            "rank_range": [
+              19,
+              44
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r80-c1120": {
+          "baseline_score_rank": 45,
+          "pilot_score_rank": 14,
+          "earth_elevation_sha256": "e82c3cc920ce9460ca1d635cb88d7a70e5d8fd5462eaaea0180b43e5f2744357",
+          "baseline_similarity_percent": 41.04589602367569,
+          "pilot_priority_rank": 14,
+          "baseline_terrain_percent": 82.09179204735138,
+          "pilot_terrain_percent": 88.92225217501242,
+          "pilot_similarity_percent": 44.46112608750621,
+          "window_sensitivity": {
+            "rank_range": [
+              14,
+              22
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r800-c1120": {
+          "baseline_score_rank": 37,
+          "pilot_score_rank": 34,
+          "earth_elevation_sha256": "b6d8d6ac395c4748063001c787e57dc27c6bf8b3fe94d67e27bbf84c30e0f246",
+          "baseline_similarity_percent": 42.314718182183334,
+          "pilot_priority_rank": 34,
+          "baseline_terrain_percent": 84.62943636436667,
+          "pilot_terrain_percent": 80.77055324885644,
+          "pilot_similarity_percent": 40.38527662442822,
+          "window_sensitivity": {
+            "rank_range": [
+              25,
+              48
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-erg-chebbi-region-r960-c80": {
+          "baseline_score_rank": 33,
+          "pilot_score_rank": 47,
+          "earth_elevation_sha256": "84eb1ca003bbc8d3360fed3a7a72c1cf476a0e62ce3e4527ac70b614d043311b",
+          "baseline_similarity_percent": 42.65576687885389,
+          "pilot_priority_rank": 47,
+          "baseline_terrain_percent": 85.31153375770778,
+          "pilot_terrain_percent": 78.37356075562607,
+          "pilot_similarity_percent": 39.18678037781304,
+          "window_sensitivity": {
+            "rank_range": [
+              30,
+              61
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r1040-c80": {
+          "baseline_score_rank": 59,
+          "pilot_score_rank": 68,
+          "earth_elevation_sha256": "a4698044cc2fee0cc434506616d2266ea8819bece6885dbb17ad099c337e0ee2",
+          "baseline_similarity_percent": 39.47092509445032,
+          "pilot_priority_rank": 68,
+          "baseline_terrain_percent": 78.94185018890064,
+          "pilot_terrain_percent": 71.56436611268803,
+          "pilot_similarity_percent": 35.78218305634402,
+          "window_sensitivity": {
+            "rank_range": [
+              66,
+              70
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r1120-c320": {
+          "baseline_score_rank": 34,
+          "pilot_score_rank": 45,
+          "earth_elevation_sha256": "1f1fec204feef49e05c6bd4997315d8f288175d5f08ce8b8370a7ede159afa79",
+          "baseline_similarity_percent": 42.54362618879133,
+          "pilot_priority_rank": 45,
+          "baseline_terrain_percent": 85.08725237758266,
+          "pilot_terrain_percent": 78.6605516334492,
+          "pilot_similarity_percent": 39.3302758167246,
+          "window_sensitivity": {
+            "rank_range": [
+              42,
+              59
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r160-c160": {
+          "baseline_score_rank": 36,
+          "pilot_score_rank": 53,
+          "earth_elevation_sha256": "41391d634a606b1364d1e424a19a056b296e348b463d9549b37d8507601141be",
+          "baseline_similarity_percent": 42.43594865516584,
+          "pilot_priority_rank": 53,
+          "baseline_terrain_percent": 84.87189731033168,
+          "pilot_terrain_percent": 76.94022267353732,
+          "pilot_similarity_percent": 38.47011133676866,
+          "window_sensitivity": {
+            "rank_range": [
+              47,
+              54
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r400-c320": {
+          "baseline_score_rank": 35,
+          "pilot_score_rank": 49,
+          "earth_elevation_sha256": "06773dcb4390f6b6bad412c9bc8e7052bdb9173fcc077bd1847b34a5dd8215fb",
+          "baseline_similarity_percent": 42.460216647530316,
+          "pilot_priority_rank": 49,
+          "baseline_terrain_percent": 84.92043329506063,
+          "pilot_terrain_percent": 77.64994159478132,
+          "pilot_similarity_percent": 38.82497079739066,
+          "window_sensitivity": {
+            "rank_range": [
+              46,
+              58
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r480-c1040": {
+          "baseline_score_rank": 26,
+          "pilot_score_rank": 37,
+          "earth_elevation_sha256": "10b253d4be8a7f3f42e581893a9227ffd161683f533f208c562b740f582d9809",
+          "baseline_similarity_percent": 43.56033978038199,
+          "pilot_priority_rank": 37,
+          "baseline_terrain_percent": 87.12067956076397,
+          "pilot_terrain_percent": 80.5403926139253,
+          "pilot_similarity_percent": 40.27019630696265,
+          "window_sensitivity": {
+            "rank_range": [
+              27,
+              47
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r640-c1120": {
+          "baseline_score_rank": 23,
+          "pilot_score_rank": 40,
+          "earth_elevation_sha256": "3862b2de6ac30caf03c95276ed547936ada1c1f05af988bac51a9751205c6caf",
+          "baseline_similarity_percent": 43.77487379430153,
+          "pilot_priority_rank": 40,
+          "baseline_terrain_percent": 87.54974758860305,
+          "pilot_terrain_percent": 79.36781535410665,
+          "pilot_similarity_percent": 39.68390767705333,
+          "window_sensitivity": {
+            "rank_range": [
+              36,
+              44
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r640-c160": {
+          "baseline_score_rank": 43,
+          "pilot_score_rank": 58,
+          "earth_elevation_sha256": "aed00af21fd9773ed10bc87a384585c487b6cdef99a0bacd65f9467514da9dbb",
+          "baseline_similarity_percent": 41.433374471307815,
+          "pilot_priority_rank": 58,
+          "baseline_terrain_percent": 82.86674894261563,
+          "pilot_terrain_percent": 75.71696433189412,
+          "pilot_similarity_percent": 37.85848216594706,
+          "window_sensitivity": {
+            "rank_range": [
+              53,
+              64
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r80-c880": {
+          "baseline_score_rank": 39,
+          "pilot_score_rank": 55,
+          "earth_elevation_sha256": "0e6c5e5985aa3c7369a5479f89fa49d233372771167d7185fd6d557b9f264c36",
+          "baseline_similarity_percent": 42.06433996736468,
+          "pilot_priority_rank": 55,
+          "baseline_terrain_percent": 84.12867993472936,
+          "pilot_terrain_percent": 76.26646242796869,
+          "pilot_similarity_percent": 38.133231213984345,
+          "window_sensitivity": {
+            "rank_range": [
+              51,
+              59
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r960-c1040": {
+          "baseline_score_rank": 41,
+          "pilot_score_rank": 56,
+          "earth_elevation_sha256": "e6a8f4aa2d1572d7c922627ffb5edd495ba14d48b89e9bd4c0591700a7fdd13f",
+          "baseline_similarity_percent": 41.91758164452209,
+          "pilot_priority_rank": 56,
+          "baseline_terrain_percent": 83.83516328904417,
+          "pilot_terrain_percent": 76.00037628175195,
+          "pilot_similarity_percent": 38.00018814087598,
+          "window_sensitivity": {
+            "rank_range": [
+              52,
+              60
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-harrat-khaybar-region-r960-c480": {
+          "baseline_score_rank": 31,
+          "pilot_score_rank": 50,
+          "earth_elevation_sha256": "1420b2a6ce0c5e0bc53110814238612247a4b8f8e4066b4ba3967dede22d7e09",
+          "baseline_similarity_percent": 42.78990763985475,
+          "pilot_priority_rank": 50,
+          "baseline_terrain_percent": 85.5798152797095,
+          "pilot_terrain_percent": 77.58198240702566,
+          "pilot_similarity_percent": 38.79099120351283,
+          "window_sensitivity": {
+            "rank_range": [
+              46,
+              55
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-ischigualasto-region-r1280-c1040": {
+          "baseline_score_rank": 18,
+          "pilot_score_rank": 28,
+          "earth_elevation_sha256": "2211b451c864a49be25774c2b4d2d8d1b7256fffddd91a9678e11d7b290e486c",
+          "baseline_similarity_percent": 45.16177085146923,
+          "pilot_priority_rank": 28,
+          "baseline_terrain_percent": 90.32354170293846,
+          "pilot_terrain_percent": 81.88238547178838,
+          "pilot_similarity_percent": 40.94119273589419,
+          "window_sensitivity": {
+            "rank_range": [
+              26,
+              35
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-ischigualasto-region-r1440-c720": {
+          "baseline_score_rank": 14,
+          "pilot_score_rank": 19,
+          "earth_elevation_sha256": "a69708f8e27c897727afc2bbf3f3ed1205a5a672a7b434cbcd8327b7a6076deb",
+          "baseline_similarity_percent": 47.20406154302843,
+          "pilot_priority_rank": 19,
+          "baseline_terrain_percent": 94.40812308605686,
+          "pilot_terrain_percent": 85.80616732916998,
+          "pilot_similarity_percent": 42.90308366458499,
+          "window_sensitivity": {
+            "rank_range": [
+              15,
+              22
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-ischigualasto-region-r1920-c800": {
+          "baseline_score_rank": 12,
+          "pilot_score_rank": 16,
+          "earth_elevation_sha256": "794b9e35d596d512b953ade9ac0809afab12e03086f208cb660a3a5836a3ee8f",
+          "baseline_similarity_percent": 48.04726044367613,
+          "pilot_priority_rank": 16,
+          "baseline_terrain_percent": 96.09452088735226,
+          "pilot_terrain_percent": 87.61195591081609,
+          "pilot_similarity_percent": 43.805977955408046,
+          "window_sensitivity": {
+            "rank_range": [
+              15,
+              23
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-ischigualasto-region-r720-c80": {
+          "baseline_score_rank": 57,
+          "pilot_score_rank": 66,
+          "earth_elevation_sha256": "78a9e72839564637109e30e16928fc8720ea2e94e4f124ab62e1934fe46b6cf2",
+          "baseline_similarity_percent": 39.90999339415918,
+          "pilot_priority_rank": 66,
+          "baseline_terrain_percent": 79.81998678831836,
+          "pilot_terrain_percent": 72.36043675135816,
+          "pilot_similarity_percent": 36.18021837567908,
+          "window_sensitivity": {
+            "rank_range": [
+              64,
+              67
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lake-abbe-margin-region-r320-c800": {
+          "baseline_score_rank": 24,
+          "pilot_score_rank": 30,
+          "earth_elevation_sha256": "75432c3fcd0bbdaab3026be269b8833d6e187cc2d715a19e228ae271be5cef54",
+          "baseline_similarity_percent": 43.71038029300835,
+          "pilot_priority_rank": 30,
+          "baseline_terrain_percent": 87.4207605860167,
+          "pilot_terrain_percent": 81.68370519550217,
+          "pilot_similarity_percent": 40.841852597751085,
+          "window_sensitivity": {
+            "rank_range": [
+              18,
+              43
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lake-abbe-margin-region-r400-c1120": {
+          "baseline_score_rank": 19,
+          "pilot_score_rank": 24,
+          "earth_elevation_sha256": "2acd59b305e53613aada9ea9ba91129106ca726c17ca24e8573f3f72310ab99b",
+          "baseline_similarity_percent": 45.03217001552493,
+          "pilot_priority_rank": 24,
+          "baseline_terrain_percent": 90.06434003104987,
+          "pilot_terrain_percent": 83.43973826613404,
+          "pilot_similarity_percent": 41.71986913306702,
+          "window_sensitivity": {
+            "rank_range": [
+              20,
+              37
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r240-c400": {
+          "baseline_score_rank": 66,
+          "pilot_score_rank": 75,
+          "earth_elevation_sha256": "025d78fc0fc5e11068744adbc19c591b0bcd872fe669008e61f2d9941f7582fd",
+          "baseline_similarity_percent": 38.70814729025821,
+          "pilot_priority_rank": 75,
+          "baseline_terrain_percent": 77.41629458051642,
+          "pilot_terrain_percent": 70.18138079092998,
+          "pilot_similarity_percent": 35.09069039546499,
+          "window_sensitivity": {
+            "rank_range": [
+              71,
+              80
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r320-c240": {
+          "baseline_score_rank": 75,
+          "pilot_score_rank": 81,
+          "earth_elevation_sha256": "6e4f036945abc51387064b9fd6325d6717c7daca37b19af9db4e38eb901de9d1",
+          "baseline_similarity_percent": 38.29218394724494,
+          "pilot_priority_rank": 81,
+          "baseline_terrain_percent": 76.58436789448989,
+          "pilot_terrain_percent": 69.4272015337267,
+          "pilot_similarity_percent": 34.71360076686335,
+          "window_sensitivity": {
+            "rank_range": [
+              80,
+              87
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r480-c240": {
+          "baseline_score_rank": 80,
+          "pilot_score_rank": 82,
+          "earth_elevation_sha256": "4c8217c88924f247d301ea8c727feb640db0aec9466bafbaddbc57e1e210daf5",
+          "baseline_similarity_percent": 37.96490502264031,
+          "pilot_priority_rank": 82,
+          "baseline_terrain_percent": 75.92981004528062,
+          "pilot_terrain_percent": 69.23512344396316,
+          "pilot_similarity_percent": 34.61756172198158,
+          "window_sensitivity": {
+            "rank_range": [
+              82,
+              90
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r720-c240": {
+          "baseline_score_rank": 71,
+          "pilot_score_rank": 77,
+          "earth_elevation_sha256": "e9f42bf8125d09fa792c74556e715fb546ad55067a89ac9c019c86f48243fd9d",
+          "baseline_similarity_percent": 38.47213180284008,
+          "pilot_priority_rank": 77,
+          "baseline_terrain_percent": 76.94426360568016,
+          "pilot_terrain_percent": 69.75346331219244,
+          "pilot_similarity_percent": 34.87673165609622,
+          "window_sensitivity": {
+            "rank_range": [
+              77,
+              86
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r80-c320": {
+          "baseline_score_rank": 77,
+          "pilot_score_rank": 83,
+          "earth_elevation_sha256": "0b880ce78f678a26ce33bda3ffdf6b51435c2e4d8ed12173d086fc447dea4340",
+          "baseline_similarity_percent": 38.0808579437779,
+          "pilot_priority_rank": 83,
+          "baseline_terrain_percent": 76.1617158875558,
+          "pilot_terrain_percent": 69.04404832804282,
+          "pilot_similarity_percent": 34.52202416402141,
+          "window_sensitivity": {
+            "rank_range": [
+              77,
+              87
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r800-c400": {
+          "baseline_score_rank": 69,
+          "pilot_score_rank": 72,
+          "earth_elevation_sha256": "58da1bc1205d3a5f935d71c93982d7f72acb35b2db5c964813243149193ec3a9",
+          "baseline_similarity_percent": 38.58322157772759,
+          "pilot_priority_rank": 72,
+          "baseline_terrain_percent": 77.16644315545518,
+          "pilot_terrain_percent": 70.48413092447049,
+          "pilot_similarity_percent": 35.242065462235246,
+          "window_sensitivity": {
+            "rank_range": [
+              72,
+              86
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-lut-yardangs-region-r960-c400": {
+          "baseline_score_rank": 82,
+          "pilot_score_rank": 88,
+          "earth_elevation_sha256": "8a38968e824c6463e76a659d348b0f293acb217a717098c14fe0bc5b9e3c8fd6",
+          "baseline_similarity_percent": 37.80939738686783,
+          "pilot_priority_rank": 88,
+          "baseline_terrain_percent": 75.61879477373566,
+          "pilot_terrain_percent": 68.55186572443323,
+          "pilot_similarity_percent": 34.275932862216614,
+          "window_sensitivity": {
+            "rank_range": [
+              84,
+              89
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-rub-khali-oman-region-r80-c720": {
+          "baseline_score_rank": 47,
+          "pilot_score_rank": 38,
+          "earth_elevation_sha256": "efa5987343f941f4d2df461742556601468952f50197f33df7c0ad92cdc8898d",
+          "baseline_similarity_percent": 40.87172100239398,
+          "pilot_priority_rank": 38,
+          "baseline_terrain_percent": 81.74344200478797,
+          "pilot_terrain_percent": 80.36568467371706,
+          "pilot_similarity_percent": 40.18284233685853,
+          "window_sensitivity": {
+            "rank_range": [
+              26,
+              42
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-sossusvlei-dunes-region-r400-c1040": {
+          "baseline_score_rank": 70,
+          "pilot_score_rank": 63,
+          "earth_elevation_sha256": "f1f91cfd1a06e32fa538ff8eb604d0732829d49db88c7b2ab8fac5de08881ec9",
+          "baseline_similarity_percent": 38.570074551835624,
+          "pilot_priority_rank": 63,
+          "baseline_terrain_percent": 77.14014910367125,
+          "pilot_terrain_percent": 73.32567921805244,
+          "pilot_similarity_percent": 36.66283960902622,
+          "window_sensitivity": {
+            "rank_range": [
+              59,
+              79
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-tongariro-west-region-r1040-c720": {
+          "baseline_score_rank": 10,
+          "pilot_score_rank": 10,
+          "earth_elevation_sha256": "ab58aee9f39765be08d53e73e1bda72adab9843941ef54228894e0728a22b6d3",
+          "baseline_similarity_percent": 59.13318623578286,
+          "pilot_priority_rank": 10,
+          "baseline_terrain_percent": 43.26637247156572,
+          "pilot_terrain_percent": 45.735465839568505,
+          "pilot_similarity_percent": 60.36773291978425,
+          "window_sensitivity": {
+            "rank_range": [
+              10,
+              11
+            ],
+            "top_ten_runs": 15,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "scan-tongariro-west-region-r1120-c800": {
+          "baseline_score_rank": 2,
+          "pilot_score_rank": 2,
+          "earth_elevation_sha256": "fe6775fe5fff06550e54143d831704b7e761c5fe4f6de88977e92e74f121d98e",
+          "baseline_similarity_percent": 73.05501411625136,
+          "pilot_priority_rank": 2,
+          "baseline_terrain_percent": 71.1100282325027,
+          "pilot_terrain_percent": 73.48636146011167,
+          "pilot_similarity_percent": 74.24318073005583,
+          "window_sensitivity": {
+            "rank_range": [
+              2,
+              2
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "sossusvlei-dunes": {
+          "baseline_score_rank": 97,
+          "pilot_score_rank": 97,
+          "earth_elevation_sha256": "a2ed36f54aef15f3d9e0716710f9d66e24501d06abedd0af4a66b8c3c7251ff4",
+          "baseline_similarity_percent": 23.783808038035396,
+          "pilot_priority_rank": 97,
+          "baseline_terrain_percent": 47.56761607607079,
+          "pilot_terrain_percent": 51.45397114585578,
+          "pilot_similarity_percent": 25.72698557292789,
+          "window_sensitivity": {
+            "rank_range": [
+              97,
+              98
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "sunset-crater": {
+          "baseline_score_rank": 94,
+          "pilot_score_rank": 91,
+          "earth_elevation_sha256": "bff11e08c5538947c6be92be8f33e5027534c519d090fd2cf962b05bb3ab9fd4",
+          "baseline_similarity_percent": 30.941719289471337,
+          "pilot_priority_rank": 91,
+          "baseline_terrain_percent": 61.88343857894267,
+          "pilot_terrain_percent": 65.41495691653594,
+          "pilot_similarity_percent": 32.70747845826797,
+          "window_sensitivity": {
+            "rank_range": [
+              85,
+              95
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "tabernas-badlands": {
+          "baseline_score_rank": 92,
+          "pilot_score_rank": 73,
+          "earth_elevation_sha256": "2e7b1c7e937e269945633441008f909d8bbb02db0cf83d9629364266375a1e6d",
+          "baseline_similarity_percent": 32.49648063333922,
+          "pilot_priority_rank": 73,
+          "baseline_terrain_percent": 64.99296126667844,
+          "pilot_terrain_percent": 70.39667906427401,
+          "pilot_similarity_percent": 35.198339532137005,
+          "window_sensitivity": {
+            "rank_range": [
+              61,
+              88
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "taklamakan-interior": {
+          "baseline_score_rank": 20,
+          "pilot_score_rank": 31,
+          "earth_elevation_sha256": "d1d4c51dd4dedabb37e97c3fa5b2d65398fca9b61c01ee394ef4440639c0613b",
+          "baseline_similarity_percent": 44.77323640194296,
+          "pilot_priority_rank": 31,
+          "baseline_terrain_percent": 89.54647280388592,
+          "pilot_terrain_percent": 81.51895930545223,
+          "pilot_similarity_percent": 40.759479652726114,
+          "window_sensitivity": {
+            "rank_range": [
+              23,
+              38
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "talampaya-canyon": {
+          "baseline_score_rank": 99,
+          "pilot_score_rank": 99,
+          "earth_elevation_sha256": "42949e54f895f740f2342dddf5151d9f953921694f0116663cf4094da25d7066",
+          "baseline_similarity_percent": 21.45049104946637,
+          "pilot_priority_rank": 99,
+          "baseline_terrain_percent": 42.90098209893274,
+          "pilot_terrain_percent": 46.40606524231137,
+          "pilot_similarity_percent": 23.203032621155685,
+          "window_sensitivity": {
+            "rank_range": [
+              97,
+              99
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "teide-canadas": {
+          "baseline_score_rank": 101,
+          "pilot_score_rank": 101,
+          "earth_elevation_sha256": "1a76fa168094560d1d2ed5c5dcacd574989dc3d3aabb012fc4f498c17c5e0e19",
+          "baseline_similarity_percent": 10.34038791590705,
+          "pilot_priority_rank": 101,
+          "baseline_terrain_percent": 20.6807758318141,
+          "pilot_terrain_percent": 21.891355556407092,
+          "pilot_similarity_percent": 10.945677778203546,
+          "window_sensitivity": {
+            "rank_range": [
+              101,
+              101
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "tongariro-west": {
+          "baseline_score_rank": 1,
+          "pilot_score_rank": 1,
+          "earth_elevation_sha256": "d40ca7b863951d743a37ee47e84bed4570ca058872896a2573a6b6c6f15a7643",
+          "baseline_similarity_percent": 79.38240392361465,
+          "pilot_priority_rank": 1,
+          "baseline_terrain_percent": 58.76480784722931,
+          "pilot_terrain_percent": 62.20469257292817,
+          "pilot_similarity_percent": 81.10234628646408,
+          "window_sensitivity": {
+            "rank_range": [
+              1,
+              1
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "tsondab-dunes": {
+          "baseline_score_rank": 67,
+          "pilot_score_rank": 32,
+          "earth_elevation_sha256": "38935a990fdf52db09002c168db2a93ec11433640f5dbd91cb9d6e5d794151ac",
+          "baseline_similarity_percent": 38.63801142310759,
+          "pilot_priority_rank": 32,
+          "baseline_terrain_percent": 77.27602284621518,
+          "pilot_terrain_percent": 80.85590452561033,
+          "pilot_similarity_percent": 40.427952262805164,
+          "window_sensitivity": {
+            "rank_range": [
+              27,
+              42
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "uyuni-incahuasi": {
+          "baseline_score_rank": 90,
+          "pilot_score_rank": 94,
+          "earth_elevation_sha256": "c2664881edb346edadf19100295beae3414ca00e64b1fb2e11db11381dfe1263",
+          "baseline_similarity_percent": 34.99363695427133,
+          "pilot_priority_rank": 94,
+          "baseline_terrain_percent": 69.98727390854266,
+          "pilot_terrain_percent": 63.446636748883066,
+          "pilot_similarity_percent": 31.723318374441533,
+          "window_sensitivity": {
+            "rank_range": [
+              92,
+              94
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "valle-luna-chile": {
+          "baseline_score_rank": 89,
+          "pilot_score_rank": 52,
+          "earth_elevation_sha256": "90e96bb7ac42d4d121982cf0dc56df4ead6cac74cdefa1373a0ef329ea4b18fa",
+          "baseline_similarity_percent": 35.61378134136544,
+          "pilot_priority_rank": 52,
+          "baseline_terrain_percent": 71.22756268273088,
+          "pilot_terrain_percent": 77.04697559797498,
+          "pilot_similarity_percent": 38.52348779898749,
+          "window_sensitivity": {
+            "rank_range": [
+              47,
+              57
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "wadi-rum": {
+          "baseline_score_rank": 100,
+          "pilot_score_rank": 100,
+          "earth_elevation_sha256": "37a5a117eb2c307c378f250d9d5b3f4bddb72f67b2d2a6f63e45529c56f58951",
+          "baseline_similarity_percent": 18.34306864291777,
+          "pilot_priority_rank": 100,
+          "baseline_terrain_percent": 36.68613728583554,
+          "pilot_terrain_percent": 38.7797146554111,
+          "pilot_similarity_percent": 19.38985732770555,
+          "window_sensitivity": {
+            "rank_range": [
+              100,
+              100
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "white-sands": {
+          "baseline_score_rank": 53,
+          "pilot_score_rank": 64,
+          "earth_elevation_sha256": "5cd1054e3759b73de17cd1062e351be4739e7335e3f54801bf1b0f3c6dbaa6d1",
+          "baseline_similarity_percent": 40.06064213703806,
+          "pilot_priority_rank": 64,
+          "baseline_terrain_percent": 80.12128427407612,
+          "pilot_terrain_percent": 73.17829037595439,
+          "pilot_similarity_percent": 36.589145187977195,
+          "window_sensitivity": {
+            "rank_range": [
+              60,
+              67
+            ],
+            "top_ten_runs": 0,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        },
+        "wolfe-creek": {
+          "baseline_score_rank": 4,
+          "pilot_score_rank": 7,
+          "earth_elevation_sha256": "42830193f6bcf841bdf49d24375241455366c429f8c4d52ca6ec9c8822408e90",
+          "baseline_similarity_percent": 68.10451944708083,
+          "pilot_priority_rank": 7,
+          "baseline_terrain_percent": 86.20903889416167,
+          "pilot_terrain_percent": 79.69760881585175,
+          "pilot_similarity_percent": 64.84880440792588,
+          "window_sensitivity": {
+            "rank_range": [
+              7,
+              9
+            ],
+            "top_ten_runs": 25,
+            "valid_runs": 25,
+            "requested_runs": 25
+          }
+        }
+      },
+      "interpretation": "Same-method source sensitivity, not accuracy improvement. 30 m descriptors are separate from the coarser ranking calculation."
+    }
+  },
+  "production_changed": false
+}

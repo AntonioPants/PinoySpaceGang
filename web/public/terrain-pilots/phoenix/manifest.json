@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "phoenix",
+  "name": "Phoenix northern plains study area \u2014 stereo pilot",
+  "body": "mars",
+  "grid": {
+    "rows": 151,
+    "columns": 151,
+    "spacing_m": 30,
+    "dtype": "float32",
+    "byte_order": "little-endian",
+    "sample_file": "elevation.f32",
+    "order": "north-first, west-first",
+    "crs_wkt": "PROJCRS[\"unknown\",BASEGEOGCRS[\"unknown\",DATUM[\"unknown\",ELLIPSOID[\"unknown\",3396190,0,LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]],PRIMEM[\"Reference meridian\",0,ANGLEUNIT[\"degree\",0.0174532925199433,ID[\"EPSG\",9122]]]],CONVERSION[\"unknown\",METHOD[\"Azimuthal Equidistant\",ID[\"EPSG\",1125]],PARAMETER[\"Latitude of natural origin\",68.22,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8801]],PARAMETER[\"Longitude of natural origin\",-125.75,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8802]],PARAMETER[\"False easting\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8806]],PARAMETER[\"False northing\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8807]]],CS[Cartesian,2],AXIS[\"(E)\",east,ORDER[1],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]],AXIS[\"(N)\",north,ORDER[2],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]]",
+    "affine": [
+      30.0,
+      0.0,
+      -2265.0,
+      0.0,
+      -30.0,
+      2265.0
+    ]
+  },
+  "local_frame": {
+    "vertical_offset_m": -4159.0
+  },
+  "source": {
+    "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/PSP_008591_2485_PSP_008644_2485/DTEPC_008591_2485_008644_2485_U01.tif",
+    "product_id": "DTEPC_008591_2485_008644_2485_U01",
+    "native_spacing_m_approx": 0.996514980811846,
+    "vertical_datum": "MOLA equipotential surface; USGS controlled raster aligned to MOLA",
+    "subset_sha256": "951979bc3cb2b80195a841f7e145ce25888f1d814d95e7c3f82f1aba8d8b7580",
+    "coverage": null,
+    "resampling": "Area average of finite physical metre elevations; no gap filling.",
+    "scale_applied": 1.0,
+    "offset_applied": 0.0
+  },
+  "attribution": "NASA/JPL-Caltech/University of Arizona; USGS Astrogeology controlled DTM distribution",
+  "license_url": "https://stac.astrogeology.usgs.gov/docs/data/mars/hirise_dtms/",
+  "limitations": [
+    "Measured stereo pilot; independent geological and artifact review pending.",
+    "30 m averaging is not a claim of 30 m effective accuracy. Subpixel hazards unresolved.",
+    "Comparison only; production scores and Earth landing physics are unchanged."
+  ]
+}

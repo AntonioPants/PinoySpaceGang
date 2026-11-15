@@ -1,0 +1,121 @@
+{
+  "site_id": "apollo-16-descartes",
+  "product_id": "NAC_DTM_APOLLO16",
+  "product_config_sha256": "2c19e6f38b55954ddd25ec6d008997e7eac413c6711df42be34afbc830cdcf4e",
+  "catalog_elevation_sha256": "4ae5081bfe2f3825ef5db007dc29c0970547c63d8ecd3c9a5c7b0c6555d7d3de",
+  "pilot_elevation_sha256": "1128e134064f18489bbab0a89de32d0ef0fca3b52df84a036a4170443ee67c06",
+  "manifest_url": "/terrain-pilots/apollo-16-descartes/manifest.json",
+  "manifest_sha256": "7274f481948f46e92b422a0b674f235b26ed5a67fc78ec87042943504b002f8e",
+  "source_receipt": {
+    "url": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16.TIF",
+    "subset_sha256": "5355a097ec5d979d50316a5cf259d84f3caff01db18f1839e77c6912425d0a22",
+    "source_window": [
+      4265,
+      4308,
+      2272,
+      2272
+    ],
+    "source_crs_wkt": "PROJCS[\"Equirectangular Moon\",GEOGCS[\"GCS_Moon\",DATUM[\"D_Moon\",SPHEROID[\"Moon_localRadius\",1737400,0]],PRIMEM[\"Reference_Meridian\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]]],PROJECTION[\"Equirectangular\"],PARAMETER[\"standard_parallel_1\",-9],PARAMETER[\"central_meridian\",180],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]",
+    "scale": 1.0,
+    "offset": 0.0,
+    "source_tags": {
+      "AREA_OR_POINT": "Area"
+    },
+    "source_shape": [
+      15653,
+      11985
+    ],
+    "source_spacing": [
+      2.0000000000006,
+      2.0000000000006
+    ],
+    "finite_source_fraction": 1.0
+  },
+  "metadata": [
+    {
+      "name": "pds-label",
+      "url": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16.LBL",
+      "resolved_url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16.LBL",
+      "sha256": "4f0ebfe199122158f2f3619b2c8cbd0c399e85295272aef4df12ab562cdbe1ee"
+    },
+    {
+      "name": "readme",
+      "url": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16_README.TXT",
+      "resolved_url": "https://pds.mcp.nasa.gov/data/store/img/lunar_reconnaissance_orbiter/pds4/lroc/lro-l-lroc-5-rdr/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16_README.TXT",
+      "sha256": "193c30878cd1563665e52678f760d10665069a40393da318d3e6547e9176f8b1"
+    }
+  ],
+  "quality": {
+    "receipt": {
+      "url": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16_CONF.IMG",
+      "subset_sha256": "b4d2f9bfe7189682bec19844a0276cd8b2f4eacbc2c02080a59a6932016473a6",
+      "source_window": [
+        4265,
+        4308,
+        2272,
+        2272
+      ],
+      "source_crs_wkt": "PROJCS[\"EQUIRECTANGULAR MOON\",GEOGCS[\"GCS_MOON\",DATUM[\"D_MOON\",SPHEROID[\"MOON_localRadius\",1737400,0]],PRIMEM[\"Reference_Meridian\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]]],PROJECTION[\"Equirectangular\"],PARAMETER[\"standard_parallel_1\",-9],PARAMETER[\"central_meridian\",180],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]",
+      "scale": 1.0,
+      "offset": 0.0,
+      "source_tags": {
+        "FILTER_NAME": "",
+        "DATA_SET_ID": "\"LRO-L-LROC-5-RDR-V1.0\"",
+        "PRODUCT_ID": "NAC_DTM_APOLLO16_CONF",
+        "PRODUCER_INSTITUTION_NAME": "\"ARIZONA STATE UNIVERSITY\"",
+        "PRODUCT_TYPE": "RDR",
+        "MISSION_NAME": "",
+        "SPACECRAFT_NAME": "",
+        "INSTRUMENT_NAME": "\"LUNAR RECONNAISSANCE ORBITER CAMERA\"",
+        "INSTRUMENT_ID": "LROC",
+        "TARGET_NAME": "MOON",
+        "CENTER_FILTER_WAVELENGTH": "",
+        "BANDWIDTH": "",
+        "PRODUCT_CREATION_TIME": "2020-10-13T12:47:58",
+        "START_TIME": "2010-02-02T10:54:14",
+        "STOP_TIME": "2011-07-19T20:53:00",
+        "NOTE": ""
+      },
+      "source_shape": [
+        15653,
+        11985
+      ],
+      "source_spacing": [
+        2.0000000000006,
+        2.0000000000006
+      ],
+      "finite_source_fraction": 1.0
+    },
+    "code_counts": {
+      "3": 295162,
+      "10": 14278,
+      "11": 96510,
+      "12": 550886,
+      "13": 1937018,
+      "14": 2268130
+    },
+    "accepted_codes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "mean_accepted_fraction": 0.9428179264068604,
+    "minimum_cell_accepted_fraction": 0.29954466223716736,
+    "scope": "Source subset including crop margin; codes require product documentation. Finite DTM is not proof of reliable stereo correlation."
+  },
+  "centre_latitude": -8.973,
+  "centre_longitude": 15.501,
+  "output_spacing_m": 30,
+  "window_m": 4530,
+  "minimum_cell_valid_fraction": 1.0,
+  "relative_vertical_error_m": 0.88,
+  "error_definition": "LROC relative LE: 90% vertical precision; separate LOLA RMS 1.02 m. Not an independent local accuracy measurement.",
+  "expert_review": "pending",
+  "status": "measured_subset_staged",
+  "production_changed": false,
+  "generator_sha256": "b125dac494f4fdaf832576a4558ef443d740a58ff1859c63a17c556da3e200ff",
+  "reproduction_command": "python -m scripts.catalog.ingest_pilot apollo-16-descartes --offline"
+}

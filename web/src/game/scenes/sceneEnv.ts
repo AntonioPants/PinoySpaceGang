@@ -26,6 +26,7 @@ export function sceneEnv(mission: MissionConfig): { env: CutsceneEnv; terrainUrl
       name: mission.earthAnalog.name,
       subtitle: mission.environment.mode === 'earth' ? 'Earth field test' : `Earth analog for ${mission.planetaryTarget.name}`,
       preset: PRESET[mission.earthAnalog.id] ?? 'desert',
+      control: mission.strategy.mode === 'MANUAL_CONTROL' ? 'manual' : 'autonomous',
     },
     terrainUrl: mission.earthAnalog.terrainBaseUrl,
   };

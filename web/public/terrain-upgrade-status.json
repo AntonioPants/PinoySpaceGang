@@ -1,0 +1,174 @@
+{
+  "version": "1.0.0",
+  "config_sha256": "27b105f0a2183862dcfc791af3c120959a82fc6d14806401d9292f985e80be38",
+  "scope": "Measured stereo previews are staged separately from production terrain. Rejected-source coverage failures and pending artifact/error review remain explicit; production rankings and landing physics are unchanged.",
+  "pilots": [
+    {
+      "site_id": "jezero",
+      "product_id": "DTEEC_002387_1985_003798_1985_A01",
+      "source_url": "https://stac.astrogeology.usgs.gov/docs/data/mars/hirise_dtms/",
+      "metadata_source": "data/mars-product-assessment.json",
+      "bbox": [
+        77.3441,
+        18.3923,
+        77.4661,
+        18.5886
+      ],
+      "posting_m": 1.0196246530775452,
+      "relative_vertical_error_m": null,
+      "quality_reviewed": false,
+      "full_valid_pixel_coverage_verified": false,
+      "datum_scale_offset_reviewed": false,
+      "raster_url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/PSP_002387_1985_PSP_003798_1985/DTEEC_002387_1985_003798_1985_A01.tif",
+      "vertical_datum": "Mars 2000 equipotential surface (PDS attached label); USGS controlled raster aligned to MOLA",
+      "attribution": "NASA/JPL-Caltech/University of Arizona; USGS Astrogeology controlled DTM distribution",
+      "license_url": "https://stac.astrogeology.usgs.gov/docs/data/mars/hirise_dtms/",
+      "metadata_urls": {
+        "pds-label": "https://www.uahirise.org/PDS/DTM/PSP/ORB_002300_002399/PSP_002387_1985_PSP_003798_1985/DTEEC_002387_1985_003798_1985_A01.IMG"
+      },
+      "raster_coverage_failure": "Measured 4.53 km crop is 98.007% covered; southwest edge contains nodata. Rejected without filling.",
+      "bbox_covers_comparison_window": true,
+      "required_bbox": [
+        77.35998434203808,
+        18.412041139069242,
+        77.44001565796194,
+        18.487958860930757
+      ],
+      "comparison_window_m": 4500,
+      "status": "requires_review",
+      "reasons": [
+        "Measured 4.53 km crop is 98.007% covered; southwest edge contains nodata. Rejected without filling.",
+        "Full valid-pixel coverage is unverified.",
+        "Stereo quality and artifacts require review.",
+        "Vertical datum and elevation scale/offset require review.",
+        "Product-specific vertical error is missing."
+      ],
+      "live_terrain_changed": false,
+      "comparison_rule": "Area-average both surfaces to a common supported spacing; use at least the coarser native posting. Upsampling creates no evidence."
+    },
+    {
+      "site_id": "marius-hills",
+      "product_id": "NAC_DTM_MARIUS",
+      "source_url": "https://data.lroc.im-ldi.com/lroc/view_rdr/NAC_DTM_MARIUS",
+      "bbox": [
+        -56.14,
+        13.21,
+        -55.64,
+        14.2
+      ],
+      "posting_m": 2,
+      "relative_vertical_error_m": 0.95,
+      "error_definition": "Relative LE; LROC defines this as 90% vertical precision. Separate LOLA RMS is 3.8 m.",
+      "error_source_url": "https://data.lroc.im-ldi.com/lroc/view_rdr/SHAPEFILE_NAC_DTMS",
+      "quality_reviewed": false,
+      "full_valid_pixel_coverage_verified": false,
+      "datum_scale_offset_reviewed": false,
+      "bbox_covers_comparison_window": false,
+      "required_bbox": [
+        -56.876505191219515,
+        14.025799756012182,
+        -56.72349480878048,
+        14.174200243987817
+      ],
+      "comparison_window_m": 4500,
+      "status": "requires_review",
+      "reasons": [
+        "Product bounding box does not cover the selected comparison footprint.",
+        "Full valid-pixel coverage is unverified.",
+        "Stereo quality and artifacts require review.",
+        "Vertical datum and elevation scale/offset require review."
+      ],
+      "live_terrain_changed": false,
+      "comparison_rule": "Area-average both surfaces to a common supported spacing; use at least the coarser native posting. Upsampling creates no evidence."
+    },
+    {
+      "site_id": "apollo-16-descartes",
+      "product_id": "NAC_DTM_APOLLO16",
+      "source_url": "https://data.lroc.im-ldi.com/lroc/view_rdr/NAC_DTM_APOLLO16",
+      "bbox": [
+        15.14,
+        -9.65,
+        15.94,
+        -8.61
+      ],
+      "posting_m": 2,
+      "relative_vertical_error_m": 0.88,
+      "error_definition": "LROC relative LE: 90% vertical precision; separate LOLA RMS 1.02 m. Not an independent local accuracy measurement.",
+      "quality_reviewed": false,
+      "full_valid_pixel_coverage_verified": true,
+      "datum_scale_offset_reviewed": true,
+      "vertical_datum": "Elevation above 1737400 m lunar reference sphere; tied to LOLA",
+      "acquisition_period": "2010-02-02T10:54:14 / 2011-07-19T20:53:00 (PDS v1.9 label; supersedes shortened website date range)",
+      "attribution": "NASA/GSFC/Arizona State University; LROC team",
+      "license_url": "https://lroc.im-ldi.com/about",
+      "raster_url": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16.TIF",
+      "quality_raster_url": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16_CONF.IMG",
+      "metadata_urls": {
+        "pds-label": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16.LBL",
+        "readme": "https://pds.lroc.im-ldi.com/data/LRO-L-LROC-5-RDR-V1.0/LROLRC_2001/DATA/SDP/NAC_DTM/APOLLO16/NAC_DTM_APOLLO16_README.TXT"
+      },
+      "accepted_quality_codes": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "verification_evidence": "Retained PDS label, checked metre scale/offset and planetary CRS, and complete 4.53 km area-averaged validity mask; see terrain-pilots/apollo-16-descartes/audit.json. Artifact review remains pending.",
+      "bbox_covers_comparison_window": true,
+      "required_bbox": [
+        15.42588043898826,
+        -9.047200243987819,
+        15.576119561011739,
+        -8.898799756012183
+      ],
+      "comparison_window_m": 4500,
+      "status": "requires_review",
+      "reasons": [
+        "Stereo quality and artifacts require review."
+      ],
+      "live_terrain_changed": false,
+      "comparison_rule": "Area-average both surfaces to a common supported spacing; use at least the coarser native posting. Upsampling creates no evidence."
+    },
+    {
+      "site_id": "phoenix",
+      "product_id": "DTEPC_008591_2485_008644_2485_U01",
+      "source_url": "https://www.uahirise.org/dtm/dtm.php?ID=PSP_008591_2485",
+      "bbox": [
+        -125.914,
+        68.1215,
+        -125.567,
+        68.2923
+      ],
+      "posting_m": 0.996514980811846,
+      "relative_vertical_error_m": null,
+      "quality_reviewed": false,
+      "full_valid_pixel_coverage_verified": true,
+      "datum_scale_offset_reviewed": true,
+      "vertical_datum": "MOLA equipotential surface; USGS controlled raster aligned to MOLA",
+      "attribution": "NASA/JPL-Caltech/University of Arizona; USGS Astrogeology controlled DTM distribution",
+      "license_url": "https://stac.astrogeology.usgs.gov/docs/data/mars/hirise_dtms/",
+      "raster_url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/PSP_008591_2485_PSP_008644_2485/DTEPC_008591_2485_008644_2485_U01.tif",
+      "metadata_urls": {
+        "pds-label": "https://www.uahirise.org/PDS/DTM/PSP/ORB_008500_008599/PSP_008591_2485_PSP_008644_2485/DTEPC_008591_2485_008644_2485_U01.IMG"
+      },
+      "verification_evidence": "Retained PDS label, checked metre scale/offset and planetary CRS, and complete 4.53 km area-averaged validity mask; see terrain-pilots/phoenix/audit.json. Artifact review remains pending.",
+      "bbox_covers_comparison_window": true,
+      "required_bbox": [
+        -125.85230293597083,
+        68.18204113906924,
+        -125.64769706402917,
+        68.25795886093076
+      ],
+      "comparison_window_m": 4500,
+      "status": "requires_review",
+      "reasons": [
+        "Stereo quality and artifacts require review.",
+        "Product-specific vertical error is missing."
+      ],
+      "live_terrain_changed": false,
+      "comparison_rule": "Area-average both surfaces to a common supported spacing; use at least the coarser native posting. Upsampling creates no evidence."
+    }
+  ]
+}
