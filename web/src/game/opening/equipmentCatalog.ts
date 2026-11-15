@@ -1,13 +1,15 @@
 import { defaultAppearance, type LanderAppearance } from '../../lib/landerAppearance';
 import type { MissionSettings } from '../../lib/types';
 import { equipmentLoadouts } from '../equipment';
+import { gearDetail, isGearPreset, withGear } from '../../lib/gear';
 
-/** Yousef owns replacement data and physics mappings. These are explicitly prototype choices. */
+/** Yousef owns replacement data and physics mappings. These are explicitly prototype choices.
+ * The gear figures come from the presets the simulation flies (lib/gear.ts), so the text cannot drift from the physics. */
 export const vehicles = equipmentLoadouts.map(v => ({ ...v, detail: `${v.settings.dryMassKg?.toLocaleString()} kg dry · ${(v.settings.thrusterForceN! / 1000).toFixed(0)} kN thrust` }));
 export const landingGear = [
-  { id: 'standard-four', name: 'Four-point gear', detail: 'Compact stance with four circular footpads.' },
-  { id: 'wide-four', name: 'Wide stance gear', detail: 'A wider four-leg layout for visual comparison.' },
-  { id: 'survey-six', name: 'Six-point gear', detail: 'Six radial supports and broad contact pads.' },
+  { id: 'standard-four', name: 'Four-point gear', role: 'Balanced', detail: gearDetail('standard-four') },
+  { id: 'wide-four', name: 'Wide stance gear', role: 'Holds steeper slopes; a stiffer, shorter stroke', detail: gearDetail('wide-four') },
+  { id: 'survey-six', name: 'Six-point gear', role: 'Takes the hardest, roughest touchdowns; heaviest', detail: gearDetail('survey-six') },
 ] as const;
 export const sensors: { id: MissionSettings['hazardSensor']; name: string; detail: string }[] = [
   { id: 'lidar', name: 'Lidar scanner', detail: 'Active terrain sensing for hazard avoidance.' },
@@ -19,7 +21,9 @@ export const initialEquipment: EquipmentSelection = { vehicleId: vehicles[0].id,
 export function equipmentSettings(selection: EquipmentSelection, previous: MissionSettings): MissionSettings {
   const vehicle = vehicles.find(v=>v.id===selection.vehicleId);
   if(!vehicle || !landingGear.some(g=>g.id===selection.landingGearId) || !sensors.some(s=>s.id===selection.hazardSensor)) throw new Error('Select available equipment before launching.');
-  // Gear changes no settings. Its footprint width reaches the physics through lib/gear.ts; everything
-  // else about it waits for Yousef's validated gear parameters.
-  return {...previous,...vehicle.settings,hazardSensor:selection.hazardSensor};
+  if(!isGearPreset(selection.landingGearId)) throw new Error('Select available equipment before launching.');
+  const next={...previous,...vehicle.settings,hazardSensor:selection.hazardSensor};
+  // Fitting a different gear resets its stroke, damping and slope rating to that gear's own;
+  // the same gear keeps whatever the player trimmed on the bridge.
+  return previous.landingGearId===selection.landingGearId?next:withGear(next,selection.landingGearId);
 }

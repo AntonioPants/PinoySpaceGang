@@ -37,7 +37,8 @@ describe('buildLander equipment',()=>{
   it('builds all 45 appearance combinations within a small draw-call budget',()=>{
     for(const livery of liveries)for(const solar of solarArrays)for(const antenna of antennaPackages) {
       const result=inspect({vehicleId:'payload',landingGearId:'survey-six',hazardSensor:'camera',liveryId:livery.id,solarArrayId:solar.id,antennaId:antenna.id});
-      expect(result.meshes).toBeLessThanOrEqual(12);
+      // static body batched by material, plus one draw call per moving leg and per solar wing
+      expect(result.meshes).toBeLessThanOrEqual(12+GEAR['survey-six'].legs+2);
       expect(result.colours[0]).toBe(livery.hull);
       expect(result.footRadius).toBe(GEAR['survey-six'].radius);
       expect(Number.isFinite(result.bounds.max.y)).toBe(true);

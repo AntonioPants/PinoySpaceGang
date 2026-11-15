@@ -3,7 +3,7 @@ import { TilesRenderer } from '3d-tiles-renderer/three';
 import { CesiumIonAuthPlugin } from '3d-tiles-renderer/three/plugins';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { polygonGeometry, polygonTilePlugin } from './polygonTerrain';
+import { polygonGeometry, polygonTilePlugin, streamedGap } from './polygonTerrain';
 import type { EnvLook } from '../components/cutscene/presets';
 import { terrainSurroundings } from './terrainSurroundings';
 import decoder from 'three/examples/jsm/libs/draco/gltf/draco_decoder.js?url';
@@ -27,14 +27,34 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
   draco.manager.setURLModifier(url => url.endsWith('draco_decoder.js') ? decoder : url);
   tiles.manager.addHandler(/\.(gltf|glb)$/i, new GLTFLoader(tiles.manager).setDRACOLoader(draco));
   const origin = tiles.ellipsoid.getEastNorthUpFrame(lat * Math.PI / 180, lon * Math.PI / 180, height, new T.Matrix4()).multiply(new T.Matrix4().makeRotationX(Math.PI / 2));
+  origin.invert();                       // ECEF -> local east/up/south
+  // `height` is a sea-level (EGM2008) height, but 3D Tiles sit on the WGS84 ellipsoid. The gap (the
+  // geoid undulation, e.g. about +30 m in New Zealand, +65 m in Iceland, -25 m in New Mexico) would
+  // otherwise float the streamed ground above the measured terrain and the camera. `lift` removes
+  // it, measured against the DEM once tiles arrive (see calibrate()).
+  let lift = 0;
+  const placeTiles = () => { tiles.group.matrix.copy(localToWorld).multiply(new T.Matrix4().makeTranslation(0, lift, 0)).multiply(origin); };
   tiles.group.matrixAutoUpdate = false;
-  tiles.group.matrix.copy(localToWorld).multiply(origin.invert());
+  placeTiles();
   const world = new T.Scene();
   world.background = sky;
   world.add(tiles.group, polygon ? new T.HemisphereLight(look!.stars ? 0x222230 : look!.skyHorizon,look!.groundDark,look!.stars ? .25 : .95) : new T.AmbientLight(0xffffff, 2));
   const restoreGeometry = polygon ? meshes.map(mesh => ({ mesh, geometry:mesh.geometry.clone() })) : [];
+  // Flight meshes and bounds are already relative to the landing point. Only
+  // the streamed site's origin needs the off-centre target translation.
+  const groundFrame = polygon ? new T.Matrix4() : localToWorld;
+  const previousClipping = renderer.localClippingEnabled;
   if (polygon) {
-    tiles.registerPlugin(polygonTilePlugin(origin,look!));
+    // Clip fragments, so even a coarse tile spanning the entire DEM has a
+    // clean opening. Raycasts still see the tiles for height calibration.
+    const footprintPlanes = [
+      new T.Plane(new T.Vector3(-1, 0, 0), bounds.west),
+      new T.Plane(new T.Vector3(1, 0, 0), -bounds.east),
+      new T.Plane(new T.Vector3(0, 0, -1), bounds.north),
+      new T.Plane(new T.Vector3(0, 0, 1), -bounds.south),
+    ];
+    renderer.localClippingEnabled = true;
+    tiles.registerPlugin(polygonTilePlugin(origin,look!,footprintPlanes));
     for (const mesh of meshes) polygonGeometry(mesh.geometry);
     // The footprint filter below uses an index even for independent triangles.
     ground.setIndex(Array.from({length:ground.getAttribute('position').count},(_,i)=>i));
@@ -42,7 +62,7 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
     sun.position.set(-5500,4200,-7200).applyMatrix4(localToWorld);
     world.add(sun);
   }
-  const surroundings = look ? terrainSurroundings(ground,bounds,localToWorld,tiles.group,look) : undefined;
+  const surroundings = look ? terrainSurroundings(ground,bounds,groundFrame,tiles.group,look) : undefined;
   if (surroundings) world.add(surroundings.mesh);
   const full = ground.index!;
   const positions = ground.getAttribute('position');
@@ -54,6 +74,33 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
     if (inside(a) && inside(b) && inside(c)) indices.push(a,b,c);
   }
   const footprint = new T.Uint32BufferAttribute(indices, 1);
+  // DEM points to compare the streamed surface with: an even spread of the measured vertices.
+  const probes: T.Vector3[] = [];
+  {
+    const all: number[] = [];
+    for (let i = 0; i < positions.count; i++) if (inside(i)) all.push(i);
+    const step = Math.max(1, Math.floor(all.length / 49));
+    for (let k = Math.floor(step / 2); k < all.length && probes.length < 49; k += step) {
+      const i = all[k]; probes.push(new T.Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)));
+    }
+  }
+  const probeRay = new T.Raycaster(), toLocal = groundFrame.clone().invert(), down = new T.Vector3(0, -1, 0).transformDirection(groundFrame);
+  /** Moves the streamed world vertically onto the measured terrain. True if it moved. */
+  function calibrate() {
+    tiles.group.updateMatrixWorld(true);
+    // gaps without the current lift, i.e. how far the raw tiles sit above the DEM
+    const gaps: number[] = [], top = new T.Vector3();
+    for (const p of probes) {
+      top.set(p.x, 60000, p.z).applyMatrix4(groundFrame);
+      probeRay.set(top, down);
+      const hit = probeRay.intersectObject(tiles.group, true)[0];
+      if (hit) gaps.push(hit.point.applyMatrix4(toLocal).y - p.y - lift);
+    }
+    const gap = streamedGap(gaps, probes.length);
+    if (gap === null || Math.abs(-gap - lift) < 2) return false;      // finer tiles shift the median by ~1 m
+    lift = -gap; placeTiles(); return true;
+  }
+  let lastCalibration = -Infinity, calibrationPending = true;
   const credit = document.createElement('small');
   credit.style.cssText = 'position:absolute;right:1%;top:15%;max-width:55%;background:#151515bc;color:white;padding:2px 5px;pointer-events:none;font:10px sans-serif';
   host.append(credit); credit.hidden = true;
@@ -104,12 +151,18 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
     }
   }
   let visible = 0, dirty = true;
-  tiles.addEventListener('tile-visibility-change', e => { visible += e.visible ? 1 : -1; dirty = true; surroundings?.refresh(); });
+  tiles.addEventListener('tile-visibility-change', e => { visible += e.visible ? 1 : -1; dirty = true; calibrationPending = true; surroundings?.refresh(); });
   return {
     draw(camera, fog) {
       camera.updateMatrixWorld(); world.updateMatrixWorld();
       if (!tiles.hasCamera(camera)) tiles.setCamera(camera);
       tiles.setResolutionFromRenderer(camera, renderer); tiles.update();
+      // Re-measure as finer tiles stream in, at most once a second.
+      const now = performance.now();
+      if (visible && calibrationPending && now - lastCalibration > 1000) {
+        lastCalibration = now; calibrationPending = false;
+        if (calibrate()) { dirty = true; surroundings?.refresh(); world.updateMatrixWorld(); }
+      }
       if (dirty) {
         dirty = false;
         if (visible && !polygon) {
@@ -130,6 +183,6 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
       renderer.clearDepth();
       return true;
     },
-    dispose() { applyImagery(false); target.dispose(); surroundings?.dispose(); ground.setIndex(full); tiles.dispose(); restoreGeometry.forEach(({mesh,geometry}) => { mesh.geometry.copy(geometry); geometry.dispose(); }); draco.dispose(); credit.remove(); },
+    dispose() { if (polygon) renderer.localClippingEnabled = previousClipping; applyImagery(false); target.dispose(); surroundings?.dispose(); ground.setIndex(full); tiles.dispose(); restoreGeometry.forEach(({mesh,geometry}) => { mesh.geometry.copy(geometry); geometry.dispose(); }); draco.dispose(); credit.remove(); },
   };
 }

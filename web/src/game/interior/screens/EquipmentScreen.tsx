@@ -1,14 +1,24 @@
 import type { MissionConfig, MissionSettings } from '../../../lib/types';
 import { equipmentLoadouts } from '../../equipment';
-import { landingGear } from '../../opening/equipmentCatalog';
-import { Slider } from './ui';
+import { GEAR_PRESETS, GEAR_TUNING, gearFromSettings, gearStats, isGearPreset, withGear, type GearPresetId } from '../../../lib/gear';
+import { Segmented, Slider } from './ui';
 
-/** Choose a lander loadout, then trim its mass, propellant and thrust. */
+const GEAR_CHOICES: { value: GearPresetId; label: string }[] = [
+  { value: 'standard-four', label: 'Standard 4' }, { value: 'wide-four', label: 'Wide 4' }, { value: 'survey-six', label: 'Survey 6' },
+];
+
+/**
+ * Choose a lander loadout and its landing gear, then trim mass, propellant, thrust and the gear's
+ * shock absorbers. The gear figures are computed live from the same model the descent flies.
+ * The page must fit its 840 x 490 monitor without scrolling (see interior.css).
+ */
 export default function EquipmentScreen({ mission, settings, onSettingsChange }: { mission: MissionConfig; settings: MissionSettings; onSettingsChange: (s: MissionSettings) => void }) {
   const set = <K extends keyof MissionSettings>(key: K, value: MissionSettings[K]) => onSettingsChange({ ...settings, [key]: value });
   const gravity = settings.environment === 'earth' ? 9.81 : mission.planetaryTarget.gravity;
-  const twr = settings.thrusterForceN / ((settings.dryMassKg + settings.fuelMassKg) * gravity);
-  const gear = landingGear.find(g => g.id === mission.equipment?.landingGearId);
+  const gear = gearFromSettings(settings), gearId = isGearPreset(settings.landingGearId) ? settings.landingGearId : undefined;
+  const mass = settings.dryMassKg + settings.fuelMassKg + (gear?.gearMassKg ?? 0);
+  const twr = settings.thrusterForceN / (mass * gravity);
+  const stats = gear ? gearStats(gear, gravity) : null;
   const matches = (l: typeof equipmentLoadouts[number]) => Object.entries(l.settings).every(([k, v]) => settings[k as keyof MissionSettings] === v);
   return <>
     <header><h2>Equipment</h2><span className={`mon-readout ${twr < 1 ? 'warn' : ''}`}>Thrust to weight <b>{twr.toFixed(2)}</b></span></header>
@@ -17,17 +27,25 @@ export default function EquipmentScreen({ mission, settings, onSettingsChange }:
         <h3>Loadout</h3>
         <div className="mon-cards">{equipmentLoadouts.map(l => <button key={l.id} type="button" aria-pressed={matches(l)} onClick={() => onSettingsChange({ ...settings, ...l.settings })}>
           <strong>{l.name}</strong><span>{l.detail}</span></button>)}</div>
-        <p className="mon-note">Presets for the simulation, not specifications of real spacecraft. A loadout also sets the hazard sensor.</p>
-        <dl className="mon-facts compact"><div><dt>Fuelled mass</dt><dd>{(settings.dryMassKg + settings.fuelMassKg).toLocaleString()} kg</dd></div>
-          <div><dt>Hazard sensor</dt><dd>{settings.hazardSensor === 'none' ? 'None' : settings.hazardSensor === 'lidar' ? 'Lidar' : 'Camera'}</dd></div>
-          {gear && <div><dt>Landing gear</dt><dd>{gear.name}<small>Chosen in the equipment bay. Only its footprint width is in the physics.</small></dd></div>}</dl>
+        {gearId && gear && stats ? <>
+          <Segmented label={`Landing gear${gear.gearId === 'custom' ? ' · trimmed' : ''}`} value={gearId} options={GEAR_CHOICES} onChange={id => onSettingsChange(withGear(settings, id))} />
+          <dl className="mon-stats">
+            <div><dt>Absorbs sink rate</dt><dd>{stats.maxSinkMps.toFixed(2)}<small> m/s</small></dd></div>
+            <div><dt>Static tip angle</dt><dd>{stats.staticTipDeg.toFixed(1)}<small>°</small></dd></div>
+            <div><dt>Holds slope here</dt><dd>{stats.holdsSlopeDeg.toFixed(1)}<small>°</small></dd></div>
+            <div><dt>Fuelled mass</dt><dd>{Math.round(mass).toLocaleString()}<small> kg</small></dd></div>
+          </dl>
+        </> : <p className="mon-note">No landing gear model on this mission: the fixed touchdown limits apply.</p>}
       </section>
       <section>
-        <h3>Vehicle</h3>
+        <h3>Vehicle{gear ? ` · gear ${gear.legs} legs, ${GEAR_PRESETS[gearId!].gearMassKg} kg` : ''}</h3>
         <Slider label="Propellant" value={settings.fuelMassKg} min={50} max={2000} step={50} unit="kg" onChange={v => set('fuelMassKg', v)} />
         <Slider label="Dry mass" value={settings.dryMassKg} min={100} max={5000} step={100} unit="kg" onChange={v => set('dryMassKg', v)} />
         <Slider label="Maximum thrust" value={settings.thrusterForceN} min={1000} max={50000} step={500} unit="N" onChange={v => set('thrusterForceN', v)} />
-        <Slider label="Slope limit" value={settings.maxSlopeToleranceDeg} min={1} max={30} step={1} unit="°" onChange={v => set('maxSlopeToleranceDeg', v)} />
+        {gear && <>
+          <Slider label="Gear stroke" value={gear.strokeM} min={GEAR_TUNING.strokeM.min} max={GEAR_TUNING.strokeM.max} step={0.05} unit="m" onChange={v => set('gearStrokeM', Math.round(v * 100) / 100)} />
+          <Slider label="Damping (stiff to soft)" value={Math.round(gear.dampingRatio * 100)} min={GEAR_TUNING.dampingRatio.min * 100} max={GEAR_TUNING.dampingRatio.max * 100} step={5} unit="%" onChange={v => set('gearDampingRatio', v / 100)} />
+        </>}
       </section>
     </div>
   </>;

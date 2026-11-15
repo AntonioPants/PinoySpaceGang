@@ -2,8 +2,10 @@
 
 Palette: void #030405, instrument charcoal #12151b, warm paper #eeeae1,
 brushed gold #dfc28d, quiet text #b6b3ab. Natural planetary colours stay in the scene.
-Typeface: the existing self-hosted IBM Plex Sans, light large titles and compact
-readable controls. No new decorative display typeface or external image service.
+Type: self-hosted Inter for reading, DM Mono for figures and labels (both from nasa.gov) and
+Michroma for the title wordmark only. No external font or image service. Buttons are neutral
+paper on black; gold is for selection and the landing flag. Steep ground on the measured
+terrain (over 12 deg, the standard gear's rating) carries red dots.
 
 Layout: a full-viewport title (a ship racing through streaking stars towards a bright point,
 the solar system) starts on a click anywhere; there is no start button. The camera then

@@ -87,9 +87,9 @@ function screenTexture(): THREE.CanvasTexture {
   const canvas = document.createElement('canvas'); canvas.width = 840; canvas.height = 490;
   const g = canvas.getContext('2d')!;
   g.fillStyle = '#0a0c0f'; g.fillRect(0, 0, 840, 490);
-  g.fillStyle = '#f2f4f6'; g.font = '500 44px "IBM Plex Sans", sans-serif'; g.fillText('Analog report', 44, 86);
+  g.fillStyle = '#f2f4f6'; g.font = '500 44px "Inter Variable", sans-serif'; g.fillText('Analog report', 44, 86);
   g.fillStyle = '#343a42'; g.fillRect(44, 112, 752, 2);
-  g.fillStyle = '#5fc48a'; g.font = '600 26px "IBM Plex Sans", sans-serif'; g.fillText('Analog characterisation received', 44, 170);
+  g.fillStyle = '#5fc48a'; g.font = '600 26px "Inter Variable", sans-serif'; g.fillText('Analog characterisation received', 44, 170);
   g.fillStyle = '#23282e'; for (let i = 0; i < 5; i++) g.fillRect(44, 210 + i * 46, 752 - (i % 3) * 150, 18);
   const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
   return texture;

@@ -54,13 +54,22 @@ cycle spacecraft, legs and sensors, updating the visible procedural lander.
 Replace prototype entries with equipment IDs, names, visual assets, units, provenance,
 compatibility and physical parameters. Agree mappings with Tim for mass, leg radius,
 stroke/damping/contact behaviour and touchdown limits. Supply each item's limitations.
-Do not silently invent gear effects: apart from their footprint width (below) the three gear shapes are visual only,
+The three gears are simulated with prototype figures (below), clearly labelled as such, not measured hardware;
 while spacecraft mass/thrust/fuel and hazard sensor do feed the existing physics.
 
-The selected IDs travel in `MissionConfig.equipment`. The physics already uses each gear's
-drawn footprint radius (`web/src/lib/gear.ts`, `gearPhysics: 'footprint'`): slope, roughness
-and rocks are measured across it. That is geometry, not gear behaviour; everything else remains pending
-until genuine gear behaviour is integrated. `equipmentSettings` is the mapping seam;
+The selected IDs travel in `MissionConfig.equipment`, and the gear itself in the settings
+(`landingGearId`, `gearStrokeM`, `gearDampingRatio`), resolved by `buildMission` into
+`MissionConfig.strategy.landingGear` (`gearPhysics: 'model'`). The model is in `app/sim/src/gear.ts`:
+stroke and damping set the sink rate the legs absorb (v = sqrt(2 * 15 m/s2 * stroke * damping)),
+the stance and leg count set the static tip angle (atan(R cos(pi/N) / h)) and an energy check
+decides a tip-over from slope, tilt, lateral speed, rebound and gravity; pads and stroke set the
+relief it stands on; its mass is added to the dry mass in the engine. Presets (`GEAR_PRESETS`):
+standard-four 4 legs, 3.0 m, 0.45 m stroke, 75 kg, rated 12 deg; wide-four 4 legs, 3.8 m, 0.40 m,
+110 kg, rated 16 deg; survey-six 6 legs, 3.3 m, 0.60 m, 135 kg, rated 14 deg. The rating is the
+slope guidance avoids (`maxSlopeToleranceDeg`); the outcome is decided by the dynamics, so the same
+touchdown can stay upright in Earth gravity and go over on the Moon. Replace the preset figures
+with measured ones there; the drawn stance in `cutscene/lander.ts` must match (a test checks it).
+A mission without a gear in its settings keeps the fixed limits. `equipmentSettings` is the mapping seam;
 preserve the player's environmental settings when applying equipment. The screen's
 `EquipmentBayProps` uses a controlled selection and `onChange` callback.
 
@@ -149,7 +158,7 @@ Earth site, terrain zoom/back, every equipment arrow, Launch Journey, console, c
 skip, flight, outcome and debrief. Verify small screens, reduced motion and missing assets.
 
 Known remaining work: planetary departure/liftoff, measured equipment
-data and gear physics, selected-gear cinematic models, character debrief, performance
+data (the gear physics runs on prototype figures), selected-gear cinematic models, character debrief, performance
 profiling and final packaging. These are explicit handoffs, not completed features.
 
 ## Lander appearance update (15 November 2026)
@@ -180,3 +189,17 @@ the local Chromium process cannot open its required socket in this environment,
 and the separate remote browser cannot reach the local Vite server. Before merging,
 check desktop/mobile layout, all selectors, camera retention/reset, boarding, launch,
 cinematic skip, descent, retry, reduced motion and the WebGL fallback.
+
+## Rocket cinematics (15 November 2026)
+
+Liftoff from Earth is now a rocket, not the bare lander: `components/cutscene/rocket.ts`
+builds a core stage, four strap-on boosters, an upper stage and a two-piece fairing in
+the selected livery, on a launch pad with a service tower. The Earth approach opens on
+the same rocket braking in; it jettisons the boosters, splits and sheds the fairing and
+releases the player's lander, which then unfolds its legs and solar arrays before
+lighting its engine for the unchanged hand-over to the live descent (now 13 s; liftoff
+9 s). Legs and arrays are hinged parts of the shared lander model (`setGear`,
+`setArrays`, both default to deployed), one draw call each; the static body keeps its
+12-mesh budget. Tests check every hardware/appearance combination fits the fairing
+folded and returns to the same footprint deployed. The test bench (`?cutscene-demo`)
+has Liftoff and a Custom lander toggle. Illustrative only: no rocket physics.

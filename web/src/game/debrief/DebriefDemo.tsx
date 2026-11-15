@@ -38,7 +38,7 @@ export default function DebriefDemo() {
   if (error) return <p role="alert">{error}</p>;
   if (!data) return <p role="status">Flying a demo landing…</p>;
   const { flight, mission, profile, catalog } = data, analogId = profile.manifest.id, targetId = mission.planetaryTarget.id;
-  return <div style={{ position: 'fixed', inset: 0, background: '#030405', color: '#eeeae1', fontFamily: "'IBM Plex Sans', sans-serif" }}>
+  return <div style={{ position: 'fixed', inset: 0, background: '#030405', color: '#eeeae1', fontFamily: "'Inter Variable', sans-serif" }}>
     <DebriefScene key={run} flight={flight} mission={mission} profile={profile}
       match={catalog ? matchOf(catalog, targetId, analogId) : undefined}
       evidence={catalog ? evidenceFor(catalog, targetId, analogId) : undefined}

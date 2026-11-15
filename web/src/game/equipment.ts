@@ -1,7 +1,8 @@
 import type { MissionSettings } from '../lib/types';
+/** Vehicles only. The slope the vehicle is rated for comes from its landing gear (lib/gear.ts). */
 export const equipmentLoadouts: { id: string; name: string; detail: string; settings: Partial<MissionSettings> }[] = [
-  { id: 'survey', name: 'Survey lander', detail: 'Lidar · 800 kg dry · 12 kN thrust', settings: { dryMassKg: 800, fuelMassKg: 350, thrusterForceN: 12000, hazardSensor: 'lidar', maxSlopeToleranceDeg: 12 } },
-  { id: 'payload', name: 'Payload lander', detail: 'Camera · 1,200 kg dry · 18 kN thrust', settings: { dryMassKg: 1200, fuelMassKg: 500, thrusterForceN: 18000, hazardSensor: 'camera', maxSlopeToleranceDeg: 10 } },
+  { id: 'survey', name: 'Survey lander', detail: 'Lidar · 800 kg dry · 12 kN thrust', settings: { dryMassKg: 800, fuelMassKg: 350, thrusterForceN: 12000, hazardSensor: 'lidar' } },
+  { id: 'payload', name: 'Payload lander', detail: 'Camera · 1,200 kg dry · 18 kN thrust', settings: { dryMassKg: 1200, fuelMassKg: 500, thrusterForceN: 18000, hazardSensor: 'camera' } },
 ];
 
 /** The loadout whose settings the player currently has, so the ship drawn matches the vehicle they set up. */

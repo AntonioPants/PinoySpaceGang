@@ -7,7 +7,10 @@ the same accent with icons and explicit text to convey meaning.
 
 - Space `#000000`, panel `#101010`, raised `#1a1a1a`.
 - Text `#f2f1ed`, secondary `#aaa9a3`, accent `#d6b77c`.
-- IBM Plex Sans, self-hosted: 400 for reading and display, 500/600 for controls.
+- Self-hosted type: Inter (reading and controls) and DM Mono (figures, labels), the faces of
+  nasa.gov, and Michroma for the wordmark. Variables `--font-ui`, `--font-data`, `--font-display`.
+- Buttons are neutral paper on black (`--btn*`): solid for the main action, a paper outline
+  for the rest. Gold marks what is selected or flagged, not every control.
 - Left-aligned content. Large globe next to a compact location list; configuration
   has a quiet route summary and a wider control panel. Telemetry uses tabular numbers.
 - Short stage fades, selected-state feedback, continuous camera motion. No ambient

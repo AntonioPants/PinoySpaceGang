@@ -4,6 +4,7 @@ export default defineConfig({
   define: {__LANDING_ENGINE_SHA__: JSON.stringify(engineFingerprint())},
   esbuild: { jsx: 'automatic' },
   resolve: { dedupe: ['react', 'react-dom', 'three'] },
-  // The catalog now has 151 sites; tests that load every terrain pack need more than the 5 s default on slower machines and CI.
-  test: { include: ['src/**/*.test.{ts,tsx}', '../app/sim/test/**/*.test.{ts,tsx}'], testTimeout: 20000 },
+  // The suite loads every real terrain pack and flies full descents in parallel workers; on a busy
+  // machine the heavier tests pass 5 s without being wrong.
+  test: { include: ['src/**/*.test.{ts,tsx}', '../app/sim/test/**/*.test.{ts,tsx}'], testTimeout: 20_000 },
 });

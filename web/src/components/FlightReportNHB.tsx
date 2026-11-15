@@ -35,11 +35,14 @@ export default function FlightReportNHB({ flight, mission, profile, analogEntry,
 
   const body = mission.planetaryTarget.body;
   const site = mission.environment.interferenceSource === 'site';
+  // With a landing gear model, slope, tilt and lateral speed fail a landing only together, as a tip-over.
+  const gear = result.gear, alone = !gear || gear.tipped;
   const readings: Array<{ label: string; value: string; limit?: string; over?: boolean }> = [
     { label: 'Sink rate', value: `${result.verticalSpeedMps.toFixed(2)} m/s`, limit: `${limits.maxVerticalMps} m/s`, over: result.verticalSpeedMps > limits.maxVerticalMps },
-    { label: 'Lateral speed', value: `${result.horizontalSpeedMps.toFixed(2)} m/s`, limit: `${limits.maxHorizontalMps} m/s`, over: result.horizontalSpeedMps > limits.maxHorizontalMps },
-    { label: 'Ground slope', value: `${result.slopeDeg.toFixed(1)}°`, limit: `${limits.maxSlopeDeg}°`, over: result.slopeDeg > limits.maxSlopeDeg },
-    { label: 'Vehicle tilt', value: `${result.tiltDeg.toFixed(1)}°`, limit: `${limits.maxTiltDeg}°`, over: result.tiltDeg > limits.maxTiltDeg },
+    { label: 'Lateral speed', value: `${result.horizontalSpeedMps.toFixed(2)} m/s`, limit: `${limits.maxHorizontalMps} m/s`, over: result.horizontalSpeedMps > limits.maxHorizontalMps * (alone ? 1 : 2) },
+    { label: 'Ground slope', value: `${result.slopeDeg.toFixed(1)}°`, limit: `${limits.maxSlopeDeg}°`, over: alone && result.slopeDeg > limits.maxSlopeDeg },
+    { label: 'Vehicle tilt', value: `${result.tiltDeg.toFixed(1)}°`, limit: `${limits.maxTiltDeg}°`, over: alone && result.tiltDeg > limits.maxTiltDeg },
+    ...(gear ? [{ label: 'Lean towards tip-over', value: `${gear.peakLeanDeg.toFixed(1)}°`, limit: `${gear.staticTipDeg.toFixed(1)}°`, over: gear.tipped }] : []),
     { label: 'Fuel remaining', value: `${result.fuelRemainingKg.toFixed(0)} kg` },
     { label: 'Distance from target', value: result.distanceFromTargetM < 0.5 ? 'Reached' : `${result.distanceFromTargetM.toFixed(1)} m` },
   ];

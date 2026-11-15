@@ -16,7 +16,7 @@ import type { FlightTelemetry } from '../../../../app/sim/src/types';
 import type { CatalogSite } from '../../../../app/sim/src/catalog';
 import type { FlightAssessment, Margin } from '../../../../app/sim/src/assessment';
 import { DUST_ALTITUDE_M, FUEL_LOW_FRACTION } from '../../../../app/sim/src/constants';
-import type { RehearsalRow } from '../../lib/debrief';
+import { gearRows, type RehearsalRow } from '../../lib/debrief';
 import type { FidelityReport } from '../../lib/fidelity';
 import type { MissionConfig } from '../../lib/types';
 
@@ -126,7 +126,7 @@ export function subsystemReadings({ flight, mission, assessment: a, fidelity, re
       analogDelta: [compare(fuelRow, body) ?? 'Rehearsal fuel comparison not available yet.', 'On Earth the plume expands into air, so plume-surface interaction is not rehearsed.'] },
     { id: 'struts', name: 'Landing struts and footpads', short: 'Struts', level: strutLevel, headline: a.touchedDown ? (strutLevel === 'exceeded' ? 'Contact limit exceeded' : strutLevel === 'caution' ? 'Contact limit marginal' : 'Within contact limits') : 'No touchdown',
       spec: [`Footpads ${lander.legRadiusM.toFixed(1)} m from the centre. Limits: sink ${limits.maxVerticalMps} m/s, lateral ${limits.maxHorizontalMps} m/s, slope ${limits.maxSlopeDeg}°, roughness ${limits.maxRoughnessM} m.`],
-      status: a.touchedDown ? [...struts.map(m => `${m.label}: ${m.value.toFixed(m.unit === '°' ? 1 : 2)} of ${m.limit} ${m.unit} (${pct(m.ratio)}${m.status === 'exceeded' ? ', over limit' : m.status === 'marginal' ? ', marginal' : ''}).`), ...summary.failureReasons]
+      status: a.touchedDown ? [...gearRows(flight).map(([name, value]) => `${name}: ${value}.`), ...struts.map(m => `${m.label}: ${m.value.toFixed(m.unit === '°' ? 1 : 2)} of ${m.limit} ${m.unit} (${pct(m.ratio)}${m.status === 'exceeded' ? ', over limit' : m.status === 'marginal' ? ', marginal' : ''}).`), ...summary.failureReasons]
         : ['The vehicle never touched down; there are no contact loads.'],
       analogDelta: [compare(row(rehearsal, 'Ground slope'), body), compare(row(rehearsal, 'Roughness under legs'), body), compare(row(rehearsal, 'Sink rate'), body),
         fidelity ? `Blind landings: ${pct(fidelity.stress.planetary.successRate)} landable on ${body} terrain vs ${pct(fidelity.stress.analog.successRate)} on Earth.` : null]

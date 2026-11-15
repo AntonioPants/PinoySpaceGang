@@ -1,5 +1,6 @@
 import type { MissionConfig, MissionSettings, PlanetarySite, TerrainManifest, TerrainProfile } from './types';
 import { insideLandingArea, type LandingPoint } from './landing';
+import { gearFromSettings, validateGearSettings } from './gear';
 export const TERRAIN_BASE = '/terrain/kilbourne-hole-v1/';
 export const defaultSettings: MissionSettings = {
   mode: 'AUTONOMOUS_HAZARD_AVOID', environment: 'planetary',
@@ -59,6 +60,7 @@ export function validateSettings(s: MissionSettings): string[] {
   if (typeof s.siteConditions !== 'boolean') errors.push('siteConditions must be true or false.');
   if (!Number.isInteger(s.realWeatherMonth) || s.realWeatherMonth < 0 || s.realWeatherMonth > 12) errors.push('realWeatherMonth must be 0 (manual) or 1–12.');
   if (!['typical', 'high_wind'].includes(s.weatherScenario)) errors.push('Unknown weather scenario.');
+  errors.push(...validateGearSettings(s));
   return errors;
 }
 export interface MissionContext { terrainBase?: string; analogName?: string; terrainScore?: number | null;
@@ -71,6 +73,7 @@ export function buildMission(site: PlanetarySite, profile: TerrainProfile, setti
   if (errors.length) throw new Error(errors.join(' '));
   const landing = context.landingTarget;
   if (landing && !insideLandingArea(profile, landing)) throw new Error('The landing flag is outside the selectable area. Place it again.');
+  const landingGear = gearFromSettings(settings);
   const lunarVacuum = settings.environment === 'planetary' && site.body === 'Moon';
   return {
     schemaVersion: '1.0.0', createdAt: new Date().toISOString(),
@@ -79,7 +82,8 @@ export function buildMission(site: PlanetarySite, profile: TerrainProfile, setti
       elevationProfile: profile.heightsM, sampleSpacingM: profile.sampleSpacingM, profileRow: profile.row,
       verticalOffsetM: profile.manifest.local_frame.vertical_offset_m, sourceSha256: profile.manifest.source.sha256 ?? profile.manifest.source.subset_sha256 ?? '',
       ...(landing && (landing.x || landing.y) ? { landingTargetM: { x: landing.x, y: landing.y } } : {}) },
-    strategy: { mode: settings.mode, hazardSensor: settings.hazardSensor, thrusterForceN: settings.thrusterForceN, fuelMassKg: settings.fuelMassKg, dryMassKg: settings.dryMassKg, maxSlopeToleranceDeg: settings.maxSlopeToleranceDeg },
+    strategy: { mode: settings.mode, hazardSensor: settings.hazardSensor, thrusterForceN: settings.thrusterForceN, fuelMassKg: settings.fuelMassKg, dryMassKg: settings.dryMassKg, maxSlopeToleranceDeg: settings.maxSlopeToleranceDeg,
+      ...(landingGear ? { landingGear } : {}) },
     environment: { mode: settings.environment, gravityMs2: gravityFor(site, settings), windSpeedMs: lunarVacuum ? 0 : settings.windSpeedMs,
       atmosphereModel: lunarVacuum ? 'none' : settings.environment === 'earth' ? 'earth-standard' : 'mars-constant', dust: settings.dust, glare: settings.glare, interferenceSource: settings.siteConditions ? 'site' : 'manual',
       realWeather: settings.environment === 'earth' && settings.realWeatherMonth > 0 && context.weatherAvailable

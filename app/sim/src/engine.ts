@@ -29,6 +29,7 @@ import { noisyField, roughnessAt, slopeDegAt } from './terrain.ts';
 import { Surface, type HazardField } from './surface.ts';
 import { siteInterference } from './environment.ts';
 import { evaluateTouchdown } from './touchdown.ts';
+import { gearCapability, validateGear } from './gear.ts';
 import { createSensorModel } from './sensors.ts';
 import { autopilot } from './controllers/autopilot.ts';
 
@@ -72,9 +73,24 @@ export interface Sim {
   telemetry(): FlightTelemetry;
 }
 
+/**
+ * The lander as flown. A landing gear model, when given, sets the foot circle, adds its mass to
+ * the dry mass and replaces the sink-rate and roughness limits with what its stroke and pads take.
+ * Tip-over is then judged at contact from its stance (see touchdown.ts); limits.maxSlopeDeg stays
+ * as the slope guidance avoids.
+ */
 export function resolveLander(input: SimInput): LanderConfig {
   const { limits, ...rest } = input.lander ?? {};
-  return { ...DEFAULT_LANDER, ...rest, limits: { ...DEFAULT_LANDER.limits, ...limits } };
+  const lander: LanderConfig = { ...DEFAULT_LANDER, ...rest, limits: { ...DEFAULT_LANDER.limits, ...limits } };
+  const gear = lander.gear;
+  if (!gear) return lander;
+  const errors = validateGear(gear);
+  if (errors.length) throw new Error(errors.join(' '));
+  const cap = gearCapability(gear, lander.hullCgHeightM);
+  return {
+    ...lander, legRadiusM: gear.radiusM, dryMassKg: lander.dryMassKg + gear.gearMassKg,
+    limits: { ...lander.limits, maxVerticalMps: round(cap.maxSinkMps, 2), maxRoughnessM: round(cap.roughnessToleranceM, 2) },
+  };
 }
 
 function simulatedBody(site: SiteTerrain, mode: EnvironmentMode | undefined): Body {
@@ -315,6 +331,7 @@ export function createSim(input: SimInput, controllerOverride?: Controller): Sim
       const res = evaluateTouchdown(
         { verticalSpeedMps: vVert, horizontalSpeedMps: vHoriz, slopeDeg: slope, roughnessM: rough, tiltDeg: tilt },
         lander.limits,
+        lander.gear ? { gear: lander.gear, gravity: env.gravity, hullCgHeightM: lander.hullCgHeightM } : undefined,
       );
       state.position.z = ground;
       state.altitudeAGL = 0;
@@ -336,6 +353,7 @@ export function createSim(input: SimInput, controllerOverride?: Controller): Sim
         slopeDeg: slope,
         roughnessM: rough,
         tiltDeg: tilt,
+        ...(res.gear ? { gear: res.gear } : {}),
       });
       return state;
     }

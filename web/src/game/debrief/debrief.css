@@ -129,7 +129,7 @@
 .lsc-callout { cursor: pointer; outline: none; }
 .lsc-leader { fill: none; stroke: #3d444d; stroke-width: 1.2; }
 .lsc-dot { fill: #3d444d; }
-.lsc-label { fill: var(--dim); font: 600 11px 'IBM Plex Sans', sans-serif; letter-spacing: .04em; text-transform: uppercase; }
+.lsc-label { fill: var(--dim); font: 600 11px 'Inter Variable', sans-serif; letter-spacing: .04em; text-transform: uppercase; }
 .lsc-light { fill: var(--dim); }
 .lsc-callout.nominal .lsc-light { fill: var(--go); } .lsc-callout.caution .lsc-light { fill: var(--caution); } .lsc-callout.exceeded .lsc-light { fill: var(--hold); }
 .lsc-callout.on .lsc-leader, .lsc-callout:focus-visible .lsc-leader { stroke: var(--ink); stroke-width: 1.8; }
@@ -193,5 +193,5 @@
 .lsc-part .lsc-tank { fill: #1a1f24; stroke-width: 1.4; }
 .lsc-wings path { fill: #10233d; stroke: #3d5a7a; stroke-width: 1.2; }
 .lsc-ground { stroke: #3d444d; stroke-width: 1; stroke-dasharray: 2 4; }
-.lsc-caption { fill: var(--dim); font: 10px 'IBM Plex Sans', sans-serif; text-anchor: middle; }
+.lsc-caption { fill: var(--dim); font: 10px 'Inter Variable', sans-serif; text-anchor: middle; }
 @media (max-width: 760px) { .lsc-detail { font-size: .9em; } }
