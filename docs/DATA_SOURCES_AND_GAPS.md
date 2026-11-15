@@ -6,13 +6,13 @@ the catalog. This report distinguishes implemented code from ingested data.
 
 | Provider | Used | Investigated / gap |
 |---|---|---|
-| ESA/Copernicus | GLO-30 public AWS mirror windows for all fifty Earth sites, including existing Kilbourne and thirty-five international additions | Approximate 30m DSM, mainly 2011–2015; not bare-earth soil, not a current Sentinel radar retrieval. Quality masks not ingested. |
-| NASA PDS / USGS | MGS MOLA DEM mosaic windows for Jezero, Bagnold, Arsia, Phoenix and Lucus Planum | Approx 463m equatorial native postings; interpolated altimetry cannot resolve dunes/polygons/caves. NASA PDS science redistributed as USGS GeoTIFF, not a new PDS raw-product download. |
-| NASA LRO / USGS | LOLA March 2014 mosaic windows for Marius Hills, Shackleton, Malapert Massif and Mons Mouton | Approx 118m equatorial postings, variable physical spacing with latitude; scale 0.5 applied. No cave geometry or base-safety certification. |
-| NASA POWER | 2024 T2M, WS10M, TS, ALLSKY_SRF_ALB daily responses for Earth sites | MERRA-2 temperature/wind regional reanalysis and CERES broadband albedo. 2m air and skin temperature are kept distinct. No vector wind supplied. Missing days excluded and count retained. |
+| ESA/Copernicus | GLO-30 terrain for 102 Earth windows (50 curated and 52 registered scans) | Approximate 30m DSM, mainly 2011–2015; not bare-earth soil, not a current Sentinel radar retrieval. Quality masks not ingested. |
+| NASA PDS / USGS | MGS MOLA DEM mosaic windows for all 25 Mars targets | Approx 463m equatorial native postings; interpolated altimetry cannot resolve dunes/polygons/caves. NASA PDS science redistributed as USGS GeoTIFF, not a new PDS raw-product download. |
+| NASA LRO / USGS | LOLA March 2014 mosaic windows for all 24 Moon targets | Approx 118m equatorial postings, variable physical spacing with latitude; scale 0.5 applied. No cave geometry or base-safety certification. |
+| NASA POWER | 2024 T2M, WS10M, TS, ALLSKY_SRF_ALB daily responses for all 102 Earth sites | MERRA-2 temperature/wind regional reanalysis and CERES broadband albedo. 2m air and skin temperature are kept distinct. No vector wind supplied. Missing days excluded and count retained. |
 | NASA Earthdata Search | Existing configurable `fetch_earthdata.py` retained; no new Earthdata granules ingested | MODIS MOD11A2 surface temperature and MCD43A3 BRDF/albedo are useful future higher-resolution replacements. They require product QA and Earthdata Login; no credentials supplied or used. POWER is a separate NASA service, not proof of Earthdata granule ingestion. |
 | NASA Worldview | Discovery only, no screenshots treated as science | Trace MODIS visualizations back to MOD11/MCD43 products and QA before quantitative use. |
-| LRO Diviner | GCP cells for all four lunar sites, selected with verified HTTP byte ranges | LRO-L-DLRE-5-GCP-V1.0 bins observations by 0.5-degree coordinates and 0.25h local time, 2009-07-05 through 2015-04-01. Reported min/max are extrema of available bolometric brightness-temperature bins, not footprint extremes or current temperature. Do not compare these with Earth daily air temperature. |
+| LRO Diviner | GCP cells for all 24 lunar targets, selected with verified HTTP byte ranges | LRO-L-DLRE-5-GCP-V1.0 bins observations by 0.5-degree coordinates and 0.25h local time, 2009-07-05 through 2015-04-01. Reported min/max are extrema of available bolometric brightness-temperature bins, not footprint extremes or current temperature. Do not compare these with Earth daily air temperature. |
 | CSA RCM | No science products ingested | EODMS public account required; vetted access may be required for finer products. Radar backscatter is not elevation or soil friction. No site-matched SAR inversion method implemented. |
 | CSA RADARSAT-1 | No science products ingested | Archive investigated as possible radar context. No appropriate scene selected/processed; this is an unfinished optional radar integration, not a fabricated authentication failure. |
 
@@ -81,3 +81,37 @@ seasonal profiles. See LOCATION_HANDOFF.md for their exact footprints and limita
 Lucus Planum adds a real MOLA window from the public USGS S3 mosaic distribution;
 THEMIS image PIA24008 supplies the yardang interpretation and centre. All proposed
 pairings now state matches and differences explicitly; scores remain unvalidated.
+
+## Expansion synchronization, 15 November 2026
+
+The working catalog has 151 terrain-backed records: 102 Earth, 24 Moon and 25 Mars.
+All 49 targets now have ten published matches and a refreshed search of the 3,361
+indexed Earth windows. `data/catalog-coverage.json` covers every record.
+`data/environment-refresh-report.json` records 52 new POWER responses and 15 new
+Diviner cells. POWER remains coarse modeled Earth context; nearby windows can
+share a climate grid cell. Diviner records remain regional thermal-bin extrema,
+not comparable annual surface-temperature observations.
+
+`data/mars-product-assessment.json` records an executed USGS planetary STAC search
+for all 25 Mars footprints. Eleven footprints intersect at least one returned
+HiRISE DTM candidate; fourteen returned none in this bounded search. This is
+product discovery, not new DEM ingestion. A returned intersection does not prove
+complete valid-pixel coverage. The next processing step is to check PDS labels,
+vertical datum, scale/offset, Figure of Merit, footprint coverage and nodata before
+replacing the regional MOLA pack. No Mars weather product was ingested by this
+terrain search. Mars surface temperature/albedo/wind and all-site contact mechanics
+remain explicit unknowns; supplying these requires a suitable calibrated product
+and a supported site/time/height definition, not copying Earth values.
+
+Every published top-ten pair has machine-readable `comparison_explanation` with
+individual-site source links, contexts, differences and an explicit unreviewed
+status. This does not create literature pairings or independent geological review.
+The 59 existing proposals retain their original evidence tier. The 42 targets
+without reference proposals remain unvalidated; human review and new independent
+reference labels are still required.
+
+The landing baseline now includes a physics implementation fingerprint as well
+as the catalog hash. Rebuild it after physics, adapter or baseline-setup changes;
+Vite captures the expected fingerprint at startup/build, so restart a dev server
+after changing physics. An incompatible baseline is rejected and live simulation
+remains the fallback. No flight/debrief layout or sound code is changed by this work.

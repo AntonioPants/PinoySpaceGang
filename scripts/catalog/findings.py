@@ -10,12 +10,14 @@ from .publication import publication
 ROOT = Path(__file__).resolve().parents[2]
 
 def generate(public, landing):
+    from .comparison_notes import comparison_notes
+    from .analog_score import landform
     data = json.loads((public / 'sites.json').read_text(encoding='utf-8'))
     sites = {s['id']: s for s in data['sites']}
     scores = data['analog_matching']['selection']['screening']
     flights = {(r['planetary_id'], r['earth_id']): r['stress'] for r in landing['rows']}
     pairs = {(p['planetary_id'], p['earth_id']): p for p in data['pairings']}
-    name = lambda s: re.sub(r'\s*study\s*area\b', '', re.sub(r':\s*[\d.]+\s*km.*$', '', s), flags=re.I).strip()
+    name = lambda s: re.sub(r'\bbase-\s*', 'base ', re.sub(r'\s*study\s*area\b', '', re.sub(r':\s*[\d.]+\s*km.*$', '', s), flags=re.I)).strip()
     rows = []
     for target in (s for s in data['sites'] if s['role'] == 'planetary_target'):
         for scanned in (False, True):
@@ -28,7 +30,8 @@ def generate(public, landing):
             earth = sites[best['earth_id']]
             key = (target['id'], earth['id'])
             differences = pairs.get(key, {}).get('explanation', {}).get('differences', [])
-            limitation = differences[0] if differences else ('Local geology unreviewed; inferred landform is not a field observation.' if scanned else 'No reviewed pair-specific geological analogy.')
+            notes=comparison_notes(earth,target,landform(earth['morphology'],target['morphology'],earth.get('inferred_landforms',()))['relation'])
+            limitation = differences[0] if differences else ('Unreviewed exploratory pair. '+notes['differences'][0]+' '+notes['differences'][2])
             stress = flights.get(key)
             rows.append([name(target['name']), 'Scanned window' if scanned else 'Curated site', name(earth['name']),
                          f"{best['central_upper_bound_percent']:.1f}%", str(stress['score']) if stress else 'Not computed', limitation,

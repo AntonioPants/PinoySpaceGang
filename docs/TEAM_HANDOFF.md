@@ -118,12 +118,14 @@ Coordinate with Furgan: landing-outcome visuals finish before the character debr
 
 Current delivery: `web/src/game/debrief/DebriefScene.tsx` replaces the flat report in the
 game's `report` stage. The astronaut walks to the mission-control monitor, the camera
-pushes into its screen, and the report opens there as an eight-section carousel
+pushes into its screen, and the analog report opens there as a nine-section carousel
 (`sections.tsx`) with left/right arrows, arrow keys and a burst of TV static between
 sections. It reuses Tim's cabin, astronaut and camera helpers read-only and shows only
 the flown telemetry. Reduced motion or missing WebGL opens the report directly; "Skip to
-report" is always available. Telemetry export was removed at Antonio's request; retry is
-kept. Test bench: `?debrief-demo`. The planner still uses `components/FlightReport.tsx`.
+report" is always available. The report leads with why the pair is an analog and where the
+analogy breaks down (the catalog's own pair evidence), then terrain, environment, landing
+behaviour and the flown flight. "Download report (JSON)" in the footer exports the same
+content as data; retry is kept. Test bench: `?debrief-demo`. The planner still uses `components/FlightReport.tsx`.
 
 ## Shared boundaries and integration
 

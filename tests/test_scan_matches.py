@@ -32,7 +32,8 @@ def test_published_shortlists_follow_the_live_rules():
         assert len(picks) <= 10 and [p['candidate_rank'] for p in picks] == list(range(1, len(picks)+1))
         for p in picks:
             assert p['evidence_status'] == 'exploratory_terrain_only'
-            assert p['landform']['status'] == 'inferred_from_scan_region_unreviewed'
+            # A borrowed label is used when one applies; otherwise the landform stays unknown and scores zero.
+            assert p['landform']['status'] == 'inferred_from_scan_region_unreviewed' or (p['landform']['relation'] == 'unknown' and p['landform']['match_percent'] == 0)
             assert p['analog_score_percent'] >= MIN_EXPLORATORY_SCORE_PERCENT
             assert abs(p['analog_score_percent']-(0.5*p['landform']['match_percent']+0.5*p['terrain_similarity_percent'])) < 1e-3
         for i, a in enumerate(picks):

@@ -4,6 +4,7 @@ import { dirname } from 'node:path';
 import { createHash } from 'node:crypto';
 import { stressFidelity } from '../src/fidelity.ts';
 import { readCatalog, loadCatalogSite } from './catalog-node.ts';
+import { engineFingerprint } from './engine-fingerprint.ts';
 
 const catalog = readCatalog();
 const raw = JSON.parse(readFileSync(new URL('../../../web/public/sites.json', import.meta.url), 'utf8'));
@@ -26,7 +27,7 @@ const rows = pairs.map((p,i) => {
 });
 const out = process.argv.includes('--out')?process.argv[process.argv.indexOf('--out')+1]:'data/staged/landing-similarity.json';
 mkdirSync(dirname(out),{recursive:true});
-writeFileSync(out,JSON.stringify({schema_version:'1.0.0',method_version:'stress-baseline-1.0.0',
+writeFileSync(out,JSON.stringify({schema_version:'1.0.0',method_version:'stress-baseline-1.1.0',engine_sha256:engineFingerprint(),
   catalog_sha256:createHash('sha256').update(readFileSync(new URL('../../../web/public/sites.json',import.meta.url))).digest('hex'),
   seeds:Array.from({length:25},(_,i)=>i+1),
   assumptions:'800 kg dry mass; 350 kg fuel; 12 kN thrust; 12 degree slope limit; default engine leg geometry; zero wind; no added rocks; site-derived interference; target gravity and air density. No scientific validation.',

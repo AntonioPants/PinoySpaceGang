@@ -225,7 +225,7 @@ both coarse grids look smooth. Ranks reflect available candidates and are not
 environmental-accuracy rankings; fixed score normalization does not depend on the
 number of sites.
 
-## Compatibility gate
+## Compatibility g  ate
 
 Finite measured, derived or modeled quantities need source URL, method, coverage
 and compatible units (Celsius converts to kelvin). Assumed parameters are excluded.
@@ -291,3 +291,33 @@ this change; all values reference the existing source-backed catalog.
 `catalog.analogScoreFor` reads the detailed modern analog score, or the all-pair central screening score outside the published ten. The full atlas sorts by this score; the ten retain published evidence-tier rank. Legacy terrain fallback is explicitly labelled. Percentages are engineering similarity, not validated accuracy.
 
 `app/sim/scripts/landing-similarity.ts` stages the deterministic baseline; `python -m scripts.catalog.findings --publish` publishes it and the generated findings through the existing transaction (stop dev servers first). Baselines cover proposed pairs, all published ten, and each target's best scanned window. They use 25 trials per patch and an explicit fixed configuration; scores do not alter analog rankings. Runtime verifies the catalog checksum. Only an exact default scenario without gear/weather/interference overrides can reuse baseline stress results; other missions run live. See SUBMISSION.md for assumptions and limits.
+
+## Expanded-population audit (15 November 2026)
+
+`data/matching-benchmark.json` remains the historical 50-Earth-site result.
+`data/matching-benchmark-expanded.json` evaluates all 102 Earth sites and all 49
+planetary targets. Targets without reference pairs report null metrics, not zero
+accuracy. The benchmark now passes inferred scan landforms through the same
+75%-discounted landform function as production; previously it treated every scan
+as an unknown label with zero landform contribution. Production scores/scales are
+unchanged.
+
+| Pure-score reference metric | Historical 50 Earth | Expanded 102 Earth |
+|---|---:|---:|
+| Analog AUC | 0.9173 | 0.8430 |
+| Analog recall@10 | 0.7797 | 0.5254 |
+| Analog mean reference rank | 9.1186 | 20.0339 |
+| Retired terrain AUC | 0.4163 | 0.3557 |
+
+These populations differ; the decrease is not hidden or fixed by changing weights.
+The expanded pool includes plausible unlabelled scans which can outrank the old
+reference sites. Unlabelled candidates count as non-reference examples in AUC,
+not scientifically disproven analogs. Historical regression thresholds are tested
+against the original curated Earth population, while the expanded report stays
+separate. More independent reference labels are required before claiming accuracy
+for the 40 added planetary targets.
+
+The full scan shortlist now covers all 49 targets without adding unbuilt windows
+to the playable catalog. Published comparisons include source-backed exploratory
+context under `comparison_explanation`; these are catalog interpretations, not
+reviewed literature pairings and never change ranking priority.

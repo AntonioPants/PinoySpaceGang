@@ -58,8 +58,12 @@ def test_lunar_terrain_and_thermal_summaries_reproduce_from_retained_data(sid, t
 
 
 def test_diviner_never_silently_uses_a_polar_band_for_another_latitude(tmp_path):
-    with pytest.raises(ValueError, match='another product band'):
-        thermal_bins(dict(id='test', longitude=0, latitude=25), tmp_path, True)
+    from scripts.catalog.diviner import band_for
+    assert band_for(25) == ('20n30n', 20)
+    assert band_for(-43.31) == ('50s40s', -50)
+    assert band_for(-3) == ('10s00s', -10)
+    assert band_for(90) == ('80n90n', 80)
+    assert thermal_bins(dict(id='test', longitude=0, latitude=25), tmp_path, True) == {}
 
 
 def test_missing_earth_weather_cache_cannot_erase_existing_conditions(tmp_path, monkeypatch):

@@ -8,6 +8,7 @@ from datetime import date, datetime, timezone
 import hashlib
 import json
 import math
+from pathlib import Path
 
 import requests
 
@@ -109,18 +110,20 @@ def assess(site, offline):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--offline', action='store_true')
+    parser.add_argument('--body', choices=['earth','mars'])
+    parser.add_argument('--output', type=Path, default=ROOT/'data/source-assessment.json')
     args = parser.parse_args(argv)
     catalog = json.loads((PUBLIC/'sites.json').read_text(encoding='utf-8'))
     results = []
     for site in catalog['sites']:
-        if site['body'] == 'moon':
+        if site['body'] == 'moon' or args.body and site['body'] != args.body:
             continue
         print('Assessing', site['id'], flush=True)
         try:
             results.append(assess(site, args.offline))
         except (requests.RequestException, ValueError, KeyError, OSError) as exc:
             results.append({'site_id': site['id'], 'status': 'failed', 'reason': str(exc)})
-    dump(ROOT/'data/source-assessment.json', {'method_version': '1.0.0',
+    dump(args.output, {'method_version': '1.0.0',
         'scope': 'Alternative-data assessment; does not change catalog conditions or similarity.',
         'sites': results})
     failures = sum(s.get('status') == 'failed' for s in results)

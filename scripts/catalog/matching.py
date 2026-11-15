@@ -68,6 +68,7 @@ def environment_feature(key, a, b):
 
 
 def comparison(earth, planet, audit, proposed, score=None):
+    from .comparison_notes import comparison_notes
     checks=[environment_feature(k,earth['conditions'].get(k,{}),planet['conditions'].get(k,{})) for k in ENVIRONMENT]
     # `score` is the analog_score.pair_score result; without it the legacy audit score is reported.
     reproduced=audit['catalog_features_reproduced']
@@ -89,6 +90,7 @@ def comparison(earth, planet, audit, proposed, score=None):
         'analog_score_percent':rounded(score['analog_score_percent']) if terrain is not None else None,
         'landform_match_percent':score['landform']['match_percent'],
         'landform':score['landform'],
+        'comparison_explanation':comparison_notes(earth,planet,score['landform']['relation']),
         'terrain_similarity_percent':round(terrain*100,4) if terrain is not None else None,
         'environment_similarity_percent':round(env,4) if env is not None else None,
         'total_similarity_percent':round(total,4) if total is not None else None,

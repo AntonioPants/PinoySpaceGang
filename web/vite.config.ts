@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+import { engineFingerprint } from '../app/sim/scripts/engine-fingerprint';
 export default defineConfig({
-  define: { CESIUM_BASE_URL: JSON.stringify('/cesium/') },
+  define: { CESIUM_BASE_URL: JSON.stringify('/cesium/'), __LANDING_ENGINE_SHA__: JSON.stringify(engineFingerprint()) },
   plugins: [react(), viteStaticCopy({ targets: ['Workers', 'Assets', 'Widgets', 'ThirdParty'].map(dir => ({
     // The plugin keeps the source path in the output; drop node_modules/cesium/Build/Cesium so the
     // files land at /cesium/Assets, /cesium/Workers, ... where CESIUM_BASE_URL looks for them.
