@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { equipmentSettings, initialEquipment, landingGear, vehicles, sensors } from './equipmentCatalog';
+import { antennaPackages, liveries, solarArrays } from '../../lib/landerAppearance';
 import { defaultSettings, validateSettings } from '../../lib/mission';
 describe('equipment handoff',()=>{
   it('keeps every prototype combination valid without pretending gear changes physics',()=>{
@@ -8,6 +9,12 @@ describe('equipment handoff',()=>{
       const settings=equipmentSettings(selection,{...defaultSettings,windSpeedMs:8,environment:'earth'});
       expect(validateSettings(settings)).toEqual([]);expect(settings.windSpeedMs).toBe(8);expect(settings.environment).toBe('earth');expect(settings.hazardSensor).toBe(sensor.id);
       expect(settings).toEqual(equipmentSettings({...selection,landingGearId:landingGear[0].id},{...defaultSettings,windSpeedMs:8,environment:'earth'}));
+    }
+  });
+  it('keeps appearance choices out of physical settings',()=>{
+    const baseline=equipmentSettings(initialEquipment,defaultSettings);
+    for(const livery of liveries)for(const solar of solarArrays)for(const antenna of antennaPackages){
+      expect(equipmentSettings({...initialEquipment,liveryId:livery.id,solarArrayId:solar.id,antennaId:antenna.id},defaultSettings)).toEqual(baseline);
     }
   });
   it('rejects stale or unknown equipment identifiers',()=>{
