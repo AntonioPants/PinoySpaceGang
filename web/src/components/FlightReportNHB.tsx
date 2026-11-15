@@ -170,6 +170,7 @@ function describeEvent(e: SimEvent): string {
     case 'dustKickup': return `Dust kick-up at ${e.altitudeM.toFixed(0)} m`;
     case 'hazardDetected': return `Hazard at aim point, slope ${e.slopeDeg.toFixed(1)} deg, roughness ${e.roughnessM.toFixed(2)} m`;
     case 'divert': return `Divert ${e.distanceM.toFixed(1)} m`;
+    case 'siteSelected': return e.diverted ? 'Landing spot chosen after divert' : e.safe ? 'Landing spot confirmed clear' : 'No safe spot in range; target held';
     case 'fuelLow': return `Fuel low, ${e.fuelKg.toFixed(0)} kg`;
     case 'fuelOut': return 'Fuel exhausted';
     case 'touchdown': return `Touchdown, sink ${e.verticalSpeedMps.toFixed(2)} m/s, lateral ${e.horizontalSpeedMps.toFixed(2)} m/s`;

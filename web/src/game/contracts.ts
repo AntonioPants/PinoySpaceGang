@@ -5,6 +5,9 @@ import type { MissionConfig, MissionSettings } from '../lib/types';
 
 /** Scenes never create another simulation or change the selected terrain. */
 export interface SceneProps {
+  /** Build and render silently under the previous screen; never play or complete while warming. */
+  warming?: boolean;
+  onPrepared?: (ready: boolean) => void;
   /** Fill the game viewport; planner/debug embeds keep their own sizing. */
   immersive?: boolean;
   mission: MissionConfig;

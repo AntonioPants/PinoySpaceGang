@@ -9,6 +9,8 @@ import { terrainSurroundings } from './terrainSurroundings';
 import decoder from 'three/examples/jsm/libs/draco/gltf/draco_decoder.js?url';
 
 export interface EarthScenery {
+  readonly ready: boolean;
+  readonly failed: boolean;
   draw(camera: T.PerspectiveCamera, fog?: T.Fog): boolean;
   dispose(): void;
 }
@@ -21,6 +23,8 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
   sky: T.Color, meshes: T.Mesh<T.BufferGeometry,T.MeshStandardMaterial>[], look?: EnvLook): EarthScenery {
   const polygon = !!look;
   const tiles = new TilesRenderer();
+  tiles.lruCache.minBytesSize=64*1024*1024;tiles.lruCache.maxBytesSize=96*1024*1024;
+  tiles.downloadQueue.maxJobs=6;tiles.parseQueue.maxJobs=2;
   tiles.registerPlugin(new CesiumIonAuthPlugin({ apiToken: import.meta.env.VITE_CESIUM_ION_TOKEN, assetId: '2275207', autoRefreshToken: true }));
   const draco = new DRACOLoader(new T.LoadingManager());
   draco.setDecoderConfig({ type: 'js' });
@@ -150,13 +154,22 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
       s.material.needsUpdate = true;
     }
   }
+  // Once a flight's horizon has converged, retain this exact rendered tile set. Refining
+  // a distant ridge in front of the player is more distracting than a fixed detail level.
+  let settledFrames = 0, ready = false, failed = false;
+  tiles.addEventListener('load-error', () => { failed = true; });
   let visible = 0, dirty = true;
   tiles.addEventListener('tile-visibility-change', e => { visible += e.visible ? 1 : -1; dirty = true; calibrationPending = true; surroundings?.refresh(); });
   return {
+    get ready() { return ready; },
+    get failed() { return failed; },
     draw(camera, fog) {
       camera.updateMatrixWorld(); world.updateMatrixWorld();
       if (!tiles.hasCamera(camera)) tiles.setCamera(camera);
-      tiles.setResolutionFromRenderer(camera, renderer); tiles.update();
+      tiles.setResolutionFromRenderer(camera, renderer);
+      if (!polygon || !ready) tiles.update();
+      if (visible > 0 && tiles.loadProgress >= 1) settledFrames++; else settledFrames = 0;
+      if (settledFrames >= 12 && (!surroundings || surroundings.ready)) ready = true;
       // Re-measure as finer tiles stream in, at most once a second.
       const now = performance.now();
       if (visible && calibrationPending && now - lastCalibration > 1000) {

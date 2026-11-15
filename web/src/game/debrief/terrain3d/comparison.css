@@ -1,4 +1,4 @@
-.tc3d{width:100%;min-width:0;color:#f2f4f6;background:#0a0c0f;border:1px solid #343a42;border-radius:5px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;overflow:hidden}
+.tc3d{width:100%;min-width:0;color:#f2f4f6;background:#0a0c0f;border:1px solid #343a42;border-radius:5px;font-family:var(--font-ui);font-size:12px;overflow:hidden}
 .tc3d .tc3d-toolbar{display:flex;flex-wrap:wrap;gap:6px;padding:8px;border-bottom:1px solid #23282e}
 .tc3d button{font:inherit;color:#dfe3e7;background:#161a1f;border:1px solid #3d444d;border-radius:18px;padding:6px 10px;cursor:pointer;min-height:32px}
 .tc3d button[aria-pressed=true]{color:#22c55e;border-color:#22c55e;background:#123222}
@@ -8,7 +8,7 @@
 .tc3d-pane{position:absolute;top:0;bottom:0;width:50%;touch-action:none;cursor:grab;overflow:hidden}
 .tc3d-pane-0{left:0}.tc3d-pane-1{left:50%;border-left:1px solid #343a42}
 .tc3d-title{position:absolute;top:8px;left:8px;right:8px;font-size:11px;font-weight:500;pointer-events:none;text-shadow:0 1px 3px #000}
-.tc3d-scale{position:absolute;bottom:8px;left:8px;pointer-events:none;font:10px ui-monospace,monospace;text-shadow:0 1px 3px #000}
+.tc3d-scale{position:absolute;bottom:8px;left:8px;pointer-events:none;font:10px var(--font-data);text-shadow:0 1px 3px #000}
 .tc3d-scale i{display:block;width:60px;height:5px;border:1px solid #e4e7ea;border-top:0;margin-bottom:3px}
 .tc3d-footers{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #343a42}
 .tc3d-metadata{min-width:0;padding:10px;display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1.5;overflow-wrap:anywhere}

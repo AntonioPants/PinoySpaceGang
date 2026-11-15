@@ -89,6 +89,8 @@ export function autopilot(opts: AutopilotOptions = {}): Controller {
             ctx.setAim(pick.best);
           }
         }
+        // Report where guidance now aims, whether it kept its aim or moved it (for displays only).
+        ctx.emit({ type: 'siteSelected', t: obs.t, at: { ...ctx.aim }, safe: pick.aimSafe || !!pick.best, diverted: !pick.aimSafe && !!pick.best });
       }
 
       // ---- horizontal ---------------------------------------------------------
@@ -161,6 +163,26 @@ export interface ScanResult {
   best?: Vec2;
 }
 
+/** Slope and roughness the autopilot judges for a landing footprint at (x, y), from what the sensor sees. */
+export function assessSite(view: HazardField, x: number, y: number, legR: number): { slope: number; rough: number } {
+  // Evaluate the footprint plus a small margin ring for guidance dispersion.
+  let slope = 0;
+  let rough = 0;
+  for (const [dx, dy] of [[0, 0], [3, 0], [-3, 0], [0, 3], [0, -3]]) {
+    slope = Math.max(slope, slopeDegAt(view, x + dx, y + dy, legR));
+    rough = Math.max(rough, roughnessAt(view, x + dx, y + dy, legR));
+  }
+  // lidar/camera point clouds resolve individual boulders the DEM can't
+  if (view.obstacleWithin) rough = Math.max(rough, view.obstacleWithin(x, y, legR + 3));
+  return { slope, rough };
+}
+
+/** Which limits a site breaks, by the margin the autopilot keeps: 70% of the slope limit, 60% of the roughness limit. */
+export function siteHazards(a: { slope: number; rough: number }, limits: { maxSlopeDeg: number; maxRoughnessM: number }) {
+  const slope = !(a.slope < 0.7 * limits.maxSlopeDeg), rough = !(a.rough < 0.6 * limits.maxRoughnessM);
+  return { slope, rough, safe: !slope && !rough };
+}
+
 /** Scores candidate spots on a grid around the aim point; lower is better. */
 export function scanForLandingSite(
   view: HazardField,
@@ -170,20 +192,8 @@ export function scanForLandingSite(
   limits: { maxSlopeDeg: number; maxRoughnessM: number },
   stepM = 4,
 ): ScanResult {
-  // Evaluate the footprint plus a small margin ring for guidance dispersion.
-  const assess = (x: number, y: number) => {
-    let slope = 0;
-    let rough = 0;
-    for (const [dx, dy] of [[0, 0], [3, 0], [-3, 0], [0, 3], [0, -3]]) {
-      slope = Math.max(slope, slopeDegAt(view, x + dx, y + dy, legR));
-      rough = Math.max(rough, roughnessAt(view, x + dx, y + dy, legR));
-    }
-    // lidar/camera point clouds resolve individual boulders the DEM can't
-    if (view.obstacleWithin) rough = Math.max(rough, view.obstacleWithin(x, y, legR + 3));
-    return { slope, rough };
-  };
-  const safe = (a: { slope: number; rough: number }) =>
-    a.slope < 0.7 * limits.maxSlopeDeg && a.rough < 0.6 * limits.maxRoughnessM;
+  const assess = (x: number, y: number) => assessSite(view, x, y, legR);
+  const safe = (a: { slope: number; rough: number }) => siteHazards(a, limits).safe;
 
   const here = assess(aim.x, aim.y);
   if (safe(here)) return { aimSafe: true, aimSlope: here.slope, aimRough: here.rough };

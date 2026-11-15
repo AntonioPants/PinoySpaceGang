@@ -31,6 +31,7 @@ const LO = { ignite: 1.4, rise: 2.2, climb: 6.5 };
 const TAIL: Record<FlightOutcome, number> = { success: 6.5, "hard-landing": 6.5, "tip-over": 6, crash: 7, timeout: 3 };
 // Scene changes dissolve instead of cutting: a scene that ends leaves its last frame here, and the
 // next scene (cutscene, departure shot or live descent) starts under that still and fades it out.
+let rendererSequence=0;
 let handoff: { url: string; at: number } | null = null;
 /** Keeps `canvas`'s current frame for the next scene. Call it right after rendering that frame. */
 export function leaveHandoff(canvas: HTMLCanvasElement) {
@@ -146,6 +147,7 @@ export class CutsceneEngine {
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.domElement.style.cssText = "display:block;width:100%;height:100%";
     if (getComputedStyle(container).position === "static") container.style.position = "relative";
+    this.renderer.domElement.dataset.rendererId=String(++rendererSequence);
     container.appendChild(this.renderer.domElement);
 
     // sky, sun, light
@@ -204,7 +206,7 @@ export class CutsceneEngine {
   /** Plays a cutscene. Resolves when it ends or is skipped. Endings keep animating until the next play()/dispose(). */
   play(kind: CutsceneKind, params: EndingParams = {}): Promise<void> {
     this.finish?.();
-    this.audio.start();
+    this.audio.start();this.beginHandoff();
     this.begin(kind, params); this.last = performance.now();
     this.ui.skip.style.display = "block";
     cancelAnimationFrame(this.raf);
@@ -295,8 +297,47 @@ export class CutsceneEngine {
     this.camera.updateProjectionMatrix();
   }
 
+  /** A warmed renderer was created before the preceding scene produced its final frame. */
+  protected beginHandoff(){
+    const still=peekHandoff();
+    this.ui.cover.style.backgroundImage=still?`url("${still}")`:'';
+    this.ui.cover.style.display='block';this.ui.cover.style.opacity='1';this.coverAge=0;
+  }
+
+  /** Stage the first frame without starting audio, timers or a flight. */
+  stagePreview(kind: CutsceneKind, params: EndingParams = {}) {
+    this.begin(kind,params); this.step(0); this.render();
+  }
+
+  /** Compile/upload and wait for the horizon while the preceding screen still covers us. */
+  async prepareView(signal?: AbortSignal) {
+    const started = performance.now();
+    // The overhead camera registered by EarthScenery covers the whole approach, not only
+    // the launch camera. Render below the covering screen until those requests converge.
+    while (!this.disposed && !signal?.aborted && this.scenery && !this.scenery.ready) {
+      if (this.scenery.failed) throw new Error('Distant terrain could not load. Check the connection and retry.');
+      if (performance.now()-started > 60000) throw new Error('Distant terrain is taking too long. Retry the landing view.');
+      this.render();
+      await new Promise<void>(resolve=>setTimeout(resolve,32));
+    }
+    if (this.disposed || signal?.aborted) return;
+    // A warm-up can be cancelled by a refit or a rapid scene skip. compileAsync's internal
+    // polling outlives disposed materials in Three.js; a hidden compile + draw finishes
+    // the upload in this task, so cleanup never races an outstanding shader poll.
+    this.renderer.compile(this.scene,this.camera);
+    this.render();
+  }
+
+  /** Stop drawing an obscured view without releasing its resident terrain or GPU buffers. */
+  setActive(active: boolean) {
+    cancelAnimationFrame(this.raf);
+    if (active && !this.disposed) { this.last=performance.now(); this.raf=requestAnimationFrame(this.tick); }
+  }
+
   dispose() {
-    if (this.disposed) return; this.disposed = true;
+    if (this.disposed) return;
+    if(this.finish&&(this.kind==='opening'||this.kind==='liftoff')){this.render();leaveHandoff(this.renderer.domElement);}
+    this.disposed = true;
     this.scenery?.dispose(); cancelAnimationFrame(this.raf); this.finish?.(); this.ro.disconnect(); this.audio.stop();
     this.scene.traverse((o) => {
       const m = o as THREE.Mesh;
@@ -921,13 +962,13 @@ export class CutsceneEngine {
     const el = <K extends keyof HTMLElementTagNameMap>(tag: K, css: string, parent: HTMLElement) => {
       const e = document.createElement(tag); e.style.cssText = css; parent.appendChild(e); return e;
     };
-    const root = el("div", "position:absolute;inset:0;pointer-events:none;overflow:hidden;font-family:ui-sans-serif,system-ui,sans-serif;color:#fff", this.container);
+    const root = el("div", "position:absolute;inset:0;pointer-events:none;overflow:hidden;font-family:var(--font-ui, sans-serif);color:#fff", this.container);
     const bar = "position:absolute;left:0;right:0;height:9%;background:#000";
     const cover = el("div", "position:absolute;inset:0;background:#000 center/cover no-repeat", root);
     const flash = el("div", "position:absolute;inset:0;background:#fff;opacity:0", root);
     if (letterbox) { el("div", bar + ";top:0", root); el("div", bar + ";bottom:0", root); }
     const fade = el("div", "position:absolute;inset:0;background:#000;opacity:0", root);
-    const cap = el("div", "position:absolute;left:6%;bottom:15%;opacity:0;transition:opacity .6s;text-shadow:0 2px 12px rgba(0,0,0,.7)", root);
+    const cap = el("div", "position:absolute;left:6%;right:6%;bottom:15%;max-height:65%;overflow:auto;overflow-wrap:anywhere;line-height:1.4;opacity:0;transition:opacity .6s;text-shadow:0 2px 12px rgba(0,0,0,.7)", root);
     const title = el("div", "font-size:clamp(20px,3.6vw,46px);font-weight:700;letter-spacing:.14em;text-transform:uppercase", cap);
     const sub = el("div", "font-size:clamp(11px,1.4vw,17px);letter-spacing:.2em;text-transform:uppercase;opacity:.85;margin-top:.4em", cap);
     const skip = el("button", "position:absolute;right:3%;bottom:11%;pointer-events:auto;display:none;background:rgba(0,0,0,.45);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:6px 14px;font:inherit;font-size:13px;letter-spacing:.1em;cursor:pointer", root);
@@ -940,6 +981,7 @@ export class CutsceneEngine {
     if (this.ui.title.textContent !== title && title) this.ui.title.textContent = title;
     if (this.ui.sub.textContent !== sub && title) this.ui.sub.textContent = sub;
     this.ui.cap.style.opacity = title ? "1" : "0";
+    this.ui.cap.style.pointerEvents = title ? "auto" : "none";
   }
 
   protected resize() {

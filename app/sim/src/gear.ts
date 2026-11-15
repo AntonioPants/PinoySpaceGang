@@ -26,7 +26,8 @@
  *     The first two are bought with speed against gravity, so low gravity makes them cheap: a
  *     touchdown that stays upright on Earth can go over on the Moon.
  *
- * The presets are prototype values for this simulator, not measured hardware.
+ * The first three presets are prototype values for this simulator; the rest follow gear that flew
+ * on real landers, with approximate figures. None are measured hardware.
  */
 import type { LandingGearConfig } from './types.ts';
 
@@ -39,7 +40,7 @@ export const RATING_TOUCHDOWN = { lateralMps: 0.6, sinkMps: 1.5 };
 
 export const GEAR_TUNING = { strokeM: { min: 0.3, max: 0.8 }, dampingRatio: { min: 0.3, max: 0.95 } };
 
-export type GearPresetId = 'standard-four' | 'wide-four' | 'survey-six';
+export type GearPresetId = 'standard-four' | 'wide-four' | 'survey-six' | 'apollo-four' | 'surveyor-three' | 'change-four' | 'vikram-four' | 'slim-five' | 'nova-six' | 'viking-three';
 
 /**
  * The three gear options. `slopeRatingDeg` is the slope guidance treats as the limit when it
@@ -52,6 +53,25 @@ export const GEAR_PRESETS: Record<GearPresetId, LandingGearConfig & { slopeRatin
   'wide-four': { gearId: 'wide-four', legs: 4, radiusM: 3.8, strokeM: 0.4, dampingRatio: 0.7, gearMassKg: 110, padRadiusM: 0.55, slopeRatingDeg: 16 },
   // six long-stroke legs for hard, rough touchdowns: the heaviest
   'survey-six': { gearId: 'survey-six', legs: 6, radiusM: 3.3, strokeM: 0.6, dampingRatio: 0.7, gearMassKg: 135, padRadiusM: 0.5, slopeRatingDeg: 14 },
+  // After gear that flew. Approximate figures that keep each design's character; the same
+  // formulas above decide what they absorb and when they tip.
+  // Apollo LM: four cantilevered legs with crushable aluminium honeycomb struts (about 0.8 m of
+  // stroke, almost no rebound) on a wide stance, rated for a 12° slope. Heavy.
+  'apollo-four': { gearId: 'apollo-four', legs: 4, radiusM: 4.6, strokeM: 0.8, dampingRatio: 0.9, gearMassKg: 260, padRadiusM: 0.47, slopeRatingDeg: 12 },
+  // Surveyor: three legs with hydraulic shock absorbers and crushable blocks. Light, but a tripod's
+  // support edge sits only half its radius from the centre, so it tips more easily.
+  'surveyor-three': { gearId: 'surveyor-three', legs: 3, radiusM: 2.6, strokeM: 0.3, dampingRatio: 0.75, gearMassKg: 30, padRadiusM: 0.2, slopeRatingDeg: 10 },
+  // Chang'e 3/4: four legs with buffer struts and large round pads for soft ground.
+  'change-four': { gearId: 'change-four', legs: 4, radiusM: 2.9, strokeM: 0.5, dampingRatio: 0.8, gearMassKg: 120, padRadiusM: 0.55, slopeRatingDeg: 14 },
+  // Chandrayaan-3: four legs strengthened after Chandrayaan-2 to take about 3 m/s.
+  'vikram-four': { gearId: 'vikram-four', legs: 4, radiusM: 2.7, strokeM: 0.55, dampingRatio: 0.7, gearMassKg: 100, padRadiusM: 0.4, slopeRatingDeg: 12 },
+  // SLIM: five short legs with 3D-printed lattice crush pads that absorb and do not rebound.
+  'slim-five': { gearId: 'slim-five', legs: 5, radiusM: 2.4, strokeM: 0.3, dampingRatio: 0.95, gearMassKg: 20, padRadiusM: 0.22, slopeRatingDeg: 15 },
+  // Nova-C: six slim legs. Light, with little stroke: IM-1 caught a foot and tipped when it
+  // touched down with sideways speed.
+  'nova-six': { gearId: 'nova-six', legs: 6, radiusM: 2.7, strokeM: 0.35, dampingRatio: 0.6, gearMassKg: 70, padRadiusM: 0.3, slopeRatingDeg: 10 },
+  // Viking and Phoenix: three legs with crushable honeycomb inserts, for Mars.
+  'viking-three': { gearId: 'viking-three', legs: 3, radiusM: 2.8, strokeM: 0.4, dampingRatio: 0.9, gearMassKg: 55, padRadiusM: 0.3, slopeRatingDeg: 12 },
 };
 
 export function isGearPreset(id: unknown): id is GearPresetId {

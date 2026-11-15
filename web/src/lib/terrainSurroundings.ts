@@ -96,6 +96,7 @@ export function terrainSurroundings(ground: T.BufferGeometry, bounds: TerrainBou
   }
   return {
     mesh,
+    get ready(){return !needsRefresh;},
     refresh() { revision++; needsRefresh=true; },
     update,
     dispose() { geometry.dispose(); material.dispose(); },

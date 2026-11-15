@@ -64,10 +64,13 @@ export default function EquipmentBay({selection,onChange,launching=false}:Equipm
       {groups.map(group=>{
         const selected=selection[group.key]??defaultAppearance[group.key as keyof typeof defaultAppearance];
         const index=Math.max(0,group.items.findIndex(item=>item.id===selected)),item=group.items[index];
-        const cycle=(n:number)=>onChange({...selection,[group.key]:group.items[(index+n+group.items.length)%group.items.length].id});
+        const cycle=(n:number)=>{const id=group.items[(index+n+group.items.length)%group.items.length].id;
+          // A real lander arrives as flown: its own sensor and gear, which can then be swapped.
+          const flown=group.key==='vehicleId'?vehicles.find(v=>v.id===id):undefined;
+          onChange({...selection,[group.key]:id,...(flown?.gear?{landingGearId:flown.gear,hazardSensor:flown.settings.hazardSensor!}:{})});};
         return <section className="equipment-rail" key={group.key}><div className="rail-heading"><span>{group.label}</span><span>{index+1} / {group.items.length}</span></div><div className="rail-choice"><button aria-label={`Previous ${group.label.toLowerCase()}`} disabled={launching} onClick={()=>cycle(-1)}><ChevronLeft/></button><strong aria-live="polite">{item.name}</strong><button aria-label={`Next ${group.label.toLowerCase()}`} disabled={launching} onClick={()=>cycle(1)}><ChevronRight/></button></div><p>{'role' in item&&<>{item.role}<br/></>}{item.detail}</p></section>;
       })}
-      <p className="gear-note">{section==='hardware'?'Prototype loadouts. The gear is simulated: stroke and damping set the sink rate it absorbs, stance and leg count set when it tips, and its mass rides along. Trim it on the bridge.':'45 appearance combinations. Finishes, solar arrays and antennas are visual choices; mass, thrust and sensor performance stay with your hardware.'}</p>
+      <p className="gear-note">{section==='hardware'?'Two prototypes and ten real Moon and Mars landers, each drawn after the craft that flew and arriving with its own engine, sensor and gear. Every one takes any gear, sensor, livery, arrays and antenna. The gear is simulated: stroke and damping set the sink rate it absorbs, stance and leg count set when it tips, and its mass rides along. Trim it on the bridge.':'45 appearance combinations. Finishes, solar arrays and antennas are visual choices; mass, thrust and sensor performance stay with your hardware.'}</p>
       {section==='appearance'&&<button className="equipment-reset" disabled={launching} onClick={()=>onChange({...selection,...defaultAppearance})}>Reset appearance</button>}
     </div>
   </>;

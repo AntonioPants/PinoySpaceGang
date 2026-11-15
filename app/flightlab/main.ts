@@ -3,6 +3,8 @@
  * move them, and Launch flies the same flight live in 3D over the real terrain pack.
  */
 import { FlightView, type CamMode, type FlightSetup } from "./view";
+import { HAZARD_SENSORS, HAZARD_SENSOR_IDS } from "../sim/src/hazardSensors.ts";
+import type { HazardSensorId } from "../sim/src/types.ts";
 import { simToPack, type TerrainPack } from "../../web/src/components/cutscene/terrainPack";
 import type { Boulder } from "../../web/src/components/cutscene/terrain";
 import { createTerrainData } from "./pack/load-terrain.mjs";
@@ -45,7 +47,7 @@ const SLIDERS: Slider[] = [
   { group: "Touchdown limits", key: "limSlope", label: "Max ground slope", min: 5, max: 25, step: 1, value: 12, unit: "°" },
 ];
 const cfg: Record<string, number> = Object.fromEntries(SLIDERS.map((s) => [s.key, s.value]));
-const opt = { strategy: "autonomous" as "autonomous" | "manual", hazard: "lidar" as "lidar" | "camera" | "none", velocimeter: true, seed: 1, intro: false };
+const opt = { strategy: "autonomous" as "autonomous" | "manual", hazard: "lidar" as HazardSensorId, velocimeter: true, seed: 1, intro: false };
 
 const SCENARIOS: Record<string, { label: string; set: Record<string, number>; opt?: Partial<typeof opt> }> = {
   nominal: { label: "Nominal", set: {} },
@@ -122,7 +124,7 @@ function simInput(over: Partial<Record<string, number>> = {}): SimInput {
     target: { x: c.east, y: c.north }, start: startState(),
   };
 }
-const controller = () => opt.strategy === "autonomous" ? autopilot({ hazardAvoidance: opt.hazard !== "none", scanAltitudeM: cfg.scanAlt,
+const controller = () => opt.strategy === "autonomous" ? autopilot({ hazardAvoidance: HAZARD_SENSORS[opt.hazard].map, scanAltitudeM: cfg.scanAlt,
   divertRadiusM: cfg.divertR, terminalAltitudeM: cfg.termAlt, terminalRateMps: cfg.termRate, maxGuidanceTiltDeg: cfg.maxTilt }) : undefined;
 function fly(input: SimInput): FlightTelemetry {
   const sim = createSim(input, controller());
@@ -131,7 +133,7 @@ function fly(input: SimInput): FlightTelemetry {
 }
 function setup(): FlightSetup {
   return { target: { x: cfg.east, y: cfg.north }, refElevation: baseTerrain.heightAt(cfg.east, cfg.north), gravity: cfg.gravity, airDensity: cfg.air,
-    wind: site.wind ?? { x: 0, y: 0 }, dust: cfg.dust, hazardScan: opt.strategy === "autonomous" && opt.hazard !== "none",
+    wind: site.wind ?? { x: 0, y: 0 }, dust: cfg.dust, hazardScan: opt.strategy === "autonomous" && HAZARD_SENSORS[opt.hazard].map,
     scanAltitudeM: cfg.scanAlt, divertRadiusM: cfg.divertR, legRadiusM: DEFAULT_LANDER.legRadiusM, maxSlopeDeg: cfg.limSlope, maxRoughnessM: DEFAULT_LANDER.limits.maxRoughnessM };
 }
 
@@ -158,7 +160,7 @@ function idle() { live = null; result = null; view.showIdle(setup(), startState(
 const OUT: Record<string, [string, string]> = { success: ["SUCCESS", "#3ddc97"], "hard-landing": ["HARD LANDING", "#ffb347"], "tip-over": ["TIP-OVER", "#ff7a59"], crash: ["CRASH", "#ff4d4d"], timeout: ["TIMEOUT", "#9aa4b2"] };
 let marginJob = 0;
 function predict() {
-  if (opt.strategy === "manual") { prediction = null; $("pred").innerHTML = '<div class="dim">Manual flight: no prediction. W/S throttle, arrows tilt, X cuts the engine.</div>'; view?.setPrediction(); drawMap(); drawChart(); return; }
+  if (opt.strategy === "manual") { prediction = null; $("pred").innerHTML = '<div class="dim">Manual flight: no prediction. H toggles the hazard-scan overlay. W/S throttle, arrows tilt, X cuts the engine.</div>'; view?.setPrediction(); drawMap(); drawChart(); return; }
   const t0 = performance.now();
   prediction = fly(simInput());
   const s = prediction.summary!, [name, color] = OUT[s.outcome];
@@ -326,9 +328,11 @@ function buildUi() {
     Object.assign(opt, { strategy: "autonomous", hazard: "lidar" }, SCENARIOS[b.dataset.sc!].opt); Object.assign(cfg, SCENARIOS[b.dataset.sc!].set);
     $<HTMLSelectElement>("strategy").value = opt.strategy; $<HTMLSelectElement>("hazard").value = opt.hazard; syncSliders(); shadeMap(); changed(true);
   }));
+  $<HTMLSelectElement>("hazard").innerHTML = HAZARD_SENSOR_IDS.map((id) => `<option value="${id}">${id === "none" ? "No hazard sensor" : "Sensor: " + HAZARD_SENSORS[id].name}</option>`).join("");
+  $<HTMLSelectElement>("hazard").value = opt.hazard;
   const sel = (id: string, fn: (v: string) => void) => { $<HTMLSelectElement>(id).onchange = (e) => fn((e.target as HTMLSelectElement).value); };
   sel("strategy", (v) => { opt.strategy = v as typeof opt.strategy; if (v === "manual") { $<HTMLSelectElement>("speed").value = "1"; view.speed = 1; } changed(false); });
-  sel("hazard", (v) => { opt.hazard = v as typeof opt.hazard; changed(false); });
+  sel("hazard", (v) => { opt.hazard = v as typeof opt.hazard; const p = HAZARD_SENSORS[opt.hazard]; if (p.map) { cfg.scanAlt = p.scanAltitudeM; cfg.divertR = p.divertRadiusM; syncSliders(); } changed(false); });
   sel("cam", (v) => { view.camMode = v as CamMode; });
   sel("speed", (v) => { view.speed = Number(v); });
   $<HTMLInputElement>("velocimeter").onchange = (e) => { opt.velocimeter = (e.target as HTMLInputElement).checked; changed(false); };
@@ -342,7 +346,7 @@ function buildUi() {
     const r = (e.target as HTMLElement).getBoundingClientRect(), x = ((e.clientX - r.left) / r.width) * 4800 - 2400, y = 2400 - ((e.clientY - r.top) / r.height) * 4800;
     cfg.east = Math.max(-2100, Math.min(2100, Math.round(x / 10) * 10)); cfg.north = Math.max(-2100, Math.min(2100, Math.round(y / 10) * 10)); syncSliders(); changed(true);
   };
-  window.addEventListener("keydown", (e) => { const t = e.target as HTMLElement; if (t.tagName === "INPUT" || t.tagName === "SELECT") return; if (e.code.startsWith("Arrow") || e.code === "Space") e.preventDefault(); pressed.add(e.code); if (e.code === "Space") $("pause").click(); });
+  window.addEventListener("keydown", (e) => { const t = e.target as HTMLElement; if (t.tagName === "INPUT" || t.tagName === "SELECT") return; if (e.code.startsWith("Arrow") || e.code === "Space") e.preventDefault(); if (e.code === "KeyH" && !e.repeat) { view.scanOverlay = !view.scanOverlay; return; } pressed.add(e.code); if (e.code === "Space") $("pause").click(); });
   window.addEventListener("keyup", (e) => pressed.delete(e.code));
   syncSliders();
 }
@@ -354,7 +358,16 @@ if (q.get("sc") && SCENARIOS[q.get("sc")!]) { Object.assign(opt, SCENARIOS[q.get
 if (q.get("cam")) $<HTMLSelectElement>("cam").value = q.get("cam")!;
 if (q.has("intro")) { opt.intro = true; $<HTMLInputElement>("intro").checked = true; }
 if (q.get("strategy") === "manual") { opt.strategy = "manual"; $<HTMLSelectElement>("strategy").value = "manual"; }
+// ?sensor=flash-lidar&glare=0.6: fly a hazard sensor at its own scan height and range, in this glare
+const sensorParam = q.get("sensor");
+if (sensorParam && sensorParam in HAZARD_SENSORS) {
+  opt.hazard = sensorParam as HazardSensorId; $<HTMLSelectElement>("hazard").value = opt.hazard;
+  const p = HAZARD_SENSORS[opt.hazard]; if (p.map) { cfg.scanAlt = p.scanAltitudeM; cfg.divertR = p.divertRadiusM; }
+}
+if (q.get("glare") !== null) cfg.glare = Number(q.get("glare"));
+syncSliders();
 site = buildSite(); predict(); buildView(); requestAnimationFrame(hudLoop);
+if (q.get("overlay") === "0") view.scanOverlay = false;
 // test hook for headless screenshots: ?launch&at=85&run=3 jumps to T+85 s, then runs 3 more seconds and holds
 if (q.has("launch")) {
   launch();

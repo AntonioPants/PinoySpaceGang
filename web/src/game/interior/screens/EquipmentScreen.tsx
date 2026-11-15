@@ -5,6 +5,8 @@ import { Segmented, Slider } from './ui';
 
 const GEAR_CHOICES: { value: GearPresetId; label: string }[] = [
   { value: 'standard-four', label: 'Standard 4' }, { value: 'wide-four', label: 'Wide 4' }, { value: 'survey-six', label: 'Survey 6' },
+  { value: 'apollo-four', label: 'Apollo 4' }, { value: 'surveyor-three', label: 'Surveyor 3' }, { value: 'change-four', label: "Chang'e 4" },
+  { value: 'vikram-four', label: 'Vikram 4' }, { value: 'slim-five', label: 'SLIM 5' }, { value: 'nova-six', label: 'Nova-C 6' }, { value: 'viking-three', label: 'Viking 3' },
 ];
 
 /**
@@ -39,9 +41,9 @@ export default function EquipmentScreen({ mission, settings, onSettingsChange }:
       </section>
       <section>
         <h3>Vehicle{gear ? ` · gear ${gear.legs} legs, ${GEAR_PRESETS[gearId!].gearMassKg} kg` : ''}</h3>
-        <Slider label="Propellant" value={settings.fuelMassKg} min={50} max={2000} step={50} unit="kg" onChange={v => set('fuelMassKg', v)} />
-        <Slider label="Dry mass" value={settings.dryMassKg} min={100} max={5000} step={100} unit="kg" onChange={v => set('dryMassKg', v)} />
-        <Slider label="Maximum thrust" value={settings.thrusterForceN} min={1000} max={50000} step={500} unit="N" onChange={v => set('thrusterForceN', v)} />
+        <Slider label="Propellant" value={settings.fuelMassKg} min={20} max={2000} step={10} unit="kg" onChange={v => set('fuelMassKg', v)} />
+        <Slider label="Dry mass" value={settings.dryMassKg} min={100} max={10000} step={50} unit="kg" onChange={v => set('dryMassKg', v)} />
+        <Slider label="Maximum thrust" value={settings.thrusterForceN} min={200} max={50000} step={100} unit="N" onChange={v => set('thrusterForceN', v)} />
         {gear && <>
           <Slider label="Gear stroke" value={gear.strokeM} min={GEAR_TUNING.strokeM.min} max={GEAR_TUNING.strokeM.max} step={0.05} unit="m" onChange={v => set('gearStrokeM', Math.round(v * 100) / 100)} />
           <Slider label="Damping (stiff to soft)" value={Math.round(gear.dampingRatio * 100)} min={GEAR_TUNING.dampingRatio.min * 100} max={GEAR_TUNING.dampingRatio.max * 100} step={5} unit="%" onChange={v => set('gearDampingRatio', v / 100)} />

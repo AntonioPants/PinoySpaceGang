@@ -4,9 +4,11 @@ import { createEarthScenery } from './earthTileScenery';
 import type { CutsceneEngine } from '../components/cutscene/engine';
 import { simToPack, type TerrainPack } from '../components/cutscene/terrainPack';
 
-export function attachSiteScenery(scene: CutsceneEngine, host: HTMLElement, pack: TerrainPack,
-  target: { x: number; y: number }, verticalOffsetM: number) {
-  if (import.meta.env.VITE_CESIUM_ION_TOKEN) void loadCatalog().then(catalog => {
+export async function attachSiteScenery(scene: CutsceneEngine, host: HTMLElement, pack: TerrainPack,
+  target: { x: number; y: number }, verticalOffsetM: number, signal?: AbortSignal) {
+  if (import.meta.env.VITE_CESIUM_ION_TOKEN && navigator.onLine) {
+    const catalog = await loadCatalog(signal);
+    if (signal?.aborted) return;
     const site = catalog.analogs.find(a => a.id === pack.manifest.id);
     if (!site) return;
     const landing = simToPack(pack, target);
@@ -17,5 +19,5 @@ export function attachSiteScenery(scene: CutsceneEngine, host: HTMLElement, pack
     scene.attachEarthScenery((renderer, ground, meshes, look) => createEarthScenery(renderer, host, site.lat, site.lon,
       height, frame, ground, {west:-landing.x,east:width-landing.x,north:-landing.z,south:depth-landing.z},
       new THREE.Color(0xb9cad3), meshes, look));
-  }).catch(() => { /* The measured scene is available offline. */ });
+  }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { prepareTerrain } from "./terrain";
 import type { LanderSpec } from "./lander";
 import { CutsceneEngine, type CutsceneKind } from "./engine";
 import type { FlightLike, StartState } from "./flight";
@@ -8,6 +9,8 @@ import type { CutsceneEnv, EndingParams } from "./presets";
 import { loadTerrainPack, peekTerrainPack, simToPack, type TerrainPack } from "./terrainPack";
 
 interface Props {
+  warming?: boolean;
+  onPrepared?: (ready: boolean) => void;
   earthSceneryOffsetM?: number;
   /** Game scenes render to the entire host viewport without forced aspect ratio. */
   fullscreen?: boolean;
@@ -35,9 +38,12 @@ interface Props {
  * Plays one cutscene. Mount it after a user click so sound is allowed to start.
  * The scene is centred on the sim's target (opening) or on the flight's touchdown point (ending).
  */
-export default function Cutscene({ earthSceneryOffsetM, kind, env, flight, start, target, params, terrain, terrainUrl, requiredTerrainId, landing, equipment, muted = false, showSkip = true, onDone, className, fullscreen = false }: Props) {
+export default function Cutscene({ warming = false, onPrepared, earthSceneryOffsetM, kind, env, flight, start, target, params, terrain, terrainUrl, requiredTerrainId, landing, equipment, muted = false, showSkip = true, onDone, className, fullscreen = false }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const engine = useRef<CutsceneEngine | null>(null);
+  const prepared = useRef(onPrepared); prepared.current=onPrepared;
+  const [painted,setPainted]=useState(false);
+  const [ready,setReady]=useState(false);
   const done = useRef(onDone); done.current = onDone;
   const play = useRef<EndingParams>({}); play.current = { ...params, flight, start, target };
   // a pack loaded by an earlier scene is used at once, with no loading frame
@@ -55,33 +61,50 @@ export default function Cutscene({ earthSceneryOffsetM, kind, env, flight, start
     if (terrain || !terrainUrl) return;
     const ctl = new AbortController();
     setFailed(false); setLoaded(peekTerrainPack(terrainUrl));
-    loadTerrainPack(terrainUrl, ctl.signal).then(p => { if (!ctl.signal.aborted) setLoaded(p); }).catch(() => { if (!ctl.signal.aborted) setFailed(true); });
+    loadTerrainPack(terrainUrl, ctl.signal).then(p => { if (!ctl.signal.aborted) setLoaded(p); }).catch(() => { if (!ctl.signal.aborted) { setFailed(true); prepared.current?.(true); } });
     return () => ctl.abort();
   }, [terrain, terrainUrl]);
+
+  useEffect(()=>{
+    let active=true;setPainted(false);
+    if(!pack){setPainted(true);return;}
+    void prepareTerrain(pack,JSON.parse(landKey),env.seed??7).then(()=>{if(active)setPainted(true);}).catch(()=>{if(active){setFailed(true);prepared.current?.(true);}});
+    return()=>{active=false;};
+  },[pack,landKey,env.seed]);
 
   // Before the first paint: the screen keeps the previous scene until this one can draw (its first
   // frame is the previous scene's last, dissolving), so an empty black box is never shown.
   useLayoutEffect(() => {
-    if (!box.current || waiting || (requiredTerrainId && (!pack || wrongPack))) return;
+    if (!box.current || !painted || waiting || (requiredTerrainId && (!pack || wrongPack))) return;
     const e = new CutsceneEngine(box.current, JSON.parse(envKey) as CutsceneEnv,
       { muted, showSkip, letterbox: !fullscreen, equipment: JSON.parse(equipKey) ?? undefined, terrain: pack ?? undefined, landing: JSON.parse(landKey) ?? undefined });
     engine.current = e;
     let live = true;
-    const host = box.current;
-    if (earthSceneryOffsetM !== undefined && pack) {
-      void import('../../lib/attachSiteScenery').then(({ attachSiteScenery }) => {
-        if (live) attachSiteScenery(e, host, pack, centre, earthSceneryOffsetM);
-      }).catch(() => { /* Keep playing over the measured terrain. */ });
-    }
-    e.play(kind, play.current).then(() => { if (live) done.current?.(); });
-    return () => { live = false; e.dispose(); engine.current = null; };
+    const ctl=new AbortController(),host=box.current;
+    setReady(false);prepared.current?.(false);
+    e.stagePreview(kind,play.current);
+    void (async()=>{
+      if(earthSceneryOffsetM!==undefined&&pack){
+        const {attachSiteScenery}=await import('../../lib/attachSiteScenery');
+        if(!live)return;
+        await attachSiteScenery(e,host,pack,centre,earthSceneryOffsetM,ctl.signal);
+      }
+      await e.prepareView(ctl.signal);
+      if(live){setReady(true);prepared.current?.(true);}
+    })().catch(()=>{if(live){setFailed(true);prepared.current?.(true);}});
+    return () => { live = false; ctl.abort(); e.dispose(); engine.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [earthSceneryOffsetM, kind, envKey, landKey, equipKey, pack, waiting, flight, requiredTerrainId, wrongPack, fullscreen]);
+  }, [painted, earthSceneryOffsetM, kind, envKey, landKey, equipKey, pack, waiting, flight, requiredTerrainId, wrongPack, fullscreen]);
 
-  useEffect(() => { engine.current?.setMuted(muted); }, [muted]);
+  useEffect(()=>{
+    const e=engine.current;if(!e||!ready||warming)return;
+    let active=true;e.setMuted(muted);void e.play(kind,play.current).then(()=>{if(active)done.current?.();});
+    return()=>{active=false;e.setActive(false);};
+  },[ready,warming,kind]);
+  useEffect(() => { engine.current?.setMuted(warming||muted); }, [muted,warming]);
 
   return (
-    <div style={{ position: "relative", width: "100%", height: fullscreen ? "100%" : undefined }} className={className}>
+    <div style={{ position: "relative", width: "100%", height: fullscreen ? "100%" : undefined }} className={className} data-cinematic-ready={ready} data-warming={warming}>
       <div ref={box} style={{ width: "100%", height: fullscreen ? "100%" : undefined, aspectRatio: fullscreen ? undefined : "16 / 9", background: "#000" }} />
       {(waiting || failed || wrongPack) && (
         <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", color: "#999", fontSize: 14 }}>

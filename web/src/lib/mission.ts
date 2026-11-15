@@ -1,3 +1,4 @@
+import { isHazardSensor } from '../../../app/sim/src/hazardSensors';
 import type { MissionConfig, MissionSettings, PlanetarySite, TerrainManifest, TerrainProfile } from './types';
 import { insideLandingArea, type LandingPoint } from './landing';
 import { gearFromSettings, validateGearSettings } from './gear';
@@ -51,12 +52,14 @@ export async function loadProfile(signal?: AbortSignal, location = TERRAIN_BASE,
 export const gravityFor = (site: PlanetarySite, settings: MissionSettings) => settings.environment === 'earth' ? 9.81 : site.gravity;
 export function validateSettings(s: MissionSettings): string[] {
   const errors: string[] = [];
-  for (const [key, min, max] of [['fuelMassKg', 50, 2000], ['dryMassKg', 100, 5000], ['thrusterForceN', 1000, 50000], ['maxSlopeToleranceDeg', 1, 30], ['windSpeedMs', 0, 30], ['dust', 0, 1], ['glare', 0, 1]] as const) {
+  for (const [key, min, max] of [['fuelMassKg', 20, 2000], ['dryMassKg', 100, 10000], ['thrusterForceN', 200, 50000], ['maxSlopeToleranceDeg', 1, 30], ['windSpeedMs', 0, 30], ['dust', 0, 1], ['glare', 0, 1]] as const) {
     if (!Number.isFinite(s[key]) || s[key] < min || s[key] > max) errors.push(`${key} is outside its supported range.`);
   }
+  if (s.ispS !== undefined && !(s.ispS >= 150 && s.ispS <= 460)) errors.push('ispS is outside its supported range.');
+  if (s.minThrottle !== undefined && !(s.minThrottle >= 0 && s.minThrottle <= .9)) errors.push('minThrottle is outside its supported range.');
   if (!['MANUAL_CONTROL', 'AUTONOMOUS_HAZARD_AVOID'].includes(s.mode)) errors.push('Unknown control mode.');
   if (!['earth', 'planetary'].includes(s.environment)) errors.push('Unknown environment mode.');
-  if (!['lidar', 'camera', 'none'].includes(s.hazardSensor)) errors.push('Unknown hazard sensor.');
+  if (!isHazardSensor(s.hazardSensor)) errors.push('Unknown hazard sensor.');
   if (typeof s.siteConditions !== 'boolean') errors.push('siteConditions must be true or false.');
   if (!Number.isInteger(s.realWeatherMonth) || s.realWeatherMonth < 0 || s.realWeatherMonth > 12) errors.push('realWeatherMonth must be 0 (manual) or 1–12.');
   if (!['typical', 'high_wind'].includes(s.weatherScenario)) errors.push('Unknown weather scenario.');
@@ -83,6 +86,7 @@ export function buildMission(site: PlanetarySite, profile: TerrainProfile, setti
       verticalOffsetM: profile.manifest.local_frame.vertical_offset_m, sourceSha256: profile.manifest.source.sha256 ?? profile.manifest.source.subset_sha256 ?? '',
       ...(landing && (landing.x || landing.y) ? { landingTargetM: { x: landing.x, y: landing.y } } : {}) },
     strategy: { mode: settings.mode, hazardSensor: settings.hazardSensor, thrusterForceN: settings.thrusterForceN, fuelMassKg: settings.fuelMassKg, dryMassKg: settings.dryMassKg, maxSlopeToleranceDeg: settings.maxSlopeToleranceDeg,
+      ...(settings.ispS !== undefined ? { ispS: settings.ispS } : {}), ...(settings.minThrottle !== undefined ? { minThrottle: settings.minThrottle } : {}),
       ...(landingGear ? { landingGear } : {}) },
     environment: { mode: settings.environment, gravityMs2: gravityFor(site, settings), windSpeedMs: lunarVacuum ? 0 : settings.windSpeedMs,
       atmosphereModel: lunarVacuum ? 'none' : settings.environment === 'earth' ? 'earth-standard' : 'mars-constant', dust: settings.dust, glare: settings.glare, interferenceSource: settings.siteConditions ? 'site' : 'manual',

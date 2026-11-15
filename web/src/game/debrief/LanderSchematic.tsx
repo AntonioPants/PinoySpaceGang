@@ -10,6 +10,10 @@
  * callout says so instead of inventing a tolerance.
  */
 import { useState, type KeyboardEvent, type ReactNode } from 'react';
+import { HAZARD_SENSORS } from '../../../../app/sim/src/hazardSensors';
+import type { HazardSensorId } from '../../../../app/sim/src/types';
+import { landingGear } from '../opening/equipmentCatalog';
+import { isLargeVehicle, vehicleName } from '../equipment';
 import { GEAR } from '../../components/cutscene/lander';
 import { liveries } from '../../lib/landerAppearance';
 import type { FlightTelemetry } from '../../../../app/sim/src/types';
@@ -77,8 +81,8 @@ export function subsystemReadings({ flight, mission, assessment: a, fidelity, re
     : `Earth stays about ${earthElevation.toFixed(0)}° above the horizon at ${target.name}, so a direct link is geometrically available.`;
 
   // ---- sensors
-  const glareNoise = sensor === 'camera' ? 1.0 : sensor === 'lidar' ? 0.15 : null;   // engine.ts hazard-map noise per unit glare
-  const sensorLevel: SubsystemLevel = sensor === 'none' ? 'caution' : sensor === 'camera' && env.interference.glare >= 0.4 ? 'caution' : 'nominal';
+  const profile = HAZARD_SENSORS[sensor] ?? HAZARD_SENSORS.lidar;   // the figures the descent flew (hazardSensors.ts)
+  const sensorLevel: SubsystemLevel = !profile.map ? 'caution' : profile.glareNoiseM >= 0.5 && env.interference.glare >= 0.4 ? 'caution' : 'nominal';
 
   // ---- avionics and thermal
   const tiltRatio = s.maxTiltDeg / lander.maxTiltDeg;
@@ -107,8 +111,8 @@ export function subsystemReadings({ flight, mission, assessment: a, fidelity, re
       spec: ['No radio or antenna model in the simulator; the link is not part of the flight.'],
       status: [commsStatus, ...(lat !== null && lon !== null ? [`Study centre: ${lat.toFixed(2)}°, ${lon.toFixed(2)}° E.`] : [])],
       analogDelta: ['On Earth the analog site has terrestrial networks and a sky-wide view of satellites, so it does not rehearse the target’s link geometry or delay.'] },
-    { id: 'sensors', name: 'Hazard sensor', short: 'Hazard sensor', level: sensorLevel, headline: sensor === 'none' ? 'No hazard sensor fitted' : `${sensor} · ${pct(env.interference.glare)} glare`,
-      spec: [sensor === 'none' ? 'No hazard sensor: guidance cannot see or divert around hazards.' : `${sensor === 'lidar' ? 'Lidar' : 'Camera'} hazard map; its noise grows ${glareNoise}× with glare (camera 1.0×, lidar 0.15×).`,
+    { id: 'sensors', name: 'Hazard sensor', short: 'Hazard sensor', level: sensorLevel, headline: sensor === 'none' ? 'No hazard sensor fitted' : `${profile.name} · ${pct(env.interference.glare)} glare`,
+      spec: [sensor === 'none' ? 'No hazard sensor: guidance cannot see or divert around hazards.' : !profile.map ? `${profile.name}: speed to ±${profile.velocitySigmaMps} m/s, but no hazard map, so guidance cannot divert.` : `${profile.name} hazard map read ${profile.scanAltitudeM} m up at ${profile.cellM} m detail, divert up to ${profile.divertRadiusM} m; noise ${profile.baseNoiseM} m plus ${profile.glareNoiseM} m per unit glare.`,
         `Dust degrades the altimeter and velocimeter below ${DUST_ALTITUDE_M} m while the engine fires. A camera degrades badly at 40% glare or more.`],
       status: [`Dust interference ${pct(env.interference.dust)}, glare ${pct(env.interference.glare)} (${mission.environment.interferenceSource === 'site' ? 'from site data' : 'manual'}).`,
         `${s.hazardsDetected} hazard${s.hazardsDetected === 1 ? '' : 's'} detected; ${s.diverts ? `${s.diverts} divert of ${s.divertDistanceM.toFixed(0)} m` : 'no divert'}.`,
@@ -150,10 +154,10 @@ const path = (points: Pt[], close = true) => points.map((p, i) => `${i ? 'L' : '
 const line = (a: Pt, b: Pt) => path([a, b], false);
 const hex = (n: number) => `#${n.toString(16).padStart(6, '0')}`;
 
-export interface LanderShape { vehicleId?: string; landingGearId?: string; hazardSensor?: 'lidar' | 'camera' | 'none'; liveryId?: string; solarArrayId?: string; antennaId?: string }
+export interface LanderShape { vehicleId?: string; landingGearId?: string; hazardSensor?: HazardSensorId; liveryId?: string; solarArrayId?: string; antennaId?: string }
 
 function geometry(spec: LanderShape) {
-  const payload = spec.vehicleId === 'payload';
+  const payload = isLargeVehicle(spec.vehicleId);
   const gear = GEAR[spec.landingGearId ?? ''] ?? GEAR['standard-four'];
   const bodyY = payload ? 2.35 : 2.2, bodyH = payload ? 1.75 : 1.4, radius = payload ? 1.88 : 1.63;
   const upperY = payload ? 3.65 : 3.35, roof = upperY + .45;
@@ -244,8 +248,8 @@ export default function LanderSchematic({ readings, shape = {}, children }: { re
   const g = geometry(shape), spots = anchors(g, shape);
   const key = (id: SubsystemId) => (e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { setActive(id); e.preventDefault(); } };
   const part = (id: SubsystemId) => ({ className: `lsc-part${id === active ? ' on' : ''} ${readings.find(r => r.id === id)!.level}`, onMouseEnter: () => setActive(id), onClick: () => setActive(id) });
-  const vehicle = shape.vehicleId === 'payload' ? 'Payload lander' : 'Survey lander';
-  const gearName = { 'wide-four': 'wide four-leg gear', 'survey-six': 'six-leg gear' }[shape.landingGearId ?? ''] ?? 'four-leg gear';
+  const vehicle = vehicleName(shape.vehicleId);
+  const gearName = landingGear.find(g => g.id === shape.landingGearId)?.name.toLowerCase() ?? 'four-leg gear';
   return <div className="lsc">
     <div className="lsc-left">
       <svg className="lsc-drawing" viewBox={`0 0 ${VIEW.width} ${VIEW.height}`} role="group" aria-label={`Lander schematic: ${vehicle}, ${gearName}. Choose a subsystem.`}>

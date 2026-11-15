@@ -31,7 +31,9 @@ export function flightSetup(mission: MissionConfig): Pick<SimInput, 'strategy' |
   return {
     strategy: mission.strategy.mode === 'MANUAL_CONTROL' ? 'manual' : 'autonomous',
     lander: { name:'Configured experimental lander', dryMassKg:mission.strategy.dryMassKg, fuelKg:mission.strategy.fuelMassKg,
-      maxThrustN:mission.strategy.thrusterForceN, limits:{maxSlopeDeg:mission.strategy.maxSlopeToleranceDeg},
+      maxThrustN:mission.strategy.thrusterForceN,
+      ...(mission.strategy.ispS !== undefined ? { ispS: mission.strategy.ispS } : {}), ...(mission.strategy.minThrottle !== undefined ? { minThrottle: mission.strategy.minThrottle } : {}),
+      limits:{maxSlopeDeg:mission.strategy.maxSlopeToleranceDeg},
       ...(gear ? { gear } : legRadiusM ? { legRadiusM } : {}) },
     sensors:{hazard:mission.strategy.hazardSensor,velocimeter:true},
     // 'site': leave unset so the engine derives dust and glare from the site's surface data.

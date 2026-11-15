@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import * as THREE from 'three';
 import { buildLander, GEAR, type LanderSpec } from './lander';
 import { antennaPackages, liveries, solarArrays } from '../../lib/landerAppearance';
+import { equipmentLoadouts } from '../../game/equipment';
 
 function inspect(spec?: LanderSpec) {
   const lander=buildLander(spec);
@@ -43,6 +44,21 @@ describe('buildLander equipment',()=>{
       expect(result.footRadius).toBe(GEAR['survey-six'].radius);
       expect(Number.isFinite(result.bounds.max.y)).toBe(true);
     }
+  });
+  it('gives every vehicle its own body that stands on its feet and takes every customisation',()=>{
+    const fingerprints=new Set<string>();
+    for(const {id} of equipmentLoadouts){
+      const plain=inspect({vehicleId:id});
+      expect(plain.bounds.min.y,id).toBeCloseTo(0,5);
+      fingerprints.add(`${plain.vertices}:${plain.bounds.max.y.toFixed(2)}`);
+      // the customisations still change the model on every body
+      expect(inspect({vehicleId:id,landingGearId:'survey-six'}).vertices,id).toBeGreaterThan(plain.vertices);
+      expect(inspect({vehicleId:id,hazardSensor:'lidar'}).vertices,id).toBeGreaterThan(inspect({vehicleId:id,hazardSensor:'none'}).vertices);
+      expect(inspect({vehicleId:id,solarArrayId:'extended'}).bounds.getSize(new THREE.Vector3()).x,id).toBeGreaterThan(inspect({vehicleId:id,solarArrayId:'compact'}).bounds.getSize(new THREE.Vector3()).x);
+      expect(new Set(antennaPackages.map(a=>{const r=inspect({vehicleId:id,antennaId:a.id});return `${r.vertices}:${r.bounds.max.y.toFixed(3)}`;})).size,id).toBe(3);
+      expect(inspect({vehicleId:id,liveryId:'ember'}).colours[0],id).toBe(liveries.find(l=>l.id==='ember')!.hull);
+    }
+    expect(fingerprints.size).toBe(equipmentLoadouts.length);
   });
   it('keeps legacy missions and unrecognized appearance values usable',()=>{
     expect(inspect()).toEqual(inspect({liveryId:'heritage',solarArrayId:'standard',antennaId:'dish'}));

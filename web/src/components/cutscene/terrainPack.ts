@@ -1,3 +1,4 @@
+import { sharedAsset } from '../../lib/sharedAsset';
 /** Real terrain from the team's terrain packs (web/public/terrain/<id>/, see its README). */
 
 export interface TerrainPack {
@@ -26,15 +27,13 @@ export function peekTerrainPack(baseUrl = DEFAULT_TERRAIN_URL): TerrainPack | nu
 }
 
 /** Loads a pack with the team's shared pack loader, so there is one source of truth. Browser only. */
-export async function loadTerrainPack(baseUrl = DEFAULT_TERRAIN_URL, signal?: AbortSignal): Promise<TerrainPack> {
-  const base = norm(baseUrl), hit = loaded.get(base);
-  if (hit) return hit;
-  // Only the Kilbourne pack ships a loader module, and its loader reads any pack's manifest and
-  // grid, so it is used for every pack (asking each pack for its own would log a 404).
-  const mod = await import(/* @vite-ignore */ /* webpackIgnore: true */ `${DEFAULT_TERRAIN_URL}load-terrain.mjs?v=2`);   // ?v=2: browsers that cached the module from a server sending the wrong type must refetch it
-  const pack = await (mod.loadTerrain(base, { signal }) as Promise<TerrainPack>);
-  loaded.set(base, pack);
-  return pack;
+const sharedTerrain=sharedAsset(async(base:string)=>{
+  const mod=await import(/* @vite-ignore */ /* webpackIgnore: true */ `${DEFAULT_TERRAIN_URL}load-terrain.mjs?v=2`);
+  const pack=await mod.loadTerrain(base) as TerrainPack;
+  loaded.set(base,pack);return pack;
+});
+export function loadTerrainPack(baseUrl = DEFAULT_TERRAIN_URL, signal?: AbortSignal): Promise<TerrainPack> {
+  return sharedTerrain(norm(baseUrl),signal);
 }
 
 /**

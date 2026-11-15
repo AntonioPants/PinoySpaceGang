@@ -5,6 +5,7 @@ import type {
   FlightSummary,
   FlightTelemetry,
   LanderConfig,
+  HazardSensorId,
   Observation,
   SimEvent,
   SimInput,
@@ -31,7 +32,8 @@ import { siteInterference } from './environment.ts';
 import { evaluateTouchdown } from './touchdown.ts';
 import { gearCapability, validateGear } from './gear.ts';
 import { createSensorModel } from './sensors.ts';
-import { autopilot } from './controllers/autopilot.ts';
+import { HAZARD_SENSORS, hazardMapNoiseM, hazardMapQuality, type HazardSensorProfile } from './hazardSensors.ts';
+import { assessSite, autopilot, siteHazards } from './controllers/autopilot.ts';
 
 export interface ControllerContext {
   dt: number;
@@ -54,6 +56,23 @@ export interface Controller {
   update(obs: Observation, ctx: ControllerContext): Controls;
 }
 
+/** One classified cell of the hazard sensor's map. */
+export interface HazardCell {
+  x: number; y: number;
+  slopeDeg: number; roughnessM: number;
+  /** Slope and roughness beyond the autopilot's margins. */
+  slopeHazard: boolean; roughHazard: boolean;
+  safe: boolean;
+}
+export interface SensorInfo {
+  id: HazardSensorId;
+  profile: HazardSensorProfile;
+  /** Noise of its hazard map in this glare, m. */
+  mapNoiseM: number;
+  /** 0..1, how well it sees the ground in this glare (displays only). */
+  quality: number;
+}
+
 export interface Sim {
   readonly state: Readonly<SimState>;
   readonly events: readonly SimEvent[];
@@ -68,6 +87,16 @@ export interface Sim {
   advance(frameDt: number, controls?: Controls): SimState;
   /** Sensor reading for HUDs (what a pilot would see). Safe to call any time; does not affect the flight. */
   observe(): Observation;
+  /** The hazard sensor flying, its profile and how well it sees the ground in this glare. */
+  readonly sensor: SensorInfo;
+  /** Where guidance is aiming now: the target, or the spot it chose after a hazard scan. */
+  readonly aim: Readonly<Vec2>;
+  /**
+   * What the hazard sensor classifies on a grid of `stepM` over a disc round `center`: the same
+   * footprint test and margins the autopilot applies to the sensor's own (noisy) view, never the
+   * true ground. Empty when the sensor builds no map. Read-only: it never touches the flight.
+   */
+  hazardMap(center: Vec2, radiusM: number, stepM?: number): HazardCell[];
   /** Subscribe to events as they happen. Returns an unsubscribe function. */
   on(listener: (e: SimEvent) => void): () => void;
   telemetry(): FlightTelemetry;
@@ -124,6 +153,7 @@ export function createSim(input: SimInput, controllerOverride?: Controller): Sim
   const lander = resolveLander(input);
   const env = resolveEnvironment(input);
   const sensors = { ...DEFAULT_SENSORS, ...input.sensors };
+  const sensor = HAZARD_SENSORS[sensors.hazard] ?? HAZARD_SENSORS.lidar;
   const interference = { ...DEFAULT_INTERFERENCE, ...siteInterference(input.site, input.interference) };
   const seed = input.seed ?? 1;
   const rng = createRng(seed);
@@ -141,11 +171,12 @@ export function createSim(input: SimInput, controllerOverride?: Controller): Sim
 
   const controller =
     controllerOverride ??
-    (input.strategy === 'autonomous' ? autopilot({ hazardAvoidance: sensors.hazard !== 'none' }) : undefined);
+    (input.strategy === 'autonomous'
+      ? autopilot({ hazardAvoidance: sensor.map, scanAltitudeM: sensor.scanAltitudeM, divertRadiusM: sensor.divertRadiusM })
+      : undefined);
 
-  const glareSigma = sensors.hazard === 'camera' ? 1.0 * interference.glare : 0.15 * interference.glare;
-  const hazardView =
-    sensors.hazard === 'none' ? null : noisyField(terrain, glareSigma, seed ^ 0x9e3779b9, 1.5);
+  // What the hazard sensor sees: the terrain with noise that grows with glare (hazardSensors.ts).
+  const hazardView = sensor.map ? noisyField(terrain, hazardMapNoiseM(sensor, interference.glare), seed ^ 0x9e3779b9, sensor.cellM) : null;
   const observeSensors = createSensorModel(sensors, interference, rng);
   // HUD readings use their own RNG so displaying them never changes the flight.
   const observeForHud = createSensorModel(sensors, interference, createRng(seed ^ 0x5bd1e995));
@@ -402,6 +433,23 @@ export function createSim(input: SimInput, controllerOverride?: Controller): Sim
       return state;
     },
     observe: () => observeForHud(state),
+    sensor: { id: HAZARD_SENSORS[sensors.hazard] ? sensors.hazard : 'lidar', profile: sensor, mapNoiseM: hazardMapNoiseM(sensor, interference.glare), quality: hazardMapQuality(sensor, interference.glare) },
+    get aim() {
+      return aim;
+    },
+    hazardMap(center, radiusM, stepM = 4) {
+      if (!hazardView) return [];
+      const cells: HazardCell[] = [];
+      for (let dy = -radiusM; dy <= radiusM; dy += stepM) {
+        for (let dx = -radiusM; dx <= radiusM; dx += stepM) {
+          if (Math.hypot(dx, dy) > radiusM) continue;
+          const x = center.x + dx, y = center.y + dy;
+          const a = assessSite(hazardView, x, y, lander.legRadiusM), h = siteHazards(a, lander.limits);
+          cells.push({ x, y, slopeDeg: a.slope, roughnessM: a.rough, slopeHazard: h.slope, roughHazard: h.rough, safe: h.safe });
+        }
+      }
+      return cells;
+    },
     on(listener) {
       listeners.add(listener);
       return () => listeners.delete(listener);
