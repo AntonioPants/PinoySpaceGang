@@ -1,3 +1,6 @@
+import { ComparisonToggle, ComparisonLegend, useTerrainComparison } from './TerrainComparison';
+import { buildTerrainHologram, disposeHologram } from '../lib/terrainComparison3D';
+import { sampleTerrain } from '../lib/terrainComparison';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FlightView, type CamMode, type FlightSetup } from '../../../app/flightlab/view';
 import { createManualPilot, createSim, keysToPilotInput } from '../../../app/sim/src/index';
@@ -15,6 +18,7 @@ import type { DescentProps } from './Descent2D';
  */
 export default function Descent3D({ mission, profile, entry, weather, warming = false, autoStart = false, onReport, onExit, toolbarExtra, onUnavailable }:
   DescentProps & { warming?: boolean; onUnavailable: (reason: string) => void }) {
+  const comparison = useTerrainComparison(mission.planetaryTarget.id);
   const box = useRef<HTMLDivElement>(null);
   const view = useRef<FlightView | null>(null);
   const sim = useRef<Sim | null>(null);
@@ -26,6 +30,7 @@ export default function Descent3D({ mission, profile, entry, weather, warming = 
     const p = peekTerrainPack(mission.earthAnalog.terrainBaseUrl);
     return p && p.manifest.id === mission.earthAnalog.id ? p : null;
   });
+  const [generation, setGeneration] = useState(0);
   const [started, setStarted] = useState(false), [paused, setPaused] = useState(false);
   const [speed, setSpeed] = useState(1), [camera, setCamera] = useState<CamMode>('auto'), [muted, setMuted] = useState(() => !soundOn());
   const [hud, setHud] = useState<SimState | null>(null), [summary, setSummary] = useState<FlightSummary | null>(null);
@@ -70,7 +75,7 @@ export default function Descent3D({ mission, profile, entry, weather, warming = 
         onEvent: e => setEvents(list => [...list, e]),
         onEnd: s => setSummary(s),
       });
-      view.current = scene; sim.current = flight;
+      view.current = scene; sim.current = flight; setGeneration(g => g+1);
       setStarted(true); setPaused(false); setSummary(null); setEvents([]); setError(''); setHud(snapshot(flight.state));
     } catch (e) {
       // most likely WebGL is not available: fall back to the 2D view
@@ -79,6 +84,15 @@ export default function Descent3D({ mission, profile, entry, weather, warming = 
     // speed, camera and sound apply live below; they must not restart the flight
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pack, mission, profile, entry, weather, manual]);
+
+  useEffect(() => {
+    const scene = view.current;
+    if (!scene || !pack || !comparison.pack) return;
+    const target = mission.earthAnalog.landingTargetM ?? {x:0,y:0};
+    const hologram = buildTerrainHologram(pack, comparison.pack, { target, elevation: sampleTerrain(pack,target.x,target.y)! });
+    scene.addComparisonSurface(hologram);
+    return () => disposeHologram(hologram);
+  }, [comparison.pack, pack, mission, generation]);
 
   const autoStarted = useRef(false);
   // before the first paint, so the descent opens on the dissolve from the cutscene, not on the launch card
@@ -128,9 +142,9 @@ export default function Descent3D({ mission, profile, entry, weather, warming = 
       <label>Playback <select aria-label="Playback speed" value={speed} onChange={e => setSpeed(Number(e.target.value))}><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></label>
       <label>Camera <select aria-label="Camera" value={camera} onChange={e => setCamera(e.target.value as CamMode)}><option value="auto">Auto</option><option value="chase">Chase</option><option value="orbit">Orbit</option><option value="ground">Ground</option><option value="top">Top</option></select></label>
       <button className="subtle-button" aria-pressed={!muted} onClick={() => setMuted(m => { setSoundOn(m); return !m; })}>{muted ? 'Sound on' : 'Sound off'}</button>
-      {toolbarExtra}
+      <ComparisonToggle comparison={comparison}/>{toolbarExtra}
     </div></div>
-    <div className="flight-stage flight-stage-3d"><div ref={box} className="flight-3d" />
+    <div className="flight-stage flight-stage-3d"><div ref={box} className="flight-3d" /><ComparisonLegend comparison={comparison} targetName={mission.planetaryTarget.name} earthName={mission.earthAnalog.name} earthSpacing={profile.sampleSpacingM}/>
       {!started && <div className="launch-overlay"><h2>{pack ? 'Ready for descent' : 'Loading terrain…'}</h2><p>Start 1,000 m above ground, 400 m west of the target.<br />Initial velocity: 25 m/s east and 20 m/s down.</p>{pack && <button className="primary-button" onClick={launch}>Start descent</button>}</div>}
     </div>
     {error && <p role="alert" className="import-error">{error}</p>}

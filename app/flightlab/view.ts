@@ -70,6 +70,9 @@ export class FlightView extends CutsceneEngine {
     el.addEventListener("wheel", (e) => { e.preventDefault(); this.zoom = Math.max(0.35, Math.min(5, this.zoom * Math.exp(e.deltaY * 0.001))); }, { passive: false });
   }
 
+  /** Attach a render-only terrain reference; it never enters the simulator. Caller owns removal. */
+  addComparisonSurface(surface: THREE.Group) { this.scene.add(surface); }
+
   /** Sim coordinates (x east, y north, z elevation) -> scene (x east, y up, z south), target at the origin. */
   toScene(x: number, y: number, z: number) { return V(x - this.setup.target.x, z - this.setup.refElevation, -(y - this.setup.target.y)); }
 

@@ -167,3 +167,45 @@
 .equipment-tabs button{color:#c9c7c0}.equipment-tabs button[aria-pressed=true]{background:var(--btn);color:var(--btn-ink);font-weight:600;box-shadow:none}
 .equipment-reset,.title-atlas{color:var(--btn)}.equipment-view-tools button{border-color:var(--btn-line);color:var(--btn)}.equipment-view-tools button:hover:not(:disabled){background:var(--btn-wash);border-color:var(--btn)}
 .equipment-rails button:focus-visible,.equipment-view-tools button:focus-visible{outline-color:var(--btn)}
+
+/* Keep comparison and assumptions clear of flight telemetry and wrapping toolbars. */
+.immersive-game-session .terrain-comparison-legend { left:30px; bottom:182px; max-width:min(540px,65%); max-height:28vh; overflow:auto; }
+.immersive-game-session .model-assumptions { top:auto; left:auto; right:30px; bottom:182px; max-width:25%; max-height:28vh; }
+@media(max-width:760px) {
+  .immersive-game-session .flight-toolbar { max-height:30vh; overflow:auto; }
+  .immersive-game-session .terrain-comparison-legend { left:16px; bottom:185px; max-width:calc(100% - 32px); max-height:20vh; }
+  .immersive-game-session .model-assumptions { right:16px; bottom:145px; max-width:calc(100% - 32px); max-height:20vh; }
+}
+
+/* The terrain stays interactive until the player explicitly opens its information sheet. */
+.surface-brief.terrain-info-sheet { position:absolute; z-index:5; left:0; right:0; bottom:82px; margin:0; padding:22px max(24px,4vw); max-height:65vh; overflow:auto; background:#0b1118; text-shadow:none; border-top:1px solid #53606c; transform:translateY(calc(100% + 90px)); visibility:hidden; pointer-events:none; animation:none; transition:transform .28s ease,visibility .28s; }
+.surface-brief.terrain-info-sheet.is-open { transform:translateY(0); visibility:visible; pointer-events:auto; }
+.terrain-info-close { float:right; padding:8px 14px; background:#17232f; border:1px solid #687583; color:#fff; cursor:pointer; }
+.terrain-bottom-controls { position:absolute; z-index:6; bottom:24px; left:4%; right:4%; display:flex; gap:14px; align-items:center; pointer-events:none; }
+.terrain-bottom-controls button { pointer-events:auto; background:#111b26; border:1px solid #657180; color:#fff; padding:12px 18px; min-height:44px; }
+.terrain-bottom-controls .game-primary { position:static; min-width:0; }
+.terrain-flag-status { margin-left:auto; color:#fff; font-size:12px; text-shadow:0 1px 3px #000; }
+@media(max-width:760px) { .terrain-bottom-controls { left:12px; right:12px; bottom:28px; gap:8px; flex-wrap:wrap; } .terrain-bottom-controls button { font-size:11px; padding:10px; } .terrain-flag-status { order:3; width:100%; margin:0; } .surface-brief.terrain-info-sheet { bottom:125px; max-height:60vh; } }
+@media(prefers-reduced-motion:reduce) { .surface-brief.terrain-info-sheet { transition:none; } }
+
+.surface-brief.terrain-info-sheet { background:transparent; border:0; text-shadow:0 1px 4px #000; bottom:235px; max-height:calc(100vh - 330px); }
+.terrain-map-readout { position:absolute; z-index:4; left:4%; right:4%; bottom:85px; color:#eee6d5; text-shadow:0 1px 4px #000; pointer-events:none; font-size:12px; }
+.terrain-map-readout p { margin:6px 0; }
+.terrain-map-readout .landing-readout { display:flex; align-items:center; gap:8px; }
+.terrain-map-readout small { display:block; max-width:1000px; line-height:1.4; }
+.terrain-map-readout button { pointer-events:auto; }
+.terrain-map-readout .game-text { padding:6px 0; }
+.terrain-bottom-controls { flex-wrap:wrap; }
+.terrain-bottom-controls>button:last-child { margin-left:auto; }
+@media(max-width:760px) { .terrain-map-readout { left:12px; right:12px; bottom:135px; font-size:10px; } .surface-brief.terrain-info-sheet { bottom:310px; max-height:calc(100vh - 400px); } }
+.terrain-info-sheet .terrain-comparison-legend { background:transparent; border:0; padding:0; }
+
+/* Back occupies its own slot in the header rather than covering the scene HUD. */
+.game-topbar { display:grid; grid-template-columns:auto auto minmax(0,1fr) auto; }
+.game-topbar:not(:has(.inspection-navigation)) { grid-template-columns:auto minmax(0,1fr) auto; }
+.game-chapter { justify-self:center; }
+.inspection-navigation { position:static; display:flex; align-items:center; }
+.inspection-navigation .game-back { margin:0; padding:8px 2px; min-height:36px; display:inline-flex; align-items:center; gap:5px; color:#d6b77c; background:transparent; border:0; border-radius:0; font-size:12px; white-space:nowrap; }
+.inspection-navigation .game-back:hover { color:#f1dfb6; }
+.inspection-navigation .game-back:focus-visible { outline:1px solid #d6b77c; outline-offset:4px; }
+@media(max-width:760px) { .game-topbar { gap:14px; } .game-topbar:has(.inspection-navigation) .game-wordmark span { display:none; } .game-topbar .game-tools { grid-column:-2; justify-self:end; } }
