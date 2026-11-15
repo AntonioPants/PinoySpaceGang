@@ -81,11 +81,12 @@ export default function OpeningGame({catalog}:{catalog:Catalog}) {
   const pair=click?undefined:pairingOf(catalog,targetId,analog.id);
   // A flag belongs to one terrain: a new site starts with it at the patch centre.
   useEffect(()=>setLanding(PATCH_CENTRE),[analog.id]);
+  const prepareTerrain = ['destination', 'earth', 'equipment', 'journey', 'report'].includes(stage);
   useEffect(()=>{const abort=new AbortController();setLoaded(null);setError('');
-    if(stage==='earth'||stage==='equipment'||stage==='journey')loadProfile(abort.signal,analog.manifestUrl,analog.id).then(p=>{if(!abort.signal.aborted)setLoaded(p);}).catch(e=>{if(!abort.signal.aborted)setError(e instanceof Error?e.message:'Terrain could not load.');});
+    if(prepareTerrain)loadProfile(abort.signal,analog.manifestUrl,analog.id).then(p=>{if(!abort.signal.aborted)setLoaded(p);}).catch(e=>{if(!abort.signal.aborted)setError(e instanceof Error?e.message:'Terrain could not load.');});
     return()=>abort.abort();
     // Stage changes must not discard a loaded terrain pack during boarding.
-  },[analog.id,analog.manifestUrl,retry,stage==='title'||stage==='worlds'||stage==='destination']);
+  },[analog.id,analog.manifestUrl,retry,prepareTerrain]);
   useEffect(()=>{const abort=new AbortController();setWeather(null);if(hasWeatherProfile(analog.id))loadWeatherProfile(analog.id,abort.signal).then(data=>{if(!abort.signal.aborted)setWeather({id:analog.id,data});}).catch(()=>{});return()=>abort.abort();},[analog.id]);
   useEffect(()=>{window.scrollTo(0,0);document.getElementById(stage==='earth'&&surface?'surface-title':'mission-title')?.focus({preventScroll:true});document.title='Analog Atlas — '+(stage==='title'?'Begin':stage==='worlds'?'Choose your world':stage==='equipment'?'Build your Lander':stage==='earth'?'Earth reconnaissance':stage==='destination'?'Choose your region':stage==='report'?'Expedition debrief':'Journey');},[stage,surface]);
   const reducedMotion=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;

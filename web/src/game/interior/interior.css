@@ -176,3 +176,19 @@ button.cabin-prompt:hover { border-color: #8a939c; }
 .launch-stand { color: var(--shell-ink); border-color: #14130f40; border-radius: 3px; }
 .launch-stand:hover { border-color: var(--shell-ink); background: var(--shell-wash); }
 .launch-menu :focus-visible { outline: 2px solid var(--shell-ink); outline-offset: 2px; }
+
+.flight-sensors .mon-segmented {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+}
+.flight-sensors .mon-segmented button {
+  padding: 4px 8px;
+  font-size: 16px;
+  line-height: 1.2;
+  overflow-wrap: normal;
+}
+/* Scroll inside the display so the CSS3D monitor keeps its wall transform. */
+.monitor-config .flight-config-content {
+  height: 100%;
+  overflow-y: auto;
+}

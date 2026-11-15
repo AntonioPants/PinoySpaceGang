@@ -2,16 +2,14 @@ import * as T from 'three';
 import { TilesRenderer } from '3d-tiles-renderer/three';
 import { DisposableCesiumIonAuthPlugin as CesiumIonAuthPlugin } from './cesiumIonAuth';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-import decoder from 'three/examples/jsm/libs/draco/gltf/draco_decoder.js?url';
+import { createTerrainDecoder } from './terrainDecoder';
 
 /** The same measured, textured world from the three-world reveal through region selection.
  * Lives in WorldScene's renderer: there is no second globe to swap in after zooming. */
 export function createPlanetTiles(body: 'Moon' | 'Mars', radius: number, renderer: T.WebGLRenderer) {
   const tiles = new TilesRenderer();
   tiles.registerPlugin(new CesiumIonAuthPlugin({apiToken:import.meta.env.VITE_CESIUM_ION_TOKEN,assetId:body==='Moon'?'2684829':'3644333',autoRefreshToken:true}));
-  const draco=new DRACOLoader(); draco.setDecoderConfig({type:'js'});
-  draco.manager.setURLModifier(url=>url.endsWith('draco_decoder.js')?decoder:url);
+  const draco = createTerrainDecoder();
   tiles.manager.addHandler(/\.(gltf|glb)$/i,new GLTFLoader(tiles.manager).setDRACOLoader(draco));
   // ECEF (X at 0° longitude, Z north) -> the game's X/east, Y/north, -Z/east frame.
   tiles.group.rotation.x=-Math.PI/2;

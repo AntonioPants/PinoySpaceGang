@@ -259,7 +259,6 @@ export default function WorldScene(props: WorldProps) {
           }
         }
       }
-      compare.current();
       if(terrain)terrain.visible=p.stage==='earth';
       departingPatches.forEach(patch => { patch.visible = p.stage==='earth'; });
       sun.position.set(-5,5,8);sun.target.position.set(0,0,0);
@@ -424,7 +423,9 @@ export default function WorldScene(props: WorldProps) {
       } else if(moving){const a=reduced.matches?1:1-Math.exp(-4*dt);controls.target.lerp(goalTarget,a);camera.up.lerp(goalUp,a).normalize();const off=camera.position.clone().sub(controls.target);const distance=Math.exp(T.MathUtils.lerp(Math.log(Math.max(off.length(),.000001)),Math.log(goalOffset.length()),a));off.normalize().lerp(goalOffset.clone().normalize(),a).normalize().multiplyScalar(distance);camera.position.copy(controls.target).add(off);camera.lookAt(controls.target);if(camera.position.distanceTo(goalTarget.clone().add(goalOffset))<goalOffset.length()*.002){camera.position.copy(goalTarget).add(goalOffset);controls.target.copy(goalTarget);finishFlight();}}
       const current = live.current;
       overviewCamera.aspect=camera.aspect;overviewCamera.position.set(0,2,14*Math.max(1,1.1/camera.aspect));overviewCamera.lookAt(0,0,0);overviewCamera.updateProjectionMatrix();
+      if (!surface) scenery?.prefetch();
       for(const [body,detail] of tileWorlds){
+        if (prepared && current.stage === 'earth') continue;
         // Register the overview even during the title so its tiles survive a later zoom.
         const mesh=planets.get(body)!;const visible=mesh.visible,scale=mesh.scale.clone(),rotation=mesh.rotation.clone();
         mesh.visible=true;mesh.scale.setScalar(1);mesh.rotation.set(0,0,0);scene.updateMatrixWorld(true);
@@ -478,7 +479,7 @@ export default function WorldScene(props: WorldProps) {
         (mesh.material as T.MeshStandardMaterial).emissiveIntensity = lit * .3;
         mesh.scale.setScalar(Math.max(own, .001) * (1 + lit * .05));
         const air = atmospheres.get(body);
-        if (air) air.visible = !surface && nearGround === 0;
+        if (air) air.visible = nearGround === 0 && (!surface || body === 'Earth');
       }
       // Thin enough that the place the camera is looking at stays in view all the way down.
       haze.density = nearGround * Math.min(160, .45 / Math.max(camera.position.distanceTo(controls.target), 1e-6));
@@ -491,9 +492,20 @@ export default function WorldScene(props: WorldProps) {
         terrain.updateMatrixWorld(); picker?.tick(terrain.worldToLocal(camera.position.clone()), surface && !moving, dt);
       }
       if(!moving)controls.update();
-      const streamed = surface && scenery?.draw(camera);
-      if (streamed) { planets.get('Earth')!.visible = false; scene.background = null; renderer.autoClear = false; }
-      renderer.render(scene,camera); renderer.autoClear = true;frame=requestAnimationFrame(render);};render();
+      // Local landing tiles cannot replace the globe during an orbital approach.
+      // Draw Earth first, then overlay the streamed patch and measured foreground.
+      const globeBackdrop = surface && moving && !!scenery;
+      if (globeBackdrop) renderer.render(scene, camera);
+      const streamed = surface && scenery?.draw(camera, undefined, moving);
+      if (streamed && !globeBackdrop) {
+        planets.get('Earth')!.visible = false;
+        scene.background = null;
+        renderer.autoClear = false;
+      }
+      if (!globeBackdrop) renderer.render(scene, camera);
+      renderer.autoClear = true;
+      frame = requestAnimationFrame(render);
+    };render();
     pause.current=(next:boolean)=>{if(next===paused)return;paused=next;if(!paused&&!frame){last=performance.now();render();}};
     return()=>{disposed=true;credit.remove();warmTarget.dispose();tileWorlds.forEach(detail=>{detail.group.removeFromParent();detail.dispose();});scenery?.dispose();cancelAnimationFrame(frame);resize.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',pointerDown);renderer.domElement.removeEventListener('pointerup',pointerUp);renderer.domElement.removeEventListener('pointermove',pointerMove);renderer.domElement.removeEventListener('pointerleave',pointerLeave);textures.forEach(t=>t.dispose());release(scene);renderer.dispose();renderer.domElement.remove();flash.remove();update.current=()=>{};paint.current=()=>{};plant.current=()=>{};pause.current=()=>{};compare.current=()=>{};if(props.handle)props.handle.current=null;};
   },[]);

@@ -1,17 +1,14 @@
 import * as T from 'three';
-import { TilesRenderer } from '3d-tiles-renderer/three';
-import { DisposableCesiumIonAuthPlugin as CesiumIonAuthPlugin } from './cesiumIonAuth';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { acquireEarthTiles } from './earthTilesResource';
 import { polygonGeometry, polygonTilePlugin, streamedGap } from './polygonTerrain';
 import type { EnvLook } from '../components/cutscene/presets';
 import { terrainSurroundings } from './terrainSurroundings';
-import decoder from 'three/examples/jsm/libs/draco/gltf/draco_decoder.js?url';
 
 export interface EarthScenery {
   readonly ready: boolean;
   readonly failed: boolean;
-  draw(camera: T.PerspectiveCamera, fog?: T.Fog): boolean;
+  prefetch(): void;
+  draw(camera: T.PerspectiveCamera, fog?: T.Fog, approaching?: boolean): boolean;
   dispose(): void;
 }
 
@@ -22,14 +19,8 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
   ground: T.BufferGeometry, bounds: { west: number; east: number; north: number; south: number },
   sky: T.Color, meshes: T.Mesh<T.BufferGeometry,T.MeshStandardMaterial>[], look?: EnvLook): EarthScenery {
   const polygon = !!look;
-  const tiles = new TilesRenderer();
-  tiles.lruCache.minBytesSize=64*1024*1024;tiles.lruCache.maxBytesSize=96*1024*1024;
-  tiles.downloadQueue.maxJobs=6;tiles.parseQueue.maxJobs=2;
-  tiles.registerPlugin(new CesiumIonAuthPlugin({ apiToken: import.meta.env.VITE_CESIUM_ION_TOKEN, assetId: '2275207', autoRefreshToken: true }));
-  const draco = new DRACOLoader(new T.LoadingManager());
-  draco.setDecoderConfig({ type: 'js' });
-  draco.manager.setURLModifier(url => url.endsWith('draco_decoder.js') ? decoder : url);
-  tiles.manager.addHandler(/\.(gltf|glb)$/i, new GLTFLoader(tiles.manager).setDRACOLoader(draco));
+  const resource = acquireEarthTiles(renderer, !polygon);
+  const tiles = resource.tiles;
   const origin = tiles.ellipsoid.getEastNorthUpFrame(lat * Math.PI / 180, lon * Math.PI / 180, height, new T.Matrix4()).multiply(new T.Matrix4().makeRotationX(Math.PI / 2));
   origin.invert();                       // ECEF -> local east/up/south
   // `height` is a sea-level (EGM2008) height, but 3D Tiles sit on the WGS84 ellipsoid. The gap (the
@@ -80,9 +71,15 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
   const footprint = new T.Uint32BufferAttribute(indices, 1);
   // DEM points to compare the streamed surface with: an even spread of the measured vertices.
   const probes: T.Vector3[] = [];
+  let patchLow = Infinity, patchHigh = -Infinity;
   {
     const all: number[] = [];
-    for (let i = 0; i < positions.count; i++) if (inside(i)) all.push(i);
+    for (let i = 0; i < positions.count; i++) {
+      if (!inside(i)) continue;
+      all.push(i);
+      patchLow = Math.min(patchLow, positions.getY(i));
+      patchHigh = Math.max(patchHigh, positions.getY(i));
+    }
     const step = Math.max(1, Math.floor(all.length / 49));
     for (let k = Math.floor(step / 2); k < all.length && probes.length < 49; k += step) {
       const i = all[k]; probes.push(new T.Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)));
@@ -124,8 +121,25 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
     overhead.left=-60000; overhead.right=60000; overhead.top=60000; overhead.bottom=-60000;
     overhead.updateProjectionMatrix();
   }
-  tiles.setCamera(overhead);
-  tiles.setResolution(overhead,polygon ? 512 : target.width,polygon ? 512 : target.height);
+  // Tile errors are in metres. The tile loader's orthographic error calculation
+  // does not account for this scene's metre-to-world scale, so registering the
+  // projection camera requests maximum detail across the entire horizon.
+  // Use a perspective camera for preloading the eventual ground view instead.
+  const siteOrigin = new T.Vector3().applyMatrix4(localToWorld);
+  const preloadCamera = new T.PerspectiveCamera(42, host.clientWidth / Math.max(1, host.clientHeight), .1 * scale, 250000 * scale);
+  preloadCamera.position.set(2000, 1300 + (patchHigh - patchLow) * .5, 3200).applyMatrix4(localToWorld);
+  preloadCamera.up.set(0, 1, 0).transformDirection(localToWorld);
+  preloadCamera.lookAt(siteOrigin);
+  preloadCamera.updateMatrixWorld();
+  if (polygon) {
+    tiles.setCamera(overhead);
+    tiles.setResolution(overhead, 512, 512);
+  } else {
+    tiles.setCamera(preloadCamera);
+    tiles.setResolutionFromRenderer(preloadCamera, renderer);
+  }
+  const viewCamera = new T.PerspectiveCamera();
+  let polygonCamera: T.PerspectiveCamera | undefined;
   const surfaces = meshes.map(({ geometry, material }) => {
     const pos = geometry.getAttribute('position'), uv = new Float32Array(pos.count*2);
     for (let i=0;i<pos.count;i++) {
@@ -146,9 +160,10 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
       s.material.color.copy(s.color);
       s.material.emissive.copy(s.emissive);
       if (active && !polygon) {
-        // Aerial imagery already includes sunlight and shadows.
-        s.material.color.set(0);
-        s.material.emissive.set(0xffffff);
+        // Keep the DEM relief lit even while the initial imagery is a coarse tile.
+        s.material.map = target.texture;
+        s.material.color.setScalar(.65);
+        s.material.emissive.setScalar(.35);
       }
       s.material.emissiveMap = active && !polygon ? target.texture : s.emissiveMap;
       s.material.needsUpdate = true;
@@ -157,19 +172,56 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
   // Once a flight's horizon has converged, retain this exact rendered tile set. Refining
   // a distant ridge in front of the player is more distracting than a fixed detail level.
   let settledFrames = 0, ready = false, failed = false;
-  tiles.addEventListener('load-error', () => { failed = true; });
-  let visible = 0, dirty = true;
-  tiles.addEventListener('tile-visibility-change', e => { visible += e.visible ? 1 : -1; dirty = true; calibrationPending = true; surroundings?.refresh(); });
+  const loadError = () => { failed = true; };
+  // This runtime set is omitted from the pinned tile loader's declarations.
+  const visibleTiles = (tiles as typeof tiles & { visibleTiles: Set<unknown> }).visibleTiles;
+  let visible = visibleTiles.size, dirty = true;
+  const visibilityChanged = (event: { visible: boolean }) => {
+    visible += event.visible ? 1 : -1;
+    dirty = true;
+    calibrationPending = true;
+    surroundings?.refresh();
+  };
+  tiles.addEventListener('load-error', loadError);
+  tiles.addEventListener('tile-visibility-change', visibilityChanged);
   return {
     get ready() { return ready; },
     get failed() { return failed; },
-    draw(camera, fog) {
+    prefetch() {
+      world.updateMatrixWorld(true);
+      if (!polygon) {
+        tiles.deleteCamera(viewCamera);
+        if (!tiles.hasCamera(preloadCamera)) tiles.setCamera(preloadCamera);
+        preloadCamera.aspect = host.clientWidth / Math.max(1, host.clientHeight);
+        preloadCamera.updateProjectionMatrix();
+        tiles.setResolutionFromRenderer(preloadCamera, renderer);
+      }
+      tiles.update();
+    },
+    draw(camera, fog, approaching = false) {
       camera.updateMatrixWorld(); world.updateMatrixWorld();
-      if (!tiles.hasCamera(camera)) tiles.setCamera(camera);
-      tiles.setResolutionFromRenderer(camera, renderer);
+      if (polygon) polygonCamera = camera;
+      if (polygon || !approaching) {
+        tiles.deleteCamera(preloadCamera);
+        // The main globe camera sees the entire planet. Limit terrain requests
+        // to the nearby landscape, using the same range as the preload camera.
+        const tileCamera = polygon ? camera : viewCamera;
+        if (!polygon) {
+          viewCamera.copy(camera, false);
+          viewCamera.far = Math.min(camera.far, 250000 * scale);
+          viewCamera.updateProjectionMatrix();
+          viewCamera.updateMatrixWorld();
+        }
+        if (!tiles.hasCamera(tileCamera)) tiles.setCamera(tileCamera);
+        tiles.setResolutionFromRenderer(tileCamera, renderer);
+      } else {
+        tiles.deleteCamera(viewCamera);
+        if (!tiles.hasCamera(preloadCamera)) tiles.setCamera(preloadCamera);
+      }
       if (!polygon || !ready) tiles.update();
       if (visible > 0 && tiles.loadProgress >= 1) settledFrames++; else settledFrames = 0;
-      if (settledFrames >= 12 && (!surroundings || surroundings.ready)) ready = true;
+      if (!polygon) ready = settledFrames >= 12;
+      else if (settledFrames >= 12 && (!surroundings || surroundings.ready)) ready = true;
       // Re-measure as finer tiles stream in, at most once a second.
       const now = performance.now();
       if (visible && calibrationPending && now - lastCalibration > 1000) {
@@ -189,13 +241,39 @@ export function createEarthScenery(renderer: T.WebGLRenderer, host: HTMLElement,
         credit.hidden = !visible;
         credit.textContent = ['Google Maps · Cesium ion', ...tiles.getAttributions().filter(a => a.type === 'string').map(a => a.value)].join(' · ');
       }
-      if (!visible) return false;
+      // Nearby landing tiles are too small to supply orbital context.
+      // They keep loading above, then overlay the globe during the final descent.
+      if (!visible || approaching && camera.position.distanceTo(siteOrigin) > 20000 * scale) return false;
       surroundings?.update();
       world.fog = fog ?? null;
+      // During the approach, the full Earth has already been drawn behind
+      // these local tiles. Preserve its colour outside their coverage.
+      world.background = approaching ? null : sky;
+      const autoClear = renderer.autoClear;
+      renderer.autoClear = !approaching;
       renderer.render(world, camera);
+      renderer.autoClear = autoClear;
       renderer.clearDepth();
       return true;
     },
-    dispose() { if (polygon) renderer.localClippingEnabled = previousClipping; applyImagery(false); target.dispose(); surroundings?.dispose(); ground.setIndex(full); tiles.dispose(); restoreGeometry.forEach(({mesh,geometry}) => { mesh.geometry.copy(geometry); geometry.dispose(); }); draco.dispose(); credit.remove(); },
+    dispose() {
+      if (polygon) renderer.localClippingEnabled = previousClipping;
+      applyImagery(false);
+      target.dispose();
+      surroundings?.dispose();
+      ground.setIndex(full);
+      tiles.deleteCamera(preloadCamera);
+      tiles.deleteCamera(viewCamera);
+      tiles.deleteCamera(overhead);
+      if (polygonCamera) tiles.deleteCamera(polygonCamera);
+      tiles.removeEventListener('load-error', loadError);
+      tiles.removeEventListener('tile-visibility-change', visibilityChanged);
+      resource.release();
+      for (const { mesh, geometry } of restoreGeometry) {
+        mesh.geometry.copy(geometry);
+        geometry.dispose();
+      }
+      credit.remove();
+    },
   };
 }

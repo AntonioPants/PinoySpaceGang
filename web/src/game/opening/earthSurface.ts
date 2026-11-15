@@ -42,7 +42,7 @@ export function earthSurface(profile: TerrainProfile, lat: number, lon: number) 
   // the horizon, and far enough out to cover the globe's own faceting.
   const axis = (count: number) => {
     const half = (count - 1) * spacing / 2, outer: number[] = [];
-    for (let v = half, step = spacing; v < 900_000;) { step *= 1.05; v = Math.min(v + step, 900_000); outer.push(v); }
+    for (let v = half, step = spacing; v < 900_000;) { step *= 1.18; v = Math.min(v + step, 900_000); outer.push(v); }
     return [...outer.slice().reverse().map(v => -v), ...Array.from({ length: count }, (_, i) => (i - (count - 1) / 2) * spacing), ...outer];
   };
   const xs = axis(columns), zs = axis(rows), positions = [], uv = [], colors = [], indices = [];
