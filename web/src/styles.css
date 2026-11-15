@@ -3,6 +3,8 @@
   --font-ui: 'Inter Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-data: 'DM Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
   --font-display: 'Michroma', 'Inter Variable', 'Helvetica Neue', Arial, sans-serif;
+  --space-xs: 4px; --space-sm: 8px; --space-md: 16px; --space-lg: 24px;
+  line-height: 1.5;
   font-family: var(--font-ui);
   color: #f2f1ed; background: #000; color-scheme: dark;
   font-synthesis: none; font-weight: 400;
@@ -479,3 +481,56 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
 /* The player's own pin on a Cesium globe. */
 .cesium-pin { position: absolute; width: 22px; height: 22px; transform: translate(-50%, -50%); border: 2px solid #e9c78a; border-radius: 50%; box-shadow: 0 0 0 1px #000a, 0 0 14px #e9c78a99; pointer-events: none; }
 .cesium-pin::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: #fff1cf; }
+
+
+/* Text must be allowed to shrink and wrap inside flex/grid tracks. */
+:where(.workspace, .section-heading, .panel-topline, .panel-actions, .flight-toolbar,
+  .flight-hud, .console-layout, .console-controls, .mission-summary, .report-metrics,
+  .terrain-stats, .comparison-metrics, .strategy-options) > * { min-width: 0; }
+:where(h1, h2, h3, h4, p, dd, button, summary, .badge) { overflow-wrap: anywhere; }
+button, summary, label, small { line-height: 1.5; }
+.segmented { flex-wrap: wrap; max-width: 100%; }
+.badge { white-space: normal; }
+.section-heading, .panel-topline, .panel-actions, .coordinates, .terrain-chart figcaption,
+.config-footer, .import-actions { flex-wrap: wrap; }
+.app-header { height: auto; min-height: 84px; flex-wrap: wrap; padding-block: 16px; }
+.header-right { gap: var(--space-md); }
+.workspace, .slider-grid, .console-controls, .report-metrics, .terrain-stats { min-width: 0; }
+.strategy-options, .slider-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.terrain-stats strong { font-size: clamp(18px, 2.4vw, 27px); overflow-wrap: anywhere; }
+.dialog-head { gap: var(--space-md); }
+.dialog-head .icon-button { flex: 0 0 32px; }
+.source-content > p + p { margin-top: var(--space-md); }
+.source-content a { overflow-wrap: anywhere; }
+.flight-toolbar > div:first-child { flex: 1 1 240px; }
+.flight-toolbar > div + div { flex: 1 1 480px; }
+.flight-toolbar label { display: inline-flex; align-items: center; flex-wrap: wrap; gap: var(--space-sm); }
+.flight-toolbar select { margin-left: 0; max-width: 100%; }
+.flight-hud { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.flight-hud strong { display: block; font-size: clamp(16px, 2vw, 24px); }
+.flight-result { flex-wrap: wrap; }
+.flight-result > div { flex: 1 1 100%; }
+.comparison-result-button { margin: var(--space-md); }
+.model-assumptions ul { padding-left: 20px; line-height: 1.6; }
+.terrain-footnote, .terrain-comparison-legend { overflow-wrap: anywhere; }
+.globe-caption { max-width: calc(100% - 32px); white-space: normal; text-align: center; }
+.console-loadout dd { text-align: right; overflow-wrap: anywhere; }
+@media (max-width: 480px) {
+  .app-header { gap: 12px; padding-inline: 16px; }
+  .app-header > a:first-child { flex-basis: 65%; font-size: 12px; }
+  .header-right { margin-left: auto; }
+  .strategy-options, .slider-grid, .comparison-metrics { grid-template-columns: minmax(0, 1fr); }
+  .terrain-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .flight-hud { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .import-preview > .text-button { margin: 12px 0 0; }
+  .terrain-readout { position: relative; inset: auto; padding: 88px 12px 12px; }
+  .terrain-footnote { position: relative; inset: auto; margin: 0 12px 12px; }
+}
+.flight-toolbar .flight-view-notice { flex-basis:100%; margin:0; order:1; }
+.planet-top { align-items:flex-start; }
+.planet-top .segmented { flex-wrap:nowrap; flex-shrink:0; }
+.planet-top .segmented button { padding-inline:10px; }
+@media(max-width:760px) {
+  .stepper { display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:8px; }
+  .stepper button { min-width:0; width:100%; justify-content:flex-start; text-align:center; }
+}

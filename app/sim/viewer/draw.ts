@@ -249,7 +249,7 @@ export function createSideRenderer() {
       ctx.stroke(); ctx.setLineDash([]);
     }
     const { aim, target } = aimFromEvents(sim, input);
-    const mark = (x: number, color: string, label: string) => {
+    const mark = (x: number, color: string, label: string, labelY = 16) => {
       ctx.strokeStyle = color;
       ctx.setLineDash([6 * dpr, 6 * dpr]);
       ctx.beginPath();
@@ -259,10 +259,11 @@ export function createSideRenderer() {
       ctx.setLineDash([]);
       ctx.fillStyle = color;
       ctx.font = `${11 * dpr}px ${MONO}`;
-      ctx.fillText(label, X(x) + 4 * dpr, 16 * dpr);
+      const labelX = Math.max(4 * dpr, Math.min(W - ctx.measureText(label).width - 4 * dpr, X(x) + 4 * dpr));
+      ctx.fillText(label, labelX, labelY * dpr);
     };
     mark(target.x, 'rgba(255,255,255,0.5)', 'target');
-    if (aim.x !== target.x) mark(aim.x, 'rgba(76,209,138,0.8)', 'divert');
+    if (aim.x !== target.x) mark(aim.x, 'rgba(76,209,138,0.8)', 'divert', Math.abs(X(aim.x) - X(target.x)) < 80 * dpr ? 32 : 16);
 
     ctx.strokeStyle = 'rgba(255,179,71,0.5)';
     ctx.lineWidth = 1.5 * dpr;

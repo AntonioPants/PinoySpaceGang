@@ -921,13 +921,13 @@ export class CutsceneEngine {
     const el = <K extends keyof HTMLElementTagNameMap>(tag: K, css: string, parent: HTMLElement) => {
       const e = document.createElement(tag); e.style.cssText = css; parent.appendChild(e); return e;
     };
-    const root = el("div", "position:absolute;inset:0;pointer-events:none;overflow:hidden;font-family:ui-sans-serif,system-ui,sans-serif;color:#fff", this.container);
+    const root = el("div", "position:absolute;inset:0;pointer-events:none;overflow:hidden;font-family:var(--font-ui, sans-serif);color:#fff", this.container);
     const bar = "position:absolute;left:0;right:0;height:9%;background:#000";
     const cover = el("div", "position:absolute;inset:0;background:#000 center/cover no-repeat", root);
     const flash = el("div", "position:absolute;inset:0;background:#fff;opacity:0", root);
     if (letterbox) { el("div", bar + ";top:0", root); el("div", bar + ";bottom:0", root); }
     const fade = el("div", "position:absolute;inset:0;background:#000;opacity:0", root);
-    const cap = el("div", "position:absolute;left:6%;bottom:15%;opacity:0;transition:opacity .6s;text-shadow:0 2px 12px rgba(0,0,0,.7)", root);
+    const cap = el("div", "position:absolute;left:6%;right:6%;bottom:15%;max-height:65%;overflow:auto;overflow-wrap:anywhere;line-height:1.4;opacity:0;transition:opacity .6s;text-shadow:0 2px 12px rgba(0,0,0,.7)", root);
     const title = el("div", "font-size:clamp(20px,3.6vw,46px);font-weight:700;letter-spacing:.14em;text-transform:uppercase", cap);
     const sub = el("div", "font-size:clamp(11px,1.4vw,17px);letter-spacing:.2em;text-transform:uppercase;opacity:.85;margin-top:.4em", cap);
     const skip = el("button", "position:absolute;right:3%;bottom:11%;pointer-events:auto;display:none;background:rgba(0,0,0,.45);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:6px 14px;font:inherit;font-size:13px;letter-spacing:.1em;cursor:pointer", root);
@@ -940,6 +940,7 @@ export class CutsceneEngine {
     if (this.ui.title.textContent !== title && title) this.ui.title.textContent = title;
     if (this.ui.sub.textContent !== sub && title) this.ui.sub.textContent = sub;
     this.ui.cap.style.opacity = title ? "1" : "0";
+    this.ui.cap.style.pointerEvents = title ? "auto" : "none";
   }
 
   protected resize() {

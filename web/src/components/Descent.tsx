@@ -28,14 +28,12 @@ export default function Descent({ warming = false, ...props }: Omit<DescentProps
   const [notice, setNotice] = useState(() => savedMode() === '3d' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
     ? 'Your system asks for reduced motion. The 2D view moves less; switch with the 2D view button.' : '');
   const choose = (next: '3d' | '2d') => { setNotice(''); setMode(next); try { localStorage.setItem(KEY, next); } catch { /* the choice just is not remembered */ } };
-  const viewSwitch = <button className="subtle-button" onClick={() => choose(mode === '3d' ? '2d' : '3d')}>{mode === '3d' ? '2D view' : '3D view'}</button>;
+  const viewSwitch = <>{notice && <small className="flight-view-notice" role="status">{notice}</small>}<button className="subtle-button" onClick={() => choose(mode === '3d' ? '2d' : '3d')}>{mode === '3d' ? '2D view' : '3D view'}</button></>;
   const unavailable = (reason: string) => { setNotice(`3D view unavailable (${reason}). Showing the 2D view.`); setMode('2d'); };
   if (mode === '2d') return warming ? null : <>
-    {notice && <p role="status" className="field-help">{notice}</p>}
     <Descent2D {...props} toolbarExtra={viewSwitch} />
   </>;
   return <>
-    {notice && <p role="status" className="field-help">{notice}</p>}
     {View3D ? <View3D {...props} warming={warming} toolbarExtra={viewSwitch} onUnavailable={unavailable} />
       : <Suspense fallback={<div className="flight-workspace empty-data" role="status">Preparing the 3D view…</div>}>
         <Descent3D {...props} warming={warming} toolbarExtra={viewSwitch} onUnavailable={unavailable} />

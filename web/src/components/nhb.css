@@ -135,3 +135,13 @@
   .nhb-certificate { grid-template-columns: minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) { .nhb-button { transition: none; } }
+
+/* Narrow report columns keep readings inside their own tracks. */
+.nhb-outcome > *, .nhb-columns > *, .nhb-scores > *, .nhb-bar-row > * { min-width:0; }
+.nhb-table { table-layout:fixed; }
+.nhb-table th, .nhb-table td { overflow-wrap:anywhere; }
+.nhb-vinylcal { flex-wrap:wrap; }
+@media(max-width:480px) {
+  .nhb-patch-bay { white-space:normal; flex-wrap:wrap; }
+  .nhb-bar-row { grid-template-columns:100px minmax(0, 1fr) 40px; gap:8px; }
+}
