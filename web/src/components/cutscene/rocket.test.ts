@@ -49,6 +49,28 @@ describe('lander gear and arrays', () => {
   });
 });
 
+describe('hazard sensor', () => {
+  it('stays visible outside the payload lander tanks', () => {
+    // vertices strictly inside the two side tanks (capsules at z = ±2.05 m, y 2.2–2.8, r 0.48)
+    const buried = (spec: LanderSpec) => {
+      const lander = buildLander(spec), v = new THREE.Vector3(); let n = 0;
+      lander.group.updateMatrixWorld(true);
+      lander.group.children[0].traverse(o => {
+        if (!(o instanceof THREE.Mesh)) return;
+        const p = o.geometry.attributes.position;
+        for (let i = 0; i < p.count; i++) {
+          v.fromBufferAttribute(p, i).applyMatrix4(o.matrixWorld);
+          const y = Math.min(2.8, Math.max(2.2, v.y));
+          if (Math.hypot(v.x, v.y - y, Math.abs(v.z) - 2.05) < 0.4) n++;
+        }
+      });
+      dispose(lander.group); return n;
+    };
+    for (const hazardSensor of ['lidar', 'camera'] as const)
+      expect(buried({ vehicleId: 'payload', hazardSensor })).toBe(buried({ vehicleId: 'payload', hazardSensor: 'none' }));
+  });
+});
+
 describe('buildRocket', () => {
   it('holds every folded lander inside its fairing', () => {
     for (const vehicleId of ['survey', 'payload']) for (const landingGearId of Object.keys(GEAR))

@@ -203,7 +203,9 @@ export function buildLander(spec: LanderSpec = {}): Lander {
     cylinder(.045,.06,.12,dark,0,.57,0,dish,12);
   }
   if(spec.hazardSensor && spec.hazardSensor!=='none') {
-    const sensor=new THREE.Group(); sensor.position.set(0,bodyY-.15,radius+.17); structure.add(sensor);
+    // The payload body's tanks sit fore and aft (±z), so its sensor faces +x, clear of them.
+    const face=payload?Math.PI/2:0, sensor=new THREE.Group();
+    sensor.position.set(Math.sin(face)*(radius+.17),bodyY-.15,Math.cos(face)*(radius+.17)); sensor.rotation.y=face; structure.add(sensor);
     box(.62,.38,.18,dark,0,0,0,sensor);
     if(spec.hazardSensor==='camera')for(const x of [-.17,.17]) {
       const lens=cylinder(.1,.12,.13,glass,x,0,.15,sensor,16);lens.rotation.x=Math.PI/2;

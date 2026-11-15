@@ -39,3 +39,18 @@ export function polygonTilePlugin(ecefToLocal: T.Matrix4, look: import('../compo
     },
   };
 }
+
+/**
+ * How far the streamed surface sits above the measured DEM (metres, + = above), from height
+ * differences at `probes` sample points. The gap between sea-level and ellipsoid heights is
+ * within about ±110 m everywhere on Earth, so larger differences are coarse, still-loading tiles
+ * and are ignored; the median ignores trees and buildings. Null until at least 60 % of the
+ * probes (and 5) agree.
+ */
+export const MAX_GEOID_GAP_M = 150;
+export function streamedGap(gaps: number[], probes = gaps.length): number | null {
+  const ok = gaps.filter(g => Number.isFinite(g) && Math.abs(g) <= MAX_GEOID_GAP_M).sort((a, b) => a - b);
+  if (ok.length < Math.max(5, Math.ceil(probes * 0.6))) return null;
+  const mid = ok.length >> 1;
+  return ok.length % 2 ? ok[mid] : (ok[mid - 1] + ok[mid]) / 2;
+}
