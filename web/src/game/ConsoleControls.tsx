@@ -1,3 +1,4 @@
+import { sensors } from './opening/equipmentCatalog';
 import type { ControlCenterProps } from './contracts';
 import type { MissionSettings } from '../lib/types';
 
@@ -16,7 +17,7 @@ export default function ConsoleControls({ mission, settings, onSettingsChange, w
   return (
     <div className="console-controls">
       <label>Control strategy<select value={settings.mode} onChange={e => update('mode', e.target.value as MissionSettings['mode'])}><option value="AUTONOMOUS_HAZARD_AVOID">Autonomous</option><option value="MANUAL_CONTROL">Manual</option></select></label>
-      <label>Hazard sensor<select value={settings.hazardSensor} onChange={e => update('hazardSensor', e.target.value as MissionSettings['hazardSensor'])}><option value="lidar">Lidar</option><option value="camera">Camera</option><option value="none">No hazard sensor</option></select></label>
+      <label>Hazard sensor<select value={settings.hazardSensor} onChange={e => update('hazardSensor', e.target.value as MissionSettings['hazardSensor'])}>{sensors.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
       <label>Test environment<select value={settings.environment} onChange={e => update('environment', e.target.value as MissionSettings['environment'])}><option value="planetary">{mission.planetaryTarget.body} physics on Earth terrain</option><option value="earth">Earth field test</option></select></label>
       <label>Wind speed (m/s)<input type="number" min={0} max={30} step={1} disabled={vacuum || real} value={vacuum ? 0 : real ? hour?.wind_speed_m_s.toFixed(1) ?? '' : settings.windSpeedMs} onChange={e => update('windSpeedMs', e.target.valueAsNumber)} /></label>
       {settings.environment === 'earth' && <label>Wind source<select value={settings.realWeatherMonth} onChange={e => update('realWeatherMonth', Number(e.target.value))}><option value={0}>Manual wind</option>{weatherAvailable ? ['January','February','March','April','May','June','July','August','September','October','November','December'].map((month, i) => <option key={month} value={i + 1}>{month} weather</option>) : settings.realWeatherMonth > 0 && <option value={settings.realWeatherMonth} disabled>Weather unavailable — select manual</option>}</select></label>}

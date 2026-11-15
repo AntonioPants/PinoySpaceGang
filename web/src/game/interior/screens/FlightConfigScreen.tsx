@@ -1,3 +1,4 @@
+import { sensors } from '../../opening/equipmentCatalog';
 import type { ControlCenterProps } from '../../contracts';
 import type { MissionSettings } from '../../../lib/types';
 import { Dropdown, Segmented, Slider } from './ui';
@@ -18,7 +19,7 @@ export default function FlightConfigScreen({ mission, settings, onSettingsChange
       <section>
         <h3>Guidance</h3>
         <Segmented label="Control" value={settings.mode} onChange={v => set('mode', v)} options={[{ value: 'AUTONOMOUS_HAZARD_AVOID', label: 'Autonomous' }, { value: 'MANUAL_CONTROL', label: 'Manual' }]} />
-        <Segmented label="Hazard sensor" value={settings.hazardSensor} onChange={v => set('hazardSensor', v)} options={[{ value: 'lidar', label: 'Lidar' }, { value: 'camera', label: 'Camera' }, { value: 'none', label: 'None' }]} />
+        <Segmented label="Hazard sensor" value={settings.hazardSensor} onChange={v => set('hazardSensor', v)} options={sensors.map(s => ({ value: s.id, label: s.name }))} />
         <Segmented label="Sensor interference" value={settings.siteConditions} onChange={v => set('siteConditions', v)} options={[{ value: true, label: 'From site data' }, { value: false, label: 'Manual' }]} />
         {settings.siteConditions ? <p className="mon-note">Dust and glare come from the test site’s surface data.</p> : <div className="mon-pair">
           <Slider label="Dust" value={Math.round(settings.dust * 100)} min={0} max={100} step={5} unit="%" onChange={v => set('dust', v / 100)} />

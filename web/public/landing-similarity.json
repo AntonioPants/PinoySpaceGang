@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "method_version": "stress-baseline-1.1.0",
-  "engine_sha256": "292af3545bb5c982406e5817a783e312331924753f1df49dfb1ca699638a6ccd",
+  "engine_sha256": "0904ba37cf3d3a0ba53a0a1cac753698e2890b8ea53176995311420decb843ff",
   "catalog_sha256": "24bf4c7476b684e141def5b008a4c6d688a542871cb0052b1a9b7c2d94caab51",
   "seeds": [
     1,

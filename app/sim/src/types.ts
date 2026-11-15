@@ -84,7 +84,7 @@ export interface TouchdownLimits {
  */
 export interface LandingGearConfig {
   /** 'custom' = a preset whose stroke or damping has been trimmed. */
-  gearId: 'standard-four' | 'wide-four' | 'survey-six' | 'custom';
+  gearId: 'standard-four' | 'wide-four' | 'survey-six' | 'apollo-four' | 'surveyor-three' | 'change-four' | 'vikram-four' | 'slim-five' | 'nova-six' | 'viking-three' | 'custom';
   legs: number;
   /** Centre to each foot pad, m. Becomes the lander's legRadiusM. */
   radiusM: number;
@@ -125,9 +125,12 @@ export type Strategy = 'autonomous' | 'manual';
 /** 'target' = the body the site represents (analogOf, else body); 'native' = where it physically is. */
 export type EnvironmentMode = 'target' | 'native' | number;
 
+/** Prototype sensors and sensors after those flown on real landers (see hazardSensors.ts). */
+export type HazardSensorId = 'lidar' | 'camera' | 'none' | 'crew-window' | 'landing-radar' | 'flash-lidar' | 'hazard-camera' | 'terrain-nav' | 'doppler-lidar';
+
 export interface SensorSuite {
-  /** Hazard detection: lidar is robust to glare; none disables hazard avoidance. */
-  hazard: 'lidar' | 'camera' | 'none';
+  /** Hazard and descent sensors; their effect on the flight is in hazardSensors.ts. */
+  hazard: HazardSensorId;
   /** Doppler velocimeter; without it velocity comes from noisier IMU integration. */
   velocimeter: boolean;
 }
@@ -210,6 +213,8 @@ export type SimEvent =
   | { type: 'engineOff'; t: number }
   | { type: 'dustKickup'; t: number; altitudeM: number; intensity: number }
   | { type: 'hazardDetected'; t: number; at: Vec2; slopeDeg: number; roughnessM: number }
+  /** The hazard scan finished: where guidance now aims, whether that spot passed, and whether it moved. Always follows a scan. */
+  | { type: 'siteSelected'; t: number; at: Vec2; safe: boolean; diverted: boolean }
   | { type: 'divert'; t: number; from: Vec2; to: Vec2; distanceM: number }
   | { type: 'fuelLow'; t: number; fuelKg: number }
   | { type: 'fuelOut'; t: number }

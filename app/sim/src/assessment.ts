@@ -12,6 +12,7 @@
  * (see SCORING) are design choices of this simulator, not engineering standards.
  */
 import type { FlightTelemetry, Outcome, SensorSuite, TouchdownLimits } from './types.ts';
+import { HAZARD_SENSORS } from './hazardSensors.ts';
 import { G0 } from './constants.ts';
 
 export const SCORING = {
@@ -295,13 +296,13 @@ export function assessFlight(flight: FlightTelemetry, context: AssessmentContext
   if (exceeded('slope') || exceeded('roughness')) {
     const what = [exceeded('slope') ? `a ${values.slope.toFixed(1)}° slope` : '', exceeded('roughness') ? `${values.roughness.toFixed(2)} m of relief under the legs` : ''].filter(Boolean).join(' and ');
     add(causes, 'bad-ground', `The touchdown point had ${what}, beyond what this vehicle tolerates.`);
-    if (hazardSensor === 'none') {
-      add(causes, 'no-hazard-sensor', 'No hazard sensor was fitted, so guidance could not see or avoid the ground it landed on.');
+    if (hazardSensor !== undefined && !HAZARD_SENSORS[hazardSensor]?.map) {
+      add(causes, 'no-hazard-sensor', hazardSensor === 'none' ? 'No hazard sensor was fitted, so guidance could not see or avoid the ground it landed on.' : `The ${HAZARD_SENSORS[hazardSensor].name.toLowerCase()} measures speed and height but does not map hazards, so guidance could not see or avoid the ground it landed on.`);
       add(recommendations, 'fit-sensor', 'Fit a hazard sensor (lidar is least affected by glare) so guidance can divert to safer ground.');
     } else if (flight.strategy === 'manual') {
       add(recommendations, 'pick-ground', 'Steer for flatter ground before the final descent, or let the autonomous strategy choose the site.');
-    } else if (hazardSensor === 'camera' && env.interference.glare >= 0.4) {
-      add(causes, 'glare', `Glare interference of ${pct(env.interference.glare)} degraded the camera's view of the hazards.`);
+    } else if (hazardSensor !== undefined && (HAZARD_SENSORS[hazardSensor]?.glareNoiseM ?? 0) >= 0.5 && env.interference.glare >= 0.4) {
+      add(causes, 'glare', `Glare interference of ${pct(env.interference.glare)} degraded the ${hazardSensor === 'camera' ? 'camera' : HAZARD_SENSORS[hazardSensor].name.toLowerCase()}'s view of the hazards.`);
       add(recommendations, 'use-lidar', 'Switch the hazard sensor to lidar, which is far less affected by glare.');
     } else if (summary.diverted) {
       add(causes, 'divert-insufficient', `Guidance diverted ${stats.divertDistanceM.toFixed(0)} m but the new site was still outside the limits.`);

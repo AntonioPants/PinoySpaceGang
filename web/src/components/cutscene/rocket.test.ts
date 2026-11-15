@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import * as THREE from 'three';
 import { buildLander, GEAR, type LanderSpec } from './lander';
+import { equipmentLoadouts } from '../../game/equipment';
 import { buildLaunchPad, buildRocket, PAYLOAD_Y } from './rocket';
 import { antennaPackages, solarArrays } from '../../lib/landerAppearance';
 
@@ -73,7 +74,7 @@ describe('hazard sensor', () => {
 
 describe('buildRocket', () => {
   it('holds every folded lander inside its fairing', () => {
-    for (const vehicleId of ['survey', 'payload']) for (const landingGearId of Object.keys(GEAR))
+    for (const { id: vehicleId } of equipmentLoadouts) for (const landingGearId of Object.keys(GEAR))
       for (const solar of solarArrays) for (const antenna of antennaPackages) {
         const spec: LanderSpec = { vehicleId, landingGearId, solarArrayId: solar.id, antennaId: antenna.id, hazardSensor: 'lidar' };
         const lander = buildLander(spec); lander.setGear(0); lander.setArrays(0);

@@ -5,8 +5,8 @@
  */
 import * as THREE from "three";
 import { CutsceneEngine, V, lerp, clamp01, TAIL, type Track } from "../../web/src/components/cutscene/engine";
-import { roughnessAt, slopeDegAt } from "../sim/src/index.ts";
 import type { Controls, FlightSummary, Sim, SimEvent, TelemetrySample } from "../sim/src/index.ts";
+import { buildOverlay, buildSiteMarker, OVERLAY_STYLE, overlayStep, type OverlayStyle, type SensorOverlay } from "./sensorOverlay.ts";
 
 export type CamMode = "auto" | "chase" | "orbit" | "ground" | "top";
 
@@ -16,6 +16,11 @@ export interface FlightSetup {
   gravity: number; airDensity: number;
   wind: { x: number; y: number };
   dust: number;                         // 0..1 interference setting
+  /**
+   * Autopilot hazard scan: true when the autopilot flies with a sensor that maps the ground. The
+   * scan is drawn when the sim reports it (the siteSelected event), over divertRadiusM round the
+   * point it scanned; in manual flight the player's overlay appears below scanAltitudeM.
+   */
   hazardScan: boolean; scanAltitudeM: number; divertRadiusM: number;
   legRadiusM: number; maxSlopeDeg: number; maxRoughnessM: number;
 }
@@ -48,8 +53,14 @@ export class FlightView extends CutsceneEngine {
   private cut = true;                     // next frame places the camera without easing
   private simAcc = 0;                     // simulated time not yet stepped, s
   private path: THREE.Line; private trail: THREE.Line; private trailN = 0; private trailT = -1;
-  private scan: THREE.Points | null = null; private scanCount = 0;
+  private overlay: SensorOverlay | null = null;
+  private scanCentre = V();               // scene point the current scan is centred on
+  private scanFrom: { x: number; y: number } | null = null;   // aim the autopilot scanned round, before any divert
+  private siteChosen = false;             // the autopilot has picked its landing spot: show the marker
+  private marker = buildSiteMarker();
   private cone: THREE.Mesh; private divert: THREE.Line | null = null;
+  /** Manual flight: show the hazard sensor's scan overlay (the player's toggle). */
+  scanOverlay = true;
 
   constructor(...args: ConstructorParameters<typeof CutsceneEngine>) {
     super(...args);
@@ -61,7 +72,7 @@ export class FlightView extends CutsceneEngine {
       new THREE.MeshBasicMaterial({ color: 0x7fdcff, transparent: true, opacity: 0.1, side: THREE.DoubleSide, depthWrite: false, fog: false }));
     this.cone.geometry.translate(0, -0.5, 0);                    // apex at the origin, opening downwards
     this.cone.visible = false;
-    this.scene.add(this.path, this.trail, this.cone);
+    this.scene.add(this.path, this.trail, this.cone, this.marker.group);
     const el = this.renderer.domElement;
     let drag: { x: number; y: number } | null = null;
     el.addEventListener("pointerdown", (e) => { drag = { x: e.clientX, y: e.clientY }; el.setPointerCapture(e.pointerId); });
@@ -133,15 +144,23 @@ export class FlightView extends CutsceneEngine {
 
   private clearFlightVisuals() {
     this.trailN = 0; this.trailT = -1; this.trail.geometry.setDrawRange(0, 0);
-    if (this.scan) { this.scene.remove(this.scan); this.scan.geometry.dispose(); (this.scan.material as THREE.Material).dispose(); this.scan = null; }
+    if (this.overlay) { this.scene.remove(this.overlay.root); this.overlay.dispose(); this.overlay = null; }
     if (this.divert) { this.scene.remove(this.divert); this.divert.geometry.dispose(); (this.divert.material as THREE.Material).dispose(); this.divert = null; }
-    this.cone.visible = false;
+    this.cone.visible = false; this.marker.group.visible = false; this.siteChosen = false; this.scanFrom = null; this.scanned = false; this.scanT = -1;
+  }
+
+  /** How the flying sensor is drawn, and what its overlay shows: for HUDs and tests. */
+  get scanStatus(): { style: OverlayStyle; shown: boolean; counts: SensorOverlay["counts"] | null; siteChosen: boolean } {
+    const style = this.sim ? OVERLAY_STYLE[this.sim.sensor.id] : "dots";
+    return { style, shown: !!this.overlay?.root.visible, counts: this.overlay?.counts ?? null, siteChosen: this.siteChosen };
   }
 
   protected live(dt: number) {
     const L = this.lander.group, sim = this.sim;
+    if (sim) this.aim = { ...sim.aim };                    // where guidance is really aiming
     const aimS = V(this.aim.x - this.setup.target.x, 0, -(this.aim.y - this.setup.target.y)); aimS.y = this.terrain.heightAt(aimS.x, aimS.z);
-    this.targetRing.visible = true; this.targetRing.position.set(aimS.x, aimS.y + 0.6, aimS.z);
+    // once the autopilot has chosen its spot, the site marker replaces the plain target ring
+    this.targetRing.visible = !this.siteChosen; this.targetRing.position.set(aimS.x, aimS.y + 0.6, aimS.z);
     this.targetRing.scale.setScalar(Math.max(3.5, Math.min(70, this.camPos.distanceTo(aimS) * 0.035)) * (1 + 0.1 * Math.sin(this.t * 5)));
 
     if (!sim) {                                             // idle overview
@@ -180,14 +199,29 @@ export class FlightView extends CutsceneEngine {
       const a = this.trail.geometry.attributes.position as THREE.BufferAttribute;
       a.setXYZ(this.trailN++, P.x, P.y + 1.5, P.z); a.needsUpdate = true; this.trail.geometry.setDrawRange(0, this.trailN); this.trailT = st.t;
     }
-    if (this.setup.hazardScan && !this.scanned && st.altitudeAGL <= this.setup.scanAltitudeM) { this.scanned = true; this.startScan(aimS); }
-    this.updateScan(P, aimS);
+    // The autopilot's scan is drawn when the sim reports it (onSimEvent). In manual flight the
+    // player's overlay comes up inside the sensor's scan height, round the target, on their toggle.
+    if (this.hooks.controls && sim.sensor.profile.map && !this.scanned && this.scanOverlay && st.altitudeAGL <= this.setup.scanAltitudeM) {
+      this.scanned = true; this.startScan(sim.aim);
+    }
+    if (this.overlay && this.hooks.controls) this.overlay.root.visible = this.scanOverlay;
+    this.updateScan(P);
+    if (this.siteChosen) {
+      this.marker.group.visible = true;
+      this.marker.place(V(aimS.x, aimS.y + 0.5, aimS.z), this.camPos.distanceTo(aimS), this.t);
+    }
     // On the frame the flight ends the lander stops dead. The camera must not stop with it: it
     // lets go and coasts on its spring into the ending shot.
     if (st.done) this.enterEnding(P, lean, ang); else this.liveCamera(P, aimS, st.altitudeAGL, dt);
   }
 
   private onSimEvent(e: SimEvent) {
+    // The autopilot scans round its aim, may divert, then reports the site it settled on.
+    if (e.type === "hazardDetected") this.scanFrom = { ...e.at };
+    if (e.type === "siteSelected") {
+      if (this.setup.hazardScan && !this.scanned) { this.scanned = true; this.startScan(this.scanFrom ?? e.at); }
+      this.siteChosen = true; this.scanFrom = null;
+    }
     if (e.type === "divert") {
       const a = this.toScene(e.from.x, e.from.y, 0), b = this.toScene(e.to.x, e.to.y, 0);
       a.y = this.terrain.heightAt(a.x, a.z) + 1; b.y = this.terrain.heightAt(b.x, b.z) + 1;
@@ -198,38 +232,36 @@ export class FlightView extends CutsceneEngine {
     this.hooks.onEvent?.(e);
   }
 
-  /** Hazard map of the ground inside the divert radius, drawn as the scan sweeps outwards. */
-  private startScan(aimS: THREE.Vector3) {
-    const s = this.setup, sim = this.sim!, step = Math.max(4, s.divertRadiusM / 22);
-    const cells: { d: number; p: THREE.Vector3; ok: boolean }[] = [];
-    for (let dy = -s.divertRadiusM; dy <= s.divertRadiusM; dy += step) for (let dx = -s.divertRadiusM; dx <= s.divertRadiusM; dx += step) {
-      const d = Math.hypot(dx, dy); if (d > s.divertRadiusM) continue;
-      const x = this.aim.x + dx, y = this.aim.y + dy;
-      const ok = slopeDegAt(sim.terrain, x, y, s.legRadiusM) < 0.7 * s.maxSlopeDeg && roughnessAt(sim.terrain, x, y, s.legRadiusM) < 0.6 * s.maxRoughnessM;
-      const p = V(aimS.x + dx, 0, aimS.z - dy); p.y = this.terrain.heightAt(p.x, p.z) + 0.7;
-      cells.push({ d, p, ok });
-    }
-    cells.sort((a, b) => a.d - b.d);
-    const pos = new Float32Array(cells.length * 3), col = new Float32Array(cells.length * 3);
-    cells.forEach((c, i) => { pos.set([c.p.x, c.p.y, c.p.z], i * 3); col.set(c.ok ? [0.35, 1, 0.6] : [1, 0.25, 0.2], i * 3); });
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.BufferAttribute(pos, 3)); g.setAttribute("color", new THREE.BufferAttribute(col, 3)); g.setDrawRange(0, 0);
-    this.scan = new THREE.Points(g, new THREE.PointsMaterial({ size: 4.5, sizeAttenuation: false, vertexColors: true, transparent: true, opacity: 0.95, depthWrite: false, fog: false }));
-    this.scan.frustumCulled = false; this.scanCount = cells.length; this.scanT = 0;
-    this.scene.add(this.scan);
-    this.addRing(aimS.clone().add(V(0, 0.8, 0)), 0x7fdcff, 2, s.divertRadiusM, 1.5, false);
-    this.audio.beep(1320);
+  /**
+   * Draw what the sensor saw over the divert radius round `centre` (sim coordinates). The cells
+   * are the sim's own classification of the sensor's view (Sim.hazardMap); the look is the
+   * sensor's (sensorOverlay.ts). Sensors with no map, and the crew window, draw nothing.
+   */
+  private startScan(centre: { x: number; y: number }) {
+    const s = this.setup, sim = this.sim!, style = OVERLAY_STYLE[sim.sensor.id];
+    if (style === "none") return;
+    const step = overlayStep(style, s.divertRadiusM, sim.sensor.profile.cellM);
+    const cells = sim.hazardMap(centre, s.divertRadiusM, step);
+    this.overlay = buildOverlay(style, {
+      cells, step, center: { ...centre }, radiusM: s.divertRadiusM, quality: sim.sensor.quality,
+      place: (x, y, lift) => { const p = this.toScene(x, y, 0); p.y = this.terrain.heightAt(p.x, p.z) + lift; return p; },
+    });
+    this.scene.add(this.overlay.root); this.scanT = 0;
+    this.scanCentre = this.toScene(centre.x, centre.y, 0); this.scanCentre.y = this.terrain.heightAt(this.scanCentre.x, this.scanCentre.z);
+    const pulse = style === "raster" ? 0xe6fbff : style === "outline" ? 0xffffff : style === "drape" ? 0x3fc8ff : 0x7fdcff;
+    this.addRing(this.scanCentre.clone().add(V(0, 0.8, 0)), pulse, 2, s.divertRadiusM, style === "raster" ? 0.7 : 1.5, false);
+    this.audio.beep(style === "raster" ? 1760 : 1320);
   }
 
-  private updateScan(P: THREE.Vector3, aimS: THREE.Vector3) {
-    if (!this.scan || this.scanT < 0) return;
+  private updateScan(P: THREE.Vector3) {
+    if (!this.overlay || this.scanT < 0) return;
     this.scanT += this.frameDt;
-    const u = clamp01(this.scanT / 1.5);
-    this.scan.geometry.setDrawRange(0, Math.floor(this.scanCount * u * u));
-    (this.scan.material as THREE.PointsMaterial).opacity = this.scanT < 7 ? 0.95 : Math.max(0.3, 0.95 - (this.scanT - 7) * 0.3);
-    this.cone.visible = this.scanT < 2.2;
+    this.overlay.update(this.scanT);
+    const u = clamp01(this.scanT / 1.5), centre = this.scanCentre;
+    // the beam from the lander to the ground while the scan runs (not for the camera's outlines)
+    this.cone.visible = this.scanT < 2.2 && this.overlay.style !== "outline" && this.overlay.root.visible;
     if (this.cone.visible) {
-      const axis = P.clone().sub(aimS), h = axis.length();
+      const axis = P.clone().sub(centre), h = axis.length();
       this.cone.position.copy(P); this.cone.scale.set(this.setup.divertRadiusM * u, h, this.setup.divertRadiusM * u);
       this.cone.quaternion.setFromUnitVectors(V(0, 1, 0), axis.normalize());
       (this.cone.material as THREE.MeshBasicMaterial).opacity = 0.07 * clamp01(2.2 - this.scanT);

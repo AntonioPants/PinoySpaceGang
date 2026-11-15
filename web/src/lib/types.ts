@@ -1,3 +1,4 @@
+import type { HazardSensorId } from '../../../app/sim/src/types';
 import type { LanderAppearance } from './landerAppearance';
 
 export type Body = 'Moon' | 'Mars';
@@ -34,10 +35,12 @@ export interface MissionSettings {
   mode: 'MANUAL_CONTROL' | 'AUTONOMOUS_HAZARD_AVOID';
   environment: 'planetary' | 'earth';
   fuelMassKg: number; dryMassKg: number; thrusterForceN: number;
+  /** Engine efficiency (specific impulse, s) and deepest throttle (0..1) of a real vehicle. Absent = the engine's defaults (311 s, 0.1). */
+  ispS?: number; minThrottle?: number;
   maxSlopeToleranceDeg: number; windSpeedMs: number;
   dust: number; glare: number;
   /** Terrain sensor used for hazard detection. */
-  hazardSensor: 'lidar' | 'camera' | 'none';
+  hazardSensor: HazardSensorId;
   /** True: dust and glare come from the analog site's surface data; false: the manual sliders. */
   siteConditions: boolean;
   /** Earth field test only: 0 = manual wind; 1–12 = use the real weather profile for that month. */
@@ -63,7 +66,7 @@ export interface MissionConfig {
     landingTargetM?: { x: number; y: number };
   };
   /** dryMassKg is the vehicle without its landing gear; landingGear (when fitted) adds its own mass in the simulation. */
-  strategy: { mode: MissionSettings['mode']; hazardSensor: MissionSettings['hazardSensor']; thrusterForceN: number; fuelMassKg: number; dryMassKg: number; maxSlopeToleranceDeg: number;
+  strategy: { mode: MissionSettings['mode']; hazardSensor: MissionSettings['hazardSensor']; thrusterForceN: number; fuelMassKg: number; dryMassKg: number; maxSlopeToleranceDeg: number; ispS?: number; minThrottle?: number;
     landingGear?: import('../../../app/sim/src/types').LandingGearConfig };
   environment: { mode: MissionSettings['environment']; gravityMs2: number; windSpeedMs: number; atmosphereModel: 'none' | 'earth-standard' | 'mars-constant'; dust: number; glare: number; interferenceSource: 'site' | 'manual';
     /** Set when an Earth field test uses a real modelled hour instead of the manual wind. */
