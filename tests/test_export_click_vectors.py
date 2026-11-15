@@ -46,7 +46,30 @@ def test_a_changed_published_score_fails_the_export():
         export.build(changed)
 
 
+def same(a, b, path=''):
+    """Paths where two exports differ. Floats agree to 1e-9 relative: the last bits of the
+    terrain features change with the machine's NumPy build (Windows, macOS and the Linux CI
+    differ around 1e-13), and that is not a stale export."""
+    if isinstance(a, dict) and isinstance(b, dict):
+        return [p for k in a.keys() | b.keys() for p in (same(a[k], b[k], f'{path}/{k}') if k in a and k in b else [f'{path}/{k}'])]
+    if isinstance(a, list) and isinstance(b, list):
+        return [f'{path} (length)'] if len(a) != len(b) else [p for i, (x, y) in enumerate(zip(a, b)) for p in same(x, y, f'{path}[{i}]')]
+    if isinstance(a, float) or isinstance(b, float):
+        ok = isinstance(a, (int, float)) and isinstance(b, (int, float)) and not isinstance(a, bool) and not isinstance(b, bool) and a == pytest.approx(b, rel=1e-9, abs=1e-12)
+        return [] if ok else [path]
+    return [] if a == b else [path]
+
+
+def test_float_noise_is_not_staleness_but_a_real_change_is():
+    assert same({'v': [1.0000000000001, 2]}, {'v': [1.0, 2]}) == []
+    assert same({'v': [1.001, 2]}, {'v': [1.0, 2]}) == ['/v[0]']
+    assert same({'a': 1}, {'a': 1, 'b': 2}) == ['/b']
+    assert same({'s': 'x'}, {'s': 'y'}) == ['/s']
+
+
 def test_committed_outputs_match_the_current_catalog(built):
     for name, fresh in zip(('earth-vectors.json', 'fixtures.json'), built):
         committed = json.loads((export.OUT/name).read_text(encoding='utf-8'))
-        assert committed == json.loads(json.dumps(fresh)), f'{name} is stale: rerun export_click_vectors'
+        differences = same(committed, json.loads(json.dumps(fresh)))
+        assert not differences, f'{name} is stale at {differences[:5]}: rerun export_click_vectors'
+
