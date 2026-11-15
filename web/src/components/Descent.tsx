@@ -31,7 +31,7 @@ export default function Descent({ warming = false, onReady, ...props }: Omit<Des
     ? 'Your system asks for reduced motion. The 2D view moves less; switch with the 2D view button.' : '');
   const [failed, setFailed] = useState(false);
   const choose = (next: '3d' | '2d') => { setNotice(''); setMode(next); try { localStorage.setItem(KEY, next); } catch { /* the choice just is not remembered */ } };
-  const viewSwitch = <button className="subtle-button" disabled={failed} onClick={() => choose(mode === '3d' ? '2d' : '3d')}>{mode === '3d' ? '2D view' : '3D view'}</button>;
+  const viewSwitch = <>{notice && <small className="flight-view-notice" role="status">{notice}</small>}<button className="subtle-button" disabled={failed} onClick={() => choose(mode === '3d' ? '2d' : '3d')}>{mode === '3d' ? '2D view' : '3D view'}</button></>;
   const unavailable = (reason: string) => { setNotice(`3D view unavailable (${reason}). Showing the 2D view.`); setMode('2d'); };
   // One simulation belongs to the descent, rather than either presentation. Switching views
   // preserves time, fuel, controls and outcome; the resident 3D renderer keeps its GPU resources.
@@ -45,7 +45,6 @@ export default function Descent({ warming = false, onReady, ...props }: Omit<Des
   useEffect(() => { if (failed) onReady?.(true); }, [failed, onReady]);
   const Resident3D = View3D ?? Descent3D;
   return <>
-    {notice && !warming && <p role="status" className="field-help">{notice}</p>}
     {!failed && <div inert={mode !== '3d' || warming} style={mode !== '3d' || warming ? {position:'absolute', inset:0, visibility:'hidden', pointerEvents:'none'} : {display:'contents'}}>
       <Suspense fallback={null}><Resident3D {...props} playback={playback} warming={warming} visible={mode === '3d' && !warming} onReady={readyChanged} toolbarExtra={viewSwitch} onUnavailable={failed3D}/></Suspense>
     </div>}

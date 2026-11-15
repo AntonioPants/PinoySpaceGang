@@ -302,3 +302,163 @@
 .world-preparation button { margin-left: .5rem; color: #e9c78a; background: transparent; border: 1px solid #81745c; border-radius: 4px; padding: .3rem .6rem; }
 
 .world-tile-credits { position: absolute; bottom: 1.2rem; left: 50%; transform: translateX(-50%); max-width: 65%; color: #aaa69d; font: 9px sans-serif; pointer-events: none; text-align: center; }
+
+/* Reserve layout space for text instead of stacking fixed bottom offsets. */
+.opening-game { --game-gutter: clamp(16px, 4vw, 56px); --game-footer: 38px; }
+.opening-game .game-topbar { padding:16px var(--game-gutter); gap:16px; min-width:0; }
+.game-topbar > * { min-width:0; }
+.opening-game .game-wordmark { gap:8px; }
+.opening-game .game-tools { gap:8px; }
+.opening-game .game-chapter { text-align:center; }
+.opening-game .game-network-status { bottom:6px; left:var(--game-gutter); font-size:10px; line-height:1.4; max-width:calc(100% - 2 * var(--game-gutter)); }
+.opening-journey .game-network-status { max-width:calc(100% - 130px); }
+.opening-game .game-bottom-note { bottom:calc(var(--game-footer) + 12px); gap:12px; }
+.opening-game .world-labels { bottom:calc(var(--game-footer) + 100px); }
+.opening-game .game-heading { left:var(--game-gutter); top:100px; width:min(500px, calc(100% - 420px)); }
+.opening-game .game-selector { top:110px; bottom:calc(var(--game-footer) + 12px); max-height:none; right:var(--game-gutter); }
+.game-selector > :not(.game-site-list) { flex-shrink:0; }
+.opening-game .game-site-list { min-height:0; max-height:none; }
+.game-site-list button > div { min-width:0; }
+.game-site-list button strong, .game-site-list button small { display:block; line-height:1.5; }
+.game-site-list button small + small { margin-top:4px; }
+.game-site-list button > span, .game-site-list button > svg { flex-shrink:0; }
+.game-selector label { display:grid; gap:8px; margin-bottom:16px; }
+.game-selector select { width:100%; min-width:0; padding:8px; }
+.opening-game .site-description { line-height:1.6; margin:12px 0; }
+.opening-game .game-primary { gap:16px; }
+.opening-game .game-primary svg { flex-shrink:0; }
+.title-screen .title-prompt { max-width:100%; letter-spacing:.2em; }
+.title-prompt::before, .title-prompt::after { flex-shrink:1; }
+
+/* The map, information sheet, readout and actions each have their own row. */
+.opening-earth.on-surface { display:grid; grid-template-rows:auto minmax(0, 1fr) auto auto var(--game-footer); }
+.on-surface > .game-topbar { grid-row:1; }
+.opening-earth.on-surface .terrain-map-readout { position:relative; inset:auto; grid-row:3; margin:0 var(--game-gutter); padding:8px 0; font-size:12px; }
+.terrain-map-readout .landing-readout { flex-wrap:wrap; }
+.terrain-map-readout .landing-readout svg { flex:0 0 14px; }
+.opening-earth.on-surface .terrain-bottom-controls { position:relative; inset:auto; grid-row:4; margin:0 var(--game-gutter); padding:8px 0; display:flex; flex-wrap:wrap; gap:8px; }
+.opening-earth.on-surface .terrain-bottom-controls button { flex:1 1 150px; margin:0; padding:10px 14px; font-size:12px; line-height:1.5; }
+.opening-earth.on-surface .terrain-info-sheet { grid-row:2; position:relative; inset:auto; align-self:end; min-height:0; max-height:100%; margin:0; padding:16px var(--game-gutter); width:100%; transform:none; display:none; }
+.opening-earth.on-surface .terrain-info-sheet.is-open { display:block; }
+.terrain-info-sheet .surface-nav { flex-wrap:wrap; gap:8px 24px; padding-right:84px; min-height:44px; }
+.terrain-info-sheet .surface-nav button { margin:0; }
+.terrain-info-sheet .terrain-info-close { position:absolute; top:16px; right:var(--game-gutter); float:none; }
+.terrain-info-sheet h2 { margin:12px 0; }
+.terrain-info-sheet .analog-evidence .evidence-line { font-family:var(--font-ui); line-height:1.6; margin:8px 0; }
+.terrain-info-sheet .landing-evidence { line-height:1.6; }
+.terrain-info-sheet .landing-evidence small { margin-top:4px; }
+
+/* Hardware controls and the mission summary cannot grow over one another. */
+.opening-equipment { display:grid; grid-template-columns:minmax(0, 1fr) clamp(280px, 27vw, 360px); grid-template-rows:auto minmax(0, 1fr) auto var(--game-footer); column-gap:32px; padding-inline:var(--game-gutter); }
+.opening-equipment > .game-topbar { grid-column:1 / -1; margin-inline:calc(-1 * var(--game-gutter)); }
+.opening-equipment .game-heading { top:100px; width:calc(100% - clamp(280px, 27vw, 360px) - 3 * var(--game-gutter)); }
+.opening-equipment .equipment-rails { position:relative; inset:auto; grid-column:2; grid-row:2; min-height:0; max-height:none; width:auto; margin:16px 0; padding:0 8px 8px 0; }
+.opening-equipment .hangar-manifest { position:relative; inset:auto; grid-column:1 / -1; grid-row:3; min-width:0; gap:8px 24px; padding:16px 0 8px; border-top:1px solid #ffffff25; }
+.hangar-manifest > * { min-width:0; }
+.hangar-manifest > p { line-height:1.6; }
+.opening-equipment .hangar-manifest > .game-primary { min-width:0; max-width:100%; }
+.opening-equipment .equipment-scene { top:180px; bottom:185px; right:calc(clamp(280px, 27vw, 360px) + 2 * var(--game-gutter)); }
+.opening-equipment .equipment-view-tools { left:var(--game-gutter); bottom:185px; flex-wrap:wrap; gap:8px 16px; max-width:calc(100% - 420px); }
+.equipment-rail .rail-choice { display:grid; grid-template-columns:38px minmax(0, 1fr) 38px; gap:12px; }
+.rail-choice strong { line-height:1.4; }
+.rail-heading { gap:12px; }
+.rail-heading > :last-child { flex-shrink:0; }
+.livery-swatches { flex-wrap:wrap; }
+
+/* The journey footer is separate from the bridge hints and flight help. */
+.opening-game .journey-content { bottom:var(--game-footer); }
+.immersive-game-session .ship-interior { display:flex; flex-direction:column; }
+.immersive-game-session .cabin-toolbar { position:relative; inset:auto; flex:none; max-height:30%; overflow:auto; padding:12px 20px; background:#080b0fe8; }
+.immersive-game-session .cabin-view { position:relative; inset:auto; height:auto; flex:1; min-height:0; }
+.immersive-game-session .cabin-hint { position:relative; inset:auto; flex:none; max-height:15%; overflow:auto; padding:10px 20px; font-size:11px; background:#080b0fe8; }
+.immersive-game-session .flight-workspace { display:grid; grid-template-rows:auto minmax(80px, 1fr) auto auto auto; }
+.immersive-game-session .flight-toolbar { position:relative; inset:auto; grid-row:1; max-height:28vh; overflow:auto; padding:12px 20px; gap:12px; align-items:center; background:#080b0fe8; }
+.immersive-game-session .flight-toolbar strong { max-width:none; }
+.immersive-game-session .flight-toolbar > div + div { justify-content:flex-end; }
+.immersive-game-session .flight-stage { position:relative; inset:auto; grid-row:2; min-height:0; height:auto; }
+.immersive-game-session .flight-hud { position:relative; inset:auto; grid-row:3; padding:12px 20px; gap:12px; background:#080b0fe8; }
+.immersive-game-session .flight-hud strong { font-size:clamp(16px, 2vw, 28px); }
+.immersive-game-session .flight-hud span { font-size:10px; letter-spacing:0; margin-bottom:4px; }
+.immersive-game-session .flight-help { position:relative; inset:auto; grid-row:4; max-height:4.5em; overflow:auto; padding:0 20px 8px; font-size:11px; background:#080b0fe8; }
+.immersive-game-session .model-assumptions { position:relative; inset:auto; grid-row:5; max-width:none; max-height:20vh; margin:0; padding:8px 20px; background:#080b0fe8; }
+.immersive-game-session .terrain-comparison-legend { left:12px; bottom:12px; max-width:min(540px, calc(100% - 24px)); max-height:35%; font-size:11px; }
+.immersive-game-session .flight-3d .terrain-credit { top:8px!important; bottom:auto!important; left:12px!important; right:12px!important; max-height:18%; overflow:auto; font-size:10px; }
+.immersive-game-session .comparison-result-button { right:20px; bottom:auto; top:30%; margin:0; max-width:calc(100% - 40px); }
+.immersive-game-session .flight-result { top:50%; max-height:65%; overflow:auto; padding:24px; gap:16px; }
+
+@media(max-width:1000px) {
+  .opening-game .game-chapter { display:none; }
+  .opening-game .game-topbar { grid-template-columns:auto auto minmax(0, 1fr); }
+  .opening-game .game-topbar:not(:has(.inspection-navigation)) { grid-template-columns:auto minmax(0, 1fr); }
+  .opening-game .game-tools { grid-column:-2; justify-self:end; }
+}
+@media(max-width:760px) {
+  .opening-game .game-heading { top:86px; width:calc(100% - 2 * var(--game-gutter)); }
+  .opening-game .game-selector { top:auto; bottom:calc(var(--game-footer) + 8px); left:var(--game-gutter); right:var(--game-gutter); max-height:55%; padding:16px; }
+  .opening-earth.on-surface .terrain-map-readout { font-size:11px; }
+  .opening-earth.on-surface .terrain-map-readout small { font-size:10px; }
+  .opening-earth.on-surface .terrain-bottom-controls button { flex-basis:130px; font-size:11px; }
+  .opening-equipment { grid-template-columns:minmax(0, 1fr); grid-template-rows:auto auto minmax(60px, 1fr) minmax(110px, 30%) auto var(--game-footer); gap:0; }
+  .opening-equipment .game-heading { position:relative; inset:auto; width:auto; grid-row:2; padding:4px 0 12px; }
+  .opening-equipment .game-heading h1 { font-size:28px; }
+  .opening-equipment .equipment-scene { top:130px; bottom:48%; right:0; }
+  .opening-equipment .equipment-rails { grid-column:1; grid-row:4; margin:8px 0; }
+  .opening-equipment .equipment-view-tools { position:relative; inset:auto; align-self:end; grid-row:3; padding:8px 0; max-width:none; font-size:10px; }
+  .opening-equipment .hangar-manifest { grid-row:5; grid-template-columns:minmax(0, 1fr); padding-top:12px; gap:4px; }
+  .opening-equipment .hangar-manifest > .game-primary { grid-column:1; grid-row:auto; margin-top:8px; min-height:44px; }
+  .immersive-game-session .flight-toolbar { padding:10px 16px; }
+  .immersive-game-session .flight-toolbar > div + div { justify-content:flex-start; }
+  .immersive-game-session .flight-hud { grid-template-columns:repeat(3, minmax(0, 1fr)); padding:10px 16px; gap:8px 12px; }
+  .immersive-game-session .flight-help, .immersive-game-session .model-assumptions { padding-inline:16px; }
+}
+@media(max-height:540px) {
+  .opening-game .game-heading { top:76px; }
+  .opening-game .game-heading h1 { font-size:26px; }
+  .opening-game .game-heading p { display:none; }
+  .opening-game .game-selector { top:76px; max-height:none; }
+  .opening-game .game-selector h2 { margin-bottom:8px; }
+  .opening-game .site-description { max-height:42px; font-size:10px; }
+  .opening-earth.on-surface .terrain-map-readout { max-height:23vh; overflow:auto; pointer-events:auto; }
+  .opening-equipment { grid-template-columns:minmax(0, 1fr) minmax(260px, 42%); grid-template-rows:auto minmax(0, 1fr) auto var(--game-footer); column-gap:20px; }
+  .opening-equipment .game-heading { position:absolute; width:45%; }
+  .opening-equipment .equipment-rails { grid-column:2; grid-row:2; }
+  .opening-equipment .equipment-scene { top:100px; bottom:140px; right:45%; }
+  .opening-equipment .equipment-view-tools { position:absolute; left:var(--game-gutter); bottom:145px; max-width:45%; }
+  .opening-equipment .hangar-manifest { grid-row:3; grid-template-columns:minmax(0, 1fr) auto; }
+  .opening-equipment .hangar-manifest > .game-primary { grid-column:2; grid-row:1 / 4; }
+  .immersive-game-session .flight-hud { grid-template-columns:repeat(5, minmax(0, 1fr)); }
+  .immersive-game-session .flight-help { max-height:3em; }
+}
+.opening-world-scene > p[role=status] { position:absolute; top:45%; left:var(--game-gutter); right:var(--game-gutter); text-align:center; font-size:12px; color:var(--muted); }
+.opening-game .lunar-destination .globe-disclaimer { left:var(--game-gutter); top:76px; max-width:calc(100% - 2 * var(--game-gutter)); line-height:1.5; }
+@media(min-width:761px) {
+  .opening-game .lunar-destination .moon-status { max-width:calc(100% - 420px); }
+}
+@media(max-width:760px) {
+  .opening-game .lunar-destination .moon-status { bottom:auto; top:160px; max-height:10vh; overflow:auto; max-width:calc(100% - 32px); }
+  .opening-game .lunar-destination .globe-disclaimer { top:125px; font-size:10px; }
+}
+/* Header actions keep their labels intact, including the title and report headers. */
+.opening-game .game-tools { flex-shrink:0; }
+.opening-game .game-tools button { white-space:nowrap; flex-shrink:0; }
+.opening-title .game-topbar { display:flex; justify-content:flex-end; }
+.opening-title .game-topbar .game-wordmark, .opening-title .game-topbar .game-chapter { display:none; }
+.opening-game .scene-unavailable { top:180px; left:var(--game-gutter); max-width:min(400px, calc(100% - 2 * var(--game-gutter))); font-size:12px; line-height:1.6; }
+.opening-title .scene-unavailable { top:90px; right:var(--game-gutter); max-width:none; text-align:center; }
+.immersive-game-session .flight-help { pointer-events:auto; }
+@media(max-width:480px) {
+  .opening-game .game-wordmark span { display:none; }
+}
+@media(max-height:540px) {
+  .opening-game .scene-unavailable { top:110px; font-size:11px; }
+  .opening-title .title-screen { justify-content:center; padding:68px 20px 58px; }
+  .opening-title .title-eyebrow { margin-bottom:8px; }
+  .opening-title .title-screen h1 { font-size:clamp(28px, 6vw, 58px); }
+  .opening-title .title-screen p { margin:12px 0; }
+  .opening-title .title-prompt { padding:8px; font-size:11px; }
+  .opening-title .title-atlas { margin-top:4px; padding:6px; }
+  .opening-title .scene-unavailable { top:72px; font-size:10px; }
+  .opening-game .world-labels { bottom:calc(var(--game-footer) + 62px); }
+}
+.opening-earth.on-surface .game-selector { position:relative; inset:auto; grid-column:1; grid-row:2; justify-self:end; align-self:stretch; width:min(340px, calc(100% - 2 * var(--game-gutter))); margin:8px var(--game-gutter); max-height:none; overflow:hidden; z-index:6; }
+.opening-earth.on-surface .terrain-info-sheet { grid-column:1; }
