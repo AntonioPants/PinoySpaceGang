@@ -49,3 +49,16 @@ The targeted scan is not global. Polar lunar massif/crater and Phoenix periglaci
 Start Journey → choose Moon/Mars → choose region → Find Earth terrain. The slider shows analog percentages for both top ten and Explore all. Select a terrain and expand More for evidence, differences and a source. The second number reports the baseline landing comparison. Atlas provides all Earth grounds with curated/discovered markers and a target selector. Credits → Findings opens the generated table. Fly; after touchdown the astronaut walks to a bridge monitor and the debrief opens there as a carousel (arrows or arrow keys) covering the outcome, what Earth cannot reproduce, scores, rehearsal and landing-baseline comparisons, and the pair's analog evidence. `?debrief-demo` plays it for one simulated landing.
 
 Rebuild with `node app/sim/node_modules/tsx/dist/cli.mjs app/sim/scripts/landing-similarity.ts --out data/staged/landing-similarity.json`, then `python -m scripts.catalog.findings`. Stop dev servers and run `python -m scripts.catalog.findings --publish` for the existing transactional publication step. Run `npm run check` and `python -m pytest -q`. See DEMO_SCRIPT.md for a timed walkthrough and fallbacks.
+
+## Click anywhere (added 15 November 2026)
+
+On the Moon or Mars screen, click bare surface to drop a pin, then "Analyse this spot". A small
+server reads the terrain there from the USGS global elevation mosaic and ranks every Earth site
+with the same published score; the pin can then be flown through the whole journey, and the
+debrief flies its comparison landings on the pin's own terrain. This is an on-demand ranking:
+engineering similarity, not reviewed and not validated, weaker evidence than the nine curated
+regions, and labelled that way on every screen. Its landform comes from the USGS geologic map
+unit through an unreviewed table (counted at 75%) or is left unmapped, in which case sites are
+ranked by terrain alone and the game says so. If the server cannot be reached the pin says
+"Matching service unavailable. Choose a marked region." and the curated game is unchanged.
+Details and limits: `docs/ANALOG_MATCHING.md`, `supabase/README.md`.

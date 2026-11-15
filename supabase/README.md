@@ -80,8 +80,12 @@ Bump `CLICK_VERSION` in `index.ts` whenever a response can change, so old cache 
 served. After any deploy run `node supabase/verify.ts`.
 
 Reference data and maps are loaded by `scripts/supabase/load_reference.py` (see its header). It
-needs a loader function that exists only while loading; the migration that creates it is in the
-project's migration history (`analog_assets_geology_gazetteer`) and it is dropped afterwards.
+posts to a token-guarded loader function, `quest_upload`. That loader is now closed: it rejects
+every call and the public roles cannot execute it (migration `close_quest_upload`). To reload
+data, replace it with a new token-guarded version (the original is in the migration history as
+`analog_assets_geology_gazetteer`) and close it again afterwards. It was closed rather than
+dropped because a drop needs a person to confirm it in the dashboard: `drop function
+public.quest_upload(text, text, jsonb);` is safe to run.
 
 ## Platform limits (Supabase docs, read 2026-11-15)
 

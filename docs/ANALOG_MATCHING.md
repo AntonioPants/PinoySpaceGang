@@ -291,3 +291,43 @@ this change; all values reference the existing source-backed catalog.
 `catalog.analogScoreFor` reads the detailed modern analog score, or the all-pair central screening score outside the published ten. The full atlas sorts by this score; the ten retain published evidence-tier rank. Legacy terrain fallback is explicitly labelled. Percentages are engineering similarity, not validated accuracy.
 
 `app/sim/scripts/landing-similarity.ts` stages the deterministic baseline; `python -m scripts.catalog.findings --publish` publishes it and the generated findings through the existing transaction (stop dev servers first). Baselines cover proposed pairs, all published ten, and each target's best scanned window. They use 25 trials per patch and an explicit fixed configuration; scores do not alter analog rankings. Runtime verifies the catalog checksum. Only an exact default scenario without gear/weather/interference overrides can reuse baseline stress results; other missions run live. See SUBMISSION.md for assumptions and limits.
+
+## Click anywhere: on-demand ranking for a pinned point (click 1.1.0, 15 November 2026)
+
+A player can pin any point on the Moon or Mars and get a ranked list of Earth sites. This is a
+separate, weaker class of evidence than the curated pairings above and every screen says so.
+
+What it is. The matching service (`supabase/functions/match-analog`, see `supabase/README.md`)
+snaps the point to 0.01 degrees, reads the same 33 x 33 azimuthal-equidistant window the pack
+builder makes (150 m cells on the Moon, 500 m on Mars) from the USGS global mosaics by HTTP
+range requests, and scores its central 4 km against every Earth site with the published
+descriptors (2.0.0) and analog score (1.0.0). The planetary side is a TypeScript port
+(`supabase/functions/_shared/analog/`); the Earth side is not ported: its vectors are exported
+by `scripts/catalog/export_click_vectors.py`, which first recomputes every published comparison
+and refuses to write if any differs at 2 decimals.
+
+Parity. Descriptors from the 9 committed planetary packs match Python to 7.6e-14 relative; all
+90 published comparisons and all 918 screening scores are reproduced at 2 decimals. Windows
+fetched for the 9 curated targets differ from the committed packs by 0.002 to 0.86 m RMS and
+move the analog score by at most 0.22 points (gates: 2 m, 1.0 point).
+
+Landform. From the USGS global geologic maps (Mars: SIM 3292, 1:20M; Moon: Unified Geologic Map
+of the Moon, 1:5M, 2020), translated to this document's families by
+`supabase/functions/_shared/analog/unit-families.json`. That table has been reviewed by nobody:
+it maps only units whose description clearly supports a family (29 of 44 Mars units and 24 of
+49 lunar units are left unmapped) and its label is discounted to 75%, the factor unreviewed
+inferred labels get. A mapped crater unit includes ejecta and floor. With no family the ranking
+is terrain-only: the game shows the terrain percentage and "landform unmapped", never the halved
+analog score. Jezero (unit HNt) and Marius Hills (unit EIp) are unmapped by this table.
+
+What it is not. Not reviewed, not validated, not a proposed pairing. No window-sensitivity range
+is computed. It describes the 4 km window at the snapped point, not the feature seen from
+orbit. It does not apply the screening and verification flags of the published top ten, so a
+pin beside a curated region will not reproduce that region's list. Moon scores (15 features at
+150 m) and Mars scores (12 features at 500 m) are not on one scale. Missing elevation data is an
+error, never filled. An Earth site missing a frozen feature is excluded and counted. Earth
+cannot reproduce the target's gravity, atmosphere or radiation.
+
+Sources: USGS Astrogeology MGS MOLA 463 m and LRO LOLA 118 m global DEM mosaics; Tanaka et al.
+(2014) USGS SIM 3292; Fortezzo et al. (2020) Unified Geologic Map of the Moon; IAU Gazetteer of
+Planetary Nomenclature (names, centre points).

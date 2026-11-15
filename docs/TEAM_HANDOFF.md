@@ -201,3 +201,44 @@ lighting its engine for the unchanged hand-over to the live descent (now 13 s; l
 12-mesh budget. Tests check every hardware/appearance combination fits the fairing
 folded and returns to the same footprint deployed. The test bench (`?cutscene-demo`)
 has Liftoff and a Custom lander toggle. Illustrative only: no rocket physics.
+
+## Polish, click anywhere and first-load (15 November 2026, branch `feature/quest`)
+
+New seams. Nothing in `game/contracts.ts`, `MissionConfig` or the scene registry changed.
+
+- **`WorldScene` is always mounted** from the title to the terrain (Eyad). The Cesium globe
+  (`components/MoonGlobe.tsx`, `layered` mode) is a layer above it (`.opening-globe-layer`) that
+  fades in once its first tile is visible and the fly-in has finished. `OpeningGame.handCamera`
+  passes the camera across through two small handles (`WorldHandle`, `GlobeHandle`): an orbit
+  (direction from the world's centre, distance in radii) or a pose over the site (east-north-up
+  metres). `WorldScene` takes `paused` and stops drawing while Cesium covers it; `leave()` fades
+  Cesium out before a stage change. The Google/measured toggle is the same hand-over, so no
+  descent replays. A new site list or pin no longer restarts a camera flight (`framed` key in
+  `WorldScene`) or rebuilds the Cesium viewer (points are read through a ref). If Cesium fails
+  the player stays on the simple globe; the old offline model is only used by the planner.
+- **The site panel is an eggshell card** (`--shell*` tokens in `styles.css`; `opening/DESIGN.md`).
+- **A pinned point as a target** (Eyad's opening; Antonio's evidence). `lib/analogClick.ts` calls
+  the matching service and builds a synthetic `PlanetarySite` (id `custom-<body>-<lat>-<lon>`).
+  In `OpeningGame`, `pin` holds the point and its state; when `pinActive`, `target`, `ranked`
+  and `topTen` come from the server's answer, `pairingOf`/`matchOf` are skipped, and
+  `AnalogEvidence`, `LandingEvidence`, `MissionControlScreen` and the debrief's match section
+  show pinned-point copy (they detect the `custom-` id). `computeFidelity` takes an optional
+  planetary profile (Tim: `lib/fidelity.ts`) and then skips the catalog lookup, the pack download
+  and the cached baseline; `DebriefScene`, `FlightReport` and `FlightReportNHB` pass it through.
+  The mission carries the pin's terrain match as `evidence.quantitativeSimilarityScore` with
+  status `unvalidated-pair`.
+- **The server** (`supabase/`, new; Antonio's method, Tim's project). One edge function, a cache
+  table, the geologic maps and gazetteer in PostGIS. `supabase/README.md` says what is deployed,
+  how to verify (`node supabase/verify.ts`) and how to redeploy. Env keys: `VITE_SUPABASE_URL`,
+  `VITE_SUPABASE_ANON_KEY` in `web/.env` (public values only). Free-tier projects pause after a
+  week idle: restore it in the dashboard before a demo.
+- **Pipeline additions** (Antonio): `scripts/catalog/export_click_vectors.py`,
+  `scripts/supabase/load_reference.py`, both additive. `web/public/sites.json` is untouched.
+- **First load** (Furgan): `vite.config.ts` keeps Vite's preload helper out of the Cesium chunk,
+  so the title no longer downloads Cesium; `OpeningGame` fetches it once the worlds settle.
+
+Who should review what: Eyad the opening (`OpeningGame.tsx`, `WorldScene.tsx`, `opening.css`,
+`MoonGlobe.tsx`); Antonio the scoring port, the unit-to-family table, the evidence copy and
+`docs/ANALOG_MATCHING.md`; Tim `lib/fidelity.ts` and the Supabase project; Furgan `vite.config.ts`.
+The rest of the performance pass (quality tiers, hidden-tab pause, lost-context recovery,
+renderer audit, GPU warm-up, a lazy catalog) was not done: see the pull request.
