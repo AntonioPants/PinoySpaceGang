@@ -178,3 +178,17 @@ the local Chromium process cannot open its required socket in this environment,
 and the separate remote browser cannot reach the local Vite server. Before merging,
 check desktop/mobile layout, all selectors, camera retention/reset, boarding, launch,
 cinematic skip, descent, retry, reduced motion and the WebGL fallback.
+
+## Rocket cinematics (15 November 2026)
+
+Liftoff from Earth is now a rocket, not the bare lander: `components/cutscene/rocket.ts`
+builds a core stage, four strap-on boosters, an upper stage and a two-piece fairing in
+the selected livery, on a launch pad with a service tower. The Earth approach opens on
+the same rocket braking in; it jettisons the boosters, splits and sheds the fairing and
+releases the player's lander, which then unfolds its legs and solar arrays before
+lighting its engine for the unchanged hand-over to the live descent (now 13 s; liftoff
+9 s). Legs and arrays are hinged parts of the shared lander model (`setGear`,
+`setArrays`, both default to deployed), one draw call each; the static body keeps its
+12-mesh budget. Tests check every hardware/appearance combination fits the fairing
+folded and returns to the same footprint deployed. The test bench (`?cutscene-demo`)
+has Liftoff and a Custom lander toggle. Illustrative only: no rocket physics.

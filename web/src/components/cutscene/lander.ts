@@ -18,6 +18,39 @@ export interface Lander {
   nozzleY: number;
   debrisColors: number[];
   footRadius: number;
+  /** 0 = legs folded up against the body (inside the rocket fairing), 1 = deployed for landing. */
+  setGear(deployed: number): void;
+  /** 0 = solar arrays folded up against the body, 1 = deployed. */
+  setArrays(deployed: number): void;
+}
+
+/**
+ * Bakes every mesh under `root` into one mesh with per-vertex colours from each part's material,
+ * so a moving assembly (a leg, an array, a rocket stage) costs one draw call.
+ */
+export function bakeColoured(root: THREE.Object3D, material: THREE.Material) {
+  root.updateMatrixWorld(true);
+  const inverse = root.matrixWorld.clone().invert(), parts: THREE.BufferGeometry[] = [], relative = new THREE.Matrix4();
+  root.traverse(object => {
+    if (!(object instanceof THREE.Mesh)) return;
+    const source = object.geometry as THREE.BufferGeometry;
+    const geometry = source.index ? source.toNonIndexed() : source.clone();
+    geometry.deleteAttribute('uv');
+    geometry.applyMatrix4(relative.multiplyMatrices(inverse, object.matrixWorld));
+    const colour = (object.material as THREE.MeshStandardMaterial).color ?? new THREE.Color(0xffffff);
+    const colours = new Float32Array(geometry.attributes.position.count * 3);
+    for (let i = 0; i < colours.length; i += 3) { colours[i] = colour.r; colours[i + 1] = colour.g; colours[i + 2] = colour.b; }
+    geometry.setAttribute('color', new THREE.BufferAttribute(colours, 3));
+    parts.push(geometry); source.dispose();
+  });
+  root.clear();
+  const geometry = mergeGeometries(parts, false);
+  parts.forEach(part => part.dispose());
+  if (!geometry) throw new Error('Assembly could not be baked.');
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.castShadow = true; mesh.receiveShadow = true;
+  root.add(mesh);
+  return mesh;
 }
 
 /** Bake static detail into one draw call per material, keeping animated parts separate. */
@@ -115,22 +148,33 @@ export function buildLander(spec: LanderSpec = {}): Lander {
     cylinder(.5,.5,.12,accent,0,2.5,z*2.05);
     for(const y of [2.15,2.85])strut(new THREE.Vector3(0,y,z*1.5),new THREE.Vector3(0,y,tank.position.z),.08,dark);
   }
-  // Articulated legs: chrome piston, sleeve, braces, pivot and layered footpad.
+  // Moving parts (legs and arrays) are built apart from the static body and baked one draw call each.
+  const moving=new THREE.MeshStandardMaterial({vertexColors:true,metalness:.55,roughness:.42}); materials.push(moving);
+  // Articulated legs: chrome piston, sleeve, braces, pivot and layered footpad. Each leg hinges at
+  // its hip; folded, it points almost straight up beside the body so the lander fits the fairing.
+  const legs:{pivot:THREE.Group;axis:THREE.Vector3;fold:number}[]=[];
   for(let k=0;k<gear.legs;k++) {
     const a=Math.PI/gear.legs+k*2*Math.PI/gear.legs,cx=Math.cos(a),sz=Math.sin(a);
     const foot=new THREE.Vector3(cx*gear.radius,.14,sz*gear.radius);
     const hip=new THREE.Vector3(cx*radius,bodyY+.35,sz*radius), knee=hip.clone().lerp(foot,.54);
-    strut(hip,knee,.115,shell); strut(knee,foot,.065,metal);
-    strut(new THREE.Vector3(cx*radius,bodyY-.6,sz*radius),foot,.055,dark);
-    add(new THREE.SphereGeometry(.15,12,8),accent,knee.x,knee.y,knee.z);
-    cylinder(gear.pad*.86,gear.pad,.1,dark,foot.x,.05,foot.z,structure,16);
-    cylinder(gear.pad*.65,gear.pad*.83,.065,metal,foot.x,.13,foot.z,structure,16);
-    cylinder(.13,.18,.13,accent,foot.x,.21,foot.z,structure,12);
+    const pivot=new THREE.Group(), at=(v:THREE.Vector3)=>v.clone().sub(hip), f=at(foot), kn=at(knee);
+    strut(new THREE.Vector3(),kn,.115,shell,pivot); strut(kn,f,.065,metal,pivot);
+    strut(at(new THREE.Vector3(cx*radius,bodyY-.6,sz*radius)),f,.055,dark,pivot);
+    add(new THREE.SphereGeometry(.15,12,8),accent,kn.x,kn.y,kn.z,pivot);
+    cylinder(gear.pad*.86,gear.pad,.1,dark,f.x,.05-hip.y,f.z,pivot,16);
+    cylinder(gear.pad*.65,gear.pad*.83,.065,metal,f.x,.13-hip.y,f.z,pivot,16);
+    cylinder(.13,.18,.13,accent,f.x,.21-hip.y,f.z,pivot,12);
+    bakeColoured(pivot,moving); pivot.position.copy(hip);
+    // swing outwards and up until the leg stands 10 degrees off vertical
+    const fold=THREE.MathUtils.degToRad(170)-Math.atan2(Math.hypot(f.x,f.z),-f.y);
+    legs.push({pivot,axis:new THREE.Vector3(-sz,0,cx),fold});
   }
   const arrayId=spec.solarArrayId, sections=arrayId==='extended'?3:arrayId==='compact'?1:2;
   const span=arrayId==='compact'?.82:.88;
+  const wings:{wing:THREE.Group;open:number;shut:number}[]=[];
   for(const side of [-1,1]) {
-    const wing=new THREE.Group(); wing.position.set(side*(radius+.35),upperY-.35,0); wing.rotation.z=side*(arrayId==='compact'?-.48:-.13); structure.add(wing);
+    const wing=new THREE.Group(); wing.position.set(side*(radius+.35),upperY-.35,0);
+    wings.push({wing,open:side*(arrayId==='compact'?-.48:-.13),shut:side*1.48});
     strut(new THREE.Vector3(-side*.5,0,0),new THREE.Vector3(side*.2,0,0),.065,metal,wing);
     for(let section=0;section<sections;section++) {
       const x=side*(span/2+section*(span+.07));
@@ -141,6 +185,7 @@ export function buildLander(spec: LanderSpec = {}): Lander {
       }
       box(.07,.12,.28,dark,side*(section*(span+.07)),0,0,wing);
     }
+    bakeColoured(wing,moving);
   }
   const antenna=new THREE.Group(); antenna.position.set(.42,roof+.2,.2); structure.add(antenna);
   cylinder(.09,.14,.35,metal,0,.14,0,antenna);
@@ -165,8 +210,13 @@ export function buildLander(spec: LanderSpec = {}): Lander {
     } else {cylinder(.19,.19,.24,glass,0,.18,.07,sensor);cylinder(.23,.23,.055,metal,0,.32,.07,sensor);}
   }
   batchStatic(structure);
+  legs.forEach(leg=>structure.add(leg.pivot)); wings.forEach(w=>structure.add(w.wing));
+  const setGear=(deployed:number)=>{const d=THREE.MathUtils.clamp(deployed,0,1);legs.forEach(leg=>leg.pivot.quaternion.setFromAxisAngle(leg.axis,(1-d)*leg.fold));};
+  const setArrays=(deployed:number)=>{const d=THREE.MathUtils.clamp(deployed,0,1);wings.forEach(w=>{w.wing.rotation.z=THREE.MathUtils.lerp(w.shut,w.open,d);});};
+  setGear(1); setArrays(1);
   // Dispose unselected materials, which scene traversal would otherwise never reach.
-  const used=new Set(structure.children.map(child=>(child as THREE.Mesh).material));
+  const used=new Set<THREE.Material>();
+  structure.traverse(o=>{if(o instanceof THREE.Mesh)used.add(o.material as THREE.Material);});
   materials.forEach(material=>{if(!used.has(material))material.dispose();});
   const mast=new THREE.Group();mast.position.y=roof+.1;mast.scale.y=.001;g.add(mast);
   cylinder(.035,.05,2.4,shell,0,1.2,0,mast,8);
@@ -174,5 +224,5 @@ export function buildLander(spec: LanderSpec = {}): Lander {
   const beaconTip=add(new THREE.SphereGeometry(.14,12,8),beaconMat,0,2.45,0,mast);
   const flame=add(new THREE.ConeGeometry(payload?.75:.6,3.4,14,1,true),new THREE.MeshBasicMaterial({color:0xffd9a0,transparent:true,opacity:.85,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide,fog:false}),0,.7,0,g);
   flame.geometry.rotateX(Math.PI);flame.geometry.translate(0,-1.7,0);flame.visible=false;
-  return {group:g,flame,mast,beaconTip,beaconMat,nozzleY:.7,footRadius:gear.radius,debrisColors:[colours.hull,colours.shell,0x252b32,colours.accent]};
+  return {group:g,flame,mast,beaconTip,beaconMat,nozzleY:.7,footRadius:gear.radius,debrisColors:[colours.hull,colours.shell,0x252b32,colours.accent],setGear,setArrays};
 }
