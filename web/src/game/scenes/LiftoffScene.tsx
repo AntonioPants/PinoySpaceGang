@@ -7,9 +7,9 @@ import { SceneFrame } from './SceneFrame';
 import { sceneEnv } from './sceneEnv';
 
 /**
- * Furgan's departure: the test flight takes off from Earth. The lander lights its engine, blasts
- * the dust away and climbs out, and the scene dissolves into the Earth approach, where it comes
- * down over the Earth analog site. The launch ground is procedural, in the colours of the analog
+ * Furgan's departure: the test flight takes off from Earth. A rocket carrying the player's lander
+ * (in its livery) lights its engines on the pad, blasts the dust away and climbs out, and the scene
+ * dissolves into the Earth approach, where the rocket releases the lander over the analog site. The launch ground is procedural, in the colours of the analog
  * site's region, under Earth's sky, gravity and air; it illustrates the departure and flies no physics.
  *
  * While it plays, the Earth analog's terrain is loaded and painted in the background, so the
@@ -29,7 +29,7 @@ export default function LiftoffScene({ mission, reducedMotion, onComplete, immer
   }, [mission]);
 
   return <SceneFrame title="Liftoff from Earth" reducedMotion={reducedMotion} onComplete={onComplete}
-    detail={`The lander lifts off from Earth on its test flight to ${mission.earthAnalog.name}.`}>
+    detail={`A rocket carrying your lander lifts off from Earth on its test flight to ${mission.earthAnalog.name}.`}>
     {muted => <Cutscene fullscreen={immersive} kind="liftoff" env={env} equipment={mission.equipment} muted={muted} showSkip={false} onDone={onComplete} />}
   </SceneFrame>;
 }

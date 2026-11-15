@@ -19,7 +19,7 @@ launch, transition to Earth descent, and debrief the actual physics outcome.
 The game opens on a title screen and runs full-screen: worlds, region, Earth test site,
 equipment bay, Tim's third-person ship bridge (`web/src/game/interior/`), Furgan's liftoff,
 Furgan's Earth-approach cutscene, the live 3D descent and the debrief. The old planner is at
-`?planner`; the flat console is the bridge's fallback. Register scenes with
+`?engineering-planner`; the flat console is the bridge's fallback. Register scenes with
 web/src/game/integrations.ts; see contracts.ts in that directory. Do not duplicate the
 simulation or mission state.
 

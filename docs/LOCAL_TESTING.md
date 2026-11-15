@@ -38,5 +38,5 @@ compile several dependencies and takes very long):
     .venv/bin/pip install -r requirements-dev.txt     # Windows: .venv\\Scripts\\pip
     .venv/bin/python -m pytest -q
 
-Useful addresses while developing: `/?planner` (engineering planner), `/?cutscene-demo`
+Useful addresses while developing: `/?engineering-planner` (engineering planner), `/?cutscene-demo`
 (cutscene bench), `/?moon` (Moon explorer).

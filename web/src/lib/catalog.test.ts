@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { runSim } from '../../../app/sim/src/engine';
-import { analogsFor, pairingOf, parseCatalog } from './catalog';
+import { analogsFor, analogScoreFor, pairingOf, parseCatalog } from './catalog';
 import { buildMission, defaultSettings, extractProfile } from './mission';
 import { toSimInput } from './simulation';
 import { fidelityFor } from './fidelity';
@@ -32,14 +32,12 @@ describe('site catalog in the mission planner', () => {
     expect(pairing?.explanation?.differences.length).toBeGreaterThan(0);
     expect(pairing?.explanation?.sources).toHaveLength(2);
   });
-  it('orders analogs for a target by proposed pairing score', () => {
-    const list = analogsFor(catalog, 'arsia-flank');
-    expect(list[0].id).toBe('amboy');
-    expect(pairingOf(catalog, 'arsia-flank', list[0].id)!.terrain_score).toBeGreaterThan(0.99);
-    expect(pairingOf(catalog, 'arsia-flank', 'white-sands')).toBeUndefined();
-    const firstUnpaired=list.findIndex(site=>!pairingOf(catalog,'arsia-flank',site.id));
-    expect(firstUnpaired).toBeGreaterThan(0);
-    expect(list.slice(firstUnpaired).every(site=>!pairingOf(catalog,'arsia-flank',site.id))).toBe(true);
+  it('orders all available analogs by modern analog score including scan windows', () => {
+    const list=analogsFor(catalog,'arsia-flank');
+    const scores=list.map(s=>analogScoreFor(catalog,'arsia-flank',s.id)!);
+    expect(scores.every(Number.isFinite)).toBe(true);
+    expect(scores).toEqual([...scores].sort((a,b)=>b-a));
+    expect(list).toHaveLength(102);
   });
   it('every available analog pack loads and flies with its catalog surface data', () => {
     const target = catalog.targets.find(t => t.id === 'marius-hills')!;

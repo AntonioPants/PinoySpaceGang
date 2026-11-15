@@ -86,8 +86,10 @@ Earth opening is attached through Tim's adapter in `game/scenes/`. His `Descent3
 now flies Furgan's live view and plays the actual outcome itself, so the registry's
 separate outcome slot is null to avoid replaying the ending twice. No Earth scene
 is mislabeled as a planetary departure. Planetary arrival and liftoff remain empty.
-Use selected equipment IDs for the future animated model; the current cutscene lander
-is generic and does not yet depict all selected gear. Keep Skip available, honor reduced
+The shared procedural model now draws selected spacecraft, gear and sensor IDs in the
+equipment bay, liftoff, Earth approach and live descent. Optional appearance IDs
+(`liveryId`, `solarArrayId`, `antennaId`) follow the same mission equipment handoff;
+missing IDs use the heritage/standard/dish appearance. They are cosmetic only. Keep Skip available, honor reduced
 motion, release renderers/listeners/timers on exit, and start audio only after consent.
 Terrain-load failure offers continuation rather than silently substituting terrain.
 
@@ -123,6 +125,15 @@ terrain, catalog entries and `FlightTelemetry`. Wrap/present these in the charac
 scene; retain telemetry export, failure reasons, scenario distinctions and retry.
 Coordinate with Furgan: landing-outcome visuals finish before the character debrief.
 
+Current delivery: `web/src/game/debrief/DebriefScene.tsx` replaces the flat report in the
+game's `report` stage. The astronaut walks to the mission-control monitor, the camera
+pushes into its screen, and the report opens there as an eight-section carousel
+(`sections.tsx`) with left/right arrows, arrow keys and a burst of TV static between
+sections. It reuses Tim's cabin, astronaut and camera helpers read-only and shows only
+the flown telemetry. Reduced motion or missing WebGL opens the report directly; "Skip to
+report" is always available. Telemetry export was removed at Antonio's request; retry is
+kept. Test bench: `?debrief-demo`. The planner still uses `components/FlightReport.tsx`.
+
 ## Shared boundaries and integration
 
 - `game/contracts.ts` owns scene and control-center props; `game/integrations.ts`
@@ -147,3 +158,46 @@ skip, flight, outcome and debrief. Verify small screens, reduced motion and miss
 Known remaining work: planetary departure/liftoff, measured equipment
 data (the gear physics runs on prototype figures), selected-gear cinematic models, character debrief, performance
 profiling and final packaging. These are explicit handoffs, not completed features.
+
+## Lander appearance update (15 November 2026)
+
+The shared `components/cutscene/lander.ts` model adds panel seams, inspection windows,
+fasteners, attitude-control pods, a curved engine bell, leg pistons, layered pads and
+framed solar cells. Static geometry is merged by material; the flame and deployable
+beacon remain separate animation objects. The model stays within 12 meshes for all
+45 tested appearance combinations, including payload/six-leg/camera hardware. This
+is a draw-call budget check, not a measured frame-rate or device-support claim.
+
+`lib/landerAppearance.ts` owns five coordinated liveries, three solar-array layouts
+and three antenna packages. `EquipmentBay` offers Hardware and Appearance sections,
+colour swatches, appearance reset and camera reset. Part changes replace the model
+without recreating the renderer or resetting the orbit. Controls remain usable when
+WebGL initialization fails; reduced motion disables orbit damping. The existing
+small-screen rail scrolls internally.
+
+`MissionConfig.equipment` and `EquipmentSelection` now accept the three optional
+appearance IDs. Existing spreads preserve them through mission locking and retry.
+They do not enter `equipmentSettings` or the physics engine. Foot-circle radii and
+pad contact level are unchanged; visual suspension does not imply simulated damping.
+
+Validation: production build and catalog consumer check passed; all 254 tests passed
+with `pnpm test --maxWorkers=2`. An unrestricted parallel run timed out in the existing
+Earth surface test; it passed with two workers. Live browser QA remains pending:
+the local Chromium process cannot open its required socket in this environment,
+and the separate remote browser cannot reach the local Vite server. Before merging,
+check desktop/mobile layout, all selectors, camera retention/reset, boarding, launch,
+cinematic skip, descent, retry, reduced motion and the WebGL fallback.
+
+## Rocket cinematics (15 November 2026)
+
+Liftoff from Earth is now a rocket, not the bare lander: `components/cutscene/rocket.ts`
+builds a core stage, four strap-on boosters, an upper stage and a two-piece fairing in
+the selected livery, on a launch pad with a service tower. The Earth approach opens on
+the same rocket braking in; it jettisons the boosters, splits and sheds the fairing and
+releases the player's lander, which then unfolds its legs and solar arrays before
+lighting its engine for the unchanged hand-over to the live descent (now 13 s; liftoff
+9 s). Legs and arrays are hinged parts of the shared lander model (`setGear`,
+`setArrays`, both default to deployed), one draw call each; the static body keeps its
+12-mesh budget. Tests check every hardware/appearance combination fits the fairing
+folded and returns to the same footprint deployed. The test bench (`?cutscene-demo`)
+has Liftoff and a Custom lander toggle. Illustrative only: no rocket physics.

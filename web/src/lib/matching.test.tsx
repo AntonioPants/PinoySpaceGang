@@ -91,6 +91,8 @@ it("offers exactly ten per target and keeps every ground available separately",(
 
 it('removes compass offsets and keeps terrain patch names distinct and stable',()=>{
   expect(displaySiteName('Example study area region: 6.1 km E, 15.7 km S')).toBe('Example region');
+  expect(displaySiteName('Atacama Yungay regional study area region: 8.7 km E, 10.5 km N')).toBe('Atacama Yungay region');
+  expect(displaySiteName('Northern region region')).toBe('Northern region');
   const catalog=parseCatalog(raw);
   const reversed=parseCatalog({...raw, sites:[...raw.sites].reverse()});
   expect(new Set(catalog.analogs.map(s=>s.name)).size).toBe(catalog.analogs.length);

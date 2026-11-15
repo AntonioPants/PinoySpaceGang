@@ -1,0 +1,100 @@
+/* The in-character debrief (web/src/game/debrief). Uses the bridge monitor's colours from interior.css. */
+.debrief-scene { position: absolute; inset: 0; background: #02040b; overflow: hidden; }
+.deb-view { position: absolute; inset: 0; }
+.deb-canvas { width: 100%; height: 100%; display: block; }
+.deb-caption { position: absolute; left: 50%; bottom: 34px; transform: translateX(-50%); margin: 0; padding: 9px 16px; border: 1px solid #4a525b; border-radius: 4px; background: #0e1114e6; color: #e4e7ea; font-size: 14px; text-align: center; max-width: calc(100% - 40px); }
+.deb-skip { position: absolute; right: 26px; top: 96px; font: inherit; font-size: 12px; padding: 9px 13px; color: #e4e7ea; background: #05060799; border: 1px solid #4a525b; border-radius: 4px; cursor: pointer; backdrop-filter: blur(10px); }
+.deb-skip:hover { border-color: #8a939c; }
+
+/* ---- the monitor, filling the view */
+/* Type scales with the window, and each page stretches its tiles, bars and rows to fill the screen. */
+.deb-screen { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 84px clamp(76px, 7vw, 140px) 22px; font-size: clamp(16px, calc(.7vw + .95vh), 28px); user-select: text; animation: deb-on .5s ease-out both; }
+.deb-screen h2 { font-size: 1.75em; }
+.deb-screen .mon-link { font-size: .85em; }
+.deb-screen > header { flex: none; }
+.deb-screen h2:focus { outline: none; }
+.deb-screen .mon-link { text-align: right; }
+.deb-page { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.deb-page > h3 { flex: none; margin: 0 0 .8em; font-size: .9em; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.deb-page > h3 span { color: var(--ink); margin-left: 10px; }
+.deb-content { flex: 1; min-height: 0; overflow: auto; padding-right: 8px; display: flex; flex-direction: column; scrollbar-color: #3d444d transparent; }
+.deb-content > * { flex: none; }
+.deb-content > .deb-tiles, .deb-content > .deb-margins, .deb-content > .deb-table { flex: 1 1 auto; }
+.deb-content h4 { margin: 1em 0 .45em; font-size: .9em; font-weight: 600; color: var(--dim); }
+.deb-content p { margin: 0 0 .7em; }
+.deb-lede { font-size: 1.1em; }
+.deb-note, .deb-pending { font-size: .88em; color: var(--dim); }
+.deb-pending { padding: 1.1em; border: 1px dashed var(--line); border-radius: 3px; }
+.deb-content .mon-banner { margin-bottom: .8em; font-size: 1.25em; padding: .5em; }
+
+.deb-tiles { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: minmax(min-content, 1fr); gap: .6em; margin: 0 0 .8em; }
+.deb-tiles.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.deb-tiles > div { display: flex; flex-direction: column; justify-content: center; padding: .7em .9em; border: 1px solid #23282e; border-radius: 3px; background: #0e1114; }
+.deb-tiles dt { font-size: .85em; color: var(--dim); }
+.deb-tiles dd { margin: .2em 0 0; font-size: 1.55em; font-variant-numeric: tabular-nums; }
+.deb-tiles small { display: block; margin-top: .2em; font-size: .78em; color: var(--dim); }
+/* a single row of headline scores: large type rather than tall empty boxes */
+.deb-tiles.hero > div { align-items: center; text-align: center; }
+.deb-tiles.hero dt { font-size: 1.2em; }
+.deb-tiles.hero dd { font-size: clamp(1.6em, 3.4vw, 2.7em); margin-top: .25em; white-space: nowrap; }
+.deb-tiles.hero small { font-size: 1em; margin-top: .6em; }
+.deb-content .landing-evidence strong, .deb-content .landing-evidence small { display: block; }
+.deb-content .landing-evidence strong { font-size: 1.15em; margin-bottom: .2em; }
+.deb-content .landing-evidence { margin-bottom: .8em; }
+.deb-grade { color: var(--go); font-size: 1.35em; font-weight: 600; margin-right: 8px; }
+
+.deb-list { margin: 0 0 .7em; padding-left: 1.2em; }
+.deb-list li { margin-bottom: 5px; }
+.deb-margins { list-style: none; margin: 0 0 .4em; padding: 0; display: flex; flex-direction: column; }
+.deb-margins li { display: grid; grid-template-columns: minmax(130px, 1.1fr) 3fr minmax(120px, auto) minmax(110px, auto); gap: .9em; align-items: center; flex: 1; min-height: 2.6em; padding: .4em 0; border-bottom: 1px solid #23282e; font-size: 1.15em; }
+.deb-margins b { font-weight: 500; font-variant-numeric: tabular-nums; }
+.deb-margins em { font-style: normal; font-size: .8em; color: var(--dim); }
+.deb-track { height: .55em; border-radius: 4px; background: #23282e; overflow: hidden; }
+.deb-track i { display: block; height: 100%; background: var(--go); }
+.deb-margins .marginal .deb-track i { background: var(--caution); } .deb-margins .marginal em { color: var(--caution); }
+.deb-margins .exceeded .deb-track i { background: var(--hold); } .deb-margins .exceeded em { color: var(--hold); }
+.deb-table { width: 100%; border-collapse: collapse; margin-bottom: .8em; font-size: 1.15em; font-variant-numeric: tabular-nums; }
+.deb-table th, .deb-table td { padding: .5em .7em; text-align: left; border-bottom: 1px solid #23282e; }
+.deb-table thead th { font-size: .8em; font-weight: 600; color: var(--dim); }
+.deb-table tbody th { font-weight: 500; }
+
+.deb-screen > footer { flex: none; display: flex; align-items: center; gap: 18px; padding-top: .8em; margin-top: .6em; border-top: 1px solid var(--line); }
+.deb-dots { display: flex; gap: 8px; }
+.deb-dots button { width: 26px; height: 6px; padding: 0; border: 0; border-radius: 3px; background: #343a42; cursor: pointer; }
+.deb-dots button[aria-selected=true] { background: var(--accent); }
+.deb-count { font-size: .85em; color: var(--dim); font-variant-numeric: tabular-nums; }
+.deb-retry { margin-left: auto; font: inherit; font-size: .9em; font-weight: 600; padding: .6em 1em; color: #0a0c0f; background: #e9ecef; border: 0; border-radius: 4px; cursor: pointer; }
+.deb-retry:hover { background: #fff; }
+
+/* arrows on the left and right edges of the screen */
+.deb-arrow { position: absolute; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 54px; height: 96px; color: #dfe3e7; background: #161a1fcc; border: 1px solid #3d444d; border-radius: 4px; cursor: pointer; z-index: 4; }
+.deb-arrow.left { left: 12px; } .deb-arrow.right { right: 12px; }
+.deb-arrow:hover { border-color: #8a939c; background: #1d2228; }
+.deb-arrow:focus-visible, .deb-skip:focus-visible, .deb-retry:focus-visible, .deb-dots button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* ---- TV static: snow over the picture while it jumps and loses colour, then it locks back in */
+.deb-static { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; opacity: 0; image-rendering: pixelated; mix-blend-mode: screen; transition: opacity .09s linear; }
+.deb-static.on { opacity: .92; }
+.deb-scanlines { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: repeating-linear-gradient(#0000 0 2px, #0000001f 2px 3px); }
+.deb-screen.tuning > header, .deb-screen.tuning > .deb-page, .deb-screen.tuning > footer { animation: deb-jitter .14s steps(2) infinite; filter: saturate(.2) contrast(1.5) brightness(1.25); }
+@keyframes deb-jitter {
+  0% { transform: translate(-7px, 2px) skewX(-1.5deg); }
+  50% { transform: translate(9px, -3px) skewX(2deg); }
+  100% { transform: translate(-3px, 1px) skewX(-.5deg); }
+}
+@keyframes deb-on { from { opacity: 0; filter: brightness(2.2); } to { opacity: 1; filter: none; } }
+
+@media (max-width: 760px) {
+  .deb-screen { padding: 84px 16px 74px; font-size: 15px; }
+  .deb-screen .mon-link { display: none; }
+  .deb-tiles, .deb-tiles.cols-4 { grid-template-columns: repeat(2, 1fr); } .deb-tiles dd { font-size: 1.2em; }
+  .deb-margins li { font-size: 1em; }
+  .deb-tiles.hero dd { font-size: 1.8em; }
+  .deb-margins li { grid-template-columns: 1fr auto; gap: 6px 12px; } .deb-margins .deb-track { grid-column: 1 / -1; grid-row: 2; }
+  .deb-screen > footer { flex-wrap: wrap; gap: 10px; padding-right: 0; } .deb-dots button { width: 16px; }
+  .deb-arrow { top: auto; bottom: 14px; transform: none; width: 46px; height: 46px; }
+  .deb-arrow.left { left: 16px; } .deb-arrow.right { left: 70px; right: auto; }
+  .deb-retry { margin-right: 56px; }
+  .deb-table { font-size: .85em; } .deb-table th, .deb-table td { padding: .5em .4em; }
+}
+@media (prefers-reduced-motion: reduce) { .deb-screen, .deb-screen.tuning > * { animation: none; } }

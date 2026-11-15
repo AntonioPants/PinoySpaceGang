@@ -50,8 +50,11 @@ const LOOK: Record<RegionState, { fill: number; fillOpacity: number; rim: number
 };
 
 /** Idle regions are quiet white outlines; the hovered one fills gold and lifts; the selected one stays gold. */
+/** Idle discovered scan windows are cyan, so they read apart from curated sites at a glance. */
+const DISCOVERED = { ...LOOK.idle, fill: 0x65d6d1, rim: 0x65d6d1 };
+
 export function paintRegion(group: T.Object3D, state: RegionState) {
-  const look = LOOK[state], [fill, rim] = group.children as T.Mesh[];
+  const look = state === 'idle' && String(group.userData.id ?? '').startsWith('scan-') ? DISCOVERED : LOOK[state], [fill, rim] = group.children as T.Mesh[];
   const fillMaterial = fill.material as T.MeshBasicMaterial, rimMaterial = rim.material as T.MeshBasicMaterial;
   fillMaterial.color.setHex(look.fill); fillMaterial.opacity = look.fillOpacity;
   rimMaterial.color.setHex(look.rim); rimMaterial.opacity = look.rimOpacity;

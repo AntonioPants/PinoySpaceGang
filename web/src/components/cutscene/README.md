@@ -34,9 +34,14 @@ and open it with `?cutscene-demo` (the original Next.js demo page became `Cutsce
 
 What follows the physics:
 
-- **Opening:** the lander flies a straight line at `start.velocity` and is at `start.position`
-  on the last frame (defaults match the sim: 1000 m up, 400 m west of the target, 25 m/s east,
-  20 m/s down). The landing target is marked on the ground.
+- **Liftoff** (`kind="liftoff"`): the rocket (`rocket.ts`, painted in the lander's livery) stands
+  on a pad with a service tower, lights its core and four boosters, raises a dust and steam
+  sheet, climbs and pitches over. It flies no physics.
+- **Opening:** the same rocket arrives braking, drops its four strap-on boosters (4.0 s), opens
+  and sheds its fairing (5.2 s) and releases the lander (6.4 s), which unfolds its legs and solar
+  arrays (`Lander.setGear` / `setArrays`). The lander flies a straight line at `start.velocity`
+  and is at `start.position` on the last frame (defaults match the sim: 1000 m up, 400 m west
+  of the target, 25 m/s east, 20 m/s down). The landing target is marked on the ground.
 - **Ending:** replays the last 7 s of `flight.samples` (4.5 s for a crash) in real time: path,
   throttle (plume, dust, sound) and tilt. Then by `summary.outcome`:
   - `success`: legs settle, beacon deploys.

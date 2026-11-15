@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { CutsceneAudio } from "./audio";
 import { buildLander, type Lander, type LanderSpec } from "./lander";
 import { Particles } from "./particles";
+import { buildLaunchPad, buildRocket, PAYLOAD_Y, type Nozzle, type Rocket } from "./rocket";
 import { DEFAULT_START, type FlightLike, type FlightOutcome } from "./flight";
 import { PRESETS, type CutsceneEnv, type EndingParams, type EnvLook } from "./presets";
 import { buildTerrain, type Boulder, type Terrain } from "./terrain";
@@ -20,8 +21,13 @@ export interface EngineOptions {
   landing?: { x: number; z: number };    // pad position in pack metres; default: flat spot picked from the data
 }
 
-const DURATION_OPENING = 9.6;
-const DURATION_LIFTOFF = 8.5;
+const DURATION_OPENING = 13;
+const DURATION_LIFTOFF = 9;
+// Opening timeline (s): the rocket brakes, drops its boosters, opens its fairing and lets the
+// lander go; the lander unfolds its legs and arrays and lights its engine before the hand-over.
+const OP = { entry: 3.2, boosters: 4.0, fairing: 5.2, fairingFree: 5.9, release: 6.4, gear: 7.0, arrays: 7.6 };
+// Liftoff: ignition, release from the pad, climb (m/s^2)
+const LO = { ignite: 1.4, rise: 2.2, climb: 6.5 };
 const TAIL: Record<FlightOutcome, number> = { success: 6.5, "hard-landing": 6.5, "tip-over": 6, crash: 7, timeout: 3 };
 // Scene changes dissolve instead of cutting: a scene that ends leaves its last frame here, and the
 // next scene (cutscene, departure shot or live descent) starts under that still and fades it out.
@@ -73,6 +79,8 @@ function standInFlight(kind: "success" | "crash", p: EndingParams): FlightLike {
 }
 
 interface Debris { mesh: THREE.Mesh; vel: THREE.Vector3; spin: THREE.Vector3; resting: boolean; }
+/** A separated rocket part flying on its own: velocity, acceleration, and spin (axis × rad/s). */
+interface FreePart { obj: THREE.Object3D; vel: THREE.Vector3; acc: THREE.Vector3; spin: THREE.Vector3; }
 interface Ring { mesh: THREE.Mesh; age: number; life: number; from: number; to: number; billboard: boolean; }
 
 /** Framework-free cutscene player. One instance per container; call play() as often as needed. */
@@ -84,6 +92,10 @@ export class CutsceneEngine {
   protected look: EnvLook;
   protected terrain: Terrain;
   protected lander: Lander;
+  protected rocket: Rocket;               // carries the lander in the liftoff and the opening
+  protected pad: THREE.Group;
+  protected free: FreePart[] = [];
+  protected prevRocket = V(); protected rocketVel = V();
   protected fire = new Particles(4000, true);
   protected smoke = new Particles(3500, false);
   protected engineLight = new THREE.PointLight(0xffb060, 0, 120, 1.6);
@@ -148,8 +160,11 @@ export class CutsceneEngine {
     this.terrain = buildTerrain(this.look, opts.terrain ? undefined : env.elevation, env.seed ?? 7, opts.terrain, opts.landing, opts.boulders);
     this.scene.add(this.terrain.group);
     this.lander = buildLander(opts.equipment);
+    this.rocket = buildRocket(opts.equipment); this.rocket.group.visible = false;
+    // the pad's service tower stands behind the rocket and to one side, as seen from the liftoff camera
+    this.pad = buildLaunchPad(Math.atan2(this.sunDir.z, this.sunDir.x) + 0.55 + Math.PI - 0.9); this.pad.visible = false;
     this.smoke.points.renderOrder = 2; this.fire.points.renderOrder = 3;
-    this.scene.add(this.lander.group, this.fire.points, this.smoke.points, this.engineLight, this.flashLight);
+    this.scene.add(this.lander.group, this.rocket.group, this.pad, this.fire.points, this.smoke.points, this.engineLight, this.flashLight);
 
     const disc = (r: number, color: number, opacity: number) => {
       const m = new THREE.Mesh(new THREE.CircleGeometry(r, 40), new THREE.MeshBasicMaterial({ color, transparent: true, opacity, depthWrite: false }));
@@ -177,7 +192,8 @@ export class CutsceneEngine {
     this.resetScene(); this.setCam(V(30, 6, 40), V(0, 3, 0)); this.render();
     // Compile every material now, so the first frame that shows the lander, its flame or the
     // fireball does not stall on shader compilation (a visible freeze on integrated GPUs).
-    const hidden = [this.lander.group, this.lander.flame, this.fireball, this.scorch, this.targetRing].filter((o) => !o.visible);
+    const hidden = [this.lander.group, this.lander.flame, this.rocket.group, this.rocket.coreNozzle.flame, ...this.rocket.boosterNozzles.map((n) => n.flame),
+      this.pad, this.fireball, this.scorch, this.targetRing].filter((o) => !o.visible);
     hidden.forEach((o) => { o.visible = true; }); this.renderer.compile(this.scene, this.camera); hidden.forEach((o) => { o.visible = false; });
     // Until it runs, the scene sits under a cover: the last frame of the scene before it, or black.
     const still = peekHandoff();
@@ -210,10 +226,11 @@ export class CutsceneEngine {
       this.gravity = this.env.preset === "lunar" ? 1.62 : this.env.preset === "mars" ? 3.71 : 9.81;
       this.air = this.env.preset === "lunar" ? 0 : this.env.preset === "mars" ? 0.02 : 1.2;
       this.dustLevel = 0.75;
-      // no rock between the camera and the pad
+      this.pad.position.set(0, this.terrain.heightAt(0, 0), 0);
+      // no rock on the pad or between the camera and the rocket
       const path: THREE.Vector3[] = [];
       for (let i = 0; i <= 24; i++) path.push(this.liftoffCam(i / 24 * DURATION_LIFTOFF));
-      this.clearRocks(path, 7);
+      this.clearRocks(path, 7); this.clearRocks([V()], 22);
       return;
     }
     const flight = kind === "ending" && params.flight?.summary && params.flight.samples.length > 1
@@ -318,7 +335,7 @@ export class CutsceneEngine {
     else if (this.kind === "opening") this.opening(this.t, dt);
     else if (this.kind === "liftoff") this.liftoff(this.t, dt);
     else if (this.kind) this.ending(this.t, dt);
-    this.updateDebris(dt); this.updateRings(dt);
+    this.updateDebris(dt); this.updateRings(dt); this.updateFree(dt);
     this.fire.update(dt); this.smoke.update(dt);
     this.flashLight.intensity *= Math.max(0, 1 - 3.5 * dt);
     this.trauma = Math.max(0, this.trauma - 0.75 * dt);
@@ -326,6 +343,26 @@ export class CutsceneEngine {
     if (dt > 0) this.landerVel.copy(lp).sub(this.prevPos).divideScalar(dt);
     if (this.landerVel.length() > 150) this.landerVel.set(0, 0, 0);      // camera cut / teleport
     this.prevPos.copy(lp);
+    const rp = this.rocket.group.position;                               // the rocket brakes from ~1.3 km/s
+    if (dt > 0) this.rocketVel.copy(rp).sub(this.prevRocket).divideScalar(dt);
+    if (this.rocketVel.length() > 2000) this.rocketVel.set(0, 0, 0);
+    this.prevRocket.copy(rp);
+  }
+
+  /** Separates a rocket part from the stack; from now on it flies by itself. */
+  protected release(obj: THREE.Object3D, vel: THREE.Vector3, acc: THREE.Vector3, spin: THREE.Vector3) {
+    this.scene.attach(obj); this.free.push({ obj, vel, acc, spin });
+  }
+
+  protected updateFree(dt: number) {
+    const q = new THREE.Quaternion();
+    for (const f of this.free) {
+      if (!f.obj.visible) continue;
+      f.vel.addScaledVector(f.acc, dt); f.obj.position.addScaledVector(f.vel, dt);
+      const w = f.spin.length();
+      if (w > 1e-6) f.obj.quaternion.premultiply(q.setFromAxisAngle(f.spin.clone().divideScalar(w), w * dt));
+      if (f.obj.position.y < this.terrain.heightAt(f.obj.position.x, f.obj.position.z) - 5) f.obj.visible = false;
+    }
   }
 
   /** Hook for subclasses that drive the scene themselves (kind "live"). */
@@ -354,11 +391,13 @@ export class CutsceneEngine {
     this.camera.rotation.z += wob(23, 4.1) * s * 0.05;
     for (const r of this.rings) if (r.billboard) r.mesh.quaternion.copy(this.camera.quaternion);
     // the lander's shadow sits where the sun ray through it meets the ground, and closes in at touchdown
-    const lp = this.lander.group.position, alt = Math.max(0, lp.y - this.terrain.heightAt(lp.x, lp.z));
+    // (the rocket's, while it still carries the lander)
+    const onRocket = this.rocket.group.visible && !this.flags.released, focus = onRocket ? this.rocket.group : this.lander.group;
+    const lp = focus.position, alt = Math.max(0, lp.y - this.terrain.heightAt(lp.x, lp.z));
     const k = alt / this.sunDir.y, sx = lp.x - this.sunDir.x * k, sz = lp.z - this.sunDir.z * k;
     this.shadow.position.set(sx, this.terrain.heightAt(sx, sz) + 0.08, sz);
-    (this.shadow.material as THREE.MeshBasicMaterial).opacity = this.lander.group.visible ? 0.45 * clamp01(1 - alt / 500) : 0;
-    this.shadow.scale.setScalar(1 + alt / 70);
+    (this.shadow.material as THREE.MeshBasicMaterial).opacity = focus.visible ? 0.45 * clamp01(1 - alt / 500) : 0;
+    this.shadow.scale.setScalar((1 + alt / 70) * (onRocket ? 1.4 : 1));
     if (this.scenery) fog.far = Math.max(fog.far, 20000);
     const streamed = this.scenery?.draw(this.camera, fog);
     if (streamed) {
@@ -398,6 +437,8 @@ export class CutsceneEngine {
     const L = this.lander;
     L.group.visible = true; L.group.rotation.set(0, 0.5, 0); L.group.scale.setScalar(1); L.group.position.set(0, 0, 0);
     L.mast.scale.y = 0.001; L.beaconMat.color.set(0x113322); L.flame.visible = false;
+    L.setGear(1); L.setArrays(1);
+    this.free = []; this.rocket.reset(); this.rocket.group.visible = false; this.pad.visible = false;
     this.scorch.visible = false; this.fireball.visible = false; this.targetRing.visible = false;
     this.engineLight.intensity = 0; this.flashLight.intensity = 0;
     this.caption("", ""); this.ui.fade.style.opacity = "0"; this.ui.flash.style.opacity = "0";
@@ -406,9 +447,14 @@ export class CutsceneEngine {
 
   // ---------------------------------------------------------------- scenes
 
-  /** Opening: ends exactly at the state where the physics simulation takes over. */
+  /**
+   * Opening: the rocket that lifted off arrives over the analog site, braking. It drops its four
+   * strap-on boosters, splits its fairing and releases the lander, which unfolds its landing gear
+   * and solar arrays and lights its engine. It ends exactly at the state where the physics
+   * simulation takes over.
+   */
   protected opening(t: number, dt: number) {
-    const L = this.lander.group, h0 = this.terrain.heightAt(0, 0), END = DURATION_OPENING;
+    const L = this.lander.group, R = this.rocket, h0 = this.terrain.heightAt(0, 0), END = DURATION_OPENING;
     const tgt = this.params.target ?? { x: 0, y: 0 }, p0 = this.params.start?.position;
     // SimInput.start.position is absolute; its default is 400 m west of the target, 1000 m up
     const sp = p0 ? { x: p0.x - tgt.x, y: p0.y - tgt.y, z: p0.z } : DEFAULT_START.position;
@@ -420,89 +466,191 @@ export class CutsceneEngine {
     const back = V(-vel.x, 0, -vel.z); if (back.lengthSq() < 1) back.set(-1, 0, 0); back.normalize();
     // The lander arrives along its hand-over line. Before 3.2 s it is still braking out of the entry
     // (extra distance that shrinks to nothing with zero slope), so speed and position are seamless.
-    const ENTRY = 3.2, ue = clamp01(t / ENTRY), extra = 1400 * Math.pow(1 - ue, 3);
+    const ENTRY = OP.entry, ue = clamp01(t / ENTRY), extra = 1400 * Math.pow(1 - ue, 3);
     const P = S.clone().addScaledVector(vel, t - END).addScaledVector(dir, -extra);
-    const behind = Math.atan2(back.z, back.x);
-    if (t < ENTRY) {                                            // A: entry, glowing, seen from the side and below
-      const u = easeInOut(ue);
-      L.visible = true; L.position.copy(P); this.orient(V(-back.x, 0, -back.z), 0.2);
-      this.thrust(0, dt);
-      const glow = Math.pow(1 - ue, 1.4);
-      this.fireball.visible = glow > 0.04; this.fireball.position.copy(P).add(V(0, 2, 0));
-      this.fireball.scale.setScalar(glow * 1.7 * (0.92 + Math.random() * 0.16));
-      const cam = P.clone().add(V(Math.cos(behind + lerp(1.5, -0.9, u)) * lerp(320, 27, u), lerp(-140, 11, u), Math.sin(behind + lerp(1.5, -0.9, u)) * lerp(320, 27, u)));
-      const d = Math.max(0.3, P.distanceTo(cam) / 300);       // plasma trail sized to stay readable at range
+    const stackVel = vel.clone().addScaledVector(dir, 3 * 1400 * (1 - ue) ** 2 / ENTRY);
+    const behind = Math.atan2(back.z, back.x), fwd = V(-back.x, 0, -back.z);
+
+    // ---- the lander: inside the fairing until it opens, then free; legs and arrays unfold
+    L.visible = t >= OP.fairing;
+    L.position.copy(P); this.orient(fwd, lerp(0.2, 0.06, easeInOut((t - OP.release) / 3)));
+    this.lander.setGear(easeInOut((t - OP.gear) / 1.6)); this.lander.setArrays(easeInOut((t - OP.arrays) / 1.6));
+
+    // ---- the rocket carries it until the release
+    R.group.visible = true;
+    if (!this.flags.released) {
+      R.group.quaternion.copy(L.quaternion);
+      R.group.position.copy(P).sub(V(0, PAYLOAD_Y, 0).applyQuaternion(L.quaternion));
+      R.group.updateMatrixWorld(true);
+    }
+    const up = V(0, 1, 0).applyQuaternion(R.group.quaternion);
+    // braking burn on every engine, ending just before the boosters go
+    const burn = t < OP.boosters ? clamp01((t - 1.5) / 0.4) * clamp01((OP.boosters - 0.25 - t) / 0.35) : 0;
+    // the lander lights its own engine for the hand-over (first, so the rocket's glow is not reset)
+    const LIT = END - 2.1, lit = t > LIT;
+    if (lit && !this.flags.lit) { this.flags.lit = true; this.trauma = 0.45; this.flashLight.position.copy(P); this.flashLight.intensity = 2500; }
+    this.thrust(lit ? Math.min(0.7, (t - LIT) * 1.6) : 0, dt);
+    this.rocketThrust(burn * 0.85, dt, [R.coreNozzle, ...R.boosterNozzles], false);
+    if (t >= OP.boosters && !this.flags.boosters) {
+      this.flags.boosters = true; this.audio.thud(); this.trauma = Math.max(this.trauma, 0.35);
+      for (const b of R.boosters) {
+        const at = b.getWorldPosition(V()), rel = at.clone().sub(R.group.position);
+        const out = rel.addScaledVector(up, -rel.dot(up)).normalize();
+        this.release(b, stackVel.clone().addScaledVector(out, 5).addScaledVector(up, -1.5), V(0, -6, 0), up.clone().cross(out).normalize().multiplyScalar(0.7));
+        for (let i = 0; i < 16; i++) this.smoke.emit({ pos: at.clone().addScaledVector(up, rnd(2, 16)).addScaledVector(out, -0.6),
+          vel: stackVel.clone().addScaledVector(out, rnd(3, 9)).add(V(rnd(-2, 2), rnd(-2, 2), rnd(-2, 2))), life: rnd(1, 2.2), size: [1.5, rnd(5, 9)], color: [0.92, 0.92, 0.92, 0.35], drag: 0.6 });
+      }
+    }
+    if (t >= OP.fairing && !this.flags.fairingFree) R.setFairing(easeOut((t - OP.fairing) / (OP.fairingFree - OP.fairing)));
+    if (t >= OP.fairing && !this.flags.fairing) {
+      this.flags.fairing = true; this.audio.thud(); this.trauma = Math.max(this.trauma, 0.3);
+      for (let i = 0; i < 30; i++) this.smoke.emit({ pos: R.group.localToWorld(V(0, rnd(PAYLOAD_Y, PAYLOAD_Y + 12), rnd(-3.2, 3.2))),
+        vel: stackVel.clone().add(V(rnd(-3, 3), rnd(-3, 3), rnd(-3, 3))), life: rnd(0.8, 1.8), size: [1, rnd(4, 7)], color: [0.95, 0.95, 0.95, 0.3], drag: 0.8 });
+    }
+    if (t >= OP.fairingFree && !this.flags.fairingFree) {
+      this.flags.fairingFree = true;
+      for (const f of R.fairing) {
+        const out = f.out.clone().applyQuaternion(R.group.quaternion), axis = f.axis.clone().applyQuaternion(R.group.quaternion);
+        this.release(f.pivot, stackVel.clone().addScaledVector(out, 10).addScaledVector(up, -2), V(0, -14, 0), axis.multiplyScalar(1.3));
+      }
+    }
+    if (t >= OP.release && !this.flags.released) {
+      this.flags.released = true; this.trauma = Math.max(this.trauma, 0.2);
+      this.release(R.core, stackVel.clone().addScaledVector(up, -6), V(0, -16, 0), fwd.clone().cross(up).normalize().multiplyScalar(0.12));
+    }
+
+    // ---- entry glow on the leading end of the stack
+    const glow = t < ENTRY ? Math.pow(1 - ue, 1.4) : 0, nose = R.group.position.clone().addScaledVector(up, -2);
+    this.fireball.visible = glow > 0.04; this.fireball.position.copy(nose);
+    this.fireball.scale.setScalar(glow * 2.4 * (0.92 + Math.random() * 0.16));
+
+    // ---- camera: a wide shot of the whole stack, closing in on the lander once it is free, then
+    // settling on exactly the chase framing the live descent view opens with (app/flightlab/view.ts:
+    // behind the direction of travel, 34 m out, 0.32 rad up), so the hand-over has no jump.
+    const C = P.clone().add(V(0, -9, 0));                       // the middle of the stack
+    const azW = behind + lerp(1.4, 0.55, easeInOut((t - ENTRY) / (OP.release - ENTRY)));
+    const W = C.clone().add(V(Math.cos(azW) * 80, 8, Math.sin(azW) * 80));
+    const s1 = easeInOut((t - (OP.release - 0.4)) / 2.8), s2 = easeInOut((t - (END - 3.8)) / 3.45);
+    const EL = 0.32, DIST = 34;
+    if (t < ENTRY) {
+      const u = easeInOut(ue), far = P.clone().add(V(Math.cos(behind + 1.4) * 380, -150, Math.sin(behind + 1.4) * 380));
+      const cam = far.lerp(W, u), d = Math.max(0.3, nose.distanceTo(cam) / 300);   // plasma trail sized to stay readable at range
       this.acc.trail += dt * 260 * glow;
       while (this.acc.trail >= 1) {
         this.acc.trail--;
-        this.fire.emit({ pos: P.clone().add(V(rnd(-3, 3), rnd(-1, 4), rnd(-3, 3)).multiplyScalar(d)), vel: back.clone().multiplyScalar(rnd(10, 40)).add(V(rnd(-4, 4), rnd(2, 14), rnd(-4, 4))).multiplyScalar(d),
-          life: rnd(0.5, 1.3), size: [rnd(8, 14) * d, 3 * d], color: [1, 0.55, 0.16, 0.5], colorEnd: [0.8, 0.12, 0.0, 0] });
-        if (Math.random() < 0.3) this.smoke.emit({ pos: P.clone(), vel: V(rnd(-3, 3), rnd(0, 5), rnd(-3, 3)).multiplyScalar(d), life: rnd(2, 3.5), size: [6 * d, 20 * d], color: [0.85, 0.85, 0.85, 0.22] });
+        this.fire.emit({ pos: nose.clone().add(V(rnd(-4, 4), rnd(-1, 5), rnd(-4, 4)).multiplyScalar(d)), vel: back.clone().multiplyScalar(rnd(10, 40)).add(V(rnd(-4, 4), rnd(2, 14), rnd(-4, 4))).multiplyScalar(d),
+          life: rnd(0.5, 1.3), size: [rnd(10, 18) * d, 4 * d], color: [1, 0.55, 0.16, 0.5], colorEnd: [0.8, 0.12, 0.0, 0] });
+        if (Math.random() < 0.3) this.smoke.emit({ pos: nose.clone(), vel: V(rnd(-3, 3), rnd(0, 5), rnd(-3, 3)).multiplyScalar(d), life: rnd(2, 3.5), size: [8 * d, 26 * d], color: [0.85, 0.85, 0.85, 0.22] });
       }
-      this.setCam(cam, P.clone().add(V(0, 2, 0)));
-      this.audio.setThrust(0.12 + 0.45 * glow);
-      this.trauma = Math.max(this.trauma, 0.1 + 0.2 * glow);
-      if (t > 0.5) this.caption(this.env.name, this.env.subtitle ?? "Earth analog test flight");
-      if (!this.flags.whoosh) { this.flags.whoosh = true; this.audio.whoosh(2.6, 0.6); }
+      this.setCam(cam, P.clone().lerp(C, u));
+    } else if (s2 <= 0) {
+      const K = P.clone().add(V(Math.cos(behind + 0.5) * 17, 2, Math.sin(behind + 0.5) * 17));
+      this.setCam(W.lerp(K, s1), C.lerp(P.clone().add(V(0, 2, 0)), s1));
     } else {
-      // B: one continuous shot. It swings from beside the lander round behind it, rises, and settles
-      // on exactly the chase framing the live descent view opens with (app/flightlab/view.ts:
-      // behind the direction of travel, 34 m out, 0.32 rad up), so the hand-over has no jump.
-      const s1 = easeInOut((t - 3.2) / 3.4), s2 = easeInOut((t - 5.8) / (END - 0.35 - 5.8));
-      this.fireball.visible = false; L.visible = true;
-      L.position.copy(P); this.orient(V(-back.x, 0, -back.z), lerp(0.2, 0.06, s1));
-      const lit = t > 7.5;
-      if (lit && !this.flags.lit) { this.flags.lit = true; this.trauma = 0.45; this.flashLight.position.copy(P); this.flashLight.intensity = 2500; }
-      this.thrust(lit ? Math.min(0.7, (t - 7.5) * 1.6) : 0, dt);
-      if (!lit) this.audio.setThrust(0.12);
-      this.targetRing.visible = t > 6.6; this.targetRing.position.set(0, h0 + 1.5, 0);
-      this.targetRing.scale.setScalar(Math.max(18, P.distanceTo(V(0, h0, 0)) * 0.05) * (1 + 0.12 * Math.sin(t * 5)));
-      const EL = 0.32, DIST = 34;
-      const az = lerp(behind + lerp(-0.9, 0.5, s1), behind, s2);
-      const r = lerp(lerp(27, 17, s1), DIST * Math.cos(EL), s2), y = lerp(lerp(11, 2, s1), DIST * Math.sin(EL), s2);
+      const az = lerp(behind + 0.5, behind, s2), r = lerp(17, DIST * Math.cos(EL), s2), y = lerp(2, DIST * Math.sin(EL), s2);
       const aim = V(0, h0, 0).sub(P).multiplyScalar(0.1); if (aim.length() > DIST * 0.2) aim.setLength(DIST * 0.2);
       this.setCam(P.clone().add(V(Math.cos(az) * r, y, Math.sin(az) * r)), P.clone().add(V(0, lerp(2, 1.5, s2), 0)).addScaledVector(aim, s2));
-      this.trauma = Math.max(this.trauma, lit ? 0.16 : lerp(0.1, 0.06, s2));
-      if (t > 4.2 && t < 7.6) this.caption("", "");
-      if (t > 7.6) this.caption("Descent simulation", `Altitude ${Math.round(sp.z)} m · you have control`);
-      // no fade out: the live descent dissolves from this last frame on the same framing
     }
+
+    if (!lit) this.audio.setThrust(0.12 + 0.45 * glow + 0.35 * burn);
+    this.targetRing.visible = t > END - 3; this.targetRing.position.set(0, h0 + 1.5, 0);
+    this.targetRing.scale.setScalar(Math.max(18, P.distanceTo(V(0, h0, 0)) * 0.05) * (1 + 0.12 * Math.sin(t * 5)));
+    this.trauma = Math.max(this.trauma, lit ? 0.16 : t < ENTRY ? 0.1 + 0.2 * glow + 0.25 * burn : lerp(0.1 + 0.25 * burn, 0.06, s2));
+    if (!this.flags.whoosh) { this.flags.whoosh = true; this.audio.whoosh(2.6, 0.6); }
+    if (t > 0.5 && t < 3.9) this.caption(this.env.name, this.env.subtitle ?? "Earth analog test flight");
+    else if (t >= OP.boosters && t < OP.fairing) this.caption("Booster separation", "Strap-on thrusters jettisoned");
+    else if (t >= OP.fairing && t < OP.release) this.caption("Fairing separation", "Exposing the lander");
+    else if (t >= OP.release && t < OP.arrays + 1.6) this.caption("Lander deployed", "Landing gear extending");
+    else if (t > END - 2) this.caption("Descent simulation", `Altitude ${Math.round(sp.z)} m · you have control`);
+    else this.caption("", "");
+    // no fade out: the live descent dissolves from this last frame on the same framing
   }
 
-  /** Liftoff: the lander on its pad lights up, blasts the dust away and climbs out. */
+  /** Liftoff: the rocket carrying the lander lights up on its pad, blasts the dust away and climbs out. */
   protected liftoff(t: number, dt: number) {
-    const L = this.lander.group, h0 = this.terrain.heightAt(0, 0), END = DURATION_LIFTOFF;
-    const IGNITE = 1.4, RISE = 1.9, A = 7;                      // s, s, m/s^2 climb
-    const up = t > RISE ? 0.5 * A * (t - RISE) ** 2 : 0, pitch = easeInOut((t - 4.8) / 3);
-    const east = t > 4.8 ? 0.5 * 2.2 * (t - 4.8) ** 2 : 0;    // pitches over towards the transfer burn
-    L.visible = true; L.position.set(east, h0 + up, 0);
-    this.orient(V(1, 0, 0), 0.32 * pitch);
-    const throttle = t < IGNITE ? 0 : Math.min(1, (t - IGNITE) / 0.5);
-    if (t >= IGNITE && !this.flags.lit) {
-      this.flags.lit = true; this.audio.thud(); this.trauma = 0.7;
-      this.flashLight.position.set(0, h0 + 1, 0); this.flashLight.intensity = 700;
-      this.dustPuff(V(0, h0, 0), 140, 28);
+    const R = this.rocket, h0 = this.terrain.heightAt(0, 0), END = DURATION_LIFTOFF;
+    const up = this.liftoffClimb(t), pitch = easeInOut((t - 4.8) / 3.5);
+    const east = t > 4.8 ? 0.5 * 2.6 * (t - 4.8) ** 2 : 0;    // pitches over towards orbit
+    this.lander.group.visible = false; R.group.visible = true; this.pad.visible = true;
+    R.group.position.set(east, h0 + up, 0);
+    this.orientObj(R.group, V(1, 0, 0), 0.3 * pitch);
+    const throttle = t < LO.ignite ? 0 : Math.min(1, (t - LO.ignite) / 0.6);
+    if (t < LO.ignite) {                                          // cryogenic venting before ignition
+      this.acc.trail += dt * 22;
+      while (this.acc.trail >= 1) {
+        this.acc.trail--;
+        const a = Math.random() * Math.PI * 2;
+        this.smoke.emit({ pos: V(Math.cos(a) * 2.1, h0 + rnd(6, 30), Math.sin(a) * 2.1), vel: V(Math.cos(a) * rnd(1, 3), rnd(-2.5, -0.5), Math.sin(a) * rnd(1, 3)),
+          life: rnd(1.5, 2.5), size: [0.8, rnd(3, 5)], color: [0.95, 0.96, 0.98, 0.3], drag: 0.8 });
+      }
     }
-    if (t < RISE && throttle > 0) this.trauma = Math.max(this.trauma, 0.45);        // straining on the pad
-    this.thrust(throttle, dt);
-    if (throttle > 0) this.trauma = Math.max(this.trauma, 0.12 + 0.25 * clamp01(1 - up / 60));
+    if (t >= LO.ignite && !this.flags.lit) {
+      this.flags.lit = true; this.audio.thud(); this.trauma = 0.8;
+      this.flashLight.position.set(0, h0 + 3, 0); this.flashLight.intensity = 1600;
+      this.dustPuff(V(0, h0, 0), 220, 34);
+    }
+    if (t < LO.rise && throttle > 0) this.trauma = Math.max(this.trauma, 0.5);        // straining on the pad
+    this.rocketThrust(throttle, dt, [R.coreNozzle, ...R.boosterNozzles]);
+    if (throttle > 0) this.trauma = Math.max(this.trauma, 0.14 + 0.3 * clamp01(1 - up / 90));
     const u = easeInOut((t - 3) / (END - 3));
-    this.setCam(this.liftoffCam(t), L.position.clone().add(V(0, lerp(2.4, 1.2, u), 0)));
+    this.setCam(this.liftoffCam(t), R.group.position.clone().add(V(0, lerp(20, 15, u), 0)));
     if (t > 0.3 && t < 3.6) this.caption(this.env.name, this.env.subtitle ?? "Departure");
-    else if (t > 5.2) this.caption("Liftoff", "Leaving the surface");
+    else if (t > 5.2) this.caption("Liftoff", "Carrying the lander to orbit");
     else this.caption("", "");
   }
 
+  protected liftoffClimb(t: number) { return t > LO.rise ? 0.5 * LO.climb * (t - LO.rise) ** 2 : 0; }
+
   /**
-   * Liftoff camera: low beside the pad, then up out of the dust sheet as the engine lights, and
-   * back and up after the climbing lander. The sun is behind it, so the lander is lit, not a silhouette.
+   * Liftoff camera: low beside the pad, then up out of the dust sheet as the engines light, and
+   * back and up after the climbing rocket. The sun is behind it, so the rocket is lit, not a silhouette.
    */
   protected liftoffCam(t: number) {
     const h0 = this.terrain.heightAt(0, 0), sunSide = Math.atan2(this.sunDir.z, this.sunDir.x);
-    const u = easeInOut((t - 3) / (DURATION_LIFTOFF - 3)), a = sunSide + 0.55 - 0.25 * u, r = lerp(19, 40, u);
+    const u = easeInOut((t - 3) / (DURATION_LIFTOFF - 3)), a = sunSide + 0.55 - 0.25 * u, r = lerp(62, 120, u);
     const cx = Math.cos(a) * r, cz = Math.sin(a) * r;
-    const y = h0 + 1.8 + 6 * easeInOut((t - 1.3) / 1.8) + 10 * u;
+    const y = h0 + 3 + 10 * easeInOut((t - 1.3) / 1.8) + 25 * u + 0.35 * this.liftoffClimb(t);
     return V(cx, Math.max(y, this.terrain.heightAt(cx, cz) + 1.6), cz);
+  }
+
+  /**
+   * Rocket engines: a flame on each firing nozzle, the exhaust, the engine glow and, near the
+   * ground, the sheet of dust and steam they raise. `firing` lists the nozzles that burn.
+   */
+  protected rocketThrust(throttle: number, dt: number, firing: Nozzle[], sound = true) {
+    const R = this.rocket, on = throttle > 0.02 && R.group.visible;
+    const vac = 1 - clamp01(this.air / 0.4), spread = lerp(4, 14, vac);
+    for (const n of [R.coreNozzle, ...R.boosterNozzles]) {
+      const lit = on && n.part.visible && firing.includes(n);
+      n.flame.visible = lit;
+      if (lit) { const w = (0.85 + 0.3 * throttle) * lerp(1, 1.7, vac); n.flame.scale.set(w, throttle * (0.8 + Math.random() * 0.4), w); }
+    }
+    if (sound) this.audio.setThrust(throttle);
+    if (!on || !firing.length) return;
+    const q = new THREE.Quaternion();
+    this.acc.exhaust += dt * 420 * throttle;
+    while (this.acc.exhaust >= 1) {
+      this.acc.exhaust--;
+      const n = firing[Math.floor(Math.random() * firing.length)];
+      const at = n.part.localToWorld(n.at.clone()), down = V(0, -1, 0).applyQuaternion(n.part.getWorldQuaternion(q));
+      this.fire.emit({ pos: at.addScaledVector(down, rnd(0, 2) * n.size).add(V(rnd(-0.4, 0.4), rnd(-0.4, 0.4), rnd(-0.4, 0.4)).multiplyScalar(n.size)),
+        vel: down.multiplyScalar(rnd(45, 75)).add(V(rnd(-spread, spread), rnd(-2, 2), rnd(-spread, spread))).add(this.rocketVel),
+        life: rnd(0.22, 0.5), size: [rnd(1.4, 2.2) * n.size, rnd(3.5, 5.5) * n.size * lerp(1, 1.5, vac)], color: [1, 0.85, 0.6, lerp(0.8, 0.45, vac)], colorEnd: [1, 0.4, 0.08, 0] });
+    }
+    const base = R.coreNozzle.part.localToWorld(R.coreNozzle.at.clone());
+    this.engineLight.position.copy(base).add(V(0, -3, 0)); this.engineLight.intensity = throttle * 900 * (0.8 + Math.random() * 0.4);
+    const gh = this.terrain.heightAt(base.x, base.z), near = clamp01(1 - (base.y - gh) / 90);
+    if (near <= 0) return;
+    const [r, g, b] = this.look.dust;
+    this.acc.dust += dt * 260 * throttle * near * near * this.dustLevel;
+    while (this.acc.dust >= 1) {
+      this.acc.dust--;
+      const a = Math.random() * Math.PI * 2, sp = rnd(14, 42) * (0.5 + near) * lerp(1, 2, vac);
+      this.smoke.emit({ pos: V(base.x + Math.cos(a) * rnd(2, 7), gh + 0.8, base.z + Math.sin(a) * rnd(2, 7)),
+        vel: V(Math.cos(a) * sp + this.wind.x * (1 - vac), rnd(1, 7) * lerp(1, 0.5, vac), Math.sin(a) * sp + this.wind.z * (1 - vac)),
+        life: rnd(2.5, 5) * lerp(1, 0.7, vac), size: [rnd(4, 7), rnd(16, 30) * lerp(1, 0.6, vac)],
+        color: [lerp(r, 0.85, 0.5), lerp(g, 0.85, 0.5), lerp(b, 0.85, 0.5), 0.3 * near + 0.08], drag: lerp(0.9, 0.05, vac), gravity: this.gravity * vac * 0.5 });
+    }
   }
 
   /** Hides the scattered rocks within `radius` metres (horizontally) of any of `points`. */
@@ -603,8 +751,11 @@ export class CutsceneEngine {
   }
 
   /** Leans the lander by `angle` radians towards a horizontal direction. */
-  protected orient(lean: THREE.Vector3, angle: number) {
-    const q = this.lander.group.quaternion;
+  protected orient(lean: THREE.Vector3, angle: number) { this.orientObj(this.lander.group, lean, angle); }
+
+  /** Leans any object by `angle` radians towards a horizontal direction, with the lander's yaw. */
+  protected orientObj(obj: THREE.Object3D, lean: THREE.Vector3, angle: number) {
+    const q = obj.quaternion;
     if (lean.lengthSq() < 1e-6 || Math.abs(angle) < 1e-5) { q.setFromAxisAngle(V(0, 1, 0), 0.5); return; }
     q.setFromAxisAngle(V(lean.z, 0, -lean.x).normalize(), angle).multiply(new THREE.Quaternion().setFromAxisAngle(V(0, 1, 0), 0.5));
   }

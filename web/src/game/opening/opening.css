@@ -113,6 +113,32 @@
 }
 @media(prefers-reduced-motion:reduce){.opening-game *{animation:none!important;transition:none!important}}
 .surface-brief h2{outline:none}
+
+/* Evidence remains inside the game HUD, with bounded expansion on phones. */
+.analog-evidence{max-width:640px;margin:10px 0}.analog-evidence .evidence-line{margin:4px 0;font-size:12px;line-height:1.4;color:#d8d2c4}.analog-evidence .evidence-line b{color:#ddc493;font-weight:500;margin-right:4px}.analog-evidence summary{cursor:pointer;font-size:12px;padding:8px 0}.analog-evidence details[open]{max-height:24vh;overflow:auto;background:#080d12ed;padding:8px 12px}.analog-evidence h3{font-size:12px;margin:8px 0}.analog-evidence ul{padding-left:18px;font-size:12px;line-height:1.45}.analog-evidence a{color:#e7c889}.surface-brief .analog-evidence small,.surface-brief .landing-evidence small{max-width:100%}.landing-evidence{max-width:640px;margin:8px 0;font-size:12px}.landing-evidence small{display:block}.game-site-list .analog-score{color:#e7c889}.game-site-list .scan-label{color:#65d6d1}.game-selector select{max-width:100%;background:#101820;color:#fff;font-size:12px}.surface-brief{max-height:65vh;overflow:auto}.surface-brief>.game-primary{position:static;margin-top:10px}.game-selector label{font-size:12px}
+
+.game-site-list>div>button{width:100%;display:flex;gap:13px;align-items:center;text-align:left;border-bottom:1px solid #ffffff14;padding:12px 4px}.game-site-list>div>button:hover{background:#d6b77c12}.scan-heading{font-size:12px;color:#65d6d1;margin:14px 0 4px}
+
+.title-screen .title-atlas{margin-top:14px;pointer-events:auto}
+
+/* The bay keeps one viewport; only the customization rail scrolls. */
+.equipment-rails{bottom:145px;overflow-y:auto;overscroll-behavior:contain;padding-right:8px;scrollbar-width:thin;scrollbar-color:#776b53 transparent}
+.equipment-tabs{display:flex;gap:4px;padding:4px;margin-bottom:14px;background:#ffffff06;border:1px solid #ffffff20;border-radius:8px}
+.equipment-tabs button{flex:1;padding:11px 8px;font-size:12px;color:#a8a294;border-radius:5px}
+.equipment-tabs button[aria-pressed=true]{background:#d6b77c20;color:#f0dfbd;box-shadow:inset 0 0 0 1px #d6b77c50}
+.livery-name{display:block;margin:16px 0 12px;font-size:19px;font-weight:400}
+.livery-swatches{display:flex;gap:10px;margin-bottom:12px}
+.livery-swatches button{position:relative;width:40px;height:40px;border-radius:50%;border:1px solid #ffffff40;padding:4px}
+.livery-swatches button>span:first-child{display:block;width:100%;height:100%;border-radius:50%}
+.livery-swatches button[aria-pressed=true]{border:2px solid #e8c98f}
+.swatch-check{position:absolute;right:-3px;bottom:-2px;width:15px;height:15px;border-radius:50%;background:#e8c98f;color:#17191c;font-size:11px;text-align:center}
+.equipment-reset{font-size:11px;text-decoration:underline;text-underline-offset:4px;padding:10px 0;color:#c7b592}
+.equipment-view-tools{position:absolute;left:5%;bottom:160px;display:flex;gap:18px;align-items:center;color:#aaa79f;font-size:11px}
+.equipment-view-tools button{display:flex;gap:6px;align-items:center;padding:8px 10px;border:1px solid #ffffff25;border-radius:5px}
+.equipment-rails button:focus-visible,.equipment-view-tools button:focus-visible{outline:2px solid #e8c98f;outline-offset:4px}
+.equipment-rails button:disabled{opacity:.45;cursor:default}
+.is-launching .equipment-view-tools{opacity:0;pointer-events:none}
+@media(max-width:760px){.equipment-rails{bottom:125px}.equipment-view-tools{left:22px;bottom:calc(29% + 136px);font-size:10px;gap:10px}.equipment-tabs{margin-bottom:8px}.equipment-tabs button{padding:8px}.livery-name{margin:10px 0;font-size:17px}.livery-swatches button{width:36px;height:36px}}
 /* ---- Type and buttons. Inter for reading, DM Mono for figures and labels (both nasa.gov's faces),
    Michroma for the wordmark. Buttons are neutral paper on black: solid for the main action, an
    outline for the rest. Gold marks what is selected or flagged, not every control. */
@@ -137,3 +163,7 @@
 .landing-readout .game-text{color:var(--btn)}
 .immersive-game-session .flight-toolbar .primary-button{background:var(--btn);color:var(--btn-ink);border:1px solid var(--btn)}
 .immersive-game-session .scene-skip,.immersive-game-session .scene-sound{background:#0b0c0ecc;border-color:var(--btn-line);color:var(--btn)}
+/* the bay's newer controls (tabs, reset, view tools) in the same neutral system; livery swatches keep their own colours */
+.equipment-tabs button{color:#c9c7c0}.equipment-tabs button[aria-pressed=true]{background:var(--btn);color:var(--btn-ink);font-weight:600;box-shadow:none}
+.equipment-reset,.title-atlas{color:var(--btn)}.equipment-view-tools button{border-color:var(--btn-line);color:var(--btn)}.equipment-view-tools button:hover:not(:disabled){background:var(--btn-wash);border-color:var(--btn)}
+.equipment-rails button:focus-visible,.equipment-view-tools button:focus-visible{outline-color:var(--btn)}

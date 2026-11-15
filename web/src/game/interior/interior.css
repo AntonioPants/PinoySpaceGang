@@ -79,7 +79,7 @@
 
 /* facts and checks */
 .mon-facts { margin: 0; }
-.mon-facts > div { display: grid; grid-template-columns: 132px 1fr; gap: 12px; padding: 9px 0; border-bottom: 1px solid #23282e; }
+.mon-facts > div { display: grid; grid-template-columns: 132px 1fr; gap: 12px; padding: 7px 0; border-bottom: 1px solid #23282e; }
 .mon-facts dt { font-size: 14px; color: var(--dim); padding-top: 4px; }
 .mon-facts dd { margin: 0; font-size: 20px; }
 .mon-facts dd small { display: block; font-size: 13.5px; color: var(--dim); }

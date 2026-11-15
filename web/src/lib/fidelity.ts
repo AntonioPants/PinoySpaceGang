@@ -5,6 +5,7 @@ import { catalogSites, siteCatalog } from '../data/sites';
 import { loadProfile } from './mission';
 import { analogSite, flightSetup } from './simulation';
 import type { MissionConfig, TerrainProfile } from './types';
+import { isBaselineMission, loadLandingSimilarity } from './landingSimilarity';
 
 export interface FidelityReport { guided: FidelityResult; stress: StressFidelityResult }
 
@@ -47,5 +48,12 @@ export async function computeFidelity(mission: MissionConfig, analogProfile: Ter
   await new Promise(resolve => setTimeout(resolve, 30));
   const guided = fidelityFor(mission, analogProfile, planetaryProfile, entry, analogEntry);
   await new Promise(resolve => setTimeout(resolve, 0));
-  return { guided, stress: stressFor(mission, analogProfile, planetaryProfile, entry, analogEntry) };
+  let cached:StressFidelityResult|undefined;
+  if(isBaselineMission(mission)) {
+    try {
+      const data=await loadLandingSimilarity();
+      cached=data.rows.find(r=>r.earth_id===mission.earthAnalog.id&&r.planetary_id===mission.planetaryTarget.id)?.stress;
+    } catch { /* Missing baseline is optional: preserve the live calculation. */ }
+  }
+  return { guided, stress: cached ?? stressFor(mission, analogProfile, planetaryProfile, entry, analogEntry) };
 }
