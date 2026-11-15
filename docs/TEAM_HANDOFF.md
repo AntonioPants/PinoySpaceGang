@@ -111,6 +111,15 @@ terrain, catalog entries and `FlightTelemetry`. Wrap/present these in the charac
 scene; retain telemetry export, failure reasons, scenario distinctions and retry.
 Coordinate with Furgan: landing-outcome visuals finish before the character debrief.
 
+Current delivery: `web/src/game/debrief/DebriefScene.tsx` replaces the flat report in the
+game's `report` stage. The astronaut walks to the mission-control monitor, the camera
+pushes into its screen, and the report opens there as an eight-section carousel
+(`sections.tsx`) with left/right arrows, arrow keys and a burst of TV static between
+sections. It reuses Tim's cabin, astronaut and camera helpers read-only and shows only
+the flown telemetry. Reduced motion or missing WebGL opens the report directly; "Skip to
+report" is always available. Telemetry export was removed at Antonio's request; retry is
+kept. Test bench: `?debrief-demo`. The planner still uses `components/FlightReport.tsx`.
+
 ## Shared boundaries and integration
 
 - `game/contracts.ts` owns scene and control-center props; `game/integrations.ts`

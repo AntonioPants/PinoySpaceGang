@@ -10,4 +10,7 @@ import './styles.css';
 const demo = new URLSearchParams(location.search).has('cutscene-demo');
 const MoonExplorer = lazy(() => import('./components/MoonExplorer'));
 const moon = new URLSearchParams(location.search).has('moon');
-createRoot(document.getElementById('root')!).render(<StrictMode><Suspense fallback={<p>Loading…</p>}>{moon ? <MoonExplorer /> : demo ? <CutsceneDemo /> : <App />}</Suspense></StrictMode>);
+// ?debrief-demo opens Antonio's in-character debrief for one simulated landing.
+const DebriefDemo = lazy(() => import('./game/debrief/DebriefDemo'));
+const debrief = new URLSearchParams(location.search).has('debrief-demo');
+createRoot(document.getElementById('root')!).render(<StrictMode><Suspense fallback={<p>Loading…</p>}>{moon ? <MoonExplorer /> : debrief ? <DebriefDemo /> : demo ? <CutsceneDemo /> : <App />}</Suspense></StrictMode>);
