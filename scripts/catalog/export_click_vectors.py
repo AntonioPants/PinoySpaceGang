@@ -1,0 +1,113 @@
+"""Export the Earth-side feature vectors the click-anywhere matcher scores against.
+
+Usage: python -m scripts.catalog.export_click_vectors
+
+Additive: reads web/public/sites.json and the committed terrain packs, never writes them.
+The Earth windows start at fractional source cells, so their area averages depend on the
+GDAL build; they are therefore exported from this pipeline instead of being ported.
+Before writing, every published comparison is recomputed from the exported vectors and
+the run fails if any differs after rounding to 2 decimals.
+"""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+
+from . import analog_score, terrain_features as tf
+
+ROOT = Path(__file__).resolve().parents[2]
+PUBLIC = ROOT/'web/public'
+OUT = ROOT/'supabase/functions/_shared/analog'
+RESOLUTIONS = (150.0, 500.0)
+
+
+class ParityError(RuntimeError):
+    pass
+
+
+def build(catalog, public=PUBLIC, scales=None, sites_sha256=None):
+    """Return (earth_vectors, fixtures). Raises ParityError if a published score is not reproduced."""
+    scales = scales or analog_score.load_scales()
+    sites = {s['id']: s for s in catalog['sites']}
+    earth, planets = {}, {}
+    for site in sorted(catalog['sites'], key=lambda s: s['id']):
+        if not site.get('terrain'):
+            continue
+        z, spacing = tf.pack_grid(site, public)[:2]
+        if site['role'] == 'earth_analog':
+            earth[site['id']] = {
+                'morphology': site.get('morphology'),
+                'inferred_landforms': list(site.get('inferred_landforms') or ()),
+                'vectors': {str(r): tf.features(z, spacing, r) for r in RESOLUTIONS}}
+        elif site['role'] == 'planetary_target':
+            resolution = analog_score.resolution_for(spacing)
+            planets[site['id']] = {
+                'body': site['body'], 'morphology': site['morphology'], 'spacing_m': spacing,
+                'resolution_m': resolution, 'rows': site['terrain']['rows'], 'columns': site['terrain']['columns'],
+                'vector': tf.features(z, spacing, resolution)}
+
+    def score(earth_id, planet_id):
+        e, p = earth[earth_id], planets[planet_id]
+        terrain = analog_score.terrain_percent(e['vectors'][str(p['resolution_m'])], p['vector'], scales.get(p['resolution_m']))
+        form = analog_score.landform(e['morphology'], p['morphology'], e['inferred_landforms'])
+        return terrain, form, analog_score.combine(terrain, form['match_percent'])
+
+    # The publisher rounds to 4 decimals first; follow the same chain so a value on a
+    # half-cent boundary does not round the other way.
+    two = lambda v: round(round(v, 4), 2)
+    matching = catalog['analog_matching']
+    failures, published = [], []
+    for row in matching['comparisons']:
+        if row['terrain_similarity_percent'] is None:
+            continue
+        terrain, form, total = score(row['earth_id'], row['planetary_id'])
+        ok = (terrain is not None
+              and two(terrain) == round(row['terrain_similarity_percent'], 2)
+              and two(total) == round(row['analog_score_percent'], 2)
+              and form == row['landform'])
+        if not ok:
+            failures.append((row['earth_id'], row['planetary_id'], terrain, row['terrain_similarity_percent'], total, row['analog_score_percent']))
+        published.append({'earth_id': row['earth_id'], 'planetary_id': row['planetary_id'],
+                          'terrain_similarity_percent': row['terrain_similarity_percent'],
+                          'analog_score_percent': row['analog_score_percent'], 'landform': row['landform']})
+    screening = []
+    for row in matching['selection']['screening']:
+        if row['central_upper_bound_percent'] is None:
+            continue
+        total = score(row['earth_id'], row['planetary_id'])[2]
+        if total is None or two(total) != round(row['central_upper_bound_percent'], 2):
+            failures.append((row['earth_id'], row['planetary_id'], 'screening', total, row['central_upper_bound_percent']))
+        screening.append([row['earth_id'], row['planetary_id'], row['central_upper_bound_percent']])
+    if failures:
+        raise ParityError(f'{len(failures)} published scores are not reproduced, e.g. {failures[:5]}')
+
+    versions = {'analog_score': analog_score.VERSION, 'descriptors': tf.VERSION}
+    constants = {'landform_weight': analog_score.LANDFORM_WEIGHT, 'related_affinity': analog_score.RELATED_AFFINITY,
+                 'inferred_factor': analog_score.INFERRED_FACTOR, 'distance_scale': analog_score.DISTANCE_SCALE,
+                 'not_inferable_families': sorted(analog_score.NOT_INFERABLE_FAMILIES)}
+    scale_sets = {str(r): scales[r] for r in RESOLUTIONS}
+    vectors = {'method': versions, 'constants': constants, 'sites_json_sha256': sites_sha256,
+               'note': 'Central 4 km window features of each Earth terrain pack, area-averaged to the comparison resolution. '
+                       'Generated by scripts/catalog/export_click_vectors.py; do not edit.',
+               'scales_by_resolution_m': scale_sets, 'sites': earth}
+    fixtures = {'method': versions, 'sites_json_sha256': sites_sha256, 'targets': planets,
+                'published_comparisons': published, 'published_screening': screening}
+    assert all(sid in sites for sid in earth)
+    return vectors, fixtures
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
+    parser.add_argument('--output', type=Path, default=OUT)
+    args = parser.parse_args(argv)
+    raw = (PUBLIC/'sites.json').read_bytes()
+    vectors, fixtures = build(json.loads(raw.decode('utf-8')), sites_sha256=hashlib.sha256(raw).hexdigest())
+    args.output.mkdir(parents=True, exist_ok=True)
+    (args.output/'earth-vectors.json').write_text(json.dumps(vectors, separators=(',', ':'))+'\n', encoding='utf-8')
+    (args.output/'fixtures.json').write_text(json.dumps(fixtures, separators=(',', ':'))+'\n', encoding='utf-8')
+    print(f'Exported {len(vectors["sites"])} Earth sites, {len(fixtures["targets"])} planetary fixtures; '
+          f'{len(fixtures["published_comparisons"])} comparisons and {len(fixtures["published_screening"])} screening rows reproduced.')
+
+
+if __name__ == '__main__':
+    main()

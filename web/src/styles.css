@@ -469,3 +469,6 @@ dialog::backdrop { background: #000b; backdrop-filter: blur(8px); }
 .comparison-planet { color:#65e7ff; margin-left:10px; }
 .surface-brief .terrain-comparison-legend { position:static; max-width:100%; margin:8px 0; }
 @media(max-width:600px) { .terrain-comparison-legend { font-size:10px; left:8px; bottom:8px; max-width:calc(100% - 16px); padding:7px; } }
+/* The player's own pin on a Cesium globe. */
+.cesium-pin { position: absolute; width: 22px; height: 22px; transform: translate(-50%, -50%); border: 2px solid #e9c78a; border-radius: 50%; box-shadow: 0 0 0 1px #000a, 0 0 14px #e9c78a99; pointer-events: none; }
+.cesium-pin::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: #fff1cf; }

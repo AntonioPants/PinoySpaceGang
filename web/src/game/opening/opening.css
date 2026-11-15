@@ -209,3 +209,9 @@
 .inspection-navigation .game-back:hover { color:#f1dfb6; }
 .inspection-navigation .game-back:focus-visible { outline:1px solid #d6b77c; outline-offset:4px; }
 @media(max-width:760px) { .game-topbar { gap:14px; } .game-topbar:has(.inspection-navigation) .game-wordmark span { display:none; } .game-topbar .game-tools { grid-column:-2; justify-self:end; } }
+/* The detailed Cesium globe is a layer over the always-mounted simple globe. It fades in once it has
+   tiles and the fly-in has finished, with the camera handed across, and fades out before leaving. */
+.opening-globe-layer{position:absolute;inset:0;z-index:-2;opacity:0;pointer-events:none;transition:opacity .4s ease}
+.opening-globe-layer.is-shown{opacity:1;pointer-events:auto;transition:opacity .6s ease}
+.opening-globe-layer:not(.is-shown) *{pointer-events:none!important}
+.opening-globe-layer .globe-view{min-height:0}
