@@ -107,7 +107,7 @@ export function earthSurface(profile: TerrainProfile, lat: number, lon: number) 
   geometry.setAttribute('uv', new T.Float32BufferAttribute(uv, 2));
   geometry.setAttribute('color', new T.Float32BufferAttribute(colors, 3));
   geometry.setIndex(indices); geometry.computeVertexNormals();
-  return { geometry, frame, relief };
+  return { geometry, frame, baseHeight: low, relief: high - low };
 }
 
 export interface CameraPose { position: T.Vector3; target: T.Vector3; up: T.Vector3 }

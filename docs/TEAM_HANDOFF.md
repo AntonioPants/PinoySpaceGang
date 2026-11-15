@@ -24,9 +24,12 @@ Earth matching presentation, a continuous globe-to-terrain camera, and transitio
 into the equipment bay. Preserve Antonio's catalog ordering/evidence.
 
 Current delivery: the opening is the default app. The prior engineering planner is
-retained at `?planner`. One Three.js scene stays mounted from worlds through Earth
-terrain; keyboard/touch-accessible controls duplicate raycast selections. Reduced
-motion snaps cameras instead of animating. Missing WebGL still permits setup.
+retained at `?engineering-planner`. Cesium streams Moon, Mars and Google Photorealistic
+3D Tiles for Earth reconnaissance when available; the original Three.js globe is the
+fallback. Screen-projected catalog markers remain clickable over each Cesium view.
+The measured Earth DEM is the default site approach and remains the authoritative
+simulation terrain; Google 3D imagery is available through a view toggle. Reduced motion snaps camera flights.
+Missing WebGL still permits setup through the site lists.
 
 The game occupies one fixed viewport at every stage, including cinematics and live
 descent. Starting from the title requests browser fullscreen when supported; rejecting or exiting
@@ -37,10 +40,10 @@ HUD overlays and internally scrolling controls on small screens.
 `earthSurface.ts` attaches the DEM to its geographic tangent frame on a curved Earth
 cap, using the globe's reference texture. DEM relief is 1:1 inside its footprint;
 the outer curved context is explicitly unmeasured and must never enter physics.
-`earthFlight` interpolates above the sphere, including interrupted flights and
-opposite-side site changes. Keep Earth visible throughout approach, and preserve the
-departing patch until the next approach finishes. Do not replace Earth with a detached
-rectangle or teleport to a second terrain scene.
+`earthFlight` interpolates above the sphere within the measured DEM view, including
+interrupted flights and opposite-side site changes. Keep Earth visible throughout that
+approach, and preserve the departing patch until the next approach finishes. Google
+imagery is visual context, not measured terrain or landing safety evidence.
 
 ## Yousef — equipment and landing gear
 

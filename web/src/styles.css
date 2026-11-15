@@ -85,6 +85,12 @@ h1 { font-size: clamp(30px, 3.1vw, 44px); line-height: 1.15; letter-spacing: -1.
 .moon-status { position: absolute; z-index: 2; bottom: 42px; left: 16px; right: 16px; width: fit-content; max-width: calc(100% - 32px); padding: 5px 9px; border-radius: 4px; background: #171717e8; color: #fff; font-size: 11px; }
 .connection-status { font-size: 12px; color: #d6b77c; white-space: nowrap; }
 .globe-canvas, .terrain-canvas { position: absolute; inset: 0; }
+.cesium-site-layer { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.cesium-site-marker { position: absolute; display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; padding: 0; transform: translate(-50%, -50%); pointer-events: auto; cursor: pointer; }
+.cesium-site-dot { width: 14px; height: 14px; border: 3px solid #171717; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px #fff, 0 1px 9px #000; }
+.cesium-site-marker[aria-pressed=true] .cesium-site-dot { width: 19px; height: 19px; background: #e7c889; box-shadow: 0 0 0 2px #e7c889, 0 0 18px #e7c88988; }
+.cesium-site-marker:focus-visible { outline: 2px solid #e7c889; border-radius: 50%; }
+.cesium-site-name { position: absolute; bottom: 38px; left: 50%; transform: translateX(-50%); width: max-content; max-width: 170px; padding: 4px 7px; border-radius: 3px; background: #080808d9; color: #e7c889; font-size: 12px; text-align: center; white-space: normal; text-shadow: 0 1px 2px #000; }
 .globe-canvas canvas, .terrain-canvas canvas { display: block; touch-action: none; }
 .globe-caption { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 9px; white-space: nowrap; font-size: 10px; color: var(--muted); z-index: 1; }
 .globe-disclaimer { position: absolute; top: 85px; left: 28px; font-size: 10px; color: var(--muted); pointer-events: none; }

@@ -48,7 +48,7 @@ export default function App() {
   if (!catalog) return <main className="main-shell" id="mission-main"><div className={`data-notice ${error ? 'warning' : ''}`} role="status">
     {error ? <><span>{error}</span><button className="text-button" onClick={() => setAttempt(v => v + 1)}>Retry</button></> : <><span className="status-dot pending" />Loading site catalog…</>}
   </div></main>;
-  return new URLSearchParams(location.search).has('planner') ? <Mission catalog={catalog} /> : <Suspense fallback={<p role="status">Preparing mission worlds…</p>}><OpeningGame catalog={catalog}/></Suspense>;
+  return new URLSearchParams(location.search).has('engineering-planner') ? <Mission catalog={catalog} /> : <Suspense fallback={<p role="status">Preparing mission worlds…</p>}><OpeningGame catalog={catalog}/></Suspense>;
 }
 
 function Mission({ catalog }: { catalog: Catalog }) {
@@ -156,7 +156,7 @@ function Mission({ catalog }: { catalog: Catalog }) {
       {step === 0 && <section className="workspace destination-workspace" aria-label="Planetary destination">
         <div className="planet-panel">
           <div className="planet-top"><div className="segmented" aria-label="Planet selection">{(['Moon', 'Mars'] as Body[]).map(body => <button key={body} aria-pressed={target.body === body} onClick={() => changeBody(body)}>{body === 'Moon' ? '◐' : '◉'} {body}</button>)}</div><span className="small-label">{bodyPoints.length} target regions</span></div>
-          {target.body === 'Moon' ? <Suspense fallback={<Globe body="Moon" points={bodyPoints} selected={targetId} onSelect={setTargetId} />}><MoonGlobe points={bodyPoints} selected={targetId} onSelect={setTargetId} /></Suspense> : <Globe body={target.body} points={bodyPoints} selected={targetId} onSelect={setTargetId} />}
+          {<Suspense fallback={<Globe body="Moon" points={bodyPoints} selected={targetId} onSelect={setTargetId} />}><MoonGlobe key={target.body} body={target.body === 'Mars' ? 'Mars' : 'Moon'} points={bodyPoints} selected={targetId} onSelect={setTargetId} /></Suspense>}
           <div className="planet-label"><span>Selected planetary body</span><strong>{target.body === 'Moon' ? 'Luna' : 'Mars'}</strong><p>{target.body === 'Moon' ? 'Earth’s natural satellite' : 'Fourth planet from the Sun'}</p></div>
           <div className="planet-scale"><span>Scenario gravity</span><strong>{target.gravity.toFixed(2)} <small>m/s²</small></strong><span>{target.body === 'Moon' ? 'Vacuum environment' : 'Thin atmosphere'}</span></div>
         </div>

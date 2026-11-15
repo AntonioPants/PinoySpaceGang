@@ -1,4 +1,7 @@
 /* Mission-table art direction: black void, warm metal, natural planetary colour. */
+.game-network-status{position:absolute;bottom:8px;left:16px;z-index:30;padding:5px 10px;background:#111e;color:#e7d6a8;border:1px solid #665b42;border-radius:5px;font-size:11px;max-width:calc(100% - 32px);pointer-events:none}
+.lunar-destination .moon-status{bottom:48px;max-width:60%;overflow-wrap:anywhere}
+.lunar-destination .globe-disclaimer{top:90px}
 .opening-game{position:fixed;inset:0;height:100dvh;background:#030405;color:#eeeae1;isolation:isolate;overflow:hidden;font-family:'IBM Plex Sans',sans-serif}
 .opening-game::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:-1;background:linear-gradient(#03040588,transparent 25%,transparent 65%,#030405b0)}
 .opening-world-scene{position:absolute;inset:0;z-index:-2;background:radial-gradient(ellipse at 50% 60%,#12151b 0, #030405 67%)}

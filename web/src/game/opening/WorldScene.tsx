@@ -7,6 +7,7 @@ import { earthFlight, earthSurface, elevationOver, globePoint, siteSwoop, EARTH_
 import { paintRegion, regionPatch } from './regions';
 import { buildLandingPicker, type LandingPicker } from './landingPick';
 import { buildTitleFlight } from './titleFlight';
+import { createEarthScenery, type EarthScenery } from '../../lib/earthTileScenery';
 
 export interface WorldProps {
   stage: 'title' | 'worlds' | 'destination' | 'earth'; body: Body; hover: Body | null;
@@ -86,6 +87,7 @@ export default function WorldScene(props: WorldProps) {
     let terrain: T.Group | null = null, terrainProfile: TerrainProfile | null = null, terrainMaterial: T.MeshStandardMaterial | null = null;
     let picker: LandingPicker | null = null, lastSite: T.Vector3 | null = null;
     const departingPatches: T.Group[] = [];
+    let scenery: EarthScenery | undefined;
     let terrainRelief = 0, route: Route | null = null, stage: WorldProps['stage'] | null = null;
     let goalTarget = new T.Vector3(), goalOffset = camera.position.clone(), goalUp = UP.clone(), moving = true, surface = false;
     /** 0 while the worlds are still out of sight on the title, 1 once they are in view. */
@@ -150,6 +152,7 @@ export default function WorldScene(props: WorldProps) {
       if (p.profile && p.profile !== terrainProfile) {
         // Keep the departing ground under the camera until the next site flight
         // finishes. Replacing a pack must not reveal the coarse sphere beneath it.
+        scenery?.dispose(); scenery = undefined;
         if (terrain) departingPatches.push(terrain);
         terrain=null; terrainMaterial=null; picker=null; terrainProfile=p.profile;
         const site=p.selectedAnalog.id===p.profile.manifest.id?p.selectedAnalog:undefined;
@@ -157,14 +160,30 @@ export default function WorldScene(props: WorldProps) {
           const patch = earthSurface(p.profile, site.lat, site.lon);
           terrainRelief = patch.relief;
           terrainMaterial = new T.MeshStandardMaterial({ color: '#e2dfd4', roughness: 1, vertexColors: true, map: (planets.get('Earth')!.material as T.MeshStandardMaterial).map });
-          terrain=new T.Group(); terrain.add(new T.Mesh(patch.geometry, terrainMaterial));
+          const measuredMesh = new T.Mesh(patch.geometry, terrainMaterial);
+          terrain=new T.Group(); terrain.add(measuredMesh);
           picker = buildLandingPicker(p.profile); terrain.add(picker.group); plant.current();
           terrain.quaternion.copy(patch.frame); terrain.position.copy(globePoint(site.lat,site.lon,1.5).add(centres.Earth));terrain.scale.setScalar(METRE_SCALE);scene.add(terrain);
+          if (import.meta.env.VITE_CESIUM_ION_TOKEN) {
+            const { rows, columns, spacing_m } = p.profile.manifest.grid;
+            const w = (columns-1)*spacing_m/2, d = (rows-1)*spacing_m/2;
+            terrain.updateMatrixWorld();
+            scenery = createEarthScenery(renderer, host, site.lat, site.lon, patch.baseHeight,
+              terrain.matrixWorld, patch.geometry, { west:-w,east:w,north:-d,south:d }, haze.color, [measuredMesh]);
+          }
         }
       }
       if(terrain)terrain.visible=p.stage==='earth';
       departingPatches.forEach(patch => { patch.visible = p.stage==='earth'; });
       sun.position.set(-5,5,8);sun.target.position.set(0,0,0);
+      if (previous === null && p.stage !== 'title') {
+        reveal = 1;
+        if (p.stage === 'earth') {
+          const above = globePoint(p.selectedAnalog.lat, p.selectedAnalog.lon, radii.Earth);
+          controls.target.copy(above).add(centres.Earth); camera.position.copy(above).multiplyScalar(1 + 2.2 / radii.Earth).add(centres.Earth);
+        } else { controls.target.set(0, 0, 0); camera.position.set(0, 2, 14); }
+        camera.lookAt(controls.target);
+      }
       const worldsView = () => ({ target: p.hover ? centres[p.hover].clone().multiplyScalar(.35) : new T.Vector3(), offset: new T.Vector3(0, 2, p.hover ? 11 : 14).multiplyScalar(Math.max(1, 1.1 / camera.aspect)) });
       if(surface && terrain) {
         // Down to the measured ground. From above the site this is one unbroken swing; from
@@ -280,8 +299,11 @@ export default function WorldScene(props: WorldProps) {
         sun.position.set(-5,5,8).lerp(localSun, nearGround); sun.target.position.set(0,0,0).lerp(terrain.position, nearGround);
         terrain.updateMatrixWorld(); picker?.tick(terrain.worldToLocal(camera.position.clone()), surface && !moving, dt);
       }
-      if(!moving)controls.update();renderer.render(scene,camera);frame=requestAnimationFrame(render);};render();
-    return()=>{disposed=true;cancelAnimationFrame(frame);resize.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',pointerDown);renderer.domElement.removeEventListener('pointerup',pointerUp);renderer.domElement.removeEventListener('pointermove',pointerMove);renderer.domElement.removeEventListener('pointerleave',pointerLeave);textures.forEach(t=>t.dispose());release(scene);renderer.dispose();renderer.domElement.remove();flash.remove();update.current=()=>{};paint.current=()=>{};plant.current=()=>{};};
+      if(!moving)controls.update();
+      const streamed = surface && scenery?.draw(camera);
+      if (streamed) { planets.get('Earth')!.visible = false; scene.background = null; renderer.autoClear = false; }
+      renderer.render(scene,camera); renderer.autoClear = true;frame=requestAnimationFrame(render);};render();
+    return()=>{disposed=true;scenery?.dispose();cancelAnimationFrame(frame);resize.disconnect();controls.dispose();renderer.domElement.removeEventListener('pointerdown',pointerDown);renderer.domElement.removeEventListener('pointerup',pointerUp);renderer.domElement.removeEventListener('pointermove',pointerMove);renderer.domElement.removeEventListener('pointerleave',pointerLeave);textures.forEach(t=>t.dispose());release(scene);renderer.dispose();renderer.domElement.remove();flash.remove();update.current=()=>{};paint.current=()=>{};plant.current=()=>{};};
   },[]);
   useEffect(()=>update.current(),[props.stage,props.body,props.hover,props.targetId,props.analogId,props.profile,props.surface,props.analogs,props.targets]);
   useEffect(()=>paint.current(),[props.hoverSite]);
