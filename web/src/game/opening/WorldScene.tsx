@@ -135,7 +135,7 @@ export default function WorldScene(props: WorldProps) {
         if (disposed) { texture.dispose(); return; } texture.colorSpace = T.SRGBColorSpace; texture.wrapS = T.RepeatWrapping; textures.push(texture); mat.map = texture; mat.emissiveMap = texture; mat.needsUpdate = true;
         referenceCount++;if(body==='Earth')earthReady=true;
         if (body === 'Earth' && terrainMaterial) { terrainMaterial.map = texture; terrainMaterial.needsUpdate = true; }
-      },undefined,()=>{if(!prepared){preparationFailed=true;live.current.onPreparationError?.('World imagery could not load. Check your connection and retry.');}});
+      },undefined,()=>{if(!disposed&&!prepared){preparationFailed=true;live.current.onPreparationError?.('World imagery could not load. Check your connection and retry.');}});
       if(body!=='Earth' && import.meta.env.VITE_CESIUM_ION_TOKEN) {
         const detail=createPlanetTiles(body,radii[body],renderer);tileWorlds.set(body,detail);globe.add(detail.group);
         mat.visible=false;
@@ -439,7 +439,9 @@ export default function WorldScene(props: WorldProps) {
       if(!navigator.onLine)preparationFailed=false;
       for(const detail of tileWorlds.values())detail.group.visible=navigator.onLine;
       credit.textContent=current.stage==='title'?'':navigator.onLine?['Cesium ion',...Array.from(tileWorlds.values(),detail=>detail.credits()),'Earth imagery: NASA'].filter(Boolean).join(' · '):'Offline reference imagery: NASA';
-      if(!prepared&&!preparationFailed){
+      // A slow connection can finish after the timeout. Accept that completion
+      // without requiring the player to discard the worlds and start over.
+      if(!prepared){
         const detailed=!navigator.onLine&&referenceCount===3||tileWorlds.size===2&&[...tileWorlds.values()].every(d=>d.ready);
         if(earthReady&&detailed){
           // Upload and compile the actual overview offscreen before allowing the title to leave.
@@ -448,7 +450,7 @@ export default function WorldScene(props: WorldProps) {
           const previous=renderer.getRenderTarget();renderer.setRenderTarget(warmTarget);renderer.render(scene,overviewCamera);for(const region of regionCameras.values())renderer.render(scene,region);renderer.setRenderTarget(previous);
           for(const state of states){state.mesh.visible=state.visible;state.mesh.scale.copy(state.scale);state.mesh.rotation.copy(state.rotation);}
           prepared=true;live.current.onPrepared?.(true);
-        }else if([...tileWorlds.values()].some(d=>d.failed)||performance.now()-prepareStarted>60000){
+        }else if(!preparationFailed&&([...tileWorlds.values()].some(d=>d.failed)||performance.now()-prepareStarted>60000)){
           preparationFailed=true;live.current.onPreparationError?.('Detailed worlds could not load. Check your connection and retry.');
         }
       }
