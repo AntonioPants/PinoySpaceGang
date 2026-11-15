@@ -12,12 +12,12 @@ import type { MatchCheck } from '../lib/matching';
 import FlightDebrief from './FlightDebrief';
 import './nhb.css';
 
-interface Props { flight: FlightTelemetry; mission: MissionConfig; profile: TerrainProfile; analogEntry?: CatalogSite; planetaryEntry?: CatalogSite; match?: MatchCheck; onRetry: () => void; onStandardView: () => void }
+interface Props { flight: FlightTelemetry; mission: MissionConfig; profile: TerrainProfile; analogEntry?: CatalogSite; planetaryEntry?: CatalogSite; planetaryProfile?: TerrainProfile; match?: MatchCheck; onRetry: () => void; onStandardView: () => void }
 type FidelityState = { status: 'working' } | { status: 'done'; result: FidelityReport } | { status: 'unavailable'; reason: string };
 
 const OUTCOME_TITLE: Record<string, string> = { crash: 'Crash', 'tip-over': 'Tip-over', 'hard-landing': 'Hard landing', timeout: 'No touchdown' };
 
-export default function FlightReportNHB({ flight, mission, profile, analogEntry, planetaryEntry, match, onRetry, onStandardView }: Props) {
+export default function FlightReportNHB({ flight, mission, profile, analogEntry, planetaryEntry, planetaryProfile, match, onRetry, onStandardView }: Props) {
   const result = flight.summary!;
   const env = flight.environment;
   const limits = flight.lander.limits;
@@ -26,11 +26,11 @@ export default function FlightReportNHB({ flight, mission, profile, analogEntry,
   const [certificate, setCertificate] = useState(false);
   useEffect(() => {
     const abort = new AbortController(); setFidelity({ status: 'working' });
-    computeFidelity(mission, profile, analogEntry, planetaryEntry, abort.signal)
+    computeFidelity(mission, profile, analogEntry, planetaryEntry, abort.signal, planetaryProfile)
       .then(r => { if (!abort.signal.aborted) setFidelity({ status: 'done', result: r }); })
       .catch(e => { if (!abort.signal.aborted) setFidelity({ status: 'unavailable', reason: e instanceof Error ? e.message : 'Could not compute the score.' }); });
     return () => abort.abort();
-  }, [mission, profile, analogEntry, planetaryEntry]);
+  }, [mission, profile, analogEntry, planetaryEntry, planetaryProfile]);
   useEffect(() => { document.getElementById('nhb-title')?.focus({ preventScroll: true }); }, []);
 
   const body = mission.planetaryTarget.body;

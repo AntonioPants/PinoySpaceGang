@@ -121,7 +121,8 @@ export function buildSections({ flight, mission, profile, match, fidelity }: Sec
         ['Basis', match.evidence_status === 'literature_informed_proposal' ? 'Literature-informed proposal' : 'Terrain only, exploratory'],
       ]} />
       <p className="deb-note">Analog match is half landform type and half terrain shape, computed before the flight{match.total_similarity_percent === null ? '; no environment comparison (wind, temperature, albedo) is available for this pair' : ''}. It is not scientifically validated and is separate from the flight scores.</p>
-    </> : <p className="deb-pending">No catalog pairing is recorded for {mission.earthAnalog.name} and {mission.planetaryTarget.name}, so there is no pre-flight match score.</p> },
+    </> : mission.planetaryTarget.id.startsWith('custom-') ? <p className="deb-pending">{mission.planetaryTarget.name} is a point you pinned, not a marked region. {typeof mission.evidence.quantitativeSimilarityScore === 'number' ? `Its on-demand terrain match with ${mission.earthAnalog.name} is ${(mission.evidence.quantitativeSimilarityScore * 100).toFixed(1)}%, ` : 'It was '}scored from the global elevation mosaic with the landform taken from the geologic map unit or left unmapped. Not reviewed and not validated; Earth cannot reproduce the target's gravity, air or radiation.</p>
+      : <p className="deb-pending">No catalog pairing is recorded for {mission.earthAnalog.name} and {mission.planetaryTarget.name}, so there is no pre-flight match score.</p> },
     { id: 'conditions', title: 'Site conditions', content: <>
       <Tiles items={[
         ['Gravity', `${env.gravity} m/s²`], ['Air density', `${Number(env.airDensity.toFixed(3))} kg/m³`],

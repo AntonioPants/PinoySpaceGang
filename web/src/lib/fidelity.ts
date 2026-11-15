@@ -1,6 +1,7 @@
 import { analogFidelity, stressFidelity, type FidelityResult, type StressFidelityResult } from '../../../app/sim/src/fidelity';
 import type { SiteTerrain } from '../../../app/sim/src/types';
 import { catalogSiteToSite, type CatalogSite } from '../../../app/sim/src/catalog';
+import { terrainPackToSite } from '../../../app/sim/src/loaders';
 import { catalogSites, siteCatalog } from '../data/sites';
 import { loadProfile } from './mission';
 import { analogSite, flightSetup } from './simulation';
@@ -11,12 +12,19 @@ export interface FidelityReport { guided: FidelityResult; stress: StressFidelity
 
 function sites(mission: MissionConfig, analogProfile: TerrainProfile, planetaryProfile: TerrainProfile,
   entry = catalogSites.find(s => s.id === mission.planetaryTarget.id), analogEntry?: CatalogSite): { planetary: SiteTerrain; analog: SiteTerrain } {
-  if (!entry) throw new Error('the planetary target is not in the site catalog.');
-  const planetary = catalogSiteToSite(entry, planetaryProfile.manifest, planetaryProfile.buffer, {}, siteCatalog);
+  // A pinned point has no catalog entry: its terrain is the grid itself, named and placed by the mission.
+  if (!entry && !mission.planetaryTarget.id.startsWith('custom-')) throw new Error('the planetary target is not in the site catalog.');
+  const planetary = entry ? catalogSiteToSite(entry, planetaryProfile.manifest, planetaryProfile.buffer, {}, siteCatalog)
+    : customSite(mission, planetaryProfile);
   const analog = analogSite(mission, analogProfile, analogEntry);
   // Same scenario wind on both terrains, so the comparison is like for like.
   planetary.wind = analog.wind;
   return { planetary, analog };
+}
+function customSite(mission: MissionConfig, profile: TerrainProfile): SiteTerrain {
+  const body = mission.planetaryTarget.body === 'Moon' ? 'moon' : 'mars';
+  if (profile.manifest.body.toLowerCase() !== body || profile.manifest.id !== mission.planetaryTarget.id) throw new Error('the planetary terrain does not belong to this mission.');
+  return { ...terrainPackToSite(profile.manifest, profile.buffer), id: mission.planetaryTarget.id, name: mission.planetaryTarget.name, body };
 }
 // Manual flights cannot be replayed on another terrain, so both sides fly autonomously, under
 // the planetary scenario's gravity and air even if the flown mission was an Earth field test.
@@ -38,9 +46,21 @@ export function stressFor(mission: MissionConfig, analogProfile: TerrainProfile,
   return stressFidelity(planetary, analog, { base, catalogTerrainScore: mission.evidence.quantitativeSimilarityScore });
 }
 
-/** Loads the planetary target's own terrain pack, then runs the comparison flights. */
+/**
+ * Loads the planetary target's own terrain pack, then runs the comparison flights.
+ * `customPlanetary` is the terrain of a pinned point (not in the catalog): with it the catalog
+ * lookup, the pack download and the cached baseline are all skipped and the flights run live.
+ */
 export async function computeFidelity(mission: MissionConfig, analogProfile: TerrainProfile,
-  analogEntry?: CatalogSite, entry = catalogSites.find(s => s.id === mission.planetaryTarget.id), signal?: AbortSignal): Promise<FidelityReport> {
+  analogEntry?: CatalogSite, entry = catalogSites.find(s => s.id === mission.planetaryTarget.id), signal?: AbortSignal,
+  customPlanetary?: TerrainProfile): Promise<FidelityReport> {
+  if (customPlanetary) {
+    await new Promise(resolve => setTimeout(resolve, 30));
+    const guided = fidelityFor(mission, analogProfile, customPlanetary, undefined, analogEntry);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
+    return { guided, stress: stressFor(mission, analogProfile, customPlanetary, undefined, analogEntry) };
+  }
   if (!entry) throw new Error('the planetary target is not in the site catalog.');
   if (!entry.terrain) throw new Error(`${entry.name} has no terrain pack to compare against.`);
   const planetaryProfile = await loadProfile(signal, entry.terrain.manifest_url, entry.id, entry.body);

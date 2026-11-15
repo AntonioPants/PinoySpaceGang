@@ -75,7 +75,9 @@ function StaticNoise({ active }: { active: boolean }) {
   return <canvas ref={ref} className={`deb-static${active ? ' on' : ''}`} width={320} height={180} aria-hidden="true" />;
 }
 
-export default function DebriefScene({ flight, mission, profile, analogEntry, planetaryEntry, match, reducedMotion, onRetry }: {
+export default function DebriefScene({ flight, mission, profile, analogEntry, planetaryEntry, planetaryProfile, match, reducedMotion, onRetry }: {
+  /** The terrain of a pinned point (not in the catalog), for the comparison flights. */
+  planetaryProfile?: TerrainProfile;
   flight: FlightTelemetry; mission: MissionConfig; profile: TerrainProfile; match?: MatchCheck;
   analogEntry?: CatalogSite; planetaryEntry?: CatalogSite; reducedMotion: boolean; onRetry: () => void;
 }) {
@@ -89,11 +91,11 @@ export default function DebriefScene({ flight, mission, profile, analogEntry, pl
   // The rehearsal flights start at once, so they are usually finished by the time the report opens.
   useEffect(() => {
     const abort = new AbortController(); setFidelity({ status: 'working' });
-    computeFidelity(mission, profile, analogEntry, planetaryEntry, abort.signal)
+    computeFidelity(mission, profile, analogEntry, planetaryEntry, abort.signal, planetaryProfile)
       .then(result => { if (!abort.signal.aborted) setFidelity({ status: 'done', result }); })
       .catch(e => { if (!abort.signal.aborted) setFidelity({ status: 'unavailable', reason: e instanceof Error ? e.message : 'Could not compute the score.' }); });
     return () => abort.abort();
-  }, [mission, profile, analogEntry, planetaryEntry]);
+  }, [mission, profile, analogEntry, planetaryEntry, planetaryProfile]);
 
   const sections = useMemo(() => buildSections({ flight, mission, profile, match, fidelity }), [flight, mission, profile, match, fidelity]);
 
