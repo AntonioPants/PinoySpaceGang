@@ -3,9 +3,7 @@ import { FlightView, type CamMode, type FlightSetup } from '../../../app/flightl
 import { createManualPilot, createSim, keysToPilotInput } from '../../../app/sim/src/index';
 import type { FlightSummary, Sim, SimEvent, SimState } from '../../../app/sim/src/index';
 import { loadTerrainPack, peekTerrainPack, setSoundOn, simToPack, soundOn, type TerrainPack } from './cutscene';
-import { createEarthScenery } from "../lib/earthTileScenery";
-import { loadCatalog } from "../lib/catalog";
-import * as THREE from "three";
+import { attachSiteScenery } from "../lib/attachSiteScenery";
 import { sceneEnv } from '../game/scenes/sceneEnv';
 import { toSimInput } from '../lib/simulation';
 import type { DescentProps } from './Descent2D';
@@ -15,11 +13,13 @@ import type { DescentProps } from './Descent2D';
  * engine each frame and draws its true state: position, tilt, throttle, hazard scan, divert and
  * trail. At touchdown it plays the ending for the real outcome. Only the physics decides it.
  */
-export default function Descent3D({ mission, profile, entry, weather, autoStart = false, onReport, onExit, toolbarExtra, onUnavailable }:
-  DescentProps & { onUnavailable: (reason: string) => void }) {
+export default function Descent3D({ mission, profile, entry, weather, warming = false, autoStart = false, onReport, onExit, toolbarExtra, onUnavailable }:
+  DescentProps & { warming?: boolean; onUnavailable: (reason: string) => void }) {
   const box = useRef<HTMLDivElement>(null);
   const view = useRef<FlightView | null>(null);
   const sim = useRef<Sim | null>(null);
+  const warmingRef = useRef(warming);
+  useLayoutEffect(() => { warmingRef.current = warming; }, [warming]);
   const pressed = useRef(new Set<string>());
   // after the opening cutscene the pack is already loaded, so the flight can start on the first frame
   const [pack, setPack] = useState<TerrainPack | null>(() => {
@@ -53,20 +53,9 @@ export default function Descent3D({ mission, profile, entry, weather, autoStart 
       const target = input.target ?? { x: 0, y: 0 };
       const conditions = flight.telemetry().environment;
       view.current?.dispose();
-      const scene = new FlightView(box.current, sceneEnv(mission).env, { terrain: pack, landing: simToPack(pack, target), letterbox: false, showSkip: false, muted, equipment: mission.equipment });
-      const host = box.current;
-      if (import.meta.env.VITE_CESIUM_ION_TOKEN) void loadCatalog().then(catalog => {
-        const site = catalog.analogs.find(a => a.id === pack.manifest.id);
-        if (!site) return;
-        const landing = simToPack(pack, target);
-        const { rows, columns, spacing_m } = pack.manifest.grid;
-        const width = (columns-1)*spacing_m, depth = (rows-1)*spacing_m;
-        const frame = new THREE.Matrix4().makeTranslation(-target.x, 0, target.y);
-        const height = mission.earthAnalog.verticalOffsetM + (pack.heightAt(landing.x, landing.z) ?? 0);
-        scene.attachEarthScenery((renderer, ground, meshes, look) => createEarthScenery(renderer, host, site.lat, site.lon,
-          height, frame, ground, {west:-landing.x,east:width-landing.x,north:-landing.z,south:depth-landing.z},
-          new THREE.Color(0xb9cad3), meshes, look));
-      }).catch(() => { /* The measured scene is available offline. */ });
+      const scene = new FlightView(box.current, sceneEnv(mission).env, { terrain: pack, landing: simToPack(pack, target), letterbox: false, showSkip: false, muted: warmingRef.current || muted, equipment: mission.equipment });
+      attachSiteScenery(scene, box.current, pack, target, mission.earthAnalog.verticalOffsetM);
+      scene.paused = warmingRef.current;
       scene.speed = speed; scene.camMode = camera;
       const setup: FlightSetup = {
         target, refElevation: flight.terrain.baseHeightAt(target.x, target.y), gravity: flight.gravity, airDensity: flight.airDensity,
@@ -99,12 +88,12 @@ export default function Descent3D({ mission, profile, entry, weather, autoStart 
   useEffect(() => () => { view.current?.dispose(); view.current = null; autoStarted.current = false; }, []);
   useEffect(() => { if (view.current) view.current.speed = speed; }, [speed]);
   useEffect(() => { if (view.current) view.current.camMode = camera; }, [camera]);
-  useEffect(() => { view.current?.setMuted(muted); }, [muted]);
-  useEffect(() => { if (view.current) view.current.paused = paused; }, [paused]);
+  useLayoutEffect(() => { view.current?.setMuted(warming || muted); }, [warming, muted]);
+  useLayoutEffect(() => { if (view.current) view.current.paused = warming || paused; }, [warming, paused]);
 
   // readouts, and the same out-of-terrain stop as the 2D view
   useEffect(() => {
-    if (!started) return;
+    if (!started || warming) return;
     const boundX = (profile.manifest.grid.columns - 1) * profile.sampleSpacingM / 2;
     const boundY = (profile.manifest.grid.rows - 1) * profile.sampleSpacingM / 2;
     const timer = setInterval(() => {
@@ -115,11 +104,11 @@ export default function Descent3D({ mission, profile, entry, weather, autoStart 
       }
     }, 100);
     return () => clearInterval(timer);
-  }, [started, profile]);
+  }, [started, profile, warming]);
 
   // keyboard for manual flight
   useEffect(() => {
-    if (!manual) return;
+    if (!manual || warming) return;
     const down = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement).tagName;
       if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
@@ -130,7 +119,7 @@ export default function Descent3D({ mission, profile, entry, weather, autoStart 
     const clear = () => pressed.current.clear();
     window.addEventListener('keydown', down); window.addEventListener('keyup', up); window.addEventListener('blur', clear);
     return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up); window.removeEventListener('blur', clear); };
-  }, [manual]);
+  }, [manual, warming]);
 
   return <section className="flight-workspace"><div className="flight-toolbar"><div><strong>{mission.planetaryTarget.name} descent</strong><small>{mission.earthAnalog.name} · Measured Earth terrain · live 3D</small></div><div>
       <button className="subtle-button" onClick={onExit}>{started && !summary ? 'End flight & configure' : 'Back to configuration'}</button>

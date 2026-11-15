@@ -17,6 +17,6 @@ export default function EarthApproachScene({ mission, reducedMotion, onComplete,
   useEffect(() => { void import('../../components/Descent').then(m => m.preloadDescent3D()).catch(() => { /* loads on demand instead */ }); }, []);
   return <SceneFrame title={`Approaching ${mission.earthAnalog.name}`} reducedMotion={reducedMotion} onComplete={onComplete}
     detail="The rocket drops its boosters and releases the lander, which deploys its landing gear 1,000 m above the ground, 400 m west of the target, and the descent begins.">
-    {muted => <Cutscene fullscreen={immersive} kind="opening" env={env} terrainUrl={terrainUrl} requiredTerrainId={mission.earthAnalog.id} start={start} target={target} equipment={mission.equipment} muted={muted} showSkip={false} onDone={onComplete} />}
+    {muted => <Cutscene earthSceneryOffsetM={mission.earthAnalog.verticalOffsetM} fullscreen={immersive} kind="opening" env={env} terrainUrl={terrainUrl} requiredTerrainId={mission.earthAnalog.id} start={start} target={target} equipment={mission.equipment} muted={muted} showSkip={false} onDone={onComplete} />}
   </SceneFrame>;
 }

@@ -8,6 +8,7 @@ import type { CutsceneEnv, EndingParams } from "./presets";
 import { loadTerrainPack, peekTerrainPack, simToPack, type TerrainPack } from "./terrainPack";
 
 interface Props {
+  earthSceneryOffsetM?: number;
   /** Game scenes render to the entire host viewport without forced aspect ratio. */
   fullscreen?: boolean;
   /** "opening" before the simulation, "ending" after it. "success" / "crash" are stand-ins without a flight. */
@@ -34,7 +35,7 @@ interface Props {
  * Plays one cutscene. Mount it after a user click so sound is allowed to start.
  * The scene is centred on the sim's target (opening) or on the flight's touchdown point (ending).
  */
-export default function Cutscene({ kind, env, flight, start, target, params, terrain, terrainUrl, requiredTerrainId, landing, equipment, muted = false, showSkip = true, onDone, className, fullscreen = false }: Props) {
+export default function Cutscene({ earthSceneryOffsetM, kind, env, flight, start, target, params, terrain, terrainUrl, requiredTerrainId, landing, equipment, muted = false, showSkip = true, onDone, className, fullscreen = false }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const engine = useRef<CutsceneEngine | null>(null);
   const done = useRef(onDone); done.current = onDone;
@@ -66,10 +67,16 @@ export default function Cutscene({ kind, env, flight, start, target, params, ter
       { muted, showSkip, letterbox: !fullscreen, equipment: JSON.parse(equipKey) ?? undefined, terrain: pack ?? undefined, landing: JSON.parse(landKey) ?? undefined });
     engine.current = e;
     let live = true;
+    const host = box.current;
+    if (earthSceneryOffsetM !== undefined && pack) {
+      void import('../../lib/attachSiteScenery').then(({ attachSiteScenery }) => {
+        if (live) attachSiteScenery(e, host, pack, centre, earthSceneryOffsetM);
+      }).catch(() => { /* Keep playing over the measured terrain. */ });
+    }
     e.play(kind, play.current).then(() => { if (live) done.current?.(); });
     return () => { live = false; e.dispose(); engine.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [kind, envKey, landKey, equipKey, pack, waiting, flight, requiredTerrainId, wrongPack, fullscreen]);
+  }, [earthSceneryOffsetM, kind, envKey, landKey, equipKey, pack, waiting, flight, requiredTerrainId, wrongPack, fullscreen]);
 
   useEffect(() => { engine.current?.setMuted(muted); }, [muted]);
 
